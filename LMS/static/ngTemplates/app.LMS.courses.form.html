@@ -1,9 +1,7 @@
-<div class="container-fluid" ng-controller="projectManagement.LMS.courses.form">
-
-
+<div class="container-fluid" ng-controller="home.LMS.courses.form">
   <div class="col-md-6">
-
-    <h2>Create a course</h2>
+    <h2 ng-if="mode == 'new'">Create a course</h2>
+    <h2 ng-if="mode == 'edit'">Edit this course</h2>
 
     <div class="form-group">
       <label>Title</label>
@@ -17,9 +15,9 @@
         </div>
       </div>
       <div class="col-md-6">
-        <div class="form-group" >
+        <div class="form-group">
           <label>Enrollment Type</label>
-          <select ng-model="form.enrollmentStatus" class="form-control" >
+          <select ng-model="form.enrollmentStatus" class="form-control">
             <option value="open">Open</option>
             <option value="onInvitation">On Invitation</option>
             <option value="admin">Admin</option>
@@ -34,13 +32,18 @@
     </div>
     <div class="form-group">
       <label>DP</label>
-      <input file-model="form.dp" type="file" >
+      <input file-model="form.dp" type="file">
     </div>
     <users-Field data="form.TAs" url="/api/HR/userSearch/" col="4" label="Teaching assistants"></users-Field>
-    <user-field url="/api/HR/userSearch/" label = "Instructor" user="form.instructor"></user-field>
-
-    <button type="button" class="btn btn-primary" ng-click="save()">
+    <div class="form-group">
+      <label> Instructor</label>
+      <input class="form-control" type="text" ng-model="form.instructor" uib-typeahead="user as getInstructor(user) for user in userSearch($viewValue)" placeholder="Search and select a Instructor">
+    </div>
+    <button type="button" class="btn btn-primary" ng-click="saveCourse()" ng-if="mode == 'new'">
       Save
+    </button>
+    <button type="button" class="btn btn-primary" ng-click="saveCourse()" ng-if="mode == 'edit'">
+      Update
     </button>
   </div>
 </div>

@@ -1,4 +1,4 @@
-<div class="container-fluid" ng-controller="projectManagement.LMS.configure.form">
+<div class="container-fluid" ng-controller="home.LMS.configure.form">
 
   <div class="row">
     <div class="col-md-1" style="border-right:solid 2px #eeeeee;padding-top:30px;min-height:50vh;">
@@ -63,7 +63,7 @@
       </div>
       <div class="form-group">
         <label>Subject</label>
-        <input type="text" class="form-control" ng-model="form.subject" uib-typeahead="subject as subject.title for subject in subjectSearch($viewValue)">
+        <input type="text" class="form-control" ng-model="form.subject" uib-typeahead="subject as subject.title + ' class ' + subject.level  for subject in subjectSearch($viewValue)">
       </div>
       <div class="form-group">
         <label>Description</label>

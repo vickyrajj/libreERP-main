@@ -23,6 +23,45 @@ app.run(['$rootScope', '$state', '$stateParams', '$permissions', function($rootS
 // Main controller is mainly for the Navbar and also contains some common components such as clipboad etc
 app.controller('main', function($scope, $state, $users, $aside, $http, $timeout, $uibModal, $permissions, ngAudio) {
 
+
+  function setCookie(cname,cvalue,exdays) {
+    var d = new Date();
+    d.setTime(d.getTime() + (exdays*24*60*60*1000));
+    var expires = "expires=" + d.toGMTString();
+    document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
+}
+
+function getCookie(cname) {
+    var name = cname + "=";
+    var decodedCookie = decodeURIComponent(document.cookie);
+    var ca = decodedCookie.split(';');
+    for(var i = 0; i < ca.length; i++) {
+        var c = ca[i];
+        while (c.charAt(0) == ' ') {
+            c = c.substring(1);
+        }
+        if (c.indexOf(name) == 0) {
+            return c.substring(name.length, c.length);
+        }
+    }
+    return "";
+}
+
+
+
+$scope.mobileView=false;
+
+// $(window).on('mouseover', function() {
+//
+// })
+
+
+$scope.onHover=false;
+console.log($scope.onHover);
+$scope.sideMenuVisibility = false;
+// retrive it back
+
+
   $scope.tutoringCall = function(request) {
     console.log("in controller, calling: " , request);
 
@@ -633,9 +672,9 @@ app.controller('sideMenu', function($scope, $http, $aside, $state, Flash, $users
 
   $scope.fixedApps = [
     {icon : 'home' , state : 'home'},
-    {icon : 'envelope-o' , state : 'home.mail'},
+    // {icon : 'envelope-o' , state : 'home.mail'},
     {icon : 'calendar' , state : 'home.calendar'},
-    {icon : 'sticky-note-o' , state : 'home.notes'},
+    // {icon : 'sticky-note-o' , state : 'home.notes'},
   ]
 
   var parts = $state.current.name.split('.');

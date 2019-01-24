@@ -22,9 +22,17 @@ router.register(r'video' , VideoViewSet , base_name ='video')
 router.register(r'feedback' , FeedbackViewSet , base_name ='feedback')
 router.register(r'book' , BookViewSet , base_name ='book')
 router.register(r'section' , SectionViewSet , base_name ='section')
+router.register(r'bookcoursemap' , BookCourseMapViewSet , base_name ='bookcoursemap')
+router.register(r'note' , NoteViewSet , base_name ='note')
+router.register(r'notesection' , NotesSectionViewSet , base_name ='notesection')
+router.register(r'announcement' , AnnouncementViewSet , base_name ='announcement')
+router.register(r'homework' , HomeworkViewSet , base_name ='homework')
 
 
 urlpatterns = [
     url(r'^', include(router.urls)),
     url(r'generateQuesPaper/$' , DownloadQuesPaper.as_view() ),
+    url(r'questionsAutoCreate/$' , QuestionsAutoCreate.as_view() ),
+    url(r'getLevelsAndBooks/$' , GetLevelsAndBooks.as_view() ),
+
 ]

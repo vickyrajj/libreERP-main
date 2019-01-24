@@ -57,7 +57,7 @@ GITOLITE_KEY = '123' # the gitolite server push notification secret key, all git
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['192.168.1.100', 'cioc.co.in', 'localhost', '127.0.0.1', '192.168.0.105', '192.168.0.105' ,'172.20.10.8' , '24tutors.com']
+ALLOWED_HOSTS = ['192.168.1.100', 'cioc.co.in', 'localhost', '127.0.0.1', '192.168.0.105', '192.168.0.105' ,'172.20.10.8' , '24tutors.com','192.168.1.151','192.168.0.113']
 
 
 LOGIN_REDIRECT = 'ERP' # the url to which the user will be redirected once successfully loggedin
@@ -95,36 +95,36 @@ INSTALLED_APPS = (
     'robots',
     'API', # uncategorised REST points
     'ERP', # permissions, overall management of the platform
-    'HR', # people aspect of the platform
-    'PIM', # personal information manager
-    'social', # social networking client
     'homepage', # landing page
-    'mail', # mail application
-    'businessManagement', # BM application
-    'ecommerce', # ecommerce
-    'projectManagement',
-    'gitweb', # github.com local server with file browsing and diff viewer
-    'taskBoard',
-    'projects',
-    'virtualWorkforce',
-	'finance',# billing , invoicing , finance etc
-	'tools',# general purpose tools like OCR, AI or big data related stuffs
-	'events',# to manage events like test, hackathon or something like that
-	'clientRelationships',# CRM like sales force
-	'LMS',# LMS
-	'POS',# POS terminal like tally
+    'HR', # people aspect of the platform
+    'LMS',# LMS
+    'PIM', # personal information manager
 	'tutor',# canvas
-	'workforceManagement',# canvas
-    'support',# canvas
-	'warehouse',# warehouse application
-	'employees',# employees details
-	'payroll',# payroll
-	'performance',# performance
-	'recruitment',# recruitment
-	'organization',# organization
-	'logistic',# logistics
-	'assets',# assets
-	'productsInventory',# inventory for POS products
+    # 'projectManagement',
+    # 'mail', # mail application
+    # 'social', # social networking client
+	# 'logistic',# logistics
+    # 'organization',# organization
+    # 'performance',# performance
+    # 'gitweb', # github.com local server with file browsing and diff viewer
+    # 'projects',
+    # 'workforceManagement',# canvas
+    # 'taskBoard',
+    # 'recruitment',# recruitment
+    # 'employees',# employees details
+    # 'businessManagement', # BM application
+    # 'support',# canvas
+    # 'tools',# general purpose tools like OCR, AI or big data related stuffs
+    # 'finance',# billing , invoicing , finance etc
+    # 'events',# to manage events like test, hackathon or something like that
+    # 'virtualWorkforce',
+	# 'assets',# assets
+    # 'clientRelationships',# CRM like sales force
+    # 'ecommerce', # ecommerce
+    # 'POS',# POS terminal like tally
+    # 'payroll',# payroll
+	# 'productsInventory',# inventory for POS products
+    # 'warehouse',# warehouse application
 )
 
 
@@ -226,9 +226,9 @@ DATABASES = {
 # DATABASES = {
 #     'default': {
 #         'ENGINE': 'django.db.backends.mysql',
-#         'NAME': 'django',
-#         'USER': 'root',
-#         'PASSWORD': 'password',
+#         'NAME': 'tutor',
+#         'USER': 'django',
+#         'PASSWORD': 'titan@1234',
 #         'HOST': '127.0.0.1',   # Or an IP Address that your DB is hosted on
 #         'PORT': '3306',
 #     }

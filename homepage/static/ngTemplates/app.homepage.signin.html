@@ -1,0 +1,39 @@
+<div class="container-fluid min_padd signup_modal" style="position:relative;">
+  <div class="col-md-12 hidden-xs hidden-sm" style="min-height:20px;padding:10px;">
+    <i class="fa fa-times close" aria-hidden="true" ng-click="close()" style="cursor:pointer;"></i>
+  </div>
+  <div class="col-md-4 min_height  hidden-xs hidden-sm" style="position:relative;background-image: linear-gradient(to bottom ,rgba(233, 233, 233, 0),rgba(233, 233, 233, 0.2), rgba(233, 233, 233, 0.8),rgba(233, 233, 233, 0.2),rgba(233, 233, 233, 0));margin-left:0px;padding-left:0px;">
+    <img src="/static/images/24tut/illustration_svg.png" class="log_img">
+  </div>
+  <div class="col-md-8 min_height for_mob text-center" style="padding-left:40px;">
+    <div class="text-center">
+      <img src="/static/images/24tut/black icon_grad.svg" class="modal_logo">
+    </div>
+    <h1 class="heading_small or"> Login now to learn LIVE Online from India's best teachers</h1>
+    <div class="col-md-4 hidden-md hidden-lg text-center">
+      <img src="/static/images/24tut/illustration_svg.png" style="width:50%;margin-bottom:10px;" ng-click="close()">
+    </div>
+    <div class="container-fluid lo_marg text-center">
+      <div class="login_btn goo">
+        <img src="/static/images/24tut/goolog.png" class="sign_img"><span class="log_txt">Continue with Google</span>
+      </div>
+      <div class="login_btn fac">
+        <img src="/static/images/24tut/faclog.png" class="sign_img"><span class="log_txt">Continue with Facebook</span>
+      </div>
+    </div>
+    <h4 class="heading_small text-center or">OR</h4>
+    <div class="col-md-8 col-md-offset-2 ph_div">
+      <div class="login-input-group">
+        <label>Phone Number</label>
+        <input type="tel" class="form-control" required="" ng-focus="slideDown()" placeholder="+91" maxlength="10">
+        <div class="error-container">Enter a valid phone number</div>
+      </div>
+      <button type="button" class="btn_gradient form-control" style="padding-bottom:30px;">
+        LOGIN
+      </button>
+    </div>
+  </div>
+  <div class="text-center hidden-md hidden-lg cancel_btn" ng-click="close()">
+    <span>Cancel</span>
+  </div>
+</div>

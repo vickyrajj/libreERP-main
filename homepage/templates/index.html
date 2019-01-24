@@ -1,9 +1,9 @@
 {% extends "base.html" %} {% load staticfiles %} {% block specific_head %}
 <title>Online live tutoring. Free 1-2-1 online classes. IIT JEE Preparation. School tutions online</title>
 
-<meta name="description" content="India's only 24x7 student helpline. Connect with the best tutors from IITs and NITs provide teaching for CBSE & ICSE, Maths & Science and competitive exams like  JEE Mains, JEE Advanced, IIT Foundation, Olympiads, NTSE, PSA"/>
+<meta name="description" content="India's only 24x7 student helpline. Connect with the best tutors from IITs and NITs provide teaching for CBSE & ICSE, Maths & Science and competitive exams like  JEE Mains, JEE Advanced, IIT Foundation, Olympiads, NTSE, PSA" />
 <link rel="canonical" href="https://24tutors.com/" />
-<link rel="publisher" href="https://plus.google.com/b/105723801328437605094/"/>
+<link rel="publisher" href="https://plus.google.com/b/105723801328437605094/" />
 <meta property="og:locale" content="en_US" />
 <meta property="og:type" content="website" />
 <meta property="og:title" content="Online live tutoring. Free 1-2-1 online classes. IIT JEE Preparation. School tutions online" />
@@ -26,7 +26,7 @@
 <link rel="icon" href="/static/images/tutor.ico" type="image/gif" sizes="16x16">
 
 {% endblock %} {% block specific_css %}
-<link href="{% static 'css/agency.css' %}" rel="stylesheet">
+<link href="{% static 'css/homepage.css' %}" rel="stylesheet">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/animatecss/3.5.1/animate.min.css" charset="utf-8">
 
 {% endblock %} {% block header %}
@@ -34,109 +34,526 @@
 {% endblock %}
 <!-- Header -->
 {% block content %}
-<div ng-app="app" ng-controller="main">
+<div>
   {% verbatim %}
-  <div class="container-fluid" style="padding-left:0px;padding-right:0px;">
-    <header style="background-image: url(/static/images/main_banner.svg);height:100vh;width:100%;">
-      <div class="row" style="padding-top:100px;color:#323232;">
-        <p ng-if="typeIndex == $index" ng-repeat="t in typings" typed-effect text="t" blink="true" style="font-size:100px;"></p>
-      </div>
-
-      <div class="row text-center" style="position:relative;">
-        <img src="/static/images/crm/tutor.png" alt="24Tutors session demo" style="width:40%;">
-        <div style="position:absolute;top: 160px;background: #eeeeee;" data-toggle="modal" data-target="#myModal" class="text-center glassy glassyButton col-md-2 col-md-offset-5 col-sm-4 col-sm-offset-4">
-          <i class="fa fa-play fa-2x"></i> <span style="font-size:25px;margin-left:10px;"></span>
+  <div class="container-fluid home_header">
+    <div class="col-md-4 col-md-offset-1 home_content">
+      <h1 style="font-size:4em;font-weight:bold;"> Learn Anything </h1>
+      <h3 style="font-size:2.4em;font-weight:lighter;font-family:sans-serif;line-height:1.2;">Get Access for Award Winning Online Courses</h3>
+    </div>
+  </div>
+  </div>
+  <!-- <div class="container-fluid">
+    <div class="col-md-12 text-center">
+      <h1>Hello <b> Rohan Rana </b> </h1>
+    </div>
+    <div class="col-md-10 col-md-offset-1 hd_screen session_tabs">
+      <div class="col-md-4">
+        <div class="container-fluid tab_card">
+          <span>Account</span>
         </div>
-        <div id="myModal" class="modal fade" role="dialog">
-          <div class="modal-dialog" style="min-height:300px;">
-            <iframe width="100%" style="margin:0px;padding:0px;" height="340" ng-if="videoLink != ''" ng-src="{{videoLink}}" frameborder="0" allowfullscreen></iframe>
+      </div>
+      <div class="col-md-4">
+        <div class="container-fluid tab_card">
+          <span>Previous Sessions</span>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="container-fluid tab_card">
+          <span>Add Session</span>
+        </div>
+      </div>
+    </div>
+  </div> -->
+
+  <div class="container-fluid" style="min-height:40vh;">
+    <div class="col-md-11 col-md-offset-1">
+      <div class="col-md-3 col-md-offset-1" style="padding:20px 0px">
+        <h1 class="heading_medium">The Prodigious eLearning Courses for you</h1>
+        <span class="u_line"></span>
+        <div class="text-muted min_padd ">
+          Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua,eiusmod tempor incididunt ut labore et dolore magna aliqua.
+        </div>
+        <div class="text-muted" style="margin:30px 10px;">
+          <span> <img src="/static/images/24tut/light-bulb.svg" width="8%"> </span> &emsp;<span>Creative Study Pattern</span><br><br>
+          <span> <img src="/static/images/24tut/paper-plane.svg" width="8%"> </span> &emsp;<span>Quick crash Coursess</span><br><br>
+          <span> <img src="/static/images/24tut/compass.svg" width="8%"> </span> &emsp;<span>Provided with Experimental Examples</span><br><br>
+          <span> <img src="/static/images/24tut/certificate.svg" width="8%"> </span>&emsp; <span>Certification Awarded</span>
+        </div>
+        <div class="">
+          <button type="button" class="btn_gradient">Discover new Courses</button>
+        </div>
+      </div>
+      <div class="col-md-7 col-md-offset-1 col-xs-12 col-sm-12 ">
+        <img src="/static/images/24tut/pic.png" class="img">
+      </div>
+    </div>
+  </div>
+  <div class="container-fluid" style="min-height:38vh;background-color:rgba(238, 238, 238, 0.46);margin:20px auto;position:relative;">
+    <img src="/static/images/24tut/bg_left.png" class="bg on_left hidden-xs hidden-sm">
+    <img src="/static/images/24tut/bg_right.png" class="bg on_right hidden-xs hidden-sm">
+    <div class="col-md-10 col-md-offset-1 hd_screen">
+      <div class="col-md-3 text-center card_div">
+        <div class="card_container">
+          <div class="min_padd">
+            <img src="/static/images/24tut/mon.png" width="20%">
+          </div>
+          <span class="card_title"> 1600+ Topics </span><br>
+          <span class="card_breif">LEARN ANYTHING</span>
+        </div>
+      </div>
+      <div class="col-md-3 text-center card_div">
+        <div class="card_container">
+          <div class="min_padd">
+            <img src="/static/images/24tut/graduate.png" width="20%">
+          </div>
+          <span class="card_title">1900+ Students</span><br>
+          <span class="card_breif">FUTURE GENIUS</span>
+        </div>
+      </div>
+      <div class="col-md-3 text-center card_div">
+        <div class="card_container">
+          <div class="min_padd">
+            <img src="/static/images/24tut/note.png" width="20%">
+          </div>
+          <span class="card_title">15900 Tests Taken</span><br>
+          <span class="card_breif">THATS A LOT</span>
+        </div>
+      </div>
+      <div class="col-md-3 text-center card_div">
+        <div class="card_container">
+          <div class="min_padd">
+            <img src="/static/images/24tut/apple.png" width="20%">
+          </div>
+          <span class="card_title">250+ Instructors</span><br>
+          <span class="card_breif">ALL TRAINED PROFESSIONALS</span>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="container-fluid" style="min-height:40vh;margin:20px auto;">
+    <div class="col-md-12 text-center min_padd">
+      <h2 class="heading_big"> <b>Courses you might like</b> </h2>
+      <h5 class="text-muted heading_small">LEARNING VIA APP NEVER GETS EASIER</h5>
+    </div>
+    <div class="col-md-10 col-md-offset-1 min_padd hd_screen">
+      <div class="col-md-4">
+        <div class="container-fluid course_card">
+          <div class="course_card_img" style="background-image:url('/static/images/24tut/img1.jpeg')"></div>
+          <div class="col-md-10 text-center">
+            <h4>Linda Carrey</h4>
+            <h3>Modern Computing Technology(v1.2)</h3>
+            <div class="row">
+              <i class="fa fa-star starf" aria-hidden="true"></i>
+              <i class="fa fa-star starf" aria-hidden="true"></i>
+              <i class="fa fa-star starf" aria-hidden="true"></i>
+              <i class="fa fa-star starf" aria-hidden="true"></i>
+              <i class="fa fa-star starf" aria-hidden="true"></i>
+              <span class="text-muted">(45 Reviews)</span>
+            </div>
+            <div class="row min_padd">
+              <div class="col-md-5 col-xs-6">
+                <i class="fa fa-clock-o" aria-hidden="true" style="color:#02EBA3"></i> <span> 12 Mins</span>
+              </div>
+              <div class="col-md-4">
+
+              </div>
+              <a href="/checkout">
+                <div class="col-md-3 col-xs-6 pull-right">
+                  <span class="badge badge-pills">$18.00/hr</span>
+                </div>
+              </a>
+            </div>
           </div>
         </div>
       </div>
+      <div class="col-md-4">
+        <div class="container-fluid course_card">
+          <div class="course_card_img" style="background-image:url('/static/images/24tut/img2.jpg')"></div>
+          <div class="col-md-10 text-center">
+            <h4>James Stewart</h4>
+            <h3>Language Learning Crash Course</h3>
+            <div class="row">
+              <i class="fa fa-star starf" aria-hidden="true"></i>
+              <i class="fa fa-star starf" aria-hidden="true"></i>
+              <i class="fa fa-star starf" aria-hidden="true"></i>
+              <i class="fa fa-star starf" aria-hidden="true"></i>
+              <i class="fa fa-star starf" aria-hidden="true"></i>
+              <span class="text-muted">(35 Reviews)</span>
+            </div>
+            <div class="row min_padd">
+              <div class="col-md-5 col-xs-6">
+                <i class="fa fa-clock-o" aria-hidden="true" style="color:#02EBA3"></i> <span> 12 Mins</span>
+              </div>
+              <div class="col-md-4">
 
+              </div>
+              <a href="/checkout">
+                <div class="col-md-3 col-xs-6 pull-right">
+                  <span class="badge badge-pills">$13.00/hr</span>
+                </div>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="container-fluid course_card">
+          <div class="course_card_img" style="background-image:url('/static/images/24tut/img3.jpg')"></div>
+          <div class="col-md-10 text-center">
+            <h4>Penny Tiler</h4>
+            <h3>Bio Cool Labs (Plants Research)</h3>
+            <div class="row">
+              <i class="fa fa-star starf" aria-hidden="true"></i>
+              <i class="fa fa-star starf" aria-hidden="true"></i>
+              <i class="fa fa-star starf" aria-hidden="true"></i>
+              <i class="fa fa-star starf" aria-hidden="true"></i>
+              <i class="fa fa-star starf" aria-hidden="true"></i>
+              <span class="text-muted">(49 Reviews)</span>
+            </div>
+            <div class="row min_padd">
+              <div class="col-md-5 col-xs-6">
+                <i class="fa fa-clock-o" aria-hidden="true" style="color:#02EBA3"></i> <span> 12 Mins</span>
+              </div>
+              <div class="col-md-4">
 
-    </header>
+              </div>
+              <a href="/checkout">
+                <div class="col-md-3 col-xs-6 pull-right">
+                  <span class="badge badge-pills">$15.00/hr</span>
+                </div>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
+
+  <div class="container-fluid no_padding" style="margin:20px auto;padding-bottom:5rem;">
+    <div class="row" style="margin:0px;">
+      <div class="col-md-12 no_padding course_contain_bg">
+        <div class="col-md-12 course_contain_gradient">
+          <div class="list_div row">
+            <div class="list_container">
+              <div class="list_head col-md-12 min_padd">
+                <span class="heading_medium">Learn with these award winning courses</span>
+              </div>
+              <div class="col-md-10" id="myGroup">
+                <div class="list container-fluid {{active==0?'divcolor':''}}" id="drop0" ng-click="drop(0)" data-target="#col0" data-parent="#myGroup">
+                  <span class="list_title"> 01. Great Online Instructors</span><i class="fa fa-{{active==0?'minus':'plus'}} sym_plus"></i>
+                </div>
+                <div id="col0" class="list_body {{active==0?'coll12':'coll11'}}">
+                  <span>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut
+                    labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris.</span>
+                </div>
+                <div class="list container-fluid {{active==1?'divcolor':''}}" id="drop1" ng-click="drop(1)" data-target="#col1" data-parent="#myGroup">
+                  <span class="list_title"> 02. Get Learny Certified Awards</span><i class="fa fa-{{active==1?'minus':'plus'}} sym_plus"></i>
+                </div>
+                <div id="col1" class="list_body {{active==1?'coll12':'coll11'}}">
+                  <span>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut
+                    labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris.</span>
+                </div>
+                <div class="list container-fluid {{active==2?'divcolor':''}}" id="drop2" ng-click="drop(2)" data-target="#col2" data-parent="#myGroup">
+                  <span class="list_title"> 03.Exclusive Course Materials</span><i class="fa fa-{{active==2?'minus':'plus'}} sym_plus"></i>
+                </div>
+                <div id="col2" class="list_body {{active==2?'coll12':'coll11'}}">
+                  <span>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut
+                    labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris.</span>
+                </div>
+                <div class="list container-fluid {{active==3?'divcolor':''}}" id="drop3" ng-click="drop(3)" data-target="#col3" data-parent="#myGroup">
+                  <span class="list_title"> 04. In - depth Course Analysis</span><i class="fa fa-{{active==3?'minus':'plus'}} sym_plus"></i>
+                </div>
+                <div id="col3" class="list_body {{active==3?'coll12':'coll11'}} ">
+                  <span>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut
+                    labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris.</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="container-fluid no_padding" style="min-height:50vh;margin:20px auto;">
+    <div class="col-md-10 col-md-offset-1">
+      <div class="col-md-5 min_padd">
+        <h4 class="text-muted">Know Your Author</h4>
+        <h3 class="heading_medium">Each course you unsertake are designed by ther authors</h3>
+        <span class="u_line"></span>
+        <div class="min_padd">
+          <p class="min_padd">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
+            tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
+            quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+          <p class="min_padd">Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
+            Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+        </div>
+        <div class="">
+          <button type="button" class="btn_gradient">How to Become an Author?</button>
+        </div>
+      </div>
+      <div class="col-md-7">
+        <div class="row">
+          <div class="col-md-4 text-center">
+            <div class="authors_div showhim">
+              <div class="showme"><img src="/static/images/24tut/profile_overlay.png" width="100%"></div>
+              <div class="ok"><img src="/static/images/24tut/author1.png" class="round_img" width="70%"></div>
+            </div>
+            <h4> <b>Lauren Ralph</b> </h4>
+          </div>
+          <div class="col-md-4 text-center">
+            <div class="authors_div showhim">
+              <div class="showme"><img src="/static/images/24tut/profile_overlay.png" width="100%"></div>
+              <div class="ok"><img src="/static/images/24tut/author2.jpeg" class="round_img" width="70%"></div>
+            </div>
+            <h4> <b>Stan Lee</b> </h4>
+          </div>
+          <div class="col-md-4 text-center">
+            <div class="authors_div showhim">
+              <div class="showme"><img src="/static/images/24tut/profile_overlay.png" width="100%"></div>
+              <div class="ok"><img src="/static/images/24tut/author3.jpg" class="round_img" width="70%"></div>
+            </div>
+            <h4> <b>Jason Stateman</b> </h4>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-4 text-center">
+            <div class="authors_div showhim">
+              <div class="showme"><img src="/static/images/24tut/profile_overlay.png" width="100%"></div>
+              <div class="ok"><img src="/static/images/24tut/author4.jpeg" class="round_img" width="70%"></div>
+            </div>
+            <h4> <b> Steve Matt</b></h4>
+          </div>
+          <div class="col-md-4 text-center">
+            <div class="authors_div showhim">
+              <div class="showme"><img src="/static/images/24tut/profile_overlay.png" width="100%"></div>
+              <div class="ok"><img src="/static/images/24tut/author5.jpeg" class="round_img" width="70%"></div>
+            </div>
+            <h4> <b>Jenny Smith</b> </h4>
+          </div>
+          <div class="col-md-4 text-center">
+            <div class="authors_div showhim">
+              <div class="showme"><img src="/static/images/24tut/layover.png" width="100%"></div>
+              <div class="ok"><img src="/static/images/24tut/join.png" class="round_img" width="70%"></div>
+            </div>
+            <h4 class="text-muted"> <b> Is this you?</b></h4>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <div class="container-fluid no_padding" style="position:relative;">
+    <div class="container-fluid no_padding" style="min-height:50vh;background-image:linear-gradient(rgba(27, 27, 27, 0.8),rgba(27, 27, 27, 0.8)),url('/static/images/24tut/tutbg.jpg');background-repeat:no-repeat;background-size:cover;">
+      <div class="col-md-12 text-center" style="margin-top:5rem;">
+        <span class="heading_big" style="color:#fff;">Become a Pro with these Course</span><br>
+        <span class="heading_small" style="color:#fff;">JUST PICK WHAT YOU NEED TO LEARN</span>
+      </div>
+    </div>
+    <div class="container-fluid pro_card_div">
+      <div class="col-md-10 col-md-offset-1 min_padd hd_screen">
+        <div class="col-md-4">
+          <div class="container-fluid pro_card">
+            <div class="course_card_img" style="background-image:url('/static/images/24tut/stu4.png')"></div>
+            <div class="col-md-10 text-center min_padd col-md-offset-1">
+              <span class="pro_num">01</span>
+              <span class="pro_head"> GREAT FOR HIGH SCHOOL</span>
+              <div class="text-center min_padd">
+                <h5 class="heading_small">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor</h5>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-md-4">
+          <div class="container-fluid pro_card">
+            <div class="course_card_img" style="background-image:url('/static/images/24tut/group.jpg')"></div>
+            <div class="col-md-10 text-center min_padd col-md-offset-1">
+              <span class="pro_num">02</span>
+              <span class="pro_head"> GROUP TRAINING </span>
+              <div class="text-center min_padd">
+                <h5 class="heading_small">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor</h5>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-md-4">
+          <div class="container-fluid pro_card">
+            <div class="course_card_img" style="background-image:url('/static/images/24tut/grp.jpg')"></div>
+            <div class="col-md-10 text-center min_padd col-md-offset-1">
+              <span class="pro_num">03</span>
+              <span class="pro_head"> BETTER FOR GROUP STUDES</span>
+              <div class="text-center min_padd">
+                <h5 class="heading_small">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor</h5>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="container-fluid  pro_card_container">
+      <img src="/static/images/24tut/4.png" class="bg on_left" width="15%">
+      <img src="/static/images/24tut/3.png" class="bg on_right" width="15%">
+      <div class="col-md-10 col-md-offset-1" style="margin-top:17%;">
+        <div class="text-center">
+          <h1 class="heading_big"> Start Learning Online</h1>
+          <h5 class="heading_small">FOR FREE. How TO ELEARN</h5>
+        </div>
+        <div class="col-md-6 col-md-offset-3 text-center min_padd">
+          <h5 style="line-height:2;font-size:1.2em;color:#888888;">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor
+            incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud
+            exercitation ullamco laboris nisi ut aliquip</h5>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <div class="container-fluid no_padding" style="min-height:20vh;">
+    <div class="col-md-12 no_padding">
+      <div class="col-md-6 text-center" style="background-color:#6A7EF1;color:#fff;min-height:13vh;padding-top:40px;padding-bottom:15px;">
+        <span class="title">Get to Know what is best for you</span><br>
+        <a href="#" class="links">View Categories</a>
+      </div>
+      <div class="col-md-6 text-center" style="background-color:#02EBA3;color:#fff;min-height:13vh;padding-top:40px;padding-bottom:15px;">
+        <span class="title">Take a look at Popular Courses</span><br>
+        <a href="#" class="links">View Collections</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="container-fluid no_padding" style="min-height:50vh;margin:20px auto;">
+    <div class="col-md-12 text-center">
+      <h1 class="heading_big">A New Era in Online Education</h1>
+      <h4 class="heading_small"> CASE STUDIES FOR YOU</h4>
+    </div>
+    <div class="col-md-10 col-md-offset-1 min_padd hd_screen">
+      <div class="col-md-6 min_padd">
+        <div class="container-fluid no_padding" style="position:relative;">
+          <img src="/static/images/24tut/blue.png" style="position:absolute;top:75px;left:-35px;" class="hidden-xs hidden-sm">
+          <img src="/static/images/24tut/liblue.png" style="position:absolute;top:-23px;right:59px;">
+          <div class="onplay" style="background-image: url('/static/images/24tut/tutbg.jpg');">
+            <div class="onplay_overlay" ng-click="playVideo()">
+              <span class="playerbtn">
+                <svg x="0" y="0" width="60px" height="60px" viewBox="0 0 200 200" class="play play--ripple">
+                  <circle fill="transparent" stroke="#02EBA3" stroke-width="0" cx="100" cy="100" r="96"></circle>
+                  <circle clip-path="url(#clipper)" fill="url(#ripple)" cx="100" cy="100" r="130"></circle>
+                  <polygon fill="#02EBA3" points="70.993,60.347 153.398,102.384 70.993,144.42   "></polygon>
+                </svg>
+                <svg x="0" y="0" width="0" height="0">
+                  <defs>
+                    <clipPath id="clipper">
+                      <circle cx="100" cy="100" r="93"></circle>
+                    </clipPath>
+                    <radialGradient id="ripple">
+                      <stop offset="0.681994" stop-color="#000" stop-opacity="0.45">
+                        <animate attributeName="offset" values="0;0.70" begin="0.2s" dur="2.1s" repeatCount="indefinite"></animate>
+                      </stop>
+                      <stop offset="0.0986606" stop-color="#02EBA3" stop-opacity="0.55">
+                        <animate attributeName="offset" values="0.05;0.75" begin="0" dur="2.1s" repeatCount="indefinite"></animate>
+                      </stop>
+                      <stop offset="0.162564" stop-color="#000" stop-opacity="0.45">
+                        <animate attributeName="offset" values="0.10;1" begin="0" dur="2.1s" repeatCount="indefinite"></animate>
+                      </stop>
+                    </radialGradient>
+                  </defs>
+                </svg>
+              </span>
+            </div>
+          </div>
+          <div class="min_padd">
+            <span>
+              <strong>eEducation as Interpretation</strong>
+            </span><br>
+            <span style="color:#02EBA3;">View Case Study</span><br>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-6 min_padd">
+        <div class="container-fluid no_padding" style="position:relative;">
+          <img src="/static/images/24tut/green.png" style="position:absolute;top:70px;left:-35px;" class="hidden-xs hidden-sm">
+          <img src="/static/images/24tut/orange.png" class="orng_img">
+          <div class="onplay" style="background-image: url('/static/images/24tut/img1.jpeg');">
+            <div class="onplay_overlay" ng-click="playVideo()">
+              <span class="playerbtn">
+                <svg x="0" y="0" width="60px" height="60px" viewBox="0 0 200 200" class="play play--ripple">
+                  <circle fill="transparent" stroke="#02EBA3" stroke-width="0" cx="100" cy="100" r="96"></circle>
+                  <circle clip-path="url(#clipper)" fill="url(#ripple)" cx="100" cy="100" r="130"></circle>
+                  <polygon fill="#02EBA3" points="70.993,60.347 153.398,102.384 70.993,144.42   "></polygon>
+                </svg>
+                <svg x="0" y="0" width="0" height="0">
+                  <defs>
+                    <clipPath id="clipper">
+                      <circle cx="100" cy="100" r="93"></circle>
+                    </clipPath>
+                    <radialGradient id="ripple">
+                      <stop offset="0.681994" stop-color="#000" stop-opacity="0.45">
+                        <animate attributeName="offset" values="0;0.70" begin="0.2s" dur="2.1s" repeatCount="indefinite"></animate>
+                      </stop>
+                      <stop offset="0.0986606" stop-color="#02EBA3" stop-opacity="0.55">
+                        <animate attributeName="offset" values="0.05;0.75" begin="0" dur="2.1s" repeatCount="indefinite"></animate>
+                      </stop>
+                      <stop offset="0.162564" stop-color="#000" stop-opacity="0.45">
+                        <animate attributeName="offset" values="0.10;1" begin="0" dur="2.1s" repeatCount="indefinite"></animate>
+                      </stop>
+                    </radialGradient>
+                  </defs>
+                </svg>
+              </span>
+            </div>
+          </div>
+          <div class="min_padd">
+            <span>
+              <strong>Creating a Better study Environment</strong>
+            </span><br>
+            <span style="color:#02EBA3;">View Case Study</span><br>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
   {% endverbatim %}
-  <div class="body">
-    <div class="container" style="padding-left:0px;padding-right:0px;box-shadow: 0px 30px 50px 12px #d0d5dd;">
-      <div class="container-fluid">
-        <section id="features">
-          <div class="row">
-            <div class="col-lg-12 text-center">
-              <h2 class="section-heading">Features</h2>
-              <h3 class="section-subheading text-muted">Completing the missing pieces in your education.</h3>
-            </div>
-          </div>
-          <div class="row text-center">
-            <div class="col-md-4">
-              <span class="fa-stack fa-4x">
-                      <i class="fa fa-circle fa-stack-2x text-primary"></i>
-                      <i class="fa fa-rocket fa-stack-1x fa-inverse"></i>
-                  </span>
-              <h4 class="service-heading">24x7 Help</h4>
-              <p class="text-muted">We know you already have schools and tutions classes scheduled but what if its 8PM in the night and you have some doubt in a question you are trying to solve. Will you wait till next morning or evening to talk to your school teacher or tution sir to get it sorted out. How about just loging into <strong>24tutors.com</strong> and connect to a credible and experienced tutor to discuss the doubt then and there.</p>
-            </div>
-            <div class="col-md-4">
-              <span class="fa-stack fa-4x">
-                      <i class="fa fa-circle fa-stack-2x text-primary"></i>
-                      <i class="fa fa-globe fa-stack-1x fa-inverse"></i>
-                  </span>
-              <h4 class="service-heading">Daily scheduled tutions</h4>
-              <p class="text-muted">Getting help in your studies on daily basis is a challenge and expensive. Browse though our tutors list and schedule daily sessions with them</p>
-            </div>
-            <div class="col-md-4">
-              <span class="fa-stack fa-4x">
-                      <i class="fa fa-circle fa-stack-2x text-primary"></i>
-                      <i class="fa fa-mobile fa-stack-1x fa-inverse"></i>
-                  </span>
-              <h4 class="service-heading">Mock tests</h4>
-              <p class="text-muted"> Feeling done with the preperation and want to test yourself then select a subject and topic and we will provide you online tests where you can get solutions of each question as well after you complete the test.</p>
-            </div>
-          </div>
-        </section>
-      </div>
-    </div>
-      {% include "tutorsPricing.html" %}
-       <section style="  background:url(   data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4KPHN2ZyB3aWR0aD0iMTgxNHB4IiBoZWlnaHQ9IjE4NzFweCIgdmlld0JveD0iMCAwIDE4MTQgMTg3MSIgdmVyc2lvbj0iMS4xIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIj4KICAgIDwhLS0gR2VuZXJhdG9yOiBTa2V0Y2ggNDMuMiAoMzkwNjkpIC0gaHR0cDovL3d3dy5ib2hlbWlhbmNvZGluZy5jb20vc2tldGNoIC0tPgogICAgPHRpdGxlPkdyb3VwIDExPC90aXRsZT4KICAgIDxkZXNjPkNyZWF0ZWQgd2l0aCBTa2V0Y2guPC9kZXNjPgogICAgPGRlZnM+CiAgICAgICAgPGxpbmVhckdyYWRpZW50IHgxPSI5MC44MzY1MjA2JSIgeTE9IjE5LjA0MDUxMjYlIiB4Mj0iMy42NTg5OTExNyUiIHkyPSIxMDAlIiBpZD0ibGluZWFyR3JhZGllbnQtMSI+CiAgICAgICAgICAgIDxzdG9wIHN0b3AtY29sb3I9IiMxMDMwOUIiIG9mZnNldD0iMCUiPjwvc3RvcD4KICAgICAgICAgICAgPHN0b3Agc3RvcC1jb2xvcj0iIzE0MUQ2NyIgb2Zmc2V0PSIxMDAlIj48L3N0b3A+CiAgICAgICAgPC9saW5lYXJHcmFkaWVudD4KICAgICAgICA8bGluZWFyR3JhZGllbnQgeDE9IjkzLjI5MjkzODMlIiB5MT0iNjIuNzg4MzU3MSUiIHgyPSI2Ny40NjU4MDk0JSIgeTI9IjM0Ljg0NjQ2OSUiIGlkPSJsaW5lYXJHcmFkaWVudC0yIj4KICAgICAgICAgICAgPHN0b3Agc3RvcC1jb2xvcj0iI0U3RUFGNiIgb2Zmc2V0PSIwJSI+PC9zdG9wPgogICAgICAgICAgICA8c3RvcCBzdG9wLWNvbG9yPSIjRkZGRkZGIiBzdG9wLW9wYWNpdHk9IjAiIG9mZnNldD0iMTAwJSI+PC9zdG9wPgogICAgICAgIDwvbGluZWFyR3JhZGllbnQ+CiAgICAgICAgPGxpbmVhckdyYWRpZW50IHgxPSI2Mi4yNjMxMTMzJSIgeTE9IjU2LjEzNzkyMTIlIiB4Mj0iNTkuMTE0MDU1NiUiIHkyPSIzMi44MDk0MjQxJSIgaWQ9ImxpbmVhckdyYWRpZW50LTMiPgogICAgICAgICAgICA8c3RvcCBzdG9wLWNvbG9yPSIjRTdFQUY2IiBvZmZzZXQ9IjAlIj48L3N0b3A+CiAgICAgICAgICAgIDxzdG9wIHN0b3AtY29sb3I9IiNGRkZGRkYiIHN0b3Atb3BhY2l0eT0iMCIgb2Zmc2V0PSIxMDAlIj48L3N0b3A+CiAgICAgICAgPC9saW5lYXJHcmFkaWVudD4KICAgIDwvZGVmcz4KICAgIDxnIGlkPSJEZXNpbmciIHN0cm9rZT0ibm9uZSIgc3Ryb2tlLXdpZHRoPSIxIiBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPgogICAgICAgIDxnIGlkPSIxLTQtSG9tZXBhZ2UtIiB0cmFuc2Zvcm09InRyYW5zbGF0ZSgtMTA2LjAwMDAwMCwgLTMyMzIuMDAwMDAwKSI+CiAgICAgICAgICAgIDxnIGlkPSJJbnRlZ3JhdGlvbi1hcHBzIiB0cmFuc2Zvcm09InRyYW5zbGF0ZSgxMDYuMDAwMDAwLCAzMTAwLjAwMDAwMCkiPgogICAgICAgICAgICAgICAgPGcgaWQ9Ikdyb3VwLTExIj4KICAgICAgICAgICAgICAgICAgICA8cGF0aCBkPSJNMTgxNi45MjIyNCw2NjcuNzYzNTA1IEMxODI2LjI0NjksNjEzLjMyNDk2MiAxNzkwLjI1NjY1LDU1OC44MDkwMjMgMTczNi41MjUwNSw1NDUuOTk2MTkxIEw0LjEyNzQ4NzgsMTMyLjg4ODg1NyBMMCwyMDAzLjg1NDk1IEwxNTY5LjcyMDU2LDE1NzQuMjIwOTkgQzE2MjIuOTkzMjIsMTU1OS42NDAyMiAxNjczLjczODMyLDE1MDMuNjg5MzYgMTY4My4wNjMwNCwxNDQ5LjI1MDQ2IEwxODE2LjkyMjI0LDY2Ny43NjM1MDUgWiIgaWQ9ImJhc2UiIGZpbGw9IiM0QkNFQUMiIHRyYW5zZm9ybT0idHJhbnNsYXRlKDkwOS4xOTY0MzIsIDEwNjguMzcxOTAyKSBzY2FsZSgtMSwgMSkgdHJhbnNsYXRlKC05MDkuMTk2NDMyLCAtMTA2OC4zNzE5MDIpICI+PC9wYXRoPgogICAgICAgICAgICAgICAgICAgIDxwYXRoIGQ9Ik04ODQuMDk1MjI3LDEyNzIuNTM5IEM5MDMuMjY0NjE4LDEyMjAuNzQ3MzUgODc3Ljg1Njk3LDExNjAuNjcyODcgODI3LjM0MDE3OSwxMTM4LjM1NjQ5IEw0NjAuNzk0MTU3LDk3Ni40MzA0ODQgQzQ2MC43OTQxNTcsOTc2LjQzMDQ4NCAxMjQuMjIxMTA1LDE3NjEuNjc1MDQgMjYxLjM2MTUzMSwxNzA0LjM1NDY0IEM0NjQuODUzMzYsMTYxOS4zMDE0NCA3MTYuODMxMzk2LDE1MTMuODI5OTcgNzE2LjgzMTM5NiwxNTEzLjgyOTk3IEM3NjcuNzc2ODcsMTQ5Mi41MDg2MSA4MjQuNjE1NzY5LDE0MzMuMjM5OTYgODQzLjc4NTU4OSwxMzgxLjQ0NzE1IEw4ODQuMDk1MjI3LDEyNzIuNTM5IFoiIGlkPSJzaGFwZSIgZmlsbD0idXJsKCNsaW5lYXJHcmFkaWVudC0yKSIgb3BhY2l0eT0iMC4wNjI1IiB0cmFuc2Zvcm09InRyYW5zbGF0ZSg1NTkuNDk3ODU4LCAxMzQxLjg4ODYyMSkgc2NhbGUoLTEsIDEpIHJvdGF0ZSgtMTQzLjAwMDAwMCkgdHJhbnNsYXRlKC01NTkuNDk3ODU4LCAtMTM0MS44ODg2MjEpICI+PC9wYXRoPgogICAgICAgICAgICAgICAgICAgIDxwYXRoIGQ9Ik0xOTkxLjY2NDcxLDY4Mi4xNTk1MzMgQzIwMDcuNjI2MzgsNjI5LjI4OTQ1MiAxOTg3LjE5ODEyLDU1Ni41OTMxNDcgMTk0Ni4wMTU1NCw1MTkuNzY4Njg0IEwxNDY3LjY1MzA0LDkyLjAyODUyNSBDMTQ2Ny42NTMwNCw5Mi4wMjg1MjUgMTExNi40ODk2NiwxMzkxLjk1NjQ3IDExMTkuNTQ1MjMsMTM5MS4xODQ1OCBDMTEyMi42MDA4LDEzOTAuNDEyNjkgMTgwOC42NDY1MiwxMDM5LjE4NTQxIDE4MDguNjQ2NTIsMTAzOS4xODU0MSBDMTg1Ny43ODk2LDEwMTQuMDMwODEgMTkxMC41NjY1Niw5NTAuNzgyMTY5IDE5MjYuNTI5MDksODk3LjkwOTIzMSBMMTk5MS42NjQ3MSw2ODIuMTU5NTMzIFoiIGlkPSJzaGFwZS0iIGZpbGw9InVybCgjbGluZWFyR3JhZGllbnQtMykiIG9wYWNpdHk9IjAuMDYyNSIgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoMTU1OC4zMDk0MzgsIDc0MS42MDY3MjUpIHNjYWxlKC0xLCAxKSByb3RhdGUoLTE1LjAwMDAwMCkgdHJhbnNsYXRlKC0xNTU4LjMwOTQzOCwgLTc0MS42MDY3MjUpICI+PC9wYXRoPgogICAgICAgICAgICAgICAgPC9nPgogICAgICAgICAgICA8L2c+CiAgICAgICAgPC9nPgogICAgPC9nPgo8L3N2Zz4K) no-repeat;  background-color: rgba(0, 0, 0, 0);background-position-x: 100%;background-position-y: 70%;  background-size: auto auto;  background-position: 100% 0background-color: #fffoverflow: hidden;  background-size: auto 100%;padding-top:0px;padding-bottom:0px;">
-       <div class="container text-center" style="padding-left:0px;padding-right:0px;padding-top:50px;box-shadow: -12px 10px 50px 2px #d0d5dd;">
-         <div class="row">
-           <div class="col-lg-12 ">
-             <h2 class="section-heading">How it works ?</h2>
-           </div>
-         </div>
-         <img src="/static/images/flow.svg" style="width: 60%;">
-       </div>
-      </section>
-      <div class="container" style="padding-left:0px;padding-right:0px;box-shadow: 0px 30px 50px 12px #d0d5dd;">
-      {% endblock %} {% block footer %}
-      {% include "footer.html" %}
-    </div>
+
+  <div class="container-fluid"style="padding:0px;">
+    {% endblock %} {% block footer %}
+    {% include "footer.html" %}
   </div>
+</div>
 </div>
 
 {% endblock %}{% block specific_js %}
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.4.1/jquery.easing.min.js"></script>
-  <!-- <script src="{% static 'js/classie.js' %}"></script> -->
-  <script src="{% static 'js/agency.js' %}"></script>
-  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.0/angular.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/angular-ui-router/0.2.17/angular-ui-router.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/angular-sanitize/1.4.9/angular-sanitize.min.js"></script>
-  <script src="{% static 'js/app.homepage.js' %}"></script>
-  <script src="{% static 'js/app.homepage.main.js' %}"></script>
-
-
+<script src="{% static 'js/angular.min.js' %}"></script>
+<script src="{% static 'js/angular-bootstrap-confirm.min.js' %}"></script>
+<script src="{% static 'js/ui-bootstrap-tpls-0.14.3.min.js' %}"></script>
+<script src="{% static 'js/angular-sanitize.min.js' %}"></script>
+<script src="{% static 'js/angular-ui-router.min.js' %}"></script>
+<script src="{% static 'js/js.cookie.min.js' %}"></script>
+<script src="{% static 'js/tinymce.min.js' %}"></script>
+<script src="{% static 'js/angular-flash.js' %}"></script>
+<script src="{% static 'js/angular-aside.min.js' %}"></script>
+<script src="{% static 'js/owl.carousel.min.js' %}"></script>
+<script src="{% static 'js/app.homepage.main.js' %}"></script>
+<script src="{% static 'js/angular-owl-carousel-2.js' %}"></script>
+<script src="{% static 'js/datetimepicker.js' %}"></script>
+<script src="{% static 'js/angular-flash.js' %}"></script>
+<script src="{% static 'js/custom/filters.js' %}"></script>
+<script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/MathJax.js?config=TeX-MML-AM_CHTML'></script>
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({ tex2jax: {inlineMath: [['$','$']]} });
+</script>
 <script src="https://syrow.cioc.in/script/chatter-Vhe9xtVRyD0hEkle5q6Yja09z1FadV6da2e+X8xtaiw=.js"></script>
 
 <script>
+  document.addEventListener('DOMContentLoaded', function() {
+    console.log('document - DOMContentLoaded - capture'); // 2nd
 
-document.addEventListener('DOMContentLoaded', function() {
-  console.log('document - DOMContentLoaded - capture'); // 2nd
+    setVisitorDetails("RR Syrow", "9898323299", "rr@syrow.com");
 
-	setVisitorDetails("RR Syrow", "9898323299", "rr@syrow.com");
-
-}, true);
-
-
+  }, true);
 </script>
 {% endblock %}

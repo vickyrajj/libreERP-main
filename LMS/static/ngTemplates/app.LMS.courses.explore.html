@@ -1,4 +1,4 @@
-<div class="container-fluid" ng-controller="projectManagement.LMS.courses.explore">
+<div class="container-fluid" ng-controller="home.LMS.courses.explore">
 
   <div style="border-right:solid 2px #eeeeee;padding-top:20px;" class="col-md-3">
 
@@ -36,7 +36,7 @@
       <div class="col-md-8">
         <div class="row">
           <div class="col-md-4">
-            <img ng-src="{{course.instructor | getDP}}" style="height:55px;width:55px;" class="img img-rounded">
+            <img ng-src="{{course.instructor }}" style="height:55px;width:55px;" class="img img-rounded">
           </div>
           <div class="col-md-8">
             {{course.instructor | getName}}
@@ -53,7 +53,7 @@
       <div class="col-md-8">
         <div style="margin-bottom:10px;" class="row" ng-repeat="ta in course.TAs">
           <div class="col-md-4">
-            <img ng-src="{{ta | getDP}}" style="height:55px;width:55px;" class="img img-rounded">
+            <img ng-src="{{ta}}" style="height:55px;width:55px;" class="img img-rounded">
           </div>
           <div class="col-md-8">
             {{ta | getName}}
@@ -75,10 +75,10 @@
     </div>
     <br>
     <div class="row">
-      <div class="col-md-3 col-sm-6 col-xs-12" ng-repeat = "enrollment in course.enrollments">
+      <div class="col-md-3 col-sm-6 col-xs-12" ng-repeat="enrollment in course.enrollments">
         <span class="info-box-icon" style="background-color:white;">
           <div class="row">
-            <img style="width: 50%;" class="img" ng-src="{{enrollment.user | getDP}}">
+            <img style="width: 50%;" class="img" ng-src="{{enrollment.user | getDp}}">
           </div>
           <div class="row {{$index | rainbow}}" style="background:white;height:40px; margin-bottom:10px;">
             <span style="color:black;font-size:12px;color:white; top:-25px;position:relative;">{{enrollment.user | getName}}</span>
@@ -89,9 +89,9 @@
 
     <br><br>
 
-    <div class="row" >
+    <div class="row">
       <div class="col-md-9">
-        <user-field url="/api/HR/userSearch/" user="enrollmentForm.user" label = "Add student" ></user-field>
+        <user-field url="/api/HR/userSearch/" user="enrollmentForm.user" label="Add student"></user-field>
       </div>
       <div class="col-md-3" style="padding-top:25px;">
         <button type="button" class="btn btn-primary" ng-click="addEnrollment()">
@@ -101,8 +101,25 @@
 
     </div>
 
+    <div class="row">
+      <div class="container-fluid">
+        <h4 class="text-muted">Added Books</h4>
+        <hr>
+        <div class="col-md-3" style="padding-bottom:10px;">
+          <button type="button" class="btn btn-primary" ng-click="addBook()">
+            Add Book <i class="fa fa-plus fa-fw"></i>
+          </button>
+        </div>
+        <div class="col-md-3 card" ng-repeat="b in bdata" style="width:100%;margin-bottom:10px;padding:5px;">
+          {{b.book.title}}
+        </div>
+      </div>
+
+
+    </div>
+
   </div>
-  <div class="col-md-9">
+  <div class="col-md-9"style="padding:0px;">
 
     <tabs-Strip tabs="tabs" active="activeTab"></tabs-Strip>
 
@@ -125,42 +142,125 @@
         </div>
       </div>
     </div>
+
     <hr>
     <div class="row">
       <div class="container-fluid" ng-if="activeTab == 3">
-        <center><button type="button" class="btn btn-primary btn-md" ng-click="open()">ADD <i class="fa fa-plus"></i></button></center>
+        <center><button type="button" class="btn btn-primary btn-md" ng-click="homework()">ADD <i class="fa fa-plus"></i></button></center>
       </div>
-      <div class="container-fluid">
-        <div class="row" style="padding:20px;" ng-repeat="sm in course.studyMaterials">
-          <div class="card" style="padding:10px;">
-            <div class="row" ng-if="sm.typ == 'file'">
-              <div class="col-md-10">
-                <i class="fa fa-file-o fa-3x"></i> <a href="{{sm.attachment}}" target="_blank">{{sm.attachment.split('/')[sm.attachment.split('/').length -1]}}</a>
-              </div>
-              <div class="col-md-2">
-                <span class="text-muted">{{sm.created | timeAgo}}</span>
-              </div>
-            </div>
-            <div class="row" ng-if="sm.typ == 'video'">
-              <div class="col-md-10">
+    </div>
 
-                <video width="400" controls>
-                  <source ng-src="{{sm.attachment}}" type="video/mp4">
-                  Your browser does not support HTML5 video.
-                </video>
-              </div>
-              <div class="col-md-2">
-                <span class="text-muted">{{sm.created | timeAgo}}</span>
-              </div>
-            </div>
+    <div class="row">
+      <div class="container-fluid" ng-if="activeTab == 4">
+        <center><button type="button" class="btn btn-primary btn-md" ng-click="announce()">Make Announcement</button></center>
+      </div>
+    </div>
 
+    <div class="row">
+      <div class="container-fluid" ng-if="activeTab == 5">
+        <center><button type="button" class="btn btn-primary btn-md" ng-click="addNotes()">Add Notes <i class="fa fa-plus"></i></button></center>
+      </div>
+    </div>
+    <div class="container-fluid">
+      <div class="col-md-3" ng-repeat="h in homwrkData" style="margin-bottom:10px;">
+        <div class="container-fluid card" style="padding-left:0px;padding-right:0px">
+          <div class="col-md-5">
+            <h5> <span> <strong>Paper :</strong> </span> </h5>
+          </div>
+          <div class="col-md-7">
+            <h5>{{h.paper.name}}</h5>
+          </div>
+          <div class="col-md-5">
+            <h5> <span> <strong>Comment :</strong> </span> </h5>
+          </div>
+          <div class="col-md-7">
+            <h5>{{h.comment}}</h5>
+          </div>
+          <div class="text-right"style="padding-right:10px;">
+            <a href="{{h.pdf}}"><i class="fa fa-file fa-fw" aria-hidden="true"></i> View file</a>
+          </div>
+
+        </div>
+      </div>
+    </div>
+    <div class="container-fluid" style="padding-top:15px;">
+      <div class="col-md-3" ng-repeat="n in noteData" style="margin-bottom:10px;">
+        <div class="container-fluid card">
+          <div ng-click="noteInfo($index)">
+            <h3>{{n.title}}</h3>
+            <hr>
+            <div class="container-fluid" style="overflow:hidden;height:158px;">
+              <p>{{n.description}}</p>
+            </div>
+          </div>
+          <div class="">
+            <a href="">
+              <h5>{{n.urlSuffix}}</h5>
+            </a>
+            <i class="fa fa-plus-square pull-right" ng-click="noteSection($index)" aria-hidden="true" style="cursor:pointer;"></i>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="container-fluid"style="padding-left:10px;padding-right:10px;">
+      <div class="col-md-3" ng-repeat="a in announcements" style="margin-bottom:10px;">
+        <div class="container-fluid card" style="min-height:180px;padding-top:8px;">
+          <div class="text-center">
+            <span style="text-transform: uppercase;color:#1d5fcf"> <strong>{{a.typ}}</strong> </span>
+          </div>
+          <hr>
+          <div>
+            <span><strong>Announcer : </strong> </span> <span> {{a.announcer | getName}}</span>
+          </div>
+          <div>
+            <span><strong>Notification Type : </strong> </span> <span style="text-transform: capitalize;"> {{a.notification}}</span>
+          </div>
+          <div ng-if="a.typ != 'general'">
+            <span><strong>Date : </strong> </span> <span> {{a.date | date}}</span> &nbsp;| &nbsp;
+            <span><strong>Time : </strong> </span> <span> {{a.time | date : "h.mm a"}}</span>
+          </div>
+          <div ng-if="a.venue!= null">
+            <span><strong>Venue : </strong> </span> <span style="text-transform: capitalize;"> {{a.venue}}</span>
+          </div>
+          <div ng-if="a.paper!= null">
+            <span><strong>Paper : </strong> </span> <span> {{a.paper.name}}</span>
+          </div>
+          <div ng-if="a.meetingId!= null">
+            <span><strong>Meeting ID : </strong> </span> <span> {{a.meetingId}}</span>
           </div>
         </div>
       </div>
     </div>
 
+    <div class="container-fluid">
+      <div class="row" style="padding:20px;" ng-repeat="sm in course.studyMaterials">
+        <div class="card" style="padding:10px;">
+          <div class="row" ng-if="sm.typ == 'file'">
+            <div class="col-md-10">
+              <i class="fa fa-file-o fa-3x"></i> <a href="{{sm.attachment}}" target="_blank">{{sm.attachment.split('/')[sm.attachment.split('/').length -1]}}</a>
+            </div>
+            <div class="col-md-2">
+              <span class="text-muted">{{sm.created | timeAgo}}</span>
+            </div>
+          </div>
+          <div class="row" ng-if="sm.typ == 'video'">
+            <div class="col-md-10">
+
+              <video width="400" controls>
+                <source ng-src="{{sm.attachment}}" type="video/mp4">
+                Your browser does not support HTML5 video.
+              </video>
+            </div>
+            <div class="col-md-2">
+              <span class="text-muted">{{sm.created | timeAgo}}</span>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
 
   </div>
-
-
 </div>

@@ -10,7 +10,7 @@ from rest_framework import viewsets , permissions , serializers
 from rest_framework.exceptions import *
 from url_filter.integrations.drf import DjangoFilterBackend
 from API.permissions import *
-from django.db.models import Q
+from django.db.models import Q, F
 from django.http import HttpResponse
 from allauth.account.adapter import DefaultAccountAdapter
 from rest_framework.views import APIView
@@ -130,6 +130,8 @@ class PaperViewSet(viewsets.ModelViewSet):
     permission_classes = (permissions.IsAuthenticated, isAdmin, )
     serializer_class = PaperSerializer
     queryset = Paper.objects.all()
+    filter_backends = [DjangoFilterBackend]
+    filter_fields = ['name']
 
 class AnswerViewSet(viewsets.ModelViewSet):
     permission_classes = (permissions.IsAuthenticated, isAdmin, )
@@ -179,3 +181,200 @@ class FeedbackViewSet(viewsets.ModelViewSet):
     permission_classes = (permissions.IsAuthenticated, isAdmin, )
     serializer_class = FeedbackSerializer
     queryset = Feedback.objects.all()
+
+from django.core.files import File
+from django.core.files.temp import NamedTemporaryFile
+import urllib2
+
+class QuestionsAutoCreate(APIView):
+    permission_classes = (permissions.AllowAny, )
+    renderer_classes = (JSONRenderer,)
+    def get(self , request , format = None):
+        print 'auto createeeeeeeeeeeee'
+        baseDir = globalSettings.BASE_DIR
+        subjectData = []
+        topicData = []
+        bookData = []
+        sectionData = []
+        questionsData = []
+        with open(str(baseDir)+'/subject.json') as f:
+            subjectData = json.load(f)
+        with open(str(baseDir)+'/topic.json') as f:
+            topicData = json.load(f)
+        with open(str(baseDir)+'/book.json') as f:
+            bookData = json.load(f)
+        with open(str(baseDir)+'/section.json') as f:
+            sectionData = json.load(f)
+        with open(str(baseDir)+'/24tutors_questions.json') as f:
+            questionsData = json.load(f)
+
+        # deleting previous oneeee
+
+        Subject.objects.all().delete()
+        Topic.objects.all().delete()
+        Book.objects.all().delete()
+        Section.objects.all().delete()
+        QPart.objects.all().delete()
+        Question.objects.all().delete()
+
+        subCreateData = []
+        for i in subjectData:
+            if i['dp']:
+                subObj = Subject.objects.create(pk=i['pk'],title=i['title'],description=i['description'],level=i['level'])
+                try:
+                    file_name = i['dp'].split('/')[-1].split('_')[-1]
+                    img_temp = NamedTemporaryFile(delete=True)
+                    img_temp.write(urllib2.urlopen(i['dp']).read())
+                    img_temp.flush()
+                    subObj.dp.save(file_name, File(img_temp))
+                except:
+                    pass
+            else:
+                subCreateData.append(Subject(pk=i['pk'],title=i['title'],description=i['description'],level=i['level']))
+        Subject.objects.bulk_create(subCreateData)
+
+        topicCreateData = []
+        for i in topicData:
+            if i['subject']:
+                sub = Subject.objects.get(pk=i['subject']['pk'])
+                topicCreateData.append(Topic(pk=i['pk'],title=i['title'],description=i['description'],subject=sub))
+        Topic.objects.bulk_create(topicCreateData)
+
+        bookCreateData = []
+        for i in bookData:
+            if i['subject']:
+                sub = Subject.objects.get(pk=i['subject']['pk'])
+                if i['dp']:
+                    bookObj = Book.objects.create(pk=i['pk'],title=i['title'],description=i['description'],subject=sub,author=i['author'],ISSN=i['ISSN'],volume=i['volume'],version=i['version'],license=i['license'])
+                    try:
+                        file_name = i['dp'].split('/')[-1].split('_')[-1]
+                        img_temp = NamedTemporaryFile(delete=True)
+                        img_temp.write(urllib2.urlopen(i['dp']).read())
+                        img_temp.flush()
+                        bookObj.dp.save(file_name, File(img_temp))
+                    except:
+                        pass
+                else:
+                    bookCreateData.append(Book(pk=i['pk'],title=i['title'],description=i['description'],subject=sub,author=i['author'],ISSN=i['ISSN'],volume=i['volume'],version=i['version'],license=i['license']))
+
+        Book.objects.bulk_create(bookCreateData)
+
+        sectionCreateData = []
+        for i in sectionData:
+            if i['book']:
+                bk = Book.objects.get(pk=i['book'])
+                sectionCreateData.append(Section(pk=i['pk'],title=i['title'],shortUrl=i['shortUrl'],book=bk,sequence=i['sequence']))
+        Section.objects.bulk_create(sectionCreateData)
+
+        for i in questionsData:
+            if i['user']:
+                usr = User.objects.get(pk=i['user'])
+                topic = None
+                bookSection = None
+                if i['topic']:
+                    topic = Topic.objects.get(pk=i['topic']['pk'])
+                if i['bookSection']:
+                    bookSection = Section.objects.get(pk=i['bookSection']['pk'])
+                quesObj = Question.objects.create(pk=i['pk'],ques=i['ques'],status=i['status'],archived=i['archived'],level=i['level'],marks=i['marks'],qtype=i['qtype'],codeLang=i['codeLang'],typ=i['typ'],solutionVideoLink=i['solutionVideoLink'],objectiveAnswer=i['objectiveAnswer'],user=usr,topic=topic,bookSection=bookSection)
+
+                try:
+                    if i['solutionVideo']:
+                        file_name = i['solutionVideo'].split('/')[-1].split('_')[-1]
+                        img_temp = NamedTemporaryFile(delete=True)
+                        img_temp.write(urllib2.urlopen(i['solutionVideo']).read())
+                        img_temp.flush()
+                        quesObj.solutionVideo.save(file_name, File(img_temp))
+                except:
+                    pass
+
+                for j in i['quesParts']:
+                    qpObj , created = QPart.objects.get_or_create(pk=j['pk'],mode=j['mode'],txt=j['txt'])
+                    try:
+                        if created and j['image']:
+                            file_name = j['image'].split('/')[-1].split('_')[-1]
+                            img_temp = NamedTemporaryFile(delete=True)
+                            img_temp.write(urllib2.urlopen(j['image']).read())
+                            img_temp.flush()
+                            qpObj.image.save(file_name, File(img_temp))
+                    except:
+                        pass
+                    quesObj.quesParts.add(qpObj)
+
+                for j in i['optionsParts']:
+                    qpObj , created = QPart.objects.get_or_create(pk=j['pk'],mode=j['mode'],txt=j['txt'])
+                    try:
+                        if created and j['image']:
+                            file_name = j['image'].split('/')[-1].split('_')[-1]
+                            img_temp = NamedTemporaryFile(delete=True)
+                            img_temp.write(urllib2.urlopen(j['image']).read())
+                            img_temp.flush()
+                            qpObj.image.save(file_name, File(img_temp))
+                    except:
+                        pass
+                    quesObj.optionsParts.add(qpObj)
+
+                for j in i['solutionParts']:
+                    qpObj , created = QPart.objects.get_or_create(pk=j['pk'],mode=j['mode'],txt=j['txt'])
+                    try:
+                        if created and j['image']:
+                            file_name = j['image'].split('/')[-1].split('_')[-1]
+                            img_temp = NamedTemporaryFile(delete=True)
+                            img_temp.write(urllib2.urlopen(j['image']).read())
+                            img_temp.flush()
+                            qpObj.image.save(file_name, File(img_temp))
+                    except:
+                        pass
+                    quesObj.solutionParts.add(qpObj)
+                print 'quess createddddddddddd',i['pk']
+
+        # print questionsData
+        return Response([] , status = status.HTTP_200_OK)
+
+
+class GetLevelsAndBooks(APIView):
+    permission_classes = (permissions.AllowAny, )
+    renderer_classes = (JSONRenderer,)
+    def get(self , request , format = None):
+        print 'hereeeeeeee'
+        LevelsAndBooks = []
+        allLevels =  list(Subject.objects.filter().values_list('level',flat = True).distinct())
+        for i in allLevels:
+            book = list(Book.objects.filter(subject__level = i).values('title',subjectName = F('subject__title')))
+            # print book,'bookbookbookbook'
+            toAppend = {'level': i, 'book': book}
+            LevelsAndBooks.append(toAppend)
+            print toAppend
+        return Response({'LevelsAndBooks':LevelsAndBooks} , status = status.HTTP_200_OK)
+
+
+class BookCourseMapViewSet(viewsets.ModelViewSet):
+    permission_classes = (permissions.IsAuthenticated, isAdmin, )
+    serializer_class = BookCourseMapSerializer
+    queryset = BookCourseMap.objects.all()
+    filter_backends = [DjangoFilterBackend]
+    filter_fields = ['course']
+
+class NoteViewSet(viewsets.ModelViewSet):
+    permission_classes = (permissions.IsAuthenticated, isAdmin, )
+    serializer_class = NoteSerializer
+    queryset = Note.objects.all()
+
+
+class NotesSectionViewSet(viewsets.ModelViewSet):
+    permission_classes = (permissions.IsAuthenticated, isAdmin, )
+    serializer_class = NotesSectionSerializer
+    queryset = NotesSection.objects.all()
+    filter_backends = [DjangoFilterBackend]
+    filter_fields = ['note']
+
+class AnnouncementViewSet(viewsets.ModelViewSet):
+    permission_classes = (permissions.IsAuthenticated, isAdmin, )
+    serializer_class = AnnouncementSerializer
+    queryset = Announcement.objects.all()
+
+class HomeworkViewSet(viewsets.ModelViewSet):
+    permission_classes = (permissions.IsAuthenticated, isAdmin, )
+    serializer_class = HomeworkSerializer
+    queryset = Homework.objects.all()
+    filter_backends = [DjangoFilterBackend]
+    filter_fields = ['course']

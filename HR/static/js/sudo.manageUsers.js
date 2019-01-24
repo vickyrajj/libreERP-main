@@ -1,5 +1,5 @@
 
-app.controller('admin.manageUsers.mailAccount' , function($scope , $http){
+app.controller('home.manageUsers.mailAccount' , function($scope , $http){
   $scope.generateMailPasskey = function() {
     console.log($scope);
     console.log($scope.data);
@@ -70,7 +70,7 @@ app.controller('sudo.manageUsers.editPayroll' , function($scope , $http,Flash){
 });
 
 
-app.controller('admin.manageUsers' , function($scope , $http , $aside , $state , Flash , $users , $filter){
+app.controller('home.manageUsers' , function($scope , $http , $aside , $state , Flash , $users , $filter){
 
   var views = [{name : 'table' , icon : 'fa-bars' , template : '/static/ngTemplates/genericTable/tableDefault.html'},
       {name : 'thumbnail' , icon : 'fa-th-large' , template : '/static/ngTemplates/empSearch/tableThumbnail.html'},

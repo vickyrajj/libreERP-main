@@ -15,11 +15,72 @@ from django.db.models import Q
 from allauth.account.adapter import DefaultAccountAdapter
 from rest_framework.views import APIView
 from rest_framework.renderers import JSONRenderer
-from gitweb.views import generateGitoliteConf
 import requests
 import libreERP.Checksum as Checksum
 from django.views.decorators.csrf import csrf_exempt
+from django.utils import translation
 import urllib
+from LMS.models import *
+
+
+def renderedStatic(request , filename):
+    print 'filename', filename
+    if request.COOKIES.get('lang') == None:
+        language = translation.get_language_from_request(request)
+    else:
+        language = request.COOKIES.get('lang')
+
+    translation.activate(language )
+    request.LANGUAGE_CODE = translation.get_language()
+
+    return render(request , filename , {"lang" : request.LANGUAGE_CODE})
+
+
+def dynamicTemplates(request , filename):
+    print 'filename', filename
+    try:
+        blogobj = blogPost.objects.get(shortUrl=filename)
+
+        if blogobj.contentType == 'book':
+            book = Book.objects.get(pk=blogobj.header)
+            print book.title,'gggggggggggggggggggggggggggg'
+            sectionobj = Section.objects.filter(book = book.pk)
+            return render(request, 'tutorsBook.html', {"home": False, "tagsCSV" :  blogobj.tagsCSV.split(','), 'book' : book ,'sectionobj':sectionobj,'blogobj' : blogobj, "brandLogo" : globalSettings.BRAND_LOGO , "brandLogoInverted": globalSettings.BRAND_LOGO_INVERT})
+    except:
+        sectionobj = Section.objects.get(shortUrl=filename)
+        blogobj = blogPost.objects.get(header=sectionobj.book.pk)
+        print 'boookkkkkk',sectionobj.book
+        sec = sectionobj.book.sections.order_by('sequence')
+        prev = False
+        nxt = False
+        prevobj={}
+        nxtvobj={}
+        for a,i in enumerate(sec):
+            print i.shortUrl , a
+            if i.pk == sectionobj.pk:
+                if len(sec) > 1:
+                    if a == 0:
+                        nxt = True
+                        nxtvobj = sec[1]
+                        print 'nxt',nxtvobj.shortUrl
+                    elif a == len(sec)-1:
+                        prev = True
+                        prevobj = sec[a-1]
+                        print 'prev',prevobj.shortUrl
+                    else:
+                        prev = True
+                        nxt = True
+                        prevobj = sec[a-1]
+                        nxtvobj = sec[a+1]
+        return render(request, 'tutorsSectionDetails.html', { "sections" : sec , "home": False, "tagsCSV" :  blogobj.tagsCSV.split(','),'sectionobj':sectionobj, 'book' : sectionobj.book ,'blogobj' : blogobj, "brandLogo" : globalSettings.BRAND_LOGO , "brandLogoInverted": globalSettings.BRAND_LOGO_INVERT,'questions':sectionobj.questions.all(),'bot':{'prev':prev,'nxt':nxt,'prevobj':prevobj,'nxtvobj':nxtvobj}})
+
+    # return render(request , filename , {"lang" : request.LANGUAGE_CODE})
+
+
+def courses(request):
+    print 'yyoyoyooyyyyyyyoooooooooooooooooooo'
+    return render(request, 'courses.html', {})
+
 
 
 class MakePaytmPayment(APIView):
@@ -224,34 +285,34 @@ class serviceViewSet(viewsets.ModelViewSet):
         u = self.request.user
         return service.objects.all()
 
-class registerDeviceApi(APIView):
-    renderer_classes = (JSONRenderer,)
-    permission_classes = (permissions.AllowAny ,)
-    def post(self , request , format = None):
-        if 'username' in request.data and 'password' in request.data and 'sshKey' in request.data:
-            sshKey = request.data['sshKey']
-            deviceName =sshKey.split()[2]
-            mode = request.data['mode']
-            print sshKey
-            user = authenticate(username =  request.data['username'] , password = request.data['password'])
-            if user is not None:
-                if user.is_active:
-                    d , n = device.objects.get_or_create(name = deviceName , sshKey = sshKey)
-                    gp , n = profile.objects.get_or_create(user = user)
-                    if mode == 'logout':
-                        print "deleted"
-                        gp.devices.remove(d)
-                        d.delete()
-                        generateGitoliteConf()
-                        return Response(status=status.HTTP_200_OK)
-                    gp.devices.add(d)
-                    gp.save()
-                    generateGitoliteConf()
-            else:
-                raise NotAuthenticated(detail=None)
-            return Response(status=status.HTTP_200_OK)
-        else:
-            raise ValidationError(detail={'PARAMS' : 'No data provided'} )
+# class registerDeviceApi(APIView):
+#     renderer_classes = (JSONRenderer,)
+#     permission_classes = (permissions.AllowAny ,)
+#     def post(self , request , format = None):
+#         if 'username' in request.data and 'password' in request.data and 'sshKey' in request.data:
+#             sshKey = request.data['sshKey']
+#             deviceName =sshKey.split()[2]
+#             mode = request.data['mode']
+#             print sshKey
+#             user = authenticate(username =  request.data['username'] , password = request.data['password'])
+#             if user is not None:
+#                 if user.is_active:
+#                     d , n = device.objects.get_or_create(name = deviceName , sshKey = sshKey)
+#                     gp , n = profile.objects.get_or_create(user = user)
+#                     if mode == 'logout':
+#                         print "deleted"
+#                         gp.devices.remove(d)
+#                         d.delete()
+#                         generateGitoliteConf()
+#                         return Response(status=status.HTTP_200_OK)
+#                     gp.devices.add(d)
+#                     gp.save()
+#                     generateGitoliteConf()
+#             else:
+#                 raise NotAuthenticated(detail=None)
+#             return Response(status=status.HTTP_200_OK)
+#         else:
+#             raise ValidationError(detail={'PARAMS' : 'No data provided'} )
 
 class deviceViewSet(viewsets.ModelViewSet):
     permission_classes = (permissions.IsAuthenticated,)

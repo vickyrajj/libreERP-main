@@ -64,7 +64,6 @@ def getOGImageAttachment(instance , filename ):
     return 'blogs/%s_%s' % (str(time()).replace('.', '_'), filename)
 
 
-from clientRelationships.models import Contact
 class calendar(models.Model):
     TYPE_CHOICE = (
         ('Meeting' , 'Meeting'),
@@ -108,7 +107,6 @@ class calendar(models.Model):
     attachment = models.FileField(upload_to = getCalendarAttachment , null = True)
     myNotes = models.CharField(max_length = 100 , blank = True)
     followers = models.ManyToManyField(User , related_name = 'calendarItemsFollowing' , blank = True)
-    clients = models.ManyToManyField(Contact , related_name='calendarEntries', blank = True)
     data = models.CharField(max_length = 200 , null = True)
 
 class blogCategory(models.Model):

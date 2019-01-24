@@ -31,6 +31,8 @@ def index(request):
     return render(request, 'index.html', {"home": True , "brandLogo" : globalSettings.BRAND_LOGO , "brandLogoInverted": globalSettings.BRAND_LOGO_INVERT})
 
 
+
+
 def blogDetails(request, blogname):
     print '*****************',blogname
     try:

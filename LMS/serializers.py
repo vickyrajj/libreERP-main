@@ -4,6 +4,7 @@ from rest_framework import serializers
 from rest_framework.exceptions import *
 from .models import *
 import random, string
+from HR.serializers import userSearchSerializer
 
 # class TopicLiteSerializer(serializers.ModelSerializer):
 #     class Meta:
@@ -155,7 +156,7 @@ class PaperSerializer(serializers.ModelSerializer):
     questions = PaperQuesSerializer(many = True , read_only = True)
     class Meta:
         model = Paper
-        fields = ('pk' , 'created' , 'updated', 'questions', 'active' , 'user')
+        fields = ('pk' , 'created' , 'updated', 'questions', 'active' , 'user','name')
         read_only_fields = ('user', 'questions')
     def create(self , validated_data):
         p=Paper(user=self.context['request'].user)
@@ -222,6 +223,8 @@ class EnrollmentSerializer(serializers.ModelSerializer):
 class CourseSerializer(serializers.ModelSerializer):
     enrollments = EnrollmentSerializer(many = True , read_only = True)
     studyMaterials = StudyMaterialSerializer(many = True , read_only = True)
+    instructor = userSearchSerializer(many = False , read_only = True)
+    topic = TopicSerializer(many = False , read_only = True)
     class Meta:
         model = Course
         fields = ('pk' , 'created' , 'updated', 'topic', 'enrollmentStatus', 'instructor' , 'TAs' , 'user' , 'description' , 'title' , 'enrollments' , 'studyMaterials')
@@ -229,11 +232,30 @@ class CourseSerializer(serializers.ModelSerializer):
     def create(self , validated_data):
         c = Course(**validated_data)
         c.user = self.context['request'].user
-        c.save()
-
+        topic = Topic.objects.get(pk = self.context['request'].data['topic'])
+        c.topic = topic
         for u in self.context['request'].data['TAs']:
             c.TAs.add(User.objects.get(pk = u))
+        c.save()
         return c
+    def update(self , instance , validated_data):
+        for key in ['enrollmentStatus', 'description' , 'title' , 'enrollments' , 'studyMaterials','user']:
+            try:
+                setattr(instance , key , validated_data[key])
+            except:
+                pass
+        if 'topic' in self.context['request'].data:
+            instance.topic = Topic.objects.get(pk =self.context['request'].data['topic'])
+
+        if 'instructor' in self.context['request'].data:
+            instance.instructor = User.objects.get(pk =self.context['request'].data['instructor'])
+
+        for u in self.context['request'].data['TAs'].split(','):
+            instance.TAs.add(User.objects.get(pk = u))
+
+        instance.save()
+        return instance
+
 
 
 class FeedbackSerializer(serializers.ModelSerializer):
@@ -272,3 +294,67 @@ class ChannelSerializer(serializers.ModelSerializer):
         c.user = self.context['request'].user
         c.save()
         return c
+
+
+class BookCourseMapSerializer(serializers.ModelSerializer):
+    book = BookLiteSerializer(many = False , read_only = True)
+    class Meta:
+        model = BookCourseMap
+        fields = ('pk' , 'book' , 'course', 'referenceBook' )
+    def create(self , validated_data):
+        print '@@@@@@@@@@@@@@'
+        b = BookCourseMap(**validated_data)
+        book = Book.objects.get(pk = self.context['request'].data['book'])
+        b.book = book
+        b.save()
+        return b
+
+
+class NoteSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Note
+        fields = ('pk' , 'title' , 'description', 'urlSuffix', 'image' )
+
+class NoteLiteSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Note
+        fields = ('pk' , 'title')
+
+class NotesSectionSerializer(serializers.ModelSerializer):
+    note = NoteLiteSerializer(many = False , read_only = True)
+    class Meta:
+        model = NotesSection
+        fields = ('pk' , 'note' , 'txt', 'image', 'mode' )
+    def create(self , validated_data):
+        n = NotesSection(**validated_data)
+        note = Note.objects.get(pk = self.context['request'].data['note'])
+        n.note = note
+        n.save()
+        return n
+
+class AnnouncementSerializer(serializers.ModelSerializer):
+    paper = PaperSerializer(many = False , read_only = True)
+    # announcer = userSearchSerializer(many = False , read_only = True)
+    class Meta:
+        model = Announcement
+        fields = ('pk' , 'created' , 'announcer', 'notified', 'notification', 'typ',  'paperDueDate', 'time', 'venue', 'txt' ,'meetingId','paper','date')
+    def create(self , validated_data):
+        p = Announcement(**validated_data)
+        if 'paper' in  self.context['request'].data:
+            paper = Paper.objects.get(pk = self.context['request'].data['paper'])
+            p.paper = paper
+        p.save()
+        return p
+
+class HomeworkSerializer(serializers.ModelSerializer):
+    paper = PaperSerializer(many = False , read_only = True)
+    class Meta:
+        model = Homework
+        fields = ('pk' , 'created' , 'course', 'paper', 'pdf', 'comment')
+    def create(self , validated_data):
+        p = Homework(**validated_data)
+        if 'paper' in  self.context['request'].data:
+            paper = Paper.objects.get(pk = self.context['request'].data['paper'])
+            p.paper = paper
+        p.save()
+        return p

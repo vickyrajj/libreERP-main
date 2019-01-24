@@ -30,6 +30,16 @@ def getChannelDPPath(instance , filename ):
 def getSolutionVideoPath(instance , filename):
     return 'lms/solution/%s_%s' % (str(time()).replace('.', '_'), filename)
 
+def getNoteImagePath(instance , filename ):
+    return 'lms/noteImage/%s_%s' % (str(time()).replace('.', '_'), filename)
+
+def getNoteSectionPath(instance , filename ):
+    return 'lms/noteSection/%s_%s' % (str(time()).replace('.', '_'), filename)
+
+
+def getHomeworkPath(instance , filename ):
+    return 'lms/homework/%s_%s' % (str(time()).replace('.', '_'), filename)
+
 
 
 
@@ -160,6 +170,7 @@ class Paper(models.Model):
     questions = models.ManyToManyField(PaperQues , blank = True)
     active = models.BooleanField(default = False)
     user = models.ForeignKey(User , null = False , related_name='papersAuthored')
+    name = models.CharField(null = True , max_length = 100)
 
 CORRECTION_CHOICES = (
     ('yes' , 'yes'),
@@ -271,6 +282,7 @@ class Video(models.Model):
     attachment = models.FileField(upload_to = getVideoPath , null = True)
     thumbnail = models.ImageField(upload_to = getVideoThumbnailPath , null = True)
     channel = models.ForeignKey(Channel , null = True , related_name ="videos")
+    course = models.ForeignKey(Course , related_name = 'videos' , null = True)
 
 
 class Feedback(models.Model):
@@ -284,3 +296,57 @@ class Feedback(models.Model):
 
     class Meta:
         unique_together = ('user', 'video', 'typ')
+
+
+class BookCourseMap(models.Model):
+    book = models.ForeignKey(Book , null = True , related_name="book")
+    course = models.ForeignKey(Course , null = True , related_name="course")
+    referenceBook = models.BooleanField(default = False)
+    class Meta:
+        unique_together = ('book','course')
+
+class Note(models.Model):
+    title =  models.CharField(max_length = 100 , null = True)
+    description = models.TextField( null = False)
+    urlSuffix = models.CharField(max_length = 100 , null = True)
+    image =  models.FileField(upload_to = getNoteImagePath , null = True)
+
+class NotesSection(models.Model):
+    note = models.ForeignKey(Note , null = True , related_name="note")
+    txt = models.TextField( null = True)
+    image = models.FileField(upload_to = getNoteSectionPath , null = True)
+    mode = models.CharField(choices = PART_TYPE_CHOICES , default = 'text' , null = False, max_length = 10)
+
+NOTIFICATION_TYPE = (
+    ('sms' , 'sms'),
+    ('email' , 'email'),
+    ('sms&email' , 'sms&email'),
+)
+ANNOUNCEMENT_TYP_CHOICES = (
+    ('general','general'),
+    ('quiz','quiz'),
+    ('onlineclass','onlineclasss'),
+    ('class','class'),
+    ('offlinequiz','offlinequiz')
+)
+
+class Announcement(models.Model):
+    created = models.DateTimeField(auto_now_add = True)
+    announcer = models.ForeignKey(User ,null = False , related_name ="announcements")
+    notified = models.BooleanField(default = False)
+    notification =  models.CharField(choices = NOTIFICATION_TYPE , max_length = 10 , null = True)
+    typ = models.CharField(choices = ANNOUNCEMENT_TYP_CHOICES , max_length = 10 , null = True)
+    paper = models.ForeignKey(Paper , null = True , related_name="paper")
+    paperDueDate =  models.DateField(auto_now = False,null = True)
+    time = models.DateTimeField(auto_now = False,null = True)
+    venue =  models.CharField(max_length = 100 , null = True)
+    txt =  models.TextField(null = True)
+    meetingId = models.CharField(max_length = 100 , null = True)
+    date = models.DateTimeField(auto_now = False,null= True)
+
+class Homework(models.Model):
+    created = models.DateTimeField(auto_now_add = True)
+    course = models.ForeignKey(Course , null = True , related_name="homeworkCourse")
+    paper = models.ForeignKey(Paper , null = True , related_name="homeworkPaper")
+    pdf = models.FileField(upload_to = getHomeworkPath , null = True)
+    comment = models.TextField(null = True)

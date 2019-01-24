@@ -1,4 +1,3 @@
-{% extends "base.html" %} {% load staticfiles %} {% block specific_head %}
 <title>Online tutoring jobs, Earn upto 50 thousands per month</title>
 
 <meta name="description" content="India's only 24x7 student helpline. Connect with the best tutors from IITs and NITs provide teaching for CBSE & ICSE, Maths & Science and competitive exams like  JEE Mains, JEE Advanced, IIT Foundation, Olympiads, NTSE, PSA"/>
@@ -24,19 +23,8 @@
 
 <meta property="article:author" content="24Tutors.com" />
 <link rel="icon" href="/static/images/tutor.ico" type="image/gif" sizes="16x16">
-{% endblock %} {% block specific_css %}
-<link href="{% static 'css/agency.css' %}" rel="stylesheet">
-<link rel="stylesheet" href="{% static 'css/animate.css' %}" charset="utf-8"> {% endblock %} {% block header %}
-
-{% include "header.html" %}
-
-{% endblock %}
-<!-- Header -->
-{% block content %}
-<div ng-app="app" ng-controller="main">
-  <!-- Services Section -->
   <div class="body" >
-    <div class="container" style="padding-left:0px;padding-right:0px;box-shadow: 0px 30px 50px 12px #d0d5dd;" >
+    <div class="container" style="padding-left:0px;padding-right:0px;" >
       <section id="careerservice">
         <div class="container-fluid" style="padding:0px;">
           <div class="career-media">
@@ -100,27 +88,6 @@
           </div>
         </div>
       </section>
-
-      {% endblock %} {% block footer %}
-      {% include "footer.html" %}
-
-
     </div>
   </div>
 </div>
-
-
-
-
-{% endblock %} {% block specific_js %}
-<script src="{% static 'js/jquery.easing.min.js' %}"></script>
-<script src="{% static 'js/classie.js' %}"></script>
-<!-- <script src="{% static 'js/cbpAnimatedHeader.js' %}"></script> -->
-
-<script src="{% static 'js/agency.js' %}"></script>
-<script src="{% static 'js/angular.min.js' %}"></script>
-<script src="{% static 'js/angular-ui-router.min.js' %}"></script>
-<script src="{% static 'js/angular-sanitize.min.js' %}"></script>
-<script src="{% static 'js/app.homepage.js' %}"></script>
-
-{% endblock %}

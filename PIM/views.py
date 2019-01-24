@@ -48,11 +48,6 @@ class calendarViewSet(viewsets.ModelViewSet):
         toReturn = qs1 | qs2
         toReturn = toReturn.distinct()
 
-        if 'clients__in' in self.request.GET:
-            clients = json.loads(self.request.GET['clients__in'])
-            # print type(clients) , type(clients[0])
-            toReturn = toReturn.filter(clients__in = clients)
-
         return toReturn
 
 class notificationViewSet(viewsets.ModelViewSet):

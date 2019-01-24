@@ -25,20 +25,21 @@
 <meta property="article:author" content="24Tutors.com" />
 <link rel="icon" href="/static/images/tutor.ico" type="image/gif" sizes="16x16">
 {% endblock %} {% block specific_css %}
+<link href="{% static 'css/homepage.css' %}" rel="stylesheet">
 <link href="{% static 'css/agency.css' %}" rel="stylesheet">
+<link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}" charset="utf-8">
+<link rel="stylesheet" href="{% static 'css/font-awesome.min.css' %}" charset="utf-8">
 <link rel="stylesheet" href="{% static 'css/animate.css' %}" charset="utf-8"> {% endblock %} {% block header %}
 
-{% include "header.html" %}
+
 
 {% endblock %}
 {% block content %}
 <div ng-app="app" ng-controller="main">
-  <div class="body">
-    <div class="container" style="padding-left:0px;padding-right:0px;box-shadow: 0px 30px 50px 12px #d0d5dd;">
-      <!-- <section style="background: url('/static/images/login_banner.jpg') no-repeat top center/cover;height:100px;">
-      </section> -->
+  <div class="body"style="padding-top:20px;">
+    <div class="container" style="padding-left:0px;padding-right:0px;">
       <section style="padding: 0px 0;">
-        <div class="container" >
+        <div class="container-fluid">
           <div class="row">
             <div class="col-md-6" style="background:linear-gradient(90deg,rgb(193, 193, 193), rgba(255,0,0,0));height: 700px;padding-top:150px;">
               <div class="row text-center" style="margin-bottom:40px;">
@@ -117,10 +118,8 @@
                   <div class="row">
                     <div class="col-md-12">
                       <div class="col-lg-12 text-center">
-
                         <a title="Google" class="btn btn-xl3" href="{% provider_login_url "google" method="oauth2" %}">
                           <i class="fa fa-google"></i>  Gmail
-
                         </a>
                       </div>
                     </div>
@@ -129,31 +128,22 @@
               </div>
             </div>
           </div>
-
         </div>
-
       </section>
-      <section style="background: url('/static/images/login_banner.jpg') no-repeat top center/cover;max-height:150px;">
-      </section>
-
-      {% endblock %} {% block footer %}
-      {% include "footer.html" %}
-
     </div>
   </div>
 </div>
-
-
-
 {% endblock %} {% block specific_js %}
 <script src="{% static 'js/jquery.easing.min.js' %}"></script>
 <script src="{% static 'js/classie.js' %}"></script>
+<script src="{% static 'js/bootstrap.min.js' %}"></script>
 <!-- <script src="{% static 'js/cbpAnimatedHeader.js' %}"></script> -->
-
-<script src="{% static 'js/agency.js' %}"></script>
+<!-- <script src="{% static 'js/agency.js' %}"></script> -->
 <script src="{% static 'js/angular.min.js' %}"></script>
 <script src="{% static 'js/angular-ui-router.min.js' %}"></script>
 <script src="{% static 'js/angular-sanitize.min.js' %}"></script>
 <script src="{% static 'js/app.homepage.js' %}"></script>
+<script src="{% static 'js/app.homepage.main.js' %}"></script>
+
 
 {% endblock %}
