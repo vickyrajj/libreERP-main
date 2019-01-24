@@ -3409,6 +3409,8 @@ app.controller('controller.ecommerce.checkout', function($scope, $rootScope, $st
   }
 
 
+  $scope.errorInshipping = false
+
 
 
 
@@ -3507,7 +3509,26 @@ app.controller('controller.ecommerce.checkout', function($scope, $rootScope, $st
         return
       }
       $scope.data.stage = 'shippingDetails';
+
     } else if ($scope.data.stage == 'shippingDetails') {
+
+      $scope.errorInshipping = false
+      $scope.openShippingErrorModal = function() {
+        $uibModal.open({
+          templateUrl: '/static/ngTemplates/app.ecommerce.shippingError.html',
+          size: 'md',
+          backdrop: false,
+          controller: 'controller.ecommerce.shippingError.modal',
+        }).result.then(function() {
+
+
+
+        }, function() {
+
+        });
+      }
+
+
       console.log($scope.isStoreGlobal);
       if (!$scope.isStoreGlobal) {
         if ($scope.data.address.street == '' || $scope.data.address.landMark == '') {
@@ -3563,6 +3584,9 @@ app.controller('controller.ecommerce.checkout', function($scope, $rootScope, $st
             console.log(err);
             $scope.shippingCharges = 0
             $scope.errorInshipping = true
+
+            $scope.openShippingErrorModal()
+
             $scope.getShippingCharges = true
           })
         })
@@ -3675,6 +3699,25 @@ app.controller('controller.ecommerce.checkout', function($scope, $rootScope, $st
   })
 
 
+})
+
+
+app.controller('controller.ecommerce.shippingError.modal', function($scope, $rootScope, $state, $http, $timeout, $uibModal, $users, $interval, Flash, $uibModalInstance) {
+  // alert('hey')
+
+  $http.get('/api/ERP/appSettings/?app=25&name__iexact=email').
+  then(function(response) {
+      $scope.supportEmail = response.data[0].value
+  })
+
+  $http.get('/api/ERP/appSettings/?app=25&name__iexact=phone').
+  then(function(response) {
+      $scope.supportPhone = response.data[0].value
+  })
+
+  $scope.clickedOkay = function () {
+      $uibModalInstance.dismiss();
+  }
 })
 
 

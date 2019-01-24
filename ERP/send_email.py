@@ -12,32 +12,28 @@ def send_email(email_body, email_to, email_subject,email_cc,email_bcc, email_typ
     # else:
     #     print 'not list'
     print 'in send email',email_to
-    print email_body
+    # print email_body
     print email_subject,'email_subject'
-    print email_cc ,' email_cc'
-    print email_bcc, 'email_bcc'
     print email_type , 'email_type'
 
     if globalSettings.EMAIL_API:
         sg = sendgrid.SendGridAPIClient(apikey= globalSettings.G_KEY)
-        emailIDs = []
+        print globalSettings.G_KEY,'globalSettings.G_KEY'
+        emailIDsList = []
+        emailIDsListObj = []
         bccIds = []
         ccIds = []
+        # for i in email_to:
+        #     emailIDsList.append(str(i))
+        # for i in globalSettings.G_ADMIN:
+        #     emailIDsList.append(str(i))
+        email_to = list(set(email_to))
         for i in email_to:
-            emailIDs.append({"email":i})
-        for i in globalSettings.G_ADMIN:
-            emailIDs.append({"email":i})
-        # for i in email_bcc:
-        #     bccIds.append({"email":i})
-        # for i in email_cc:
-        #     ccIds.append({"email":i})
-        print emailIDs ,'emailIDs'
-        print bccIds ,'bccIds'
-        print ccIds ,'ccIds'
+            emailIDsListObj.append({"email":i})
         data = {
           "personalizations": [
             {
-              "to": emailIDs,
+              "to": emailIDsListObj,
               "subject": email_subject
             }
           ],
@@ -53,9 +49,10 @@ def send_email(email_body, email_to, email_subject,email_cc,email_bcc, email_typ
           ]
         }
 
-        print data
-
+        # print data
+        print 'beforeeeee'
         response = sg.client.mail.send.post(request_body=data)
+        print response
     else:
         for i in globalSettings.G_ADMIN:
             email_to.append(i)

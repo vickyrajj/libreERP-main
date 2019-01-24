@@ -304,7 +304,7 @@ G_FROM='onlinestore@bniglobalstore.com'
 #onlinestore@bniglobalstore.com
 G_KEY='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'
 #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
-G_ADMIN=["vikas.motla@gmail.com","vikas.m@cioc.in"]
+G_ADMIN=["vikky.motla@gmail.com","vikas.m@cioc.in"]
 
 
 DEFAULT_FROM_EMAIL = 'do_not_reply@24tutors.com'

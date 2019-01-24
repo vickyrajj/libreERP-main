@@ -21,6 +21,7 @@ import sendgrid
 import os
 import unicodedata
 from ERP.models import appSettingsField
+from ERP.send_email import send_email
 
 
 def merge_two_dicts(x, y):
@@ -36,39 +37,80 @@ def sendMail(d):
     }
     email_body = get_template('app.ecommerce.newUserEmail.html').render(ctx)
     email_subject = 'New User'
-    emails=[]
-    if globalSettings.EMAIL_API:
-        sg = sendgrid.SendGridAPIClient(apikey= globalSettings.G_KEY)
-        # sg = sendgrid.SendGridAPIClient(apikey=os.environ.get('SENDGRID_API_KEY'))
-        for i in globalSettings.G_ADMIN:
-            emails.append({"email":i})
-        data = {
-          "personalizations": [
-            {
-              "to": emails,
-              "subject": email_subject
-            }
-          ],
-          "from": {
-            "email": globalSettings.G_FROM,
-            "name":globalSettings.SEO_TITLE
-          },
-          "content": [
-            {
-              "type": "text/html",
-              "value": email_body
-            }
-          ]
-        }
-        response = sg.client.mail.send.post(request_body=data)
-        print(response.body,"bodyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy")
-    else:
-        sentEmail=[]
-        sentEmail.append(str(email))
-        # msg = EmailMessage(email_subject, email_body, to= sentEmail , from_email= 'do_not_reply@cioc.co.in' )
-        msg = EmailMessage(email_subject, email_body, to= sentEmail)
-        msg.content_subtype = 'html'
-        msg.send()
+
+    # if globalSettings.EMAIL_API:
+    #     sg = sendgrid.SendGridAPIClient(apikey= globalSettings.G_KEY)
+    #     # sg = sendgrid.SendGridAPIClient(apikey=os.environ.get('SENDGRID_API_KEY'))
+    #     for i in globalSettings.G_ADMIN:
+    #         emails.append({"email":i})
+    #     data = {
+    #       "personalizations": [
+    #         {
+    #           "to": emails,
+    #           "subject": email_subject
+    #         }
+    #       ],
+    #       "from": {
+    #         "email": globalSettings.G_FROM,
+    #         "name":globalSettings.SEO_TITLE
+    #       },
+    #       "content": [
+    #         {
+    #           "type": "text/html",
+    #           "value": email_body
+    #         }
+    #       ]
+    #     }
+    #     response = sg.client.mail.send.post(request_body=data)
+    #     print(response.body,"bodyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy")
+    # else:
+    #     sentEmail=[]
+    #     sentEmail.append(str(email))
+    #     # msg = EmailMessage(email_subject, email_body, to= sentEmail , from_email= 'do_not_reply@cioc.co.in' )
+    #     msg = EmailMessage(email_subject, email_body, to= sentEmail)
+    #     msg.content_subtype = 'html'
+    #     msg.send()
+
+    email_body = get_template('app.ecommerce.newUserEmail.html').render(ctx)
+    email_subject = 'New User'
+    email_to=[]
+    for i in globalSettings.G_ADMIN:
+        email_to.append(str(i))
+    email_cc = []
+    email_bcc = []
+    send_email(email_body,email_to,email_subject,email_cc,email_bcc,'html')
+
+
+
+
+    try:
+        phone = appSettingsField.objects.filter(name='phone')[0].value
+    except:
+        phone = ''
+
+    try:
+        email = appSettingsField.objects.filter(name='email')[0].value
+    except:
+        email = ''
+
+    websiteAddress = globalSettings.SITE_ADDRESS
+    ctx = {
+        'user':d,
+        'brandName':globalSettings.SEO_TITLE,
+        'brandLogo': globalSettings.ICON_LOGO,
+        'phone':phone,
+        'email':email,
+        'websiteAddress':websiteAddress
+    }
+    email_body = get_template('app.ecommerce.mailToNewUser.html').render(ctx)
+    email_subject = 'Welcome!'
+    email_to=[]
+    email_to.append(str(d['email']))
+    email_cc = []
+    email_bcc = []
+    send_email(email_body,email_to,email_subject,email_cc,email_bcc,'html')
+
+
 
 class EnquiryAndContactsSerializer(serializers.ModelSerializer):
     class Meta:
@@ -148,41 +190,51 @@ class RegistrationSerializer(serializers.ModelSerializer):
                         }
                         email_body = get_template('app.homepage.permission.html').render(ctx)
                         email_subject = 'Permission for the new user'
-                        if globalSettings.EMAIL_API:
-                            sg = sendgrid.SendGridAPIClient(apikey= globalSettings.G_KEY)
-                            # sg = sendgrid.SendGridAPIClient(apikey=os.environ.get('SENDGRID_API_KEY'))
-                            data = {
-                              "personalizations": [
-                                {
-                                  "to": [
-                                    {
-                                      "email": str(globalSettings.G_ADMIN[0])
-                                      # str(orderObj.user.email)
-                                    }
-                                  ],
-                                  "subject": email_subject
-                                }
-                              ],
-                              "from": {
-                                "email": globalSettings.G_FROM,
-                                "name":globalSettings.SEO_TITLE
-                              },
-                              "content": [
-                                {
-                                  "type": "text/html",
-                                  "value": email_body
-                                }
-                              ]
-                            }
-                            response = sg.client.mail.send.post(request_body=data)
-                            print(response.body,"bodyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy")
-                        else:
-                            sentEmail=[]
-                            sentEmail.append(str(adminData.email))
-                            # msg = EmailMessage(email_subject, email_body, to= sentEmail , from_email= 'do_not_reply@cioc.co.in' )
-                            msg = EmailMessage(email_subject, email_body, to= sentEmail)
-                            msg.content_subtype = 'html'
-                            msg.send()
+                        # if globalSettings.EMAIL_API:
+                        #     sg = sendgrid.SendGridAPIClient(apikey= globalSettings.G_KEY)
+                        #     # sg = sendgrid.SendGridAPIClient(apikey=os.environ.get('SENDGRID_API_KEY'))
+                        #     data = {
+                        #       "personalizations": [
+                        #         {
+                        #           "to": [
+                        #             {
+                        #               "email": str(globalSettings.G_ADMIN[0])
+                        #               # str(orderObj.user.email)
+                        #             }
+                        #           ],
+                        #           "subject": email_subject
+                        #         }
+                        #       ],
+                        #       "from": {
+                        #         "email": globalSettings.G_FROM,
+                        #         "name":globalSettings.SEO_TITLE
+                        #       },
+                        #       "content": [
+                        #         {
+                        #           "type": "text/html",
+                        #           "value": email_body
+                        #         }
+                        #       ]
+                        #     }
+                        #     response = sg.client.mail.send.post(request_body=data)
+                        #     print(response.body,"bodyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy")
+                        # else:
+                        #     sentEmail=[]
+                        #     sentEmail.append(str(adminData.email))
+                        #     # msg = EmailMessage(email_subject, email_body, to= sentEmail , from_email= 'do_not_reply@cioc.co.in' )
+                        #     msg = EmailMessage(email_subject, email_body, to= sentEmail)
+                        #     msg.content_subtype = 'html'
+                        #     msg.send()
+
+
+                        email_body = get_template('app.homepage.permission.html').render(ctx)
+                        email_subject = 'Permission for the new user'
+                        email_to=[]
+                        for i in globalSettings.G_ADMIN:
+                            email_to.append(str(i))
+                        email_cc = []
+                        email_bcc = []
+                        send_email(email_body,email_to,email_subject,email_cc,email_bcc,'html')
 
 
                     else:
@@ -272,41 +324,52 @@ class RegistrationSerializer(serializers.ModelSerializer):
 
                         email_body = get_template('app.homepage.permission.html').render(ctx)
                         email_subject = 'Permission for the new user'
-                        if globalSettings.EMAIL_API:
-                            sg = sendgrid.SendGridAPIClient(apikey= globalSettings.G_KEY)
-                            # sg = sendgrid.SendGridAPIClient(apikey=os.environ.get('SENDGRID_API_KEY'))
-                            data = {
-                              "personalizations": [
-                                {
-                                  "to": [
-                                    {
-                                      "email": str(globalSettings.G_ADMIN[0])
-                                      # str(orderObj.user.email)
-                                    }
-                                  ],
-                                  "subject": email_subject
-                                }
-                              ],
-                              "from": {
-                                "email": globalSettings.G_FROM,
-                                "name":globalSettings.SEO_TITLE
-                              },
-                              "content": [
-                                {
-                                  "type": "text/html",
-                                  "value": email_body
-                                }
-                              ]
-                            }
-                            response = sg.client.mail.send.post(request_body=data)
-                            print(response.body,"bodyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy")
-                        else:
-                            sentEmail=[]
-                            sentEmail.append(str(adminData.email))
-                            # msg = EmailMessage(email_subject, email_body, to= sentEmail , from_email= 'do_not_reply@cioc.co.in' )
-                            msg = EmailMessage(email_subject, email_body, to= sentEmail)
-                            msg.content_subtype = 'html'
-                            msg.send()
+                        # if globalSettings.EMAIL_API:
+                        #     sg = sendgrid.SendGridAPIClient(apikey= globalSettings.G_KEY)
+                        #     # sg = sendgrid.SendGridAPIClient(apikey=os.environ.get('SENDGRID_API_KEY'))
+                        #     data = {
+                        #       "personalizations": [
+                        #         {
+                        #           "to": [
+                        #             {
+                        #               "email": str(globalSettings.G_ADMIN[0])
+                        #               # str(orderObj.user.email)
+                        #             }
+                        #           ],
+                        #           "subject": email_subject
+                        #         }
+                        #       ],
+                        #       "from": {
+                        #         "email": globalSettings.G_FROM,
+                        #         "name":globalSettings.SEO_TITLE
+                        #       },
+                        #       "content": [
+                        #         {
+                        #           "type": "text/html",
+                        #           "value": email_body
+                        #         }
+                        #       ]
+                        #     }
+                        #     response = sg.client.mail.send.post(request_body=data)
+                        #     print(response.body,"bodyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy")
+                        # else:
+                        #     sentEmail=[]
+                        #     sentEmail.append(str(adminData.email))
+                        #     # msg = EmailMessage(email_subject, email_body, to= sentEmail , from_email= 'do_not_reply@cioc.co.in' )
+                        #     msg = EmailMessage(email_subject, email_body, to= sentEmail)
+                        #     msg.content_subtype = 'html'
+                        #     msg.send()
+
+                        email_body = get_template('app.homepage.permission.html').render(ctx)
+                        email_subject = 'Permission for the new user'
+                        email_to=[]
+                        for i in globalSettings.G_ADMIN:
+                            email_to.append(str(i))
+                        email_cc = []
+                        email_bcc = []
+                        send_email(email_body,email_to,email_subject,email_cc,email_bcc,'html')
+
+
                     else:
                         u.is_active = True
                     if d['designation']:
@@ -316,7 +379,6 @@ class RegistrationSerializer(serializers.ModelSerializer):
                             u.is_staff = False
                     u.save()
                     if 'email' in d:sendMail(d)
-                    print u.profile.pk ,'FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF'
                     pobj = profile.objects.get(pk=u.profile.pk)
                     try:
                         pobj.details = d
@@ -437,42 +499,50 @@ class RegistrationSerializer(serializers.ModelSerializer):
 
             email_body = get_template('app.homepage.emailOTP.html').render(ctx)
             email_subject = 'Regisration OTP'
-            if globalSettings.EMAIL_API:
-                sg = sendgrid.SendGridAPIClient(apikey= globalSettings.G_KEY)
-                # sg = sendgrid.SendGridAPIClient(apikey=os.environ.get('SENDGRID_API_KEY'))
-                data = {
-                  "personalizations": [
-                    {
-                      "to": [
-                        {
-                          # "email": 'bhanubalram5@gmail.com'
-                          "email": str(reg.email)
-                          # str(orderObj.user.email)
-                        }
-                      ],
-                      "subject": email_subject
-                    }
-                  ],
-                  "from": {
-                    "email": globalSettings.G_FROM,
-                    "name":globalSettings.SEO_TITLE
-                  },
-                  "content": [
-                    {
-                      "type": "text/html",
-                      "value": email_body
-                    }
-                  ]
-                }
-                response = sg.client.mail.send.post(request_body=data)
-                print(response.body,"bodyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy")
-            else:
-                sentEmail=[]
-                sentEmail.append(str(reg.email))
-                # msg = EmailMessage(email_subject, email_body, to= sentEmail , from_email= 'do_not_reply@cioc.co.in' )
-                msg = EmailMessage(email_subject, email_body, to= sentEmail)
-                msg.content_subtype = 'html'
-                msg.send()
+            # if globalSettings.EMAIL_API:
+            #     sg = sendgrid.SendGridAPIClient(apikey= globalSettings.G_KEY)
+            #     # sg = sendgrid.SendGridAPIClient(apikey=os.environ.get('SENDGRID_API_KEY'))
+            #     data = {
+            #       "personalizations": [
+            #         {
+            #           "to": [
+            #             {
+            #               # "email": 'bhanubalram5@gmail.com'
+            #               "email": str(reg.email)
+            #               # str(orderObj.user.email)
+            #             }
+            #           ],
+            #           "subject": email_subject
+            #         }
+            #       ],
+            #       "from": {
+            #         "email": globalSettings.G_FROM,
+            #         "name":globalSettings.SEO_TITLE
+            #       },
+            #       "content": [
+            #         {
+            #           "type": "text/html",
+            #           "value": email_body
+            #         }
+            #       ]
+            #     }
+            #     response = sg.client.mail.send.post(request_body=data)
+            #     print(response.body,"bodyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy")
+            # else:
+            #     sentEmail=[]
+            #     sentEmail.append(str(reg.email))
+            #     # msg = EmailMessage(email_subject, email_body, to= sentEmail , from_email= 'do_not_reply@cioc.co.in' )
+            #     msg = EmailMessage(email_subject, email_body, to= sentEmail)
+            #     msg.content_subtype = 'html'
+            #     msg.send()
+
+            email_body = get_template('app.homepage.emailOTP.html').render(ctx)
+            email_subject = 'Regisration OTP'
+            email_to=[]
+            email_to.append(str(reg.email))
+            email_cc = []
+            email_bcc = []
+            send_email(email_body,email_to,email_subject,email_cc,email_bcc,'html')
         if not globalSettings.LITE_REGISTRATION:
             if globalSettings.VERIFY_MOBILE:
                 mobile = reg.mobile

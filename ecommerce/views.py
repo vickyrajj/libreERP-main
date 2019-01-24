@@ -333,8 +333,8 @@ class CreateOrderAPI(APIView):
         msg = 'Error'
         contactData=[]
         userCart = Cart.objects.filter(user=request.user)
-        print userCart.count(),userCart
-        print request.data,type(request.data),'fffffffffffffffff'
+        # print userCart.count(),userCart
+        # print request.data,type(request.data),'fffffffffffffffff'
         prod = request.data['products']
         if type(request.data['products']) == unicode:
             prod = ast.literal_eval(request.data['products'])
@@ -345,24 +345,22 @@ class CreateOrderAPI(APIView):
             pObj = listing.objects.get(pk = i['pk'])
             qtyGst = 0
             taxAmount = 0
-            addGst = True
+            isStoreGlobal = True
             globalStoreObj = appSettingsField.objects.filter(name='isStoreGlobal')
             if len(globalStoreObj)>0:
                 if globalStoreObj[0].flag:
-                    addGst = False
-
-
+                    isStoreGlobal = False
 
             if pObj.product.serialNo == i['prodSku']:
                 pp = pObj.product.price
                 if pObj.product.productMeta:
                     ptaxRate = pObj.product.productMeta.taxRate
-                    taxAmount = int(round((pp * ptaxRate)/100))
+                    taxAmount = float(round((pp * ptaxRate)/100 , 2))
                 if pp > 0:
                     a = pp - (pObj.product.discount*pp)/100
-                    print a ,type(a)
-                    b = a - (int(request.data['promoCodeDiscount'])*a)/100
-                    finalTaxAmount = taxAmount - (int(request.data['promoCodeDiscount'])*taxAmount)/100
+                    # print a ,type(a)
+                    b = a - float(request.data['promoCodeDiscount'])*a/100
+                    finalTaxAmount = taxAmount - float(request.data['promoCodeDiscount']*taxAmount/100)
                 else:
                     b=0
                     finalTaxAmount = 0
@@ -373,18 +371,20 @@ class CreateOrderAPI(APIView):
                 priceDuringOrder = pp
                 if prodVar.parent.productMeta:
                     ptaxRate = prodVar.parent.productMeta.taxRate
-                    taxAmount = int(round((pp * ptaxRate)/100))
+                    taxAmount = float(round((pp * ptaxRate)/100, 2))
                 if pp > 0:
-                    b = pp - (int(request.data['promoCodeDiscount'])*pp)/100
-                    finalTaxAmount = taxAmount - (int(request.data['promoCodeDiscount'])*taxAmount)/100
+                    b = pp - float(request.data['promoCodeDiscount'])*pp/100
+                    finalTaxAmount = taxAmount - float(request.data['promoCodeDiscount'])*taxAmount/100
                 else:
                     b=0
                     finalTaxAmount = 0
 
-            pDiscAmount = int(round(pp-b))
-            if addGst:
-                pDiscAmount += int(round(taxAmount-finalTaxAmount))
+            pDiscAmount = round(pp-b, 2)
+            if isStoreGlobal:
+                pDiscAmount += round(taxAmount-finalTaxAmount, 2)
                 b += finalTaxAmount
+            else:
+                pass
 
             pDiscAmount = pDiscAmount * i['qty']
             qtyGst = finalTaxAmount * i['qty']
@@ -392,22 +392,22 @@ class CreateOrderAPI(APIView):
             qtyTotal = b * i['qty']
             totalAmount += qtyTotal
 
-            oQMObj = OrderQtyMap.objects.create(**{'product':pObj,'qty':i['qty'],'totalAmount':int(round(qtyTotal)),'discountAmount':pDiscAmount,'prodSku':i['prodSku'],'desc':i['desc'],'gstAmount':qtyGst,'priceDuringOrder':priceDuringOrder})
+            oQMObj = OrderQtyMap.objects.create(**{'product':pObj,'qty':i['qty'],'totalAmount':round(qtyTotal,2),'discountAmount':round(pDiscAmount, 2),'prodSku':i['prodSku'],'desc':i['desc'],'gstAmount':round(qtyGst, 2),'priceDuringOrder':round(priceDuringOrder, 2)})
             oQMp.append(oQMObj)
             obj = pObj.product
             if 'storepk' in request.data:
-                print 'multistoreeeeeeeeeeeeeeeeee'
+                print 'multistore'
                 storeObj = Store.objects.get(pk=int(request.data['storepk']))
                 try:
                     if i['prodSku']==obj.serialId:
-                        print 'parentttttt, multistoreeeeeeeeeeeeeeeeee',storeObj.name
+                        print 'parent, multistoreeeeeeeeeeeeeeeeee',storeObj.name
                         storeQtyObj = StoreQty.objects.get(store__id = storeObj.pk, product__id = obj.pk, productVariant__isnull = True)
                         if i['qty']>storeQtyObj.quantity:
                             print 'error raise exception'
                         storeQtyObj.quantity = storeQtyObj.quantity - i['qty']
                         storeQtyObj.save()
                     else:
-                        print 'childddddddddd, multistoreeeeeeeeeeeeeeeeee'
+                        print 'child, multistoreeeeeeeeeeeeeeeeee'
                         prodVar = ProductVerient.objects.get(parent__id = obj.pk , sku = i['prodSku'])
                         storeQtyObj = StoreQty.objects.get(store__id = storeObj.pk, product__id = obj.pk, productVariant__id = prodVar.pk)
                         if i['qty']>storeQtyObj.quantity:
@@ -427,7 +427,7 @@ class CreateOrderAPI(APIView):
                         storeQtyObj.quantity = storeQtyObj.quantity - i['qty']
                         storeQtyObj.save()
                     else:
-                        print 'childddddddddd , single store'
+                        print 'child , single store'
                         prodVar = ProductVerient.objects.get(parent__id = obj.pk , sku = i['prodSku'])
                         storeQtyObj = StoreQty.objects.get(master = True, product__id = obj.pk, productVariant__id = prodVar.pk)
                         if i['qty']>storeQtyObj.quantity:
@@ -469,9 +469,9 @@ class CreateOrderAPI(APIView):
                 data['promoCode'] = str(request.data['promoCode'])
             print data
             if 'shippingCharges' in request.data:
-                print 'thereeeeeeeee',data['totalAmount'],request.data['shippingCharges']
-                data['shippingCharges'] = request.data['shippingCharges']
-                data['totalAmount'] += request.data['shippingCharges']
+                shippingCharges = round(request.data['shippingCharges'],2)
+                data['shippingCharges'] = shippingCharges
+                data['totalAmount'] += shippingCharges
             orderObj = Order.objects.create(**data)
             for i in oQMp:
                 orderObj.orderQtyMap.add(i)
@@ -638,12 +638,15 @@ class CreateOrderAPI(APIView):
                     'currencyVal':currencyVal,
                     'shippingCharges':shippingCharges
                 }
+                print ctx , 'ctxxxxxxxxxxxx'
                 email_body = get_template('app.ecommerce.emailDetail.html').render(ctx)
                 email_subject = "Order Details"
                 email_to = []
                 email_to.append(str(orderObj.user.email))
-                email_cc = ['vikky.motla@gmail.com']
-                email_bcc = ['bhrthkshr@gmail.com']
+                for i in globalSettings.G_ADMIN:
+                    email_to.append(str(i))
+                email_cc = []
+                email_bcc = []
                 send_email(email_body,email_to,email_subject,email_cc,email_bcc,'html')
             return Response({'paymentMode':orderObj.paymentMode,'dt':orderObj.created,'odnumber':orderObj.pk}, status = status.HTTP_200_OK)
 
@@ -1434,6 +1437,8 @@ class SendStatusAPI(APIView):
         email_body = msgBody
         email_subject = "Order Status"
         email_to = [emailAddr[0]]
+        # for i in globalSettings.G_ADMIN:
+        #     email_to.append(str(i))
         email_cc = []
         email_bcc = []
         send_email(email_body,email_to,email_subject,email_cc,email_bcc,'text')
@@ -1509,7 +1514,7 @@ class SendFeedBackAPI(APIView):
         response = request.data['response']
         # responseData = BeautifulSoup(response, 'html.parser')
         responseData = Markup(response)
-        emailAddr.append(supportObj.email)
+        emailAddr.append(str(supportObj.email))
         ctx = {
             'heading' : "On response to your Feed Back",
             'linkUrl': globalSettings.BRAND_NAME,
@@ -2151,11 +2156,12 @@ def generateInvoiceBni(response, contract ,request):
     elements = []
     companyAddress = settingsFields.get(name = 'companyAddress').value
     companyAddress = companyAddress.replace(',', '<br/>', 1)
-    companyAddress = companyAddress.replace('nagar,', 'nagar<br/>', 1)
+    companyAddress = companyAddress.replace('ross,', 'ross,<br/>', 1)
+    companyAddress = companyAddress.replace('nagar,', 'nagar,<br/>', 1)
     telPhone  = str(settingsFields.get(name = 'phone').value)
     email = str(settingsFields.get(name = 'email').value)
 
-    websiteAddress = globalSettings.SEO_AUTHOR
+    websiteAddress = globalSettings.SITE_ADDRESS
     # brandLogo = globalSettings.ICON_LOGO
 
     if isStoreGlobal:
@@ -2200,10 +2206,13 @@ def generateInvoiceBni(response, contract ,request):
     dataDetails = []
 
 
-    s11 =Paragraph("<para fontSize=8> <br/> "+ str(contract.user.first_name) +" "+ str(contract.user.last_name) +"<br/>102 Eden Park, 20 Vittal Mallya Rd.<br/>"+ str(contract.city) +" - "+ str(contract.pincode) +"<br/>"+ str(contract.state) +" <br/> "+ str(contract.country) +"<br/>"+ str(contract.mobileNo) +"<br/><br/><br/></para>",styles['Normal'])
-
-
-    s12 =Paragraph("<para> </para>",styles['Normal'])
+    # s11 =Paragraph("<para fontSize=8> <br/> "+ str(contract.user.first_name) +" "+ str(contract.user.last_name) +"<br/>102 Eden Park, 20 Vittal Mallya Rd.<br/>"+ str(contract.city) +" - "+ str(contract.pincode) +"<br/>"+ str(contract.state) +" <br/> "+ str(contract.country) +"<br/>"+ str(contract.mobileNo) +"<br/><br/><br/></para>",styles['Normal'])
+    #
+    #
+    # s12 =Paragraph("<para> </para>",styles['Normal'])
+    # s13 = Paragraph("<para alignment='right' fontSize=18> INVOICE </para>",styles['Normal'])
+    s11 =Paragraph("<para fontSize=8> <b> Shipping Address </b> <br/> "+ str(contract.user.first_name) +" "+ str(contract.user.last_name) +"<br/>102 Eden Park, 20 Vittal Mallya Rd.<br/>"+ str(contract.city) +" - "+ str(contract.pincode) +"<br/>"+ str(contract.state) +" <br/> "+ str(contract.country) +"<br/>"+ str(contract.mobileNo) +"<br/><br/><br/></para>",styles['Normal'])
+    s12 =Paragraph("<para fontSize=8> <b> Billing Address </b> <br/> "+ str(contract.user.first_name) +" "+ str(contract.user.last_name) +"<br/>102 Eden Park, 20 Vittal Mallya Rd.<br/>"+ str(contract.billingCity) +" - "+ str(contract.billingPincode) +"<br/>"+ str(contract.billingState) +" <br/> "+ str(contract.billingState) +"<br/>"+ str(contract.mobileNo) +"<br/><br/><br/></para>",styles['Normal'])
     s13 = Paragraph("<para alignment='right' fontSize=18> INVOICE </para>",styles['Normal'])
     dataDetails +=[[s11,s12,s13]]
 
@@ -2224,7 +2233,7 @@ def generateInvoiceBni(response, contract ,request):
 
     s23 = Paragraph("<para alignment='right' fontSize=8> Invoice Date: "+ invoiceDate +" <br/>Order Date: "+ orderDate +" </para>",styles['Normal'])
     dataDetails +=[[s21,s22,s23]]
-    t2=Table(dataDetails,colWidths=(90*mm,29.5*mm,90*mm))
+    t2=Table(dataDetails,colWidths=(85.5*mm,85.5*mm,40*mm))
     t2.setStyle(TableStyle([('TEXTFONT', (0, 0), (-1, -1), 'Times-Bold'),('TEXTCOLOR',(0,0),(-1,-1),black),('ALIGN',(0,0),(-1,-1),'RIGHT'),('VALIGN',(0,0),(-1,-1),'TOP'), ]))
     elements.append(t2)
 
@@ -2239,14 +2248,14 @@ def generateInvoiceBni(response, contract ,request):
     p101_08 =Paragraph("<para fontSize=8>Total Price  <span fontSize=6> ("+currency+")</span></para>",styles['Normal'])
 
     if isStoreGlobal:
-        data1=[[p101_01,p101_02,p101_09,p101_03,p101_04,p101_08]]
+        data1=[[p101_01,p101_02,p101_09,p101_04,p101_08]]
     else:
         data1=[[p101_01,p101_02,p101_09,p101_03,p101_04,p101_05,p101_06,p101_07,p101_08]]
     # p101_06 =Paragraph("<para fontSize=8>{0}</para>".format(amountTitle),styles['Normal']) IF ANY NON STATIC DATA GIIVE LIKE THIS
 
     rheights=1*[0.2*inch]
     if isStoreGlobal:
-        t3=Table(data1,rowHeights=rheights,colWidths=(15*mm, 90*mm,25*mm ,25*mm, 25*mm, 25*mm))
+        t3=Table(data1,rowHeights=rheights,colWidths=(15*mm, 100*mm,25*mm , 35*mm, 35*mm))
     else:
         t3=Table(data1,rowHeights=rheights,colWidths=(15*mm, 50*mm,10*mm ,20*mm, 25*mm, 20*mm, 20*mm, 25*mm, 25*mm))
     t3.setStyle(TableStyle([('TEXTFONT', (0, 0), (-1, -1), 'Times-Bold'),('TEXTCOLOR',(0,0),(-1,-1),black),('ALIGN',(0,0),(-1,-1),'LEFT'),('VALIGN',(0,0),(-1,-1),'TOP'),('BOX',(0,0),(-1,-1),0.25,colors.black),('INNERGRID', (0,0), (-1,-1), 0.25, colors.black)]))
@@ -2259,6 +2268,7 @@ def generateInvoiceBni(response, contract ,request):
     promoAmount = 0
     discount = 0
     promoCode = ''
+    subtotal = 0
     promoObj = Promocode.objects.all()
     if contract.promoCode:
         for p in promoObj:
@@ -2376,6 +2386,7 @@ def generateInvoiceBni(response, contract ,request):
             total+=totalprice
 
         qty = i.qty
+        subtotal += i.totalAmount
         p111_01 =Paragraph("<para fontSize=8>"+ str(Serialid) +"</para>",styles['Normal'])
         p111_02 =Paragraph("<para fontSize=8> "+ str(prodName) +" </para>",styles['Normal'])
         p111_09 =Paragraph("<para fontSize=8> "+ str(qty) +" </para>",styles['Normal'])
@@ -2387,16 +2398,16 @@ def generateInvoiceBni(response, contract ,request):
         p111_08 =Paragraph("<para fontSize=8  alignment='right'>"+ str(i.totalAmount) +"</para>",styles['Normal'])
 
         if isStoreGlobal:
-            data2.append([p111_01,p111_02,p111_09,p111_03,p111_04,p111_08])
+            data2.append([p111_01,p111_02,p111_09,p111_04,p111_08])
         else:
             data2.append([p111_01,p111_02,p111_09,p111_03,p111_04,p111_05,p111_06,p111_07,p111_08])
 
 
     shippingCharges = round(contract.shippingCharges,2)
-    subtotal = round(total,2)
+    subtotal = round(subtotal,2)
     grandTotal=round(contract.totalAmount, 2)
     if isStoreGlobal:
-        t4=Table(data2,colWidths=(15*mm, 90*mm,25*mm ,25*mm, 25*mm, 25*mm))
+        t4=Table(data2,colWidths=(15*mm, 100*mm,25*mm , 35*mm, 35*mm))
     else:
         t4=Table(data2,colWidths=(15*mm, 50*mm,10*mm ,20*mm, 25*mm, 20*mm, 20*mm, 25*mm, 25*mm))
 

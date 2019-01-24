@@ -1,5 +1,5 @@
 
-app.controller('admin.manageUsers.mailAccount' , function($scope , $http){
+app.controller('admin.manageUsers.mailAccount' , function($scope , $http, Flash){
 
   $scope.generateMailPasskey = function() {
     console.log($scope);

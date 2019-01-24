@@ -820,10 +820,17 @@
               <button type="button" class="btn btn-default pull-left" ng-click="prev()">
                 Go back
               </button>
-              <button type="button" class="btn btn-success btn-lg pull-right hidden-sm hidden-xs" ng-click="data.modeOfPayment=='COD'? order(): pay()">
+
+              <button ng-if="errorInshipping" type="button" class="btn btn-success btn-lg pull-right hidden-sm hidden-xs" name="button" ng-click="openShippingErrorModal()" ng-disabled="true" >{{data.modeOfPayment=='COD'? 'Order': 'Pay'}}</button>
+
+              <button ng-if="errorInshipping" type="button" class="btn btn-success pull-right hidden-lg hidden-md" name="button" disabled>{{data.modeOfPayment=='COD'? 'Order': 'Pay'}}</button>
+
+              {{errorInshipping}}dfg
+
+              <button ng-if="!errorInshipping" type="button" class="btn btn-success btn-lg pull-right hidden-sm hidden-xs" ng-click="data.modeOfPayment=='COD'? order(): pay()">
                 {{data.modeOfPayment=='COD'? 'Order': 'Pay'}}
               </button>
-              <button type="button" class="btn btn-success pull-right hidden-lg hidden-md" ng-click="data.modeOfPayment=='COD'? order(): pay()">
+              <button ng-if="!errorInshipping" type="button" class="btn btn-success pull-right hidden-lg hidden-md" ng-click="data.modeOfPayment=='COD'? order(): pay()">
                 {{data.modeOfPayment=='COD'? 'Order': 'Pay'}}
               </button>
             </div>

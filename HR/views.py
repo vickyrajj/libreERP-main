@@ -32,6 +32,7 @@ from openpyxl import load_workbook
 from io import BytesIO
 from ERP.send_email import send_email
 from rest_framework.authentication import SessionAuthentication, BasicAuthentication
+from ERP.models import appSettingsField
 
 class CsrfExemptSessionAuthentication(SessionAuthentication):
 
@@ -353,28 +354,36 @@ class SendActivatedStatus(APIView):
     def post(self , request , format = None):
         print request.data
 
-        msgBody = ['You have successfully registered' ]
+
+        try:
+            phone = appSettingsField.objects.filter(name='phone')[0].value
+        except:
+            phone = ''
+
+        try:
+            email = appSettingsField.objects.filter(name='email')[0].value
+        except:
+            email = ''
+
+        websiteAddress = globalSettings.SITE_ADDRESS
 
         ctx = {
-            'heading' : 'Welcome to Ecommerce',
-            'recieverName' : str(request.data['name']),
-            'message': msgBody,
-            'linkUrl': 'sterlingselect.com',
-            'linkText' : 'View Online',
-            'sendersAddress' : 'sterlingselect',
-            'sendersPhone' : '841101',
-            'linkedinUrl' : 'https://www.linkedin.com/company/24tutors/',
-            'fbUrl' : 'https://www.facebook.com/24tutorsIndia/',
-            'twitterUrl' : 'twitter.com',
-            'brandName' : globalSettings.BRAND_NAME,
+            'name':request.data['name'],
+            'brandName':globalSettings.SEO_TITLE,
+            'brandLogo': globalSettings.ICON_LOGO,
+            'phone':phone,
+            'email':email,
+            'websiteAddress':websiteAddress
         }
-        emailAddr = []
-        emailAddr.append(str(request.data['email']))
-        email_body = get_template('app.HR.userActivated.html').render(ctx)
-        email_subject = 'Registration Successfull!!!!!'
+        email_body = get_template('app.ecommerce.userActivated.html').render(ctx)
+        email_subject = 'Welcome!'
+        email_to=[]
+        email_to.append(str('vikas.motla@gmail.com'))
         email_cc = []
         email_bcc = []
-        send_email(email_body,emailAddr,email_subject,email_cc,email_bcc,'html')
+        send_email(email_body,email_to,email_subject,email_cc,email_bcc,'html')
+
+
         return Response({}, status = status.HTTP_200_OK)
 
 
