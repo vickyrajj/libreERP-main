@@ -93,7 +93,7 @@
           </div>
 
           <div class="" ng-repeat="comment in reviewCommentData" style="margin-top:25px;">
-            <div class="col-md-10">
+            <div class="col-md-9">
               <div style="background-color:{{comment.user==msgData.user_id? '#ea1515':'#286EFA'}};float:right; color:#fff; margin-top:5px ;border-radius:15px 50px 50px 15px; padding:8px 10px 0px 15px;word-break: break-all !important;">
                 <p> {{comment.message}} </p>
               </div>
@@ -103,9 +103,10 @@
               </div>
             </div>
 
-              <img style="width:5rem" ng-if="msgData.user_id" src="{{msgData.user_id | getDP}}" alt="">
-
-              <p style="font-size:15px;display:inline-block;">{{msgData.user_id | getName}}</p>
+          <div class="col-md-3">
+            <img style="width:5rem" ng-if="comment.user" src="{{comment.user | getDP}}" alt="">
+            <p style="font-size:15px;display:inline-block;">{{comment.user | getName}}</p>
+          </div>
 
           </div>
 

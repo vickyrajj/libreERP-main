@@ -155,8 +155,10 @@
             <img ng-src="{{comment.visitor_capture}}" alt="">
           </div>
         </div>
-          <img style="width:5rem" ng-if="msgData.user_id" src="{{msgData.user_id | getDP}}" alt="">
-          <p style="font-size:15px;display:inline-block;">{{msgData.user_id | getName}}</p>
+          <div class="col-sm-3">
+            <img style="width:5rem" src="{{comment.user | getDP}}" alt="">
+            <p style="font-size:15px;display:inline-block;">{{comment.user | getName}}</p>
+          </div>
       </div>
     </div>
 

@@ -59,7 +59,7 @@
       <!-- message section -->
       <div class="" style="max-height:700px;margin-bottom:20px;overflow:scroll">
 
-        <div class="row col-md-12" ng-repeat="msg in msgData">
+        <div class="row col-md-12" ng-repeat="msg in fullChatData">
           <div ng-if="!msg.logs" class="container-fluid" style="float:{{msg.sentByAgent ? 'right; background-color:#dba4ae; ':'left; background-color:#72b3d4;'}} padding:5px 10px;margin:8px;border-radius:{{msg.sentByAgent ? '20px 0px 20px 20px':'0px 20px 20px 20px'}};">
             <p ng-if="msg.message.length>0 && msg.attachmentType != 'youtubeLink'" style="word-break: break-all !important;font-size:16px">
               {{msg.message}}</p>
@@ -94,7 +94,7 @@
           </div>
 
           <div class="" ng-repeat="comment in reviewCommentData" style="margin-top:25px;">
-            <div class="col-md-10">
+            <div class="col-md-9">
               <div style="background-color:{{comment.user==msgData[0].user_id? '#ea1515':'#286EFA'}};float:right; color:#fff; margin-top:5px ;border-radius:15px 50px 50px 15px; padding:8px 10px 0px 15px;word-break: break-all !important;">
                 <p> {{comment.message}} </p>
               </div>
@@ -105,13 +105,12 @@
             </div>
 
               <!-- <img ng-src="{{comment.user | getDP}}" style="border-radius:50%; width:45px;" alt="User Image"> -->
-              <img style="width:5rem" ng-if="msgData[0].user_id" src="{{msgData[0].user_id | getDP}}" alt="">
-              <p style="font-size:15px;display:inline-block;">{{msgData[0].user_id | getName}}</p>
-
+              <div class="col-sm-3">
+                <img style="width:5rem" ng-if="comment.user" src="{{comment.user | getDP}}" alt="">
+                <p style="font-size:15px;display:inline-block;">{{comment.user | getName}}</p>
+              </div>
           </div>
-
         </div>
-
     </div>
 
     <div class="col-sm-3">
@@ -139,7 +138,6 @@
         </p>
       </div>
   </div>
-
 
   </div>
 </div>
