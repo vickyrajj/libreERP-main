@@ -760,6 +760,11 @@ app.controller("businessManagement.reviews", function($scope, $state, $users, $s
       $scope.filterData(true)
     }
 
+
+$scope.something=function(){
+  alert('new')
+
+}
   $scope.tableAction = function(index) {
 
     console.log($scope.reviewData[index]);

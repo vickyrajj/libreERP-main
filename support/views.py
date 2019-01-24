@@ -1030,6 +1030,9 @@ class getChatStatus(APIView):
                 chatT.status="missed"
                 chatT.save()
                 compPk=chatT.company.pk
+            if diffForstatusInMints>3 and chatT.user is None:
+                chatT.isLate=True
+                chatT.save()
         return Response({'sendMail':sendMail,'changeStatus':changeStatus,'companyPk':compPk}, status = status.HTTP_200_OK)
 
 

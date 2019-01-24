@@ -466,9 +466,9 @@ $scope.count=0;
         var toPatch = {
           user: $scope.me.pk
         }
-        if (now - chatThreadCreated > 180000 ) {
-          toPatch.isLate = true
-        }
+        // if (now - chatThreadCreated > 180000 ) {
+        //   toPatch.isLate = true
+        // }
 
 
 

@@ -26,6 +26,7 @@
                               <tr>
                                 <th style="text-align:center;display:none">Chat Start</th>
                               </tr>
+                              <!-- <button type="button" name="button"  disabled data-ng-click="something()">Here</button> -->
                             </thead>
                            <tbody>
                            <tr id="id{{$index}}" ng-repeat="data in reviewData" ng-click="tabelRowAction(data)" style="background-color: {{$index==lastActiveTR?'#f0f0f0':' '}}">
@@ -37,7 +38,7 @@
                                      <span style="font-weight: 500;font-size:90%">{{data.name}}</span>
                                    </div>
                                    <span style="font-size:83%">{{data.uid}}</span>
-                                   <span ng-if="data.isLate" style="color:red">( Late )</span>
+                                   <span ng-if="data.isLate" style="color:#C83737;font-size:75%">-Late</span>
                                    <div>
                                      <span ng-if="data.chatDuration>0.0" style="font-size:90%"><i class="fa fa-clock-o" aria-hidden="true"></i>  {{data.chatDuration}} Min</span>
                                    </div>
@@ -304,7 +305,7 @@
                                    <span style="font-weight: 500;font-size:90%">{{data.name}}</span>
                                  </div>
                                  <span style="font-size:83%">{{data.uid}}</span>
-                                 <span ng-if="data.isLate" style="color:red">( Late )</span>
+                                 <span ng-if="data.isLate" style="color:#C83737">-Late</span>
                                  <div>
                                    <span ng-if="data.chatDuration>0.0" style="font-size:90%"><i class="fa fa-clock-o" aria-hidden="true"></i>  {{data.chatDuration}} Min</span>
                                  </div>
