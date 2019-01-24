@@ -11,7 +11,7 @@
       <h3 ng-if="mode=='edit'">Edit {{form.isInvoice?'Invoice':'Sales Order'}} </h3>
     </div>
   </div>
-  <div class="container-fluid">
+  <div class="col-md-10 col-md-offset-1">
     <div class="row">
       <div class="col-md-6" style="padding:15px 40px">
         <div class="row">
@@ -70,15 +70,15 @@
           </div>
         </div>
 
-        <div class="form-group" ng-if="(form.costcenter.length==0&&form.bussinessunit.length==0)||form.project.pk">
+        <div class="form-group" ng-if="(form.costcenter.length==0 && form.bussinessunit.length==0)||form.project.pk">
           <label>Project</label>
           <input type="text" class="form-control" ng-model="form.project" uib-typeahead="p as p.title for p in projectSearch($viewValue)" placeholder="Search By Project Title" ng-disabled="mode=='edit'">
         </div>
-        <div class="form-group" ng-if="(form.project.length==0&&form.bussinessunit.length==0)||form.costcenter.pk">
+        <div class="form-group" ng-if="(form.project.length==0 && form.bussinessunit.length==0)||form.costcenter.pk">
           <label>Cost Center</label>
           <input type="text" class="form-control" ng-model="form.costcenter" uib-typeahead="cost as cost.name for cost in costCenterSearch($viewValue)" placeholder="Search By CostCenter Name" ng-disabled="mode=='edit'">
         </div>
-        <div class="form-group" ng-if="(form.project.length==0&&form.costcenter.length==0)||form.bussinessunit.pk">
+        <div class="form-group" ng-if="(form.project.length==0 && form.costcenter.length==0)||form.bussinessunit.pk">
           <label>Business Unit</label>
           <input type="text" class="form-control" ng-model="form.bussinessunit" uib-typeahead="units as units.name for units in unitSearch($viewValue)" placeholder="Search By Unit Name" ng-disabled="mode=='edit'">
         </div>
@@ -121,7 +121,7 @@
     <div class="row" style="padding:30px 0px">
       <div class="col-md-12">
         <div class="btn-group">
-          <button type="button" class="btn btn-primary" mwl-confirm title="Confirm" message="Are you sure?" confirm-text="Yes <i class='fa fa-check'></i>" cancel-text="No" on-confirm="saveOutBound()" confirm-button-type="success" cancel-button-type="default">Save</button>
+          <button type="button" class="btn btn-primary" ng-click="saveOutBound()">Save</button>
           <button ng-if="mode=='new'" type="button" class="btn btn-default" mwl-confirm title="Form Reset" message="Are you sure?" confirm-text="Yes <i class='fa fa-check'></i>" cancel-text="No" on-confirm="resetForm()" confirm-button-type="danger" cancel-button-type="default">Refresh</button>
         </div>
       </div>

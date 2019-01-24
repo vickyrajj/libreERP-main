@@ -21,7 +21,7 @@
   <div ng-if="!sideMenuVisibility" class="row" style="{{mobileView ? ';':'width:30%;'}};padding:15px;">
     <img ng-src="{{user.pk | getDP}}" class="img img-circle" style="width:50px;margin-left:20px;">
   </div>
-  <div class="row" style="margin:0px;">
+  <div class="row" style="margin:0px;" ng-if="SHOW_COMMON_APPS == 'True'">
     <div class="container-fluid" style="padding:0px;">
 
 

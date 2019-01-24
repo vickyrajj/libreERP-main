@@ -28,7 +28,7 @@ class projectViewSet(viewsets.ModelViewSet):
         if u.is_superuser:
             return project.objects.all()
         else:
-            return u.projectsInitiated.all() | u.projectsInvolvedIn.all()
+            return u.projectsInitiated.all() | u.projectsInvolvedIn.all() | project.objects.filter(team = None)
 
 class projectLiteViewSet(viewsets.ModelViewSet):
     permission_classes = (permissions.IsAuthenticated, permissions.DjangoModelPermissionsOrAnonReadOnly)
