@@ -11,12 +11,12 @@ def send_email(email_body, email_to, email_subject,email_cc,email_bcc, email_typ
     #     print 'list'
     # else:
     #     print 'not list'
-    print 'in send email',email_to
-    print email_body
-    print email_subject,'email_subject'
-    print email_cc ,' email_cc'
-    print email_bcc, 'email_bcc'
-    print email_type , 'email_type'
+    # print 'in send email',email_to
+    # print email_body
+    # print email_subject,'email_subject'
+    # print email_cc ,' email_cc'
+    # print email_bcc, 'email_bcc'
+    # print email_type , 'email_type'
 
     if globalSettings.EMAIL_API:
         sg = sendgrid.SendGridAPIClient(apikey= globalSettings.G_KEY)
@@ -31,9 +31,9 @@ def send_email(email_body, email_to, email_subject,email_cc,email_bcc, email_typ
         #     bccIds.append({"email":i})
         # for i in email_cc:
         #     ccIds.append({"email":i})
-        print emailIDs ,'emailIDs'
-        print bccIds ,'bccIds'
-        print ccIds ,'ccIds'
+        # print emailIDs ,'emailIDs'
+        # print bccIds ,'bccIds'
+        # print ccIds ,'ccIds'
         data = {
           "personalizations": [
             {
