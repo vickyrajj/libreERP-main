@@ -2465,15 +2465,15 @@ def deliveryChallan(response , value , request):
 
     detailaddress = Paragraph("""
     <para align="left">
-    <font size ='8'>
-    <bTo,</b> <br/>
+    <font size ='8'><br/>
+    <b>To,</b> <br/>
     %s <br/>
     GST IN : %s
     </font></para>
     """ %(address,materialdata.customergst),styles['Normal'])
     detailval = Paragraph("""
     <para align="left">
-    <font size ='8'>
+    <font size ='8'><br/>
     Delivery through : %s <br/><br/>
     Kind Attn : %s <br/>
     Your reference : %s <br/>
