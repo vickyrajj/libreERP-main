@@ -2506,7 +2506,7 @@ def deliveryChallan(response , value , request):
     footer1 = Paragraph("""
     <para align="left">
     <font size ='8'>
-    Approximate value of goods : %s <br/>
+    Approximate value of goods in INR : %s <br/>
     <b> NOT FOR SALE</b>
     </font></para>
     """ %(materialdata.apprx),styles['Normal'])
