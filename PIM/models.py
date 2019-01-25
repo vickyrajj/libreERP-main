@@ -132,6 +132,7 @@ class blogPost(models.Model):
         ('product' , 'product'),
         ('book' , 'book'),
         ('question' , 'question'),
+        ('course' , 'course'),
     )
     public = models.BooleanField(default = False)
     title = models.CharField(max_length = 500 , null=True)
@@ -164,6 +165,9 @@ class blogPost(models.Model):
 
     def get_absolute_url(self):
         return '/'+ self.shortUrl + '/'
+
+    def __repr__(self):
+        return self.shortUrl
 
 class blogLike(models.Model):
     parent = models.ForeignKey(blogPost , related_name = 'likes')

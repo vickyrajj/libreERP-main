@@ -6,7 +6,7 @@ from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 from homepage.views import index
 from HR.views import loginView , logoutView , home , registerView , tokenAuthentication , root, generateOTP, documentView
 from homepage.views import blog,blogDetails,news,team, career ,policy ,terms ,refund , contacts , registration , desclaimer
-from ERP.views import serviceRegistration , dynamicTemplates, courses
+from ERP.views import serviceRegistration , dynamicTemplates, courses , coursesContent , ncert , mockTestView
 from tutor.views import studentHome , tutorHome
 from ERP.views import PaymentResponse, renderedStatic
 from django.contrib.sitemaps.views import sitemap
@@ -52,7 +52,11 @@ urlpatterns = [
     url(r'^sitemap\.xml$', sitemap, {'sitemaps': sitemaps}, name='django.contrib.sitemaps.views.sitemap'),
     url(r'^ngTemplates/(?P<filename>[\w|\W]+)', renderedStatic , name ='renderedStatic'),
     url(r'^dynamicTemplates/(?P<filename>[\w|\W]+).html', dynamicTemplates , name ='dynamicTemplates'),
-    url(r'^courses', courses , name ='courses'),
+    url(r'^courses/(?P<page>[\w|\W]+)', coursesContent , name ='coursesContent'),
+    url(r'^courses/', courses , name ='courses'),
+    url(r'^ncert/', ncert , name ='ncert'),
+    url(r'^mock-test/(?P<testID>[\w|\W]+)', mockTestView , name ='mockTest'),
+
 
 ]
 
@@ -60,5 +64,5 @@ if settings.DEBUG:
     urlpatterns +=static(settings.STATIC_URL , document_root = settings.STATIC_ROOT)
     urlpatterns +=static(settings.MEDIA_URL , document_root = settings.MEDIA_ROOT)
 
-# urlpatterns.append(url(r'^(?P<blogname>[\w|\W]+)/', blogDetails , name ='blogDetails'))
-urlpatterns.append(url(r'^.*$', index , name='index'))
+urlpatterns.append(url(r'^(?P<blogname>[\w|\W]+)/', blogDetails , name ='blogDetails'))
+# urlpatterns.append(url(r'^.*$', index , name='index'))

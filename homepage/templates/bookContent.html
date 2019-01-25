@@ -1,0 +1,154 @@
+{% extends "tutorBook.html" %}
+
+{% block content %}
+<title>{{book.title}} {{sectionobj.title}} pdf</title>
+<div class="container-fluid" style="padding-left:0;padding-right:0;">
+
+  <style media="screen">
+    nav{
+    display: none;
+  }
+    footer{
+      width:75%;
+      margin-left:25%;
+    }
+  </style>
+
+  <style media="screen and (max-width:768px)">
+    footer{
+       width: 100%;
+       margin-left: 0px;
+     }
+   </style>
+
+  <!-- <style media="screen and (max-width:1352px)">
+    footer{
+          width: 76%;
+          margin-left: 20%;
+        }
+      </style> -->
+
+  <div class="col-md-3 pull-right leftSection_div hidden-xs hidden-sm">
+    <div class="logoeffect">
+      <a href="/"> <img src="/static/images/24tut/white24.png" width="70%"></a>
+    </div>
+    <div class="" style="background: rgba(0,0,0,.05);padding: 10px 15px;color: #fff;">
+      <h4>OTHER CHAPTERS</h4>
+    </div>
+    <div id="leftSection" class="" style="padding-left:0px;padding-right:0px;overflow: hidden;width:99%;">
+      <ul class="list-unstyled other_chap">
+        {% for sec in sections %}
+        {% if sectionobj.shortUrl == sec.shortUrl %}
+        <li id="activeli" class="activeli"><a class="activea" href="/{{sec.shortUrl}}/"><span>{{sec.title}}</span></a></li>
+        {% else %}
+        <li><a href="/{{sec.shortUrl}}/"><span>{{sec.title}}</span></a></li>
+        {% endif %}
+        {% endfor %}
+      </ul>
+    </div>
+  </div>
+  <div class="col-md-1 q_div hidden-xs hidden-sm">
+    <div class="" style="overflow: hidden;width:99%;">
+      <ul class="list-unstyled q_list" style="height: 97vh;overflow: auto;width: 126%;overflow-x:hidden;">
+        {% for q in questions %}
+        <li ng-click="toTheTop({{forloop.counter}})"><span class="q_no">q{{ forloop.counter }}</span>
+          <!-- <div class="question">
+            <div class="" style="padding:20px;">
+              <span>Lorem ipsum dolor sit amet, consectua. Utti ea commodom.</span>
+            </div>
+          </div> -->
+          {% endfor %}
+        </li>
+      </ul>
+    </div>
+  </div>
+
+
+  <div class="col-sm-12">
+    <div class="col-sm-6 pull-right menu_list_div hidden-md hidden-lg" ng-show="menu">
+      <div class="logoeffect">
+        <a href="/"> <img src="/static/images/24tut/white24.png" width="70%"></a>
+      </div>
+      <div class="" style="background: rgba(0,0,0,.05);padding: 10px 15px;color: #fff;">
+        <h4>OTHER CHAPTERS</h4>
+      </div>
+      <div id="leftSection" class="" style="padding-left:0px;padding-right:0px;overflow: hidden;width:99%;">
+        <ul class="list-unstyled other_chap">
+          {% for sec in sections %}
+          {% if sectionobj.shortUrl == sec.shortUrl %}
+          <li id="activeli" class="activeli"><a class="activea" ui-sref="chapter({chapterName: '{{sec.shortUrl}}' })"><span>{{sec.title}}</span></a></li>
+          {% else %}
+          <li><a ui-sref="chapter({chapterName: '{{sec.shortUrl}}' })"><span>{{sec.title}}</span></a></li>
+          {% endif %}
+          {% endfor %}
+        </ul>
+      </div>
+    </div>
+    <div class="col-sm-2 menu_q_div hidden-md hidden-lg" ng-show="menu">
+      <div class="" style="overflow: hidden;width:99%;">
+        <ul class="list-unstyled q_list" style="height: 97vh;overflow: auto;width: 126%;overflow-x:hidden;">
+          {% for q in questions %}
+          <li ng-click="toTheTop({{forloop.counter}})"><span class="q_no">q{{ forloop.counter }}</span>
+            {% endfor %}
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-md-9 col-md-offset-3 solution_div" style="background-color:#e8e8e8;">
+
+
+    <div class="col-md-12 top_header">
+      <div class="hidden-md hidden-lg" style="padding-top:10px;">
+        <div class="user" id="flybtn" ng-click="signin()">
+          <i class="fa fa-user" aria-hidden="true" style="position:fixed;top:13px;right:70px;font-size:30px;color:#eee;cursor:pointer;"></i>
+        </div>
+        <button type="button" class="btn btn-default pull-right show_menu" id="flybtn1" ng-click="show_menu()">
+          <i class="fa fa-bars" aria-hidden="true"></i>
+        </button>
+      </div>
+      <!-- <img src="" width="100%"style="z-index:-100;opacity:0.5;;left:0;top:0;"> -->
+
+      <div class="col-md-2 mobileview">
+        <img src="/static/images/24tut/hcv.jpg" class="tb_image">
+      </div>
+      <div class="col-md-6 heading_24">
+        <h1> {{sectionobj.title}} </h1>
+        <h2>{{book.title}}</h2>
+        <h3>-{{book.author}}</h3>
+      </div>
+
+      <button class="btn btn-primary pull-right sign_btn" ng-click="signin()">sign in</button>
+    </div>
+    <!-- <div ng-show="displ">
+      <span>Q{{idx}}</span>
+    </div>  -->
+    <div class="col-md-12 q_main_div">
+      <div class="container-fluid q_container" ng-init="initiateMath()">
+        {% for q in questions %}
+        <div id="q{{ forloop.counter }}" class="col-md-12 min_padd q_box">
+          <i class="fa fa-bookmark bkmrk" aria-hidden="true"></i>
+          <p class="qes"><strong style="border-right:1px solid #eee;padding-right:10px;float:left;">{{ forloop.counter }}</strong> &nbsp; <span class="ques"><strong>{{q.ques | safe}}</strong></span>
+          </p>
+          <div class="row" style="padding-left:30px;width:90%;">
+            {% for qp in q.quesParts.all %}
+            <p class="qes">{{qp.txt | safe}}</p>
+            {% endfor %}
+          </div>
+          <h5 class="text-primary" style="padding-top: 10px;padding-bottom: 10px;padding-left:15px"><strong>Solution :</strong> </h5>
+          <div class="col-md-10" style="padding-left:30px;width:90%; word-wrap: break-word; ">
+            {% for sp in q.solutionParts.all %}
+            <p class="qes">{{sp.pk}} {{sp.txt | safe}}</p>
+            {% endfor %}
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+
+  </div>
+
+</div>
+
+{% endblock %}

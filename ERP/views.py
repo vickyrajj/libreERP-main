@@ -78,10 +78,18 @@ def dynamicTemplates(request , filename):
 
 
 def courses(request):
-    print 'yyoyoyooyyyyyyyoooooooooooooooooooo'
     return render(request, 'courses.html', {})
 
+def mockTestView(request , testID):
+    pass
 
+def coursesContent(request , page):
+    print "coming in course content"
+    print page
+    return render(request, 'courses.html', {"typ" : page})
+
+def ncert(request):
+    return render(request, 'ncert.html', {})
 
 class MakePaytmPayment(APIView):
     renderer_classes = (JSONRenderer,)

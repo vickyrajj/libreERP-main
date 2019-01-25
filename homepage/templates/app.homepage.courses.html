@@ -1,0 +1,366 @@
+<div class="row" style="margin:0px;">
+  <style>
+    .nohover:hover {
+      transform: scale(1);
+      transition: 0;
+    }
+  </style>
+
+  <div class="container-fluid" ng-class='banner' style="background-image: linear-gradient(rgba(36, 32, 32, 0.79), rgba(32, 32, 32, 0.74)), url('/static/images/24tut/studentimg.jpg');background-size:cover;background-repeat:no-repeat;height:40vh;">
+  </div>
+
+  <div class="container" style="padding-bottom:4em;">
+    <div class="row" style="margin-top:4em;">
+      <div class="col-md-6 col-xs-12">
+        <div style="margin-right:2em;display:inline-block;">
+          <span style="font-size:30px;color:#000;"><b>Class 12 std</b></span>
+        </div>
+      </div>
+    </div>
+    <div class="row" style="margin-top:2em;">
+      <div class="col-md-3 col-xs-12 rightborder">
+        <table>
+          <tr>
+            <td style="width:35%;"><img src="/static/images/24tut/author1.png" class="img-responsive img-circle" style="height:50px;width:50px;" /></td>
+            <td><span style="font-size:20px;"><b>Video Course</b></span><br /><span style="color: #9E9E9E">Adden On 29 sep'18</span></td>
+          </tr>
+        </table>
+      </div>
+      <div class="col-md-2 col-xs-5 smdevice" style="border-right:1px solid #9E9E9E">
+        <table>
+          <tr>
+            <td style="width:25%;"><i class="fa fa-book"></i></td>
+            <td><span style="font-size:20px;"><b>3 Books</b></span></td>
+          </tr>
+        </table>
+      </div>
+      <div class="col-md-3 col-xs-7 smdevice">
+        <table>
+          <tr>
+            <td style="width:50%"> <i class="fa fa-star " style="color:#f4c810" aria-hidden="true"></i>
+              <i class="fa fa-star " style="color:#f4c810" aria-hidden="true"></i>
+              <i class="fa fa-star " style="color:#f4c810" aria-hidden="true"></i>
+              <i class="fa fa-star " style="color:#f4c810" aria-hidden="true"></i>
+              <i class="fa fa-star " style="color:#f4c810" aria-hidden="true"></i></td>
+            <td><span style="font-size:15px;"><b class="text-muted">(11 Reviews)</b></span></td>
+          </tr>
+        </table>
+      </div>
+    </div>
+    <div class="row" style="margin-top:2em;">
+      <div class="col-md-6">
+        <table class="alignintable">
+          <tr>
+            <td class="tablehead"><span> Share this course:</span></td>
+            <td><i class="fa fa-facebook" aria-hidden="true"></i></td>
+            <td><i class="fa fa-twitter" aria-hidden="true"></i></td>
+            <td><i class="fa fa-linkedin" aria-hidden="true"></i></td>
+            <td style="width:8%;"><i class="fa fa-youtube" aria-hidden="true"></i></td>
+            <td><i class="fa fa-comments" aria-hidden="true"></i></td>
+            <td style="width:20%;"><a href="#">View Forum</a></td>
+          </tr>
+        </table>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="container-fluid" style="background-color:#FCC300;min-height:10vh;  position:relative;padding-bottom: 2em;" ng-hide="device.smallDevice">
+    <div class="container">
+      <div class="col-md-2 clickchange" ng-class="click1" ng-click="clicks(1)">
+        <span><b>Books</b></span>
+        <div ng-class="class1"></div>
+      </div>
+      <div class="col-md-2 clickchange" ng-class="click2" ng-click="clicks(2)">
+        <span><b>Video Course</b></span>
+        <div ng-class="class2"></div>
+      </div>
+      <a href="/exam">
+        <div class="col-md-2 clickchange" ng-class="click3" ng-click="clicks(3)">
+          <span><b>Test Series</b></span>
+          <div ng-class="class3"></div>
+        </div>
+      </a>
+      <!-- <a href="/forum"> -->
+      <div class="col-md-2 clickchange" ng-class="click4" ng-click="clicks(4)">
+        <span><b>Forum</b></span>
+        <div ng-class="class4"></div>
+      </div>
+      <!-- </a> -->
+      <div class="col-md-2 clickchange" ng-class="click5" ng-click="clicks(5)">
+        <span><b>Refernce Books</b></span>
+        <div ng-class="class5"></div>
+      </div>
+      <div class="col-md-2 clickchange1" ng-class="click6" ng-click="clicks(6)">
+        <span><b>Notes</b></span>
+        <div ng-class="class6"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="container-fluid" ng-hide="!device.smallDevice">
+    <div class="container" style="background-color:#FCC300;min-height:10vh;  position:relative;padding-bottom: 2em;">
+      <ng-owl-carousel class="owl-theme" owl-items="items" owl-properties="properties" owl-ready="ready($api)">
+        <div ng-repeat="a in items">
+          <div ng-if="$index==2">
+            <a href="/exam">
+              <div class="col-xs-12 clickchange" ng-class="a.class1" ng-click="clicks($index+1)">
+                <span style="font-size:35px;"><b>{{a.head}}</b></span>
+                <div ng-class="a.class2"></div>
+              </div>
+            </a>
+          </div>
+          <div ng-if="$index!=2">
+            <div class="col-xs-12 clickchange" ng-class="a.class1" ng-click="clicks($index+1)">
+              <span style="font-size:35px;"><b>{{a.head}}</b></span>
+              <div ng-class="a.class2"></div>
+            </div>
+          </div>
+
+        </div>
+      </ng-owl-carousel>
+    </div>
+  </div>
+  <div class="container" ng-show="books">
+    <div class="col-md-8 col-md-offset-2">
+      <div ng-repeat="a in bookscontent">
+        <div class="row " ng-class="!$last ? 'contentborder' : 'contentborderlast'" style="position:relative;">
+          <div class="headblock" ng-click="headclick($index)">
+            <span class="titlesize"><b>{{a.title}}<span style="font-size:15px;margin-left:0.5em;"> (6 Lessons)</span></b></span>
+            <span class="titleicon"><i class="fa fa-angle-{{a.view==true?'up':'down'}}" style="font-size:30px;"></i></span>
+            <div ng-class="!$last ? 'roundcircle' : 'roundcirclelast'"> </div>
+          </div>
+          <div ng-show="a.view">
+            <div ng-repeat="b in a.chapter | limitTo:5">
+              <div class="row contentblock">
+                <div class="col-md-10 col-xs-11" style="{{$last && !a.view1 ? 'color:#a3a3a3;':''}}{{$first?'border-top:0':''}}">{{b.content}}</div>
+                <div class="col-md-2 col-xs-1  right_on" style="{{$last && !a.view1 ? 'color:#a3a3a3;':''}}{{$first?'border-top:0':''}}">{{b.page}}</div>
+              </div>
+            </div>
+            <div ng-show="a.view1">
+              <div ng-repeat="b in a.chapter | limitTo:len:5">
+                <div class="row  contentblock">
+                  <div class="col-md-10 col-xs-11">{{b.content}}</div>
+                  <div class="col-md-2 col-xs-1 right_on">{{b.page}}</div>
+                </div>
+              </div>
+            </div>
+            <div class="text-center">
+              <button class="btn-style1" ng-click="loadcontent($index,a.chapter.length)">{{a.view1 == true?'Load Less':'Load More'}}</button>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="container-fluid no_padding" ng-show="videos">
+    <div class="col-md-12 min_padd text-center" style="background:#eee;">
+      <div class="col-md-3 video_card text-center" ng-repeat="i in subject">
+        <a href="/courseVideo">
+          <h2>{{i.name}}</h2>
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <div class="container-fluid" ng-show="forum">
+    <div ng-repeat="a in forumlist" style="margin-top:3em;">
+      <div class="col-md-6 col-md-offset-3 col-xs-12 no_padding">
+        <div>
+
+          <div class="col-md-1 col-xs-2">
+            <div style="width:60px;padding-top: 1.5em;">
+              <img src="{{a.imgsrc}}" style="width:45px;border-radius:50%;height:45px;" />
+            </div>
+          </div>
+          <div class="col-md-11 col-xs-10 no_padding" style="">
+            <div class="no_pad" style="border-bottom: 1px solid #eaecf0;display: flex;align-items: center;">
+
+              <div class="contentrow" style="flex: 0 1 auto;" ng-click="forumview($index)">
+                <div class="toprow" style="">
+                  <i class="fa fa-thumb-tack"></i>
+                  <span style="font-size:17px;color: #3C4556;cursor:pointer;">{{a.title}}</span>
+                </div>
+                <div class="bottomrow" style="font-size: 1em;">
+                  <span class="" style="font-size:15px;color: #3C4556;">{{a.secondtext}}</span>
+                  <span class="heartsym1 centeralignn" style=""><span class="">Replies:</span>{{a.users.length}}</span>
+                </div>
+              </div>
+              <div class=" heartsym centeralignn" style="flex: 1 0 0;color: #949fb4;">
+                <span style="text-align: right;">Replies:{{a.users.length}}</span>
+              </div>
+            </div>
+            <div class="childforum" style='border-bottom: 1px solid #eaecf0;' ng-show="forumlist[$index].status==true">
+              <div ng-repeat="b in a.users">
+                <div class="col-md-1 no_padding">
+                  <div style="width:60px;text-align: left;padding-top: 1.5em;">
+                    <img src="{{b.userimg}}" style="width:45px;border-radius:50%;height:45px;" />
+                  </div>
+                </div>
+                <div style="padding: 1.5em  0;{{$last?'':'border-bottom: 1px solid #eaecf0'}};display: flex;align-items: center;" class="effecton">
+
+                  <div style="flex: 0 1 auto;width: 85%;font-size: 1em;">
+                    <span>{{b.name}}</span>
+                    <div style="padding-top: 1em;">
+                      <span style="font-size:16px;">{{b.comment}}</span>
+                    </div>
+                    <div style="margin-top:1em;" ng-click="replyto($parent.$index,$index)">
+                      <button class="btn btn-primary visible" type="button" ng-class="a.users[$index].status==true?'nodisplay':''"> Reply</button>
+                    </div>
+                    <div style="padding-top:1em;" ng-show="a.users[$index].status==true">
+                      <textarea class="autoExpand comment_areaa" type="textarea" ng-model="comment" placeholder='Add  a comment Here..' style="min-width:100%;"></textarea>
+                      <div class="pull-right" style="padding-top:10px;">
+                        <button type="button" class="btn btn-default" ng-click="cancel($parent.$index,$index)">Cancel</button>
+                        <button type="button" class="btn btn-primary">Reply</button>
+                      </div>
+                    </div>
+                  </div>
+                  <div style="flex: 1 0 0;text-align: right;">
+                    <i class="fa fa-heart heartsym" aria-hidden="true"></i>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="container no_padding" ng-show="refbook">
+    <div class="row min_padd text-center" style="">
+      <div class="col-md-6" style="position: relative;" ng-repeat="b in refbooks">
+        <div class="movie-card">
+          <div class="col-md-5 studentcard" style="min-height:300px;">
+            <img src="{{b.img}}" class="imgstyle" />
+          </div>
+          <!-- <div class="circle">
+            <div><b>83%</b></div>
+          </div> -->
+          <div class="colorcircle" style="background-color:{{arr[$index]}}">
+          </div>
+          <div class="col-md-7 text-left">
+            <div style="margin-top:3em;">
+              <span style="font-size:18px;color:#5B5B5B;"> <strong>{{b.name}}</strong> </span><br>
+              <span style="font-size:18px;color:#5B5B5B;">{{b.detail}}</span>
+            </div>
+            <div class="stucardtext">
+              <span style="font-size:18px;"><b>{{b.author}}</b></span>
+            </div>
+            <div style="padding-bottom: 20px;">
+              <span style="font-size:15px;color:#5B5B5B;padding-bottom: 20px;"></span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="container" ng-show="notes">
+    <div class="row">
+      <div class="col-md-10 col-md-offset-1">
+        <div class="row">
+          <div ng-repeat="a in mathformulas ">
+            <div class="col-md-4" style="margin:1em 0">
+              <div class="cardstype nohover" style="margin-top:3em;border-top-left-radius: 50px;min-height:0vh;min-height:20vh;text-align: left;">
+                <div style="cursor:pointer;text-align: center;padding:2em 1em 1em 1em;min-height: 9em;"><span style="font-size:17px;">{{a.chapter}} </span><br />
+                  <span style="font-size:17px;"> {{a.name}}</span>
+                </div>
+                <div class="text-center">
+                  <button class="btn-style1" style="border-top-left-radius: 15px;padding: 0.5em 1em;margin-top: 0em;" ng-click="chapterclick(a.id,a)">View</button>
+                </div>
+
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+<div class="container-fluid" style="background-color: #fff;">
+  <div class="container" style=" margin-bottom: 2em;text-align: center;">
+    <h1 style="margin-top:2em;"><b>Related Courses</b></h1>
+    <span class="heading_small">COURSES YOU MIGHT BE INTERESTED IN</span>
+    <div class="row" style="margin-bottom:2em;">
+      <div ng-repeat="a in cardss">
+        <div class="anim-in-out anim-zoom-out">
+          <div style="margin-top: 2em;">
+            <div class="col-md-4">
+              <div class="cardstype">
+                <img src="{{a.img1}}" class="img-radiuss" alt="Avatar" style="width:100%">
+                <div class="body1" style="background-color: #fff;border-bottom-left-radius: 10px;border-bottom-right-radius: 10px;">
+                  <h4 style="border-bottom:1px solid #C9C9C9;padding-bottom:1em;"><b>{{a.title}}</b></h4>
+                  <p style="padding-top:1em;">{{a.content}}</p>
+                  <table class="table-align">
+                    <td class="tablealign1"><span style="text-align: center"><img src="{{a.img2}}" class="img-responsive img-circle" style="height:50px;width:50px;"></span></td>
+                    <td class="tablealign2"><b>{{a.name}}</b></td>
+                    <td style="cursor:pointer;"><a href="/checkout"class="badge badge-pills">&#8377;{{a.price}}/hr</a></td>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="container-fluid" style="min-height:60vh;background-color:#F9F9F9;">
+  <div class="col-md-12 min_padd text-center">
+    <h1 class="heading_big">eLearny's Testimonials</h1>
+    <h5 class="heading_small">WHAT STUDENTS THINK OF US</h5>
+  </div>
+  <div class="col-md-8 col-md-offset-2">
+    <div class="col-md-4">
+      <div class="container-fluid tell_card">
+        <img src="/static/images/24tut/tell1.jpeg" class="tell_abt">
+        <img src="/static/images/24tut/clip.png" class="tell_abt_overlay">
+        <div class="text-center tell_c_info">
+          <h2 class="pro_head">Lauren Ralph</h2>
+          <h5 class="text-muted">eLearny Student</h5>
+          <div class="" style="padding:10px 30px;line-height:2;">
+            <span class="heading_small">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod sed do eiusmod.</span>
+            <img src="/static/images/24tut/qleft.png" class="quotes_img">
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="container-fluid tell_card">
+        <img src="/static/images/24tut/tell2.jpeg" class="tell_abt">
+        <img src="/static/images/24tut/clip.png" class="tell_abt_overlay">
+        <div class="text-center  tell_c_info">
+          <h2 class="pro_head">Stan Lee</h2>
+          <h5 class="text-muted">Music Student</h5>
+          <div class="" style="padding:10px 30px;line-height:2;">
+            <span class="heading_small">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod sed do eiusmod.</span>
+            <img src="/static/images/24tut/qleft.png" class="quotes_img">
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="container-fluid tell_card">
+        <img src="/static/images/24tut/tell5.png" class="tell_abt">
+        <img src="/static/images/24tut/clip.png" class="tell_abt_overlay">
+        <div class="text-center tell_c_info">
+          <h2 class="pro_head">Joseph Irvin</h2>
+          <h5 class="text-muted">Programmer</h5>
+          <div class="" style="padding:10px 30px;line-height:2;">
+            <span class="heading_small">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod sed do eiusmod.</span>
+            <img src="/static/images/24tut/qleft.png" class="quotes_img">
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+</div>

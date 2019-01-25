@@ -36,7 +36,19 @@ def index(request):
 def blogDetails(request, blogname):
     print '*****************',blogname
     try:
+        # print "searching for blog post"
+        # print blogPost.objects.all()
+        # typ = None
+        # if '/' in blogname:
+        #     prts = blogname.split('/')
+        #     typ = prts[1]
+        #
+        #     blogobj = blogPost.objects.get(shortUrl=prts[0])
+        # else:
         blogobj = blogPost.objects.get(shortUrl=blogname)
+
+        print "got blog post"  , blogobj
+
         if blogobj.contentType == 'article':
             us = ''
             blogId = blogobj.pk
@@ -52,7 +64,15 @@ def blogDetails(request, blogname):
         elif blogobj.contentType == 'book':
             book = Book.objects.get(pk=blogobj.header)
             sectionobj = Section.objects.filter(book = book.pk)
-            return render(request, 'bookDetails.html', {"home": False, "tagsCSV" :  blogobj.tagsCSV.split(','), 'book' : book ,'sectionobj':sectionobj,'blogobj' : blogobj, "brandLogo" : globalSettings.BRAND_LOGO , "brandLogoInverted": globalSettings.BRAND_LOGO_INVERT})
+            return render(request, 'book.html', {"home": False, "tagsCSV" :  blogobj.tagsCSV.split(','), 'book' : book ,'sectionobj':sectionobj,'blogobj' : blogobj, "brandLogo" : globalSettings.BRAND_LOGO , "brandLogoInverted": globalSettings.BRAND_LOGO_INVERT})
+        # elif blogobj.contentType == 'course':
+        #     if typ == 'books':
+        #         pass
+        #     elif typ == 'video-couse':
+        #         pass
+        #     elif typ == 'mock-tests':
+        #         pass
+
     except:
 
         traceback.print_exc(file=sys.stdout)
@@ -84,7 +104,7 @@ def blogDetails(request, blogname):
                         prevobj = sec[a-1]
                         nxtvobj = sec[a+1]
 
-        return render(request, 'sectionDetails.html', { "sections" : sec , "home": False, "tagsCSV" :  blogobj.tagsCSV.split(','),'sectionobj':sectionobj, 'book' : sectionobj.book ,'blogobj' : blogobj, "brandLogo" : globalSettings.BRAND_LOGO , "brandLogoInverted": globalSettings.BRAND_LOGO_INVERT,'questions':sectionobj.questions.all(),'bot':{'prev':prev,'nxt':nxt,'prevobj':prevobj,'nxtvobj':nxtvobj}})
+        return render(request, 'bookContent.html', { "sections" : sec , "home": False, "tagsCSV" :  blogobj.tagsCSV.split(','),'sectionobj':sectionobj, 'book' : sectionobj.book ,'blogobj' : blogobj, "brandLogo" : globalSettings.BRAND_LOGO , "brandLogoInverted": globalSettings.BRAND_LOGO_INVERT,'questions':sectionobj.questions.all(),'bot':{'prev':prev,'nxt':nxt,'prevobj':prevobj,'nxtvobj':nxtvobj}})
 
 
 
