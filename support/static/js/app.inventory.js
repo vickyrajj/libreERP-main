@@ -148,36 +148,109 @@ app.controller("businessManagement.inventory", function($scope, $state, $users, 
 $scope.createDC= function(pkVal){
   $uibModal.open({
     templateUrl: '/static/ngTemplates/app.inventory.deliveryChallan.html',
-    size: 'xs',
-    // backdrop:false,
+    size: 'lg',
+    backdrop:false,
     resolve: {
       value: function() {
         return pkVal;
       }
     },
     controller: function($scope, $uibModalInstance,value) {
-      $scope.form={
-        materialPk:'',
-        vandor:''
+
+      $scope.materialPk = value
+      $scope.refresh = function(){
+        $scope.form={
+          customer : '',
+          materialIssue :'',
+          heading : '',
+          challanNo :'',
+          challanDate :'',
+          deliveryThr : '',
+          refNo : '',
+          apprx :'',
+          notes:''
+        }
       }
-      $scope.form.materialPk = value
-      $scope.vendorSearch = function(query) {
-        return $http.get('/api/support/vendor/?name__contains=' + query).
+        $scope.refresh()
+
+      $http({
+        method: 'GET',
+        url: '/api/support/deliveryChallan/?materialIssue='+$scope.materialPk
+      }).
+      then(function(response) {
+        $scope.data = response.data[0]
+        console.log($scope.data,'aaaaaaaaa');
+      })
+
+      $scope.viewAll = function(){
+        if(typeof $scope.data =='undefined'){
+            $scope.refresh()
+        }
+        else{
+          $scope.form = $scope.data
+        }
+      }
+      $timeout(function() {
+        $scope.viewAll()
+      }, 500);
+
+
+
+      $scope.serviceSearch = function(query) {
+        return $http.get('/api/ERP/service/?name__contains=' + query).
         then(function(response) {
           return response.data;
         })
       };
       $scope.create = function() {
-        console.log($scope.form.vendor,$scope.form.materialPk );
+        $scope.form.materialIssue = $scope.materialPk
+        if(typeof $scope.form.challanDate=='object'){
+          $scope.form.challanDate = $scope.form.challanDate.toJSON().split('T')[0]
+        }
+        else{
+            $scope.form.challanDate = $scope.form.challanDate
+        }
+        if(typeof $scope.form.customer=='object'){
+          $scope.customer = $scope.form.customer.pk
+        }
+        else{
+            $scope.customer = $scope.form.customer
+        }
+        // if(typeof $scope.form.materialIssue=='object'){
+        //   $scope.form.materialIssue = $scope.form.materialIssue.pk
+        // }
+        // else{
+        //     $scope.form.materialIssue = $scope.form.materialIssue
+        // }
+
+        var dataToSend = {
+          customer : $scope.customer ,
+          materialIssue :$scope.form.materialIssue,
+          heading : $scope.form.heading,
+          challanNo :$scope.form.challanNo,
+          challanDate :$scope.form.challanDate,
+          deliveryThr : $scope.form.deliveryThr,
+          refNo :  $scope.form.refNo,
+          apprx : $scope.form.apprx,
+          notes: $scope.form.notes
+        }
+
+        if(!$scope.form.pk){
+          var method = 'POST'
+          var url = '/api/support/deliveryChallan/'
+        }
+        else{
+          var method = 'PATCH'
+          var url = '/api/support/deliveryChallan/'+ $scope.form.pk +'/'
+        }
+
         $http({
-            method: 'PATCH',
-            url: '/api/support/material/' +$scope.form.materialPk+'/' ,
-            data:{
-              vendor:$scope.form.vendor.pk
-            }
+            method: method,
+            url: url,
+            data:dataToSend
           }).
           then(function(response) {
-              $uibModalInstance.dismiss();
+            $scope.form = response.data
           })
       };
       $scope.close = function() {

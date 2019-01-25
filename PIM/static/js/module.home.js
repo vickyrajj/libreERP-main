@@ -158,6 +158,12 @@ app.config(function($stateProvider) {
       controller: 'businessManagement.invoice'
     })
 
+    .state('home.deliveryChallan', {
+      url: "/deliveryChallan",
+      templateUrl: '/static/ngTemplates/app.deliveryChallan.html',
+      controller: 'businessManagement.deliveryChallan'
+    })
+
     // .state('home.settings', {
     //   url: "/settings",
     //   views: {

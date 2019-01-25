@@ -161,6 +161,13 @@ class InvoiceQtyViewSet(viewsets.ModelViewSet):
     filter_backends = [DjangoFilterBackend]
     filter_fields = ['invoice']
 
+class DeliveryChallanViewSet(viewsets.ModelViewSet):
+    permission_classes = (permissions.AllowAny , )
+    queryset = DeliveryChallan.objects.all()
+    serializer_class = DeliveryChallanSerializer
+    filter_backends = [DjangoFilterBackend]
+    filter_fields = ['materialIssue','customer','challanNo']
+
 class ProductsUploadAPIView(APIView):
     permission_classes = (permissions.IsAuthenticated ,)
 
@@ -2416,81 +2423,120 @@ class CancelMaterialAPIView(APIView):
         return Response(status=status.HTTP_200_OK)
 
 def deliveryChallan(response , value , request):
+    print value,'llllllllllll'
+    materialdata = DeliveryChallan.objects.get(pk=value)
     styles = getSampleStyleSheet()
     style_right = ParagraphStyle(name='right', parent=styles['Normal'], alignment=TA_RIGHT)
     doc = SimpleDocTemplate(response,pagesize=letter, topMargin=0.2*cm,leftMargin=0.1*cm,rightMargin=0.1*cm)
     doc.request = request
     elements = []
-    invdata = MaterialIssueMain.objects.get(pk = request.GET['value'])
-    print invdata,'aaaaa'
-    p1 = Paragraph("<para alignment='center' fontSize=15  ><b> Delivery Challan</b></para>",styles['Normal'])
+    # invdata = MaterialIssueMain.objects.get(pk = request.GET['value'])
+    # print invdata,'aaaaa'
+    try:
+        heading = materialdata.heading.replace('\n', '<br />')
+    except:
+        heading = materialdata.heading
+    p1 = Paragraph("<para alignment='center' fontSize=10  ><b> {0}</b></para>".format(heading),styles['Normal'])
 
     elements.append(p1)
     elements.append(Spacer(1,15))
-    supplier = invdata.vendor.name
-    # projecttitle =invdata.project.title
-    # customer =invdata.project.service.name
-    # dated = invdata.created.date()
-    p0_01 =Paragraph("<para  alignment='left' fontSize=10>Supplier - {0}</para>".format(supplier),styles['Normal'])
-    # p1_01 =Paragraph("<para fontSize=10>Project title</para>",styles['Normal'])
-    # p1_02 =Paragraph(str(projecttitle),styles['Normal'])
-    #
-    # p2_01 =Paragraph("<para fontSize=10>Customer</para>",styles['Normal'])
-    # p2_02 =Paragraph(str(customer),styles['Normal'])
-    #
-    # p3_01 =Paragraph("<para fontSize=10>Date of issue</para>",styles['Normal'])
-    # p3_02 =Paragraph(str(dated),styles['Normal'])
+    detail = Paragraph("""
+    <para align="left">
+    <font size='8'>
+    No : %s <br/>
+    Date : %s
+    </font>
+    </para>
+    """ %(materialdata.challanNo,materialdata.challanDate),styles['Normal'])
+    detail1 = Paragraph("""
+    <para align="left">
+    <font size ='8'>
+    <b>Our GST IN: 29AABCB6326Q1Z6</b> <br/><br/>
 
+    </font></para>
+    """ %(),styles['Normal'])
+    td=[[detail,detail1]]
+    t=Table(td)
 
-
-    data1=[[p0_01]]
-    # rheights=1*[0.2*inch] #[1.1*inch,1.1*inch]
-    # cwidths=6.5*inch
-    t1=Table(data1)
-
+    elements.append(t)
+    detailaddress = Paragraph("""
+    <para align="left">
+    <font size ='8'>
+    <bTo,</b> <br/>
+    %s <br/>
+    %s <br/>
+    %s  %s <br/>
+    %s - %s <br/>
+    GST IN : %s
+    </font></para>
+    """ %(materialdata.customer.name,materialdata.customer.address.street,materialdata.customer.address.city,materialdata.customer.address.state,materialdata.customer.address.country,materialdata.customer.address.pincode,materialdata.customer.gst),styles['Normal'])
+    detailval = Paragraph("""
+    <para align="left">
+    <font size ='8'>
+    Delivery through : %s <br/><br/>
+    Kind Attn : %s <br/>
+    Your reference : %s <br/>
+    </font></para>
+    """ %(materialdata.deliveryThr,materialdata.customer.customerName,materialdata.refNo),styles['Normal'])
+    td1=[[detailaddress,detailval]]
+    t1=Table(td1)
+    t.hAlign = 'LEFT'
     elements.append(t1)
-    elements.append(Spacer(1,40))
-
-
+    elements.append(Spacer(1,15))
+    p4_00 =Paragraph("<para fontSize=6 align=center><b>Sl. No</b></para>",styles['Normal'])
     p4_01 =Paragraph("<para fontSize=6 align=center><b>Part number</b></para>",styles['Normal'])
     p4_02 =Paragraph("<para fontSize=6 align=center><b>Part description</b></para>",styles['Normal'])
     p4_03 =Paragraph("<para fontSize=6 align=center><b>Quantity</b></para>",styles['Normal'])
-    # p4_04 =Paragraph("<para fontSize=6 align=center><b>Stock value / unit<br/>(Z) </b></para>",styles['Normal'])
-    # p4_05 =Paragraph("<para fontSize=6 align=center><b>Stock value consumed for the comm nr<br/>(AD = ACxZ)</b></para>",styles['Normal'])
-    data2= [[p4_01,p4_02,p4_03]]
-
-    grandtotal = 0
-
-    for i in invdata.materialIssue.all():
-        partno = i.product.part_no
-        description = i.product.description_1
-        qty = i.qty
-        qdata = qty
-        price = i.price
-        pdata = price
-        total = qty*price
-        tdata = total
-        grandtotal+=total
-        gtotal = grandtotal
-        p6_01 =Paragraph(partno,styles['Normal'])
-        p6_02 =Paragraph(description,styles['Normal'])
-        p6_03 =Paragraph("{:,}".format(qdata),styles['Normal'])
-        # p6_04 =Paragraph("{:,}".format(round(pdata,2)),style_right)
-        # p6_05 =Paragraph("{:,}".format(round(tdata,2)),style_right)
-        data2+=[[p6_01,p6_02,p6_03]]
-
-    # p7_01 =Paragraph("<para fontSize=8 ></para>",styles['Normal'])
-    # p7_02 =Paragraph("<para fontSize=8 ></para>",styles['Normal'])
-    # p7_03 =Paragraph("<para fontSize=8 ></para>",styles['Normal'])
-    # p7_04 =Paragraph("<para fontSize=8 ><b>Total</b></para>",style_right)
-    # p7_05 =Paragraph("{:,}".format(round(gtotal,2)),style_right)
-    # data2+=[[p7_01,p7_02,p7_03,p7_04,p7_05]]
-
-    # rheight=0.4*inch #[1.1*inch,1.1*inch]
-    # cwidth=1.6*inch,3*inch,0.4*inch
-    t2=Table(data2)
+    p4_04 =Paragraph("<para fontSize=6 align=center><b>HSN</b></para>",styles['Normal'])
+    data2= [[p4_00,p4_01,p4_02,p4_03,p4_04]]
+    indx = 0
+    for i in materialdata.materialIssue.materialIssue.all():
+        indx+=1
+        p6_00 =Paragraph("<para fontSize=6>{0}</para>".format(indx),styles['Normal'])
+        p6_01 =Paragraph("<para fontSize=6>{0}</para>".format(i.product.part_no),styles['Normal'])
+        p6_02 =Paragraph("<para fontSize=6>{0}</para>".format(i.product.description_1),styles['Normal'])
+        p6_03 =Paragraph("<para fontSize=6 align='center'>{0}</para>".format(i.qty),styles['Normal'])
+        p6_04 =Paragraph("<para fontSize=6>{0}</para>".format(i.product.customs_no),styles['Normal'])
+        data2+=[[p6_00,p6_01,p6_02,p6_03,p6_04]]
+    t2=Table(data2,colWidths=(18*mm,40*mm,90*mm,25*mm,40*mm))
     t2.setStyle(TableStyle([('ALIGN',(0,0),(-1,-1),'CENTER'),('VALIGN',(0,0),(-1,-1),'MIDDLE'),('BOX',(0,0),(-1,-1),0.25,colors.black),('INNERGRID', (0,0), (-1,-1), 0.25, colors.black)]))
     elements.append(t2)
+    elements.append(Spacer(1,15))
+    footer1 = Paragraph("""
+    <para align="left">
+    <font size ='8'>
+    Approximate value of goods : %s <br/>
+    <b> NOT FOR SALE</b>
+    </font></para>
+    """ %(materialdata.apprx),styles['Normal'])
+    td3=[[footer1]]
+    t3=Table(td3)
+    elements.append(t3)
+    elements.append(Spacer(1,15))
+    try:
+        notes = materialdata.notes.replace('\n', '<br />')
+    except:
+        notes = materialdata.notes
+    footer2 = Paragraph("""
+    <para align="left">
+    <font size ='8'>
+    Notes :  <br/>
+    %s <br/>
+    </font></para>
+    """ %(notes),styles['Normal'])
+    td4=[[footer2]]
+    t4=Table(td4)
+    elements.append(t4)
+    footer3 = Paragraph("""
+    <para align="left">
+    <font size ='8'>
+    For BRUDERER PRESSES INDIA PRIVATE LIMITED <br/> <br/>
+    Authorised Signatory <br/>
+    </font></para>
+    """ %(),styles['Normal'])
+    td5=[[footer3]]
+    t5=Table(td5)
+    elements.append(t5)
     doc.build(elements)
 
 class DeliveryChallanNoteAPIView(APIView):

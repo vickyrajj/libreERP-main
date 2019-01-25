@@ -25,7 +25,7 @@ class serviceSerializer(serializers.ModelSerializer):
     contactPerson = userSearchSerializer(many = True , read_only = True)
     class Meta:
         model = service
-        fields = ('pk' , 'created' ,'name' , 'customerName' ,'user' , 'email', 'cin' , 'tin' , 'address' , 'mobile' , 'telephone' , 'logo' , 'about', 'doc', 'web','contactPerson')
+        fields = ('pk' , 'created' ,'name' , 'customerName' ,'user' , 'email', 'cin' , 'tin' , 'address' , 'mobile' , 'telephone' , 'logo' , 'about', 'doc', 'web','contactPerson','gst')
         read_only_fields = ('user',)
 
     def assignValues(self , instance , validated_data):
@@ -37,6 +37,8 @@ class serviceSerializer(serializers.ModelSerializer):
             instance.cin = validated_data['cin']
         if 'tin' in validated_data:
             instance.tin = validated_data['tin']
+        if 'gst' in validated_data:
+            instance.gst = validated_data['gst']
         if 'mobile' in validated_data:
             instance.mobile = validated_data['mobile']
         if 'telephone' in validated_data:
