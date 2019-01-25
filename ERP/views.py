@@ -80,8 +80,13 @@ def dynamicTemplates(request , filename):
 def courses(request):
     return render(request, 'courses.html', {})
 
-def mockTestView(request , testID):
-    pass
+def mockTestView(request ,testID):
+    # testID=1;
+    return render(request, 'exam.html', {'id':testID})
+
+def testResultsView(request ):
+    # testID=1;
+    return render(request, 'examResults.html', {})
 
 def coursesContent(request , page):
     print "coming in course content"

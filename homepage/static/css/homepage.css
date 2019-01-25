@@ -2083,6 +2083,21 @@ hr {
 .selected {
   background-color: #D6F1FB;
 }
+.selectedhead {
+  background-color: #25B5E9;
+  border: 0;
+}
+
+.headselected {
+
+  margin-left: 1em;
+  padding: 0.1em 1em;
+}
+
+.selectedsub {
+  color: #fff;
+}
+
 
 .notview {
   width: 35px;
@@ -2296,11 +2311,27 @@ hr {
 }
 
 .btn-section {
-  margin-top: 20em;
+  /* margin-top: 20em;
   border-top: 1px solid #D2D2D2;
   padding: 0;
   margin-left: 0;
-  margin-right: 0;
+  margin-right: 0; */
+  position: fixed;
+  bottom: 3em;
+  right: 36.5em;
+  padding: 0;
+  margin: 0;
+  text-align: center;
+  border-top: 1px solid #D2D2D2;
+  display: inline-block;
+  width: 100%;
+  box-sizing: border-box;
+  z-index: 99;
+  background-color: #fff;
+}
+
+.saves {
+  margin-left: 30em;
 }
 
 .answers {
@@ -2327,7 +2358,8 @@ hr {
 }
 
 .fromtop {
-  margin-top: 30em;
+  padding-bottom: 5em;
+  margin-top:25em;
 }
 
 .center-align {
@@ -2513,23 +2545,27 @@ hr {
   background-color: #fff;
   cursor: default;
 }
-.method_row h3{
+
+.method_row h3 {
   margin-top: 40px;
 }
-.session_tabs{
+
+.session_tabs {
   text-align: center;
 }
-.tab_card{
+
+.tab_card {
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.1);
   border-radius: 7px;
   cursor: pointer;
   background-color: #eee;
-
 }
-.tab_card:hover{
+
+.tab_card:hover {
   background-color: #17EEAB;
   color: #fff;
 }
+
 /* exams css properties */
 /* for normal screens ends here.... */
 @media only screen and (device-width: 1352px) and (device-height: 641px) {
@@ -3027,6 +3063,10 @@ hr {
     background-color: #fff;
   }
 
+  .saves {
+    margin-left: em;
+  }
+
   .savebtn {
     padding: 0.5em 0;
     border: 0;
@@ -3061,7 +3101,8 @@ hr {
   }
 
   .fromtop {
-    margin-top: 25em;
+    padding-bottom: 5em;
+    margin-top:25em;
   }
 
   .aligntotext1 {

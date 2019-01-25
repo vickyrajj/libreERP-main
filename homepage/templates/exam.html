@@ -1,0 +1,156 @@
+{% extends "tutorBase.html" %}
+
+{% block tutorcontent %}
+
+{% verbatim %}
+
+<div class="container-fluid " ng-controller="exam">
+
+  <style media="screen">
+    nav,footer{
+      display: none;
+    }
+
+  </style>
+
+  <!-- <div class="row ">
+    <div class="headsection">
+      <div class="navbar-toggle " data-toggle="collapse" data-target="#questionlist" ng-click="toggleNavbar = !toggleNavbar" style="border:none;">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </div>
+    </div>
+  </div> -->
+  <div class="row">
+
+    <div class="col-md-9" style="min-height:100vh;padding:0;">
+      <div class="maindiv">
+        <div class="text-center">
+          <div ng-repeat="a in questionList" style="display:inline-block;">
+            <div style="cursor:pointer;" class="headselected" ng-click="subjectSelect(a.subject,$index) " ng-class="{'selectedhead':$index==subcount}"  >
+              <h4  ng-class="{'selectedsub':$index==subcount}"><b>{{a.subject}}</b></h4>
+            </div>
+          </div>
+        </div>
+        <div style="border-bottom:1px solid  #25B5E9;height:40px;">
+          <h4 style="float:left;" class="subtext"><b>Question No {{count+1}}</b></h4>
+          <h4 class="text-right subtext" style="float:right;"><b>Single Choice Type Question</b></h4>
+        </div>
+        <div class="queanswer">
+          <div ng-repeat="a in questionList" ng-show='$index === subcount' ng-init="subindex=$index">
+            <div ng-repeat="b in a.testquestions">
+              <h3 style="margin-left:1em;" ng-show="$index === count" math-jax-bind="questionList[subindex].testquestions[$index].Question">{{b.Question}}</h3>
+
+              <ol style="margin-left:2em;font-size:20px;color:#6C6464;" type='A' class="answers" ng-show="$index === count">
+                <li ng-repeat="c in b.Options track by $index" class="optionhover" style="padding:0.5em;position:relative;" ng-click="selection(subindex,$parent.$index,$index)" ng-class="{'selected' : selections[subindex].answers[$parent.$index] == $index}" math-jax-bind="questionList[subindex].testquestions[$parent.$index].Options[$index]">{{c}}</li>
+              </ol>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="text-center btn-section">
+        <button class="savebtn saves"  ng-click="save(subcount,count)"><b>Save</b></button>
+        <button class="btnaction1" ng-click="review(subcount,count)"><b>Review Later</b></button>
+        <button class="btnaction" ng-click="clearselection(subcount,count)"><b>Clear Selection</b></button>
+      </div>
+    </div>
+    <!-- <div class="collapse navbar-collapse" id="questionlist" uib-collapse="!toggleNavbar"> -->
+
+    <div class="col-md-3 " style="padding-top:2em;background-color: #F5F5F5;min-height:100vh;padding-bottom: 2em;">
+      <!-- <div class="col-md-3 .visible-md collapse navbar-collapse" id="questionlist" uib-collapse="!toggleNavbar" style="padding-top:2em;background-color: #F5F5F5;min-height:100vh;" > -->
+      <h4 style="margin-left:0.2em;">Question Overview</h4>
+      <div style="margin-bottom:10em;">
+        <div ng-repeat="b in questionList" ng-show='$index === subcount'>
+
+          <div class="text-center" ng-repeat="a in b.testquestions  | limitTo:9">
+
+            <div class="col-md-2 col-xs-2 " ng-init="$parent.$index==0?($first?a.status='notanswered':'default'):'default'" style="min-height:66px;text-align: center">
+              <div ng-class="a.status=='answered'?'answered':(a.status=='notanswered'?'notanswered':(a.status=='reviewed'?'reviewed':(a.status=='attemptreviewed'?'attemptreviewed':'notview')))" ng-click="queclick($index)">
+                <span class="numberalign"><b>{{$index+1}}</b></span>
+              </div>
+            </div>
+
+
+          </div>
+        </div>
+        <div ng-repeat="b in questionList" ng-show='$index === subcount'>
+          <div ng-repeat="a in b.testquestions   | limitTo:b.testquestions.length:9" class="text-center">
+            <div class="col-md-2 col-xs-2 " ng-init="a.status='default'" style="min-height:66px;">
+              <div ng-class="a.status=='answered'?'answered':(a.status=='notanswered'?'notanswered':(a.status=='reviewed'?'reviewed':(a.status=='attemptreviewed'?'attemptreviewed':'notview')))" ng-click="queclick($index+9)">
+                <span class="numberalign1"><b>{{9+$index+1}}</b></span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="fromtop">
+        <div class="col-md-6 col-xs-6 text-center">
+          <table>
+            <tr>
+              <td>
+                <div class="answered"></div>
+              </td>
+              <td style="padding: 2em 0 0 1em;"><span class="aligntotext"> Attempted</span> </td>
+            </tr>
+          </table>
+        </div>
+        <div class="col-md-6 col-xs-6 text-center">
+          <table>
+            <tr>
+              <td>
+                <div class="notanswered"></div>
+              </td>
+              <td style="padding: 1em 0 0 1em;"><span class="aligntotext">Not Attempted</span> </td>
+            </tr>
+          </table>
+        </div>
+        <div class="col-md-6 col-xs-6 text-center">
+          <table>
+            <tr>
+              <td>
+                <div class="notview"></div>
+              </td>
+              <td style="padding: 0.5em 0 0 0.5em;"><span class="aligntotext1">Not Viewed yet</span> </td>
+            </tr>
+          </table>
+        </div>
+        <div class="col-md-6 col-xs-6 text-center">
+          <table>
+            <tr>
+              <td>
+                <div class="reviewed"></div>
+              </td>
+              <td style="padding: 0.5em 0 0 0.5em;"><span class="aligntotext1">To be Reviewed</span> </td>
+            </tr>
+          </table>
+        </div>
+        <div class="col-md-12 col-xs-12 text-left" style="margin-top:-1em;">
+          <table>
+            <tr>
+              <td>
+                <div class="attemptreviewed"></div>
+              </td>
+              <td style="padding: 0.5em 0 0 0.5em;"><span class="aligntotext1">Attempted and Marked for Review</span> </td>
+            </tr>
+          </table>
+        </div>
+        <div class="col-md-12 text-center" style="margin-top: 10em;">
+          <button class="btns">Instructions</button>
+        </div>
+        <div class="col-md-12 text-center">
+          <button class="btns">Questions</button>
+        </div>
+        <div class="col-md-12 text-center">
+          <button class="btns" ng-click="finish(selections,questionList)">Finish</button>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+</div>
+</div>
+
+{% endverbatim %}
+{% endblock %}
