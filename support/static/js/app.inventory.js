@@ -246,6 +246,7 @@ $scope.createDC= function(pkVal){
             data:dataToSend
           }).
           then(function(response) {
+            Flash.create('success','Saved');
             $scope.form = response.data
           })
       };
