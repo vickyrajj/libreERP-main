@@ -278,7 +278,7 @@ class PurchaseOrderSerializer(serializers.ModelSerializer):
     project = projectLiteSerializer(many = False , read_only = True)
     class Meta:
         model = PurchaseOrder
-        fields = ('pk', 'created' , 'name' , 'address' , 'personName' , 'phone', 'email' , 'pincode' , 'user' , 'status', 'poNumber' , 'quoteNumber' ,'quoteDate', 'deliveryDate' , 'terms' , 'costcenter' , 'bussinessunit' , 'project' , 'isInvoice')
+        fields = ('pk', 'created' , 'name' , 'address' , 'personName' , 'phone', 'email' , 'pincode' , 'user' , 'status', 'poNumber' , 'quoteNumber' ,'quoteDate', 'deliveryDate' , 'terms' , 'costcenter' , 'bussinessunit' , 'project' , 'isInvoice','pin_status','country','city','state')
         read_only_fields = ('user', )
     def create(self , validated_data):
         u = self.context['request'].user
@@ -291,10 +291,16 @@ class PurchaseOrderSerializer(serializers.ModelSerializer):
         if 'project' in self.context['request'].data:
             po.project = project.objects.get(pk=int(self.context['request'].data['project']))
         po.save()
-        po.poNumber = po.pk
-        po.save()
+        # po.poNumber = po.pk
+        # po.save()
         return po
     def update(self , instance , validated_data):
+        for key in ['pk', 'created' , 'name' , 'address' , 'personName' , 'phone', 'email' , 'pincode' , 'user' , 'status', 'poNumber' , 'quoteNumber' ,'quoteDate', 'deliveryDate' , 'terms' , 'costcenter' , 'bussinessunit' , 'project' , 'isInvoice','pin_status','country','city','state']:
+            try:
+                setattr(instance , key , validated_data[key])
+            except:
+                print "Error while saving " , key
+                pass
         if 'costcenter' in self.context['request'].data:
             instance.costcenter = CostCenter.objects.get(pk=int(self.context['request'].data['costcenter']))
         if 'bussinessunit' in self.context['request'].data:
@@ -308,7 +314,7 @@ class PurchaseOrderQtySerializer(serializers.ModelSerializer):
     purchaseorder = PurchaseOrderSerializer(many = False , read_only = True)
     class Meta:
         model = PurchaseOrderQty
-        fields = ('pk', 'created' , 'product' , 'qty' , 'price','purchaseorder' )
+        fields = ('pk', 'created' , 'product' , 'qty' , 'price','purchaseorder' , 'hsn' , 'tax' , 'total' )
     def create(self , validated_data):
         d = PurchaseOrderQty(**validated_data)
         if 'purchaseorder' in self.context['request'].data:
@@ -323,7 +329,7 @@ class ExpenseHeadingSerializer(serializers.ModelSerializer):
 
 class OutBoundInvoiceSerializer(serializers.ModelSerializer):
     costcenter = CostCenterLiteSerializer(many = False , read_only = True)
-    bussinessunit = UnitsLiteSerializer(many=False,read_only=True)    
+    bussinessunit = UnitsLiteSerializer(many=False,read_only=True)
     class Meta:
         model = OutBoundInvoice
         fields=('pk','created','user','status','isInvoice','poNumber','name','personName','phone','email','address','pincode','state','city','country','pin_status','deliveryDate','payDueDate','gstIn','costcenter','bussinessunit')

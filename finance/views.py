@@ -111,7 +111,7 @@ class PurchaseOrderViewSet(viewsets.ModelViewSet):
     serializer_class = PurchaseOrderSerializer
     queryset = PurchaseOrder.objects.all()
     filter_backends = [DjangoFilterBackend]
-    filter_fields = ['name','poNumber']
+    filter_fields = ['name','poNumber','isInvoice']
 
 class PurchaseOrderQtyViewSet(viewsets.ModelViewSet):
     permission_classes = (permissions.IsAuthenticated,)

@@ -2,22 +2,23 @@ app.controller('businessManagement.finance.expenses', function($scope, $http, $a
   // settings main page controller
 
   $scope.data = {
-    tableData: []
+    tableData: [],
+    invoiceData: []
   };
 
   views = [{
     name: 'list',
     icon: 'fa-th-large',
     template: '/static/ngTemplates/genericTable/genericSearchList.html',
-    itemTemplate: '/static/ngTemplates/app.finance.inboundInvoices.item.html',
+    itemTemplate: '/static/ngTemplates/app.finance.purchaseOrder.item.html',
   }, ];
 
-  var options = {
-    main: {
-      icon: 'fa-pencil',
-      text: 'edit'
-    },
-  };
+  // var options = {
+  //   main: {
+  //     icon: 'fa-pencil',
+  //     text: 'edit'
+  //   },
+  // };
 
   $scope.config = {
     views: views,
@@ -53,6 +54,67 @@ app.controller('businessManagement.finance.expenses', function($scope, $http, $a
         }
         $scope.addTab({
           title: title + $scope.data.tableData[i].name,
+          cancel: true,
+          app: appType,
+          data: {
+            pk: target,
+            index: i
+          },
+          active: true
+        })
+      }
+    }
+
+  }
+
+  invoiceViews = [{
+    name: 'list',
+    icon: 'fa-th-large',
+    template: '/static/ngTemplates/genericTable/genericSearchList.html',
+    itemTemplate: '/static/ngTemplates/app.finance.inboundInvoices.item.html',
+  }, ];
+
+  // var options = {
+  //   main: {
+  //     icon: 'fa-pencil',
+  //     text: 'edit'
+  //   },
+  // };
+
+  $scope.invoiceConfig = {
+    views: invoiceViews,
+    url: '/api/finance/purchaseorder/',
+    searchField: 'name',
+    getParams : [{key : 'isInvoice' , value : true}],
+    deletable: true,
+    itemsNumPerView: [12, 24, 48],
+  }
+
+
+  $scope.invoicetableAction = function(target, action, mode) {
+    console.log(target, action, mode);
+    console.log($scope.data.invoiceData);
+
+    for (var i = 0; i < $scope.data.invoiceData.length; i++) {
+      if ($scope.data.invoiceData[i].pk == parseInt(target)) {
+        if (action == 'details') {
+          var title = 'Invoice Details :';
+          var appType = 'detailsinvoice';
+        } else if (action == 'edit') {
+          var title = 'edit :';
+          var appType = 'editinvoice';
+        } else if (action == 'delete') {
+          $http({
+            method: 'DELETE',
+            url: '/api/finance/purchaseorder/' + $scope.data.invoiceData[i].pk + '/'
+          }).
+          then(function(response) {})
+          $scope.data.invoiceData.splice(i, 1)
+          return
+        }
+
+        $scope.addTab({
+          title: title + $scope.data.invoiceData[i].name,
           cancel: true,
           app: appType,
           data: {
@@ -131,13 +193,17 @@ app.controller('businessManagement.finance.purchaseOrder.form', function($scope,
       personName: '',
       phone : '',
       email : '',
-      pincode : 0,
+      pincode : '',
+      state:'',
+      pin_status:'',
+      city:'',
+      country:'',
       poNumber : '',
       quoteNumber : '',
       quoteDate:'',
       terms : '',
       project : '',
-      // costcenter : '',
+      costcenter : '',
       bussinessunit : '',
     }
   }
@@ -196,6 +262,13 @@ $scope.showOption = function() {
       })
   };
 
+  $scope.pinSearch = function(query) {
+      return $http.get('/api/ERP/genericPincode/?pincode__contains=' + query).
+      then(function(response) {
+        return response.data;
+      })
+  };
+
   $scope.costCenterSearch = function(query) {
       return $http.get('/api/finance/costCenter/?name__contains=' + query).
       then(function(response) {
@@ -211,6 +284,7 @@ $scope.showOption = function() {
   };
 
   $scope.save = function() {
+    console.log($scope.form,'hhhhhhhhhhhhhh');
     // .toJSON().split('T')[0])
     console.log($scope.form.deliveryDate, typeof $scope.form.deliveryDate);
     if(typeof $scope.form.deliveryDate == 'object'){
@@ -239,7 +313,11 @@ $scope.showOption = function() {
         address : $scope.form.address,
         phone : $scope.form.phone,
         email : $scope.form.email,
-        pincode : $scope.form.pincode,
+        pincode: $scope.form.pincode.pincode,
+        state: $scope.form.pincode.state,
+        city: $scope.form.pincode.city,
+        country: $scope.form.pincode.country,
+        pin_status: $scope.form.pincode.pin_status,
         deliveryDate : $scope.form.deliveryDate,
         poNumber : $scope.form.poNumber,
         quoteNumber : $scope.form.quoteNumber,
@@ -295,6 +373,15 @@ $scope.showOption = function() {
             then(function(response) {})
           }
         }
+        $http({
+          method: 'PATCH',
+          url: '/api/finance/purchaseorder/'+response.data.pk+'/',
+          data: {
+            poNumber:response.data.pk
+          }
+        }).
+        then(function(response) {
+        })
         $scope.resetForm()
         $scope.products = []
         $scope.options = false
@@ -303,6 +390,24 @@ $scope.showOption = function() {
       })
     }
     else{
+      console.log(typeof $scope.form.pincode,$scope.form.pincode,'aaaaaaaaa');
+      if(typeof $scope.form.pincode=='object'){
+        console.log("hhhhhhhhhhhheeeeeeeeeeeeeee",$scope.form.pincode);
+        var data = $scope.form.pincode
+        $scope.form.pincode= data['pincode'],
+        $scope.form.state= data['state'],
+        $scope.form.city= data['city'],
+        $scope.form.country= data['country'],
+        $scope.form.pin_status= data['pin_status']
+      }
+      else{
+        $scope.form.pincode= $scope.form.pincode,
+        $scope.form.state= $scope.form.state,
+        $scope.form.city= $scope.form.city,
+        $scope.form.country= $scope.form.country,
+        $scope.form.pin_status= $scope.form.pin_status
+      }
+      console.log($scope.form,'aaaaaaaaaaaaaaaa');
       var dataToSend = {
         name:$scope.form.name,
         personName : $scope.form.personName,
@@ -310,6 +415,10 @@ $scope.showOption = function() {
         phone : $scope.form.phone,
         email : $scope.form.email,
         pincode : $scope.form.pincode,
+        state: $scope.form.state,
+        city: $scope.form.city,
+        country: $scope.form.country,
+        pin_status: $scope.form.pin_status,
         deliveryDate : $scope.form.deliveryDate,
         poNumber : $scope.form.poNumber,
         quoteNumber : $scope.form.quoteNumber,
@@ -465,6 +574,9 @@ app.controller('businessManagement.finance.inboundInvoices.form', function($scop
       phone : '',
       email : '',
       pincode : 0,
+      city:'',
+      state:'',
+      country:'',
       poNumber : '',
       quoteNumber : '',
       quoteDate:'',
@@ -476,8 +588,30 @@ app.controller('businessManagement.finance.inboundInvoices.form', function($scop
       products:[]
     }
   }
+  $scope.mode = 'new';
+  $scope.getAllData = function(){
+    $http({
+      method: 'GET',
+      url: '/api/finance/purchaseorderqty/?purchaseorder=' + $scope.form.pk,
+    }).
+    then(function(response) {
+      $scope.form.products = response.data
+    })
+  }
+  if (typeof $scope.tab == 'undefined') {
+    $scope.mode = 'new';
+    $scope.resetForm()
+    $scope.products = []
+    $scope.options = false
+  } else {
+    $scope.mode = 'edit';
+    $scope.products = []
+    $scope.form = $scope.data.invoiceData[$scope.tab.data.index]
+    console.log( $scope.form,'aaaaaaaaaaa');
+    $scope.getAllData()
+    $scope.options = true
+  }
 
-  $scope.resetForm()
   $scope.projectSearch = function(query) {
       return $http.get('/api/projects/project/?title__contains=' + query).
       then(function(response) {
@@ -528,7 +662,7 @@ app.controller('businessManagement.finance.inboundInvoices.form', function($scop
 
   $scope.$watch('form.poNumber', function(newValue, oldValue) {
     console.log(newValue,'aaaaaaaaaa');
-    if (newValue != undefined || newValue != null) {
+    if (typeof newValue == "object") {
       console.log(newValue);
       $scope.form.pk = newValue.pk
       $scope.form.name = newValue.name
@@ -537,6 +671,9 @@ app.controller('businessManagement.finance.inboundInvoices.form', function($scop
       $scope.form.phone = newValue.phone
       $scope.form.email = newValue.email
       $scope.form.pincode = newValue.pincode
+      $scope.form.city = newValue.city
+      $scope.form.state = newValue.state
+      $scope.form.country = newValue.country
       $scope.form.status = newValue.status
       $scope.form.quoteNumber = newValue.quoteNumber
       $scope.form.quoteDate = newValue.quoteDate
@@ -573,14 +710,227 @@ app.controller('businessManagement.finance.inboundInvoices.form', function($scop
   },true)
 
   $scope.saveInvoice = function(){
+    if(typeof $scope.form.pincode=='object'){
+      var data = $scope.form.pincode
+      $scope.form.pincode= data['pincode'],
+      $scope.form.state= data['state'],
+      $scope.form.city= data['city'],
+      $scope.form.country= data['country'],
+      $scope.form.pin_status= data['pin_status']
+    }
+    else{
+      $scope.form.pincode= $scope.form.pincode,
+      $scope.form.state= $scope.form.state,
+      $scope.form.city= $scope.form.city,
+      $scope.form.country= $scope.form.country,
+      $scope.form.pin_status= $scope.form.pin_status
+    }
     if($scope.form.pk){
-      console.log('heeeeeerrrrrrrreeeeeeeeeeeeeee');
+      // $scope.form.isInvoice = true
+      if (typeof $scope.form.poNumber =='object'){
+        $scope.form.poNumber = $scope.form.poNumber.poNumber
+      }
+      else{
+          $scope.form.poNumber = $scope.form.poNumber
+      }
+      var dataToSend = {
+        name:$scope.form.name,
+        personName : $scope.form.personName,
+        address : $scope.form.address,
+        phone : $scope.form.phone,
+        email : $scope.form.email,
+        pincode : $scope.form.pincode,
+        state: $scope.form.state,
+        city: $scope.form.city,
+        country: $scope.form.country,
+        pin_status: $scope.form.pin_status,
+        deliveryDate : $scope.form.deliveryDate,
+        poNumber : $scope.form.poNumber,
+        quoteNumber : $scope.form.quoteNumber,
+        quoteDate :  $scope.form.quoteDate,
+        terms :  $scope.form.terms,
+        poNumber : $scope.form.poNumber,
+        isInvoice : true
+      }
+      if($scope.form.project!=undefined){
+          dataToSend.project = $scope.form.project.pk
+        if($scope.form.project.costCenter!=undefined||$scope.form.project.costCenter!=null){
+          console.log($scope.form.project.costCenter);
+          $scope.form.costCenter = $scope.form.project.costCenter
+          dataToSend.costcenter = $scope.form.costCenter.pk
+          if($scope.form.costCenter.unit!=undefined){
+            $scope.form.bussinessunit = $scope.form.costCenter.unit
+            dataToSend.bussinessunit = $scope.form.bussinessunit.pk
+          }
+        }
+      }
+      if($scope.form.costcenter!=undefined||$scope.form.costcenter!=null){
+        dataToSend.costcenter = $scope.form.costcenter.pk
+        if($scope.form.costcenter.unit!=undefined||$scope.form.costcenter.unit!=null){
+          $scope.form.bussinessunit = $scope.form.costcenter.unit
+          dataToSend.bussinessunit = $scope.form.bussinessunit.pk
+        }
+      }
+
+      if($scope.form.bussinessunit!=undefined||$scope.form.bussinessunit!=null){
+        dataToSend.bussinessunit = $scope.form.bussinessunit.pk
+      }
+      $http({
+        method: 'PATCH',
+        url: '/api/finance/purchaseorder/'+$scope.form.pk+'/',
+        data: dataToSend
+      }).
+      then(function(response) {
+        console.log("herereeeeeeeeeeee");
+        if ($scope.products.length > 0) {
+          for (var i = 0; i < $scope.form.products.length; i++) {
+            if(typeof $scope.products[i].hsn == 'object'){
+              $scope.form.products[i].hsn = $scope.form.products[i].hsn.hsn
+              $scope.form.products[i].tax = $scope.form.products[i].hsn.tax
+            }
+            else{
+              $scope.form.products[i].hsn = $scope.products[i].hsn
+              $scope.products[i].tax = $scope.products[i].tax
+            }
+
+            var toSend = {
+              product: $scope.products[i].product,
+              qty: $scope.products[i].qty,
+              price: $scope.products[i].price,
+              purchaseorder: response.data.pk,
+              hsn: $scope.products[i].hsn,
+              tax: $scope.products[i].tax,
+              total: $scope.products[i].total
+            }
+            if($scope.products[i].pk){
+              method = 'PATCH',
+              url = '/api/finance/purchaseorderqty/' + $scope.products[i].pk +'/'
+            }
+            else{
+              method = 'POST'
+              url = '/api/finance/purchaseorderqty/'
+            }
+            $http({
+              method: method,
+              url: url,
+              data: toSend
+            }).
+            then(function(response) {})
+          }
+        }
+      })
     }else{
-      console.log('thhhhhhhhhhhhttttttttttttteeeeerrrrrreeeeeee');
+      var dataToSend = {
+        name:$scope.form.name,
+        personName : $scope.form.personName,
+        address : $scope.form.address,
+        phone : $scope.form.phone,
+        email : $scope.form.email,
+        pincode : $scope.form.pincode,
+        state: $scope.form.state,
+        city: $scope.form.city,
+        country: $scope.form.country,
+        pin_status: $scope.form.pin_status,
+        deliveryDate : $scope.form.deliveryDate,
+        poNumber : $scope.form.poNumber,
+        quoteNumber : $scope.form.quoteNumber,
+        quoteDate :  $scope.form.quoteDate,
+        terms :  $scope.form.terms,
+        poNumber : $scope.form.poNumber.poNumber,
+        isInvoice : true
+      }
+      if($scope.form.project!=undefined){
+          dataToSend.project = $scope.form.project.pk
+        if($scope.form.project.costCenter!=undefined||$scope.form.project.costCenter!=null){
+          console.log($scope.form.project.costCenter);
+          $scope.form.costCenter = $scope.form.project.costCenter
+          dataToSend.costcenter = $scope.form.costCenter.pk
+          if($scope.form.costCenter.unit!=undefined){
+            $scope.form.bussinessunit = $scope.form.costCenter.unit
+            dataToSend.bussinessunit = $scope.form.bussinessunit.pk
+          }
+        }
+      }
+      if($scope.form.costcenter!=undefined||$scope.form.costcenter!=null){
+        dataToSend.costcenter = $scope.form.costcenter.pk
+        if($scope.form.costcenter.unit!=undefined||$scope.form.costcenter.unit!=null){
+          $scope.form.bussinessunit = $scope.form.costcenter.unit
+          dataToSend.bussinessunit = $scope.form.bussinessunit.pk
+        }
+      }
+
+      if($scope.form.bussinessunit!=undefined||$scope.form.bussinessunit!=null){
+        dataToSend.bussinessunit = $scope.form.bussinessunit.pk
+      }
+      $http({
+        method: 'POST',
+        url: '/api/finance/purchaseorder/',
+        data: dataToSend
+      }).
+      then(function(response) {
+
+      })
     }
   }
 
 
+
+
+})
+
+app.controller('businessManagement.finance.inboundInvoices.explore', function($scope, $http, $aside, $state, Flash, $users, $filter, $permissions) {
+  $scope.data = $scope.data.invoiceData[$scope.tab.data.index]
+  $scope.getAllData = function(){
+    $http({
+      method: 'GET',
+      url: '/api/finance/purchaseorderqty/?purchaseorder=' + $scope.data.pk,
+    }).
+    then(function(response) {
+      $scope.products = response.data
+    })
+  }
+
+
+$scope.getAllData()
+
+$scope.sendForApproval=function(){
+  dataToSend = {
+    status:'Sent'
+  }
+  $http({
+    method: 'PATCH',
+    url: '/api/finance/purchaseorder/' + $scope.data.pk +'/',
+    data: dataToSend
+  }).then(function(response) {
+     $scope.data = response.data
+    })
+
+}
+$scope.approve=function(){
+  dataToSend = {
+    status:'Approved'
+  }
+  $http({
+    method: 'PATCH',
+    url: '/api/finance/purchaseorder/' + $scope.data.pk +'/',
+    data: dataToSend
+  }).then(function(response) {
+     $scope.data = response.data
+    })
+}
+$scope.reject=function(){
+  dataToSend = {
+    status:'created'
+  }
+  $http({
+    method: 'PATCH',
+    url: '/api/finance/purchaseorder/' + $scope.data.pk +'/',
+    data: dataToSend
+  }).then(function(response) {
+     $scope.data = response.data
+    })
+
+}
 
 
 })

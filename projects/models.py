@@ -149,7 +149,7 @@ class PurchaseOrder(models.Model):
     city =  models.CharField(max_length = 50, null = True)
     country =  models.CharField(max_length = 30, null = True)
     pin_status = models.CharField( max_length = 2, default = "1")
-    poNumber = models.CharField(max_length = 30,null=True)
+    poNumber = models.CharField(max_length = 30,null=True, blank=True)
     quoteNumber = models.CharField(max_length = 30,null=True)
     quoteDate = models.DateField(null = True)
     deliveryDate = models.DateField(null = True)

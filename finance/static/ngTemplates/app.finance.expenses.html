@@ -20,7 +20,7 @@
         <uib-tab-heading>
           New Invoice Entry <i class="fa fa-plus"></i>
         </uib-tab-heading>
-        <div style="margin-top:20px;" ng-include="'/static/ngTemplates/app.finance.invoiceExpense.form.html'">
+        <div style="margin-top:20px;" ng-include="'/static/ngTemplates/app.finance.inboundInvoices.form.html'">
         </div>
       </uib-tab>
       <uib-tab>
@@ -28,7 +28,7 @@
           Invoices
           <i class="fa fa-list-ul"></i>
         </uib-tab-heading>
-        <generic-Table data="data.tableData" config-Obj="{{config}}" callback-Fn="tableAction"></generic-Table>
+        <generic-Table data="data.invoiceData" config-Obj="{{invoiceConfig}}" callback-Fn="invoicetableAction"></generic-Table>
       </uib-tab>
       <uib-tab ng-repeat="tab in tabs" active="tab.active" disable="tab.disabled">
         <uib-tab-heading>
@@ -40,6 +40,12 @@
         </div>
         <div ng-if="tab.app == 'details'">
           <div ng-include="'/static/ngTemplates/app.finance.purchaseOrder.explore.html'"></div>
+        </div>
+        <div ng-if="tab.app == 'editinvoice'">
+            <div ng-include="'/static/ngTemplates/app.finance.inboundInvoices.form.html'">
+        </div>
+        <div ng-if="tab.app == 'detailsinvoice'">
+          <div ng-include="'/static/ngTemplates/app.finance.inboundInvoices.explore.html'"></div>
         </div>
         <!-- <div ng-if="tab.app == 'selected'">
       <div ng-include="'/static/ngTemplates/app.recruitment.jobs.selected.html'"></div>
