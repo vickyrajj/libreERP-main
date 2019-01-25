@@ -1,6 +1,7 @@
 <div ng-controller="businessManagement.invoice.form">
   <div class="container-fluid">
-    <h2>Create A Invoice</h2>
+    <h2 ng-if="!form.pk">Create Invoice</h2>
+      <h2 ng-if="form.pk">Edit Invoice</h2>
     <div class="row" style="padding:10px">
       <div class="col-md-12">
         <div class="row">
