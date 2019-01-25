@@ -837,7 +837,7 @@ app.controller("controller.home.main", function($scope, $state, $http , $permiss
       }
     }
     $scope.fetchGraphData();
-  },2500)
+  },2000)
 
 
 

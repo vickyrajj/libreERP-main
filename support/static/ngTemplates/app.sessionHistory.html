@@ -35,9 +35,10 @@
                                 <span style="display:inline-block">
                                    <div ng-if="data.name">
                                      <span style="font-weight: 500;font-size:90%">{{data.name}}</span>
-                                     <span ng-if="data.isLate" style="color:red">( Late )</span>
+
                                    </div>
                                    <span style="font-size:83%">{{data.uid}}</span>
+                                   <span ng-if="data.isLate" style="color:#C83737;font-size:75%">-Late</span>
                                    <div>
                                      <span ng-if="data.chatDuration>0.0" style="font-size:90%"><i class="fa fa-clock-o" aria-hidden="true"></i>  {{data.chatDuration}} Min</span>
                                    </div>
@@ -307,7 +308,7 @@
                                    <span style="font-weight: 500;font-size:90%">{{data.name}}</span>
                                  </div>
                                  <span style="font-size:83%">{{data.uid}}</span>
-                                 <span ng-if="data.isLate" style="color:red">( Late )</span>
+                                 <span ng-if="data.isLate" style="color:#C83737;font-size:75%">-Late</span>
                                  <div>
                                    <span ng-if="data.chatDuration>0.0" style="font-size:90%"><i class="fa fa-clock-o" aria-hidden="true"></i>  {{data.chatDuration}} Min</span>
                                  </div>
@@ -320,12 +321,12 @@
                                  <i ng-if="data.typ=='video'" class="fa fa-video-camera fa-md" aria-hidden="true"></i>
                                  <i ng-if="data.typ!='video'&&data.typ!='audio'" class="fa fa-commenting-o fa-md" aria-hidden="true"></i>
                                  <div class="tabel_dataStatus" style="font-size:80%">
-                                   <span ng-if="data.status=='late'&&data.user_id" style="color:green"><b>{{data.status|humanize}}</b></span>
-                                   <span ng-if="data.status=='started'&&data.user_id" style="color:green"><b>{{data.status|humanize}}</b></span>
-                                   <span ng-if="data.status=='closed'&&data.user_id" style="color:#A40B0B"><b>{{data.status|humanize}}</b></span>
-                                   <span ng-if="data.status=='reviewed'&&data.user_id" style="color:brown"><b>{{data.status|humanize}}</b></span>
-                                   <span ng-if="data.status=='resolved'&&data.user_id" style="color:#FF8C00"><b>{{data.status|humanize}}</b></span>
-                                   <span ng-if="!data.user_id" style="color:#F90000"><b>Missed</b></span>
+
+                                   <span ng-if="data.status=='started'" style="color:green"><b>{{data.status|humanize}}</b></span>
+                                   <span ng-if="data.status=='closed'" style="color:#A40B0B"><b>{{data.status|humanize}}</b></span>
+                                   <span ng-if="data.status=='reviewed'" style="color:brown"><b>{{data.status|humanize}}</b></span>
+                                   <span ng-if="data.status=='resolved'" style="color:#FF8C00"><b>{{data.status|humanize}}</b></span>
+                                   <span ng-if="data.status=='missed'" style="color:#F90000"><b>Missed</b></span>
                                 </div>
                                 <div class="">
                                   <span ng-if="data.customerRating<=3&&data.customerRating" style="font-size:80%;margin-right:1rem;padding: .1rem 1rem;color:red">{{data.customerRating}}

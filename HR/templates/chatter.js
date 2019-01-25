@@ -1595,7 +1595,7 @@ function createChatDiv() {
               font-weight: bold;\
           }\
               .first_animation {\
-              animation:  first_animation 1s;\
+              animation: first_animation 1s;\
           }\
               .left-center {\
                     left: -55px;\
