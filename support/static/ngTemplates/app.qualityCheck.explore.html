@@ -62,7 +62,7 @@
           <div ng-if="!msg.logs" class="container-fluid" style="float:{{msg.sentByAgent ? 'right; background-color:#dba4ae; ':'left; background-color:#72b3d4;'}} padding:5px 10px;margin:8px;border-radius:{{msg.sentByAgent ? '20px 0px 20px 20px':'0px 20px 20px 20px'}};">
             <p ng-if="msg.message.length>0 && msg.attachmentType != 'youtubeLink'" style="word-break: break-all !important;font-size:16px">
               {{msg.message}}</p>
-            <img ng-if="msg.attachmentType == 'image' || msg.attachmentType == 'instructionImage'" ng-src="{{msg.file}}" style="width:250px;">
+            <img ng-if="msg.attachmentType == 'image' || msg.attachmentType == 'instructionImage'" ng-src="{{msg.attachment}}" style="width:250px;">
             <video ng-if="msg.attachmentType == 'video'" width="280" height="240" ng-src="{{msg.file}}" controls></video>
             <audio ng-if="msg.attachmentType == 'audio'" ng-src="{{msg.file}}" controls></audio>
             <p class="text-center" ng-if="msg.attachmentType == 'application'" style="word-wrap: break-word;"><a ng-href="{{msg.file}}" target="_blank"><i class="fa {{msg.file.split('chat/')[1] | fileTypeIcon }} fa-2x" ></i></a> <br> {{msg.file.split('chat/')[1]}} </p>

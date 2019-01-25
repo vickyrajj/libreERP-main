@@ -58,7 +58,7 @@
           <div class="row">
 
               <i class="fa fa-clock-o fa-5x" aria-hidden="true" style="padding:5px"></i> <br>
-              <i class="fa fa-arrow-{{changeInFrtAvg.increase?'up':'down' }}"></i> {{changeInFrtAvg.percentage}}%
+              <i class="fa fa-arrow-{{changeInFrtAvg.increase?'up':'down' }}"></i> {{changeInFrtAvg.percentage.toFixed(2)}}%
 
             <div class="">
               <p style="margin:5px">First Response Time </p>
@@ -86,7 +86,7 @@
           <div class="row">
             <div class="col-xs-4" style="text-align:center">
               <i class="fa fa-reply-all fa-4x" aria-hidden="true" style="padding:3px"></i> <br>
-              <i class="fa fa-arrow-{{changeInRespTimeAvg.increase?'up':'down' }}"></i> {{changeInRespTimeAvg.percentage}}%
+              <i class="fa fa-arrow-{{changeInRespTimeAvg.increase?'up':'down' }}"></i> {{changeInRespTimeAvg.percentage.toFixed(2)}}%
             </div>
             <div class="col-xs-8 text-right" style="padding-top:5px">
               <p style="margin-bottom:5px">Average Response Time </p>

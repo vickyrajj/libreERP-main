@@ -104,7 +104,7 @@ class ChatThreadSerializer(serializers.ModelSerializer):
         model = ChatThread
         fields = ( 'pk' , 'created' , 'uid', 'status' , 'customerRating' , 'customerFeedback' ,
         'company','user','userDevice','userDeviceIp' ,'chatDuration' ,'firstResponseTime',
-        'typ','reviewedOn',"reviewedBy",'closedOn','closedBy','resolvedBy','resolvedOn','archivedOn','archivedBy','escalatedL1On','escalatedL1By','escalatedL2On','escalatedL2By')
+        'typ','reviewedOn',"reviewedBy",'closedOn','closedBy','resolvedBy','resolvedOn','archivedOn','archivedBy','escalatedL1On','escalatedL1By','escalatedL2On','escalatedL2By','location')
     def create(self ,  validated_data):
         c = ChatThread(**validated_data)
         c.company = CustomerProfile.objects.get(pk=int(self.context['request'].data['company']))
@@ -158,7 +158,7 @@ class ChatThreadSerializer(serializers.ModelSerializer):
                 instance.escalatedL2By = User.objects.get(pk=int(self.context['request'].user.pk))
                 instance.save()
 
-        for key in ['status' , 'customerRating' , 'customerFeedback' , 'company','user','typ','isLate']:
+        for key in ['status' , 'customerRating' , 'customerFeedback' , 'company','user','typ','isLate','location']:
             try:
                 setattr(instance , key , validated_data[key])
             except:

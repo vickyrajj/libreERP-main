@@ -743,7 +743,7 @@ app.directive('chatBox', function() {
     controller: function($scope, $users, $uibModal, $http, ngAudio, Flash, $sce, webNotification) {
       $scope.IsVisitorOn=true;
       $scope.isVisitorVideoShowing=true;
-
+      console.log($scope.data,"^^^^^^^^^^^^^^^^^^^^^");
         $http({
             method: 'GET',
             url: '/api/support/getMyUser/?getCompanyDetails=' + $scope.data.companyPk,
@@ -752,10 +752,20 @@ app.directive('chatBox', function() {
             $scope.companyName=response.data.cDetails[0]
             $scope.compContactPersons=response.data.contactP
           })
+          $http({
+            method: 'GET',
+            url: '/api/support/chatThread/?uid='+$scope.data.uid
+          }).
+          then(function(response) {
+            console.log(response.data,'dddddddddddd',typeof response.data);
+            $scope.location =JSON.parse(response.data[0].location)
+            console.log($scope.location);
+          });
 
       setTimeout(function () {
         document.getElementById('chatBoxdiv'+$scope.index).focus()
       }, 1000);
+
 
       $scope.textAreaBehavior = function(e){
         if (e.keyCode == 13 && !e.shiftKey)
@@ -783,29 +793,6 @@ app.directive('chatBox', function() {
         $scope.getFrameContent.postMessage('captureImage', webRtcAddress);
       }
 
-      // $scope.toggleVisitorScreen=function(){
-      //   if(!$scope.alreadyDone){
-      //     $scope.isVisitorVideoShowing=!$scope.isVisitorVideoShowing;
-      //     if(!$scope.isVisitorVideoShowing){
-      //       // $scope.msgDivHeight = 51
-      //       connection.session.publish(wamp_prefix+'service.support.chat.' + $scope.data.uid, ['HideVisitorVideo'], {}, {
-      //         acknowledge: true
-      //       }).
-      //       then(function(publication) {
-      //         console.log("Published");
-      //       });
-      //     }
-      //   else{
-      //     // $scope.msgDivHeight = 52
-      //     connection.session.publish(wamp_prefix+'service.support.chat.' + $scope.data.uid, ['ShowVisitorVideo'], {}, {
-      //       acknowledge: true
-      //     }).
-      //     then(function(publication) {
-      //       console.log("Published");
-      //     });
-      //   }
-      //   }
-      // }
 
       $scope.hideVisitorScreen = function() {
         $scope.IsVisitorOn=!$scope.IsVisitorOn;
@@ -1154,28 +1141,13 @@ app.directive('chatBox', function() {
 
 
       function sendMailToContactPersons(){
-        if($scope.isMailSent){
-          return
-        }
         for (var i = 0; i < $scope.compContactPersons.length; i++) {
           var profile=$users.get($scope.compContactPersons[i])
           sendMail(profile.email,$scope.data.uid)
         }
-        $scope.isMailSent=true;
       }
 
-      setInterval(function () {
-        $http({
-          method: 'GET',
-          url: '/api/support/getChatStatus/?sendMail&uid=' + $scope.data.uid,
-        }).
-        then(function(response) {
-          if(response.data.sendMail){
-            // $scope.chatClose()
-            sendMailToContactPersons()
-          }
-        });
-      }, 1000*60*2);
+      
 
 
       $http({

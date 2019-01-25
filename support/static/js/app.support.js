@@ -132,11 +132,27 @@ app.controller("businessManagement.support", function($scope, $state, $users, $s
       console.log('mail sent to '+mailId);
     });
   }
+
    $scope.sendMailsToContact=function(contacts,chatUid){
     for (var i = 0; i < contacts.length; i++) {
       var profile=$users.get(contacts[i])
       sendMail(profile.email,chatUid)
     }
+  }
+
+
+  var getCompDetails = function(companyPk){
+    return new Promise(function(resolve,reject){
+      $http({
+          method: 'GET',
+          url: '/api/support/getMyUser/?getCompanyDetails=' + companyPk,
+        }).then(function(response){
+          console.log(response.data);
+          resolve(response.data)
+        }).catch((err)=>{
+          reject(err)
+        })
+    })
   }
 
 
@@ -150,17 +166,31 @@ app.controller("businessManagement.support", function($scope, $state, $users, $s
       then(function(response) {
         console.log(response.data);
         if(response.data.changeStatus){
-          $http({
-              method: 'GET',
-              url: '/api/support/getMyUser/?getCompanyDetails=' + response.data.companyPk,
-            }).then(function(response){
-              let compContactPersons=response.data.contactP
-              $scope.sendMailsToContact(compContactPersons,$scope.newUsers[i].uid)
-            })
+          getCompDetails(response.data.companyPk).then((data)=>{
+            $scope.sendMailsToContact(data.contactP,$scope.newUsers[i].uid)
+          })
           $scope.newUsers.splice(i, 1);
         }
       });
     }
+  }, 1000*60*1);
+
+  setInterval(function () {
+    for (let i = 0; i < $scope.myUsers.length; i++) {
+      $http({
+        method: 'GET',
+        url: '/api/support/getChatStatus/?sendMail&uid=' + $scope.myUsers[i].uid,
+      }).
+      then(function(response) {
+        console.log(response.data,'myUsers');
+        if(response.data.sendMail){
+          getCompDetails(response.data.companyPk).then((data)=>{
+            $scope.sendMailsToContact(data.contactP,$scope.myUsers[i].uid)
+          })
+        }
+      });
+    }
+
   }, 1000*60*1);
 
   $scope.myCompanies = [];

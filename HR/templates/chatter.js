@@ -2391,7 +2391,7 @@ var myformrating;
           var xhttp = new XMLHttpRequest();
            xhttp.onreadystatechange = function() {
              if (this.readyState == 4 && this.status == 201) {
-               console.log('posted successfully');
+               console.log('posted successfully',this.responseText);
                var data = JSON.parse(this.responseText)
                threadExist=true
                chatThreadPk = data.pk
@@ -2931,6 +2931,49 @@ setInterval(function () {
   });
 
 
+  var getLocationDataFirstApi = function(ipAddress){
+    return new Promise(function(resolve,reject){
+      var xhttpIP = new XMLHttpRequest();
+      xhttpIP.onreadystatechange = function() {
+        if (this.readyState == 4 && this.status == 200) {
+          resolve(this.responseText)
+        }else if(this.readyState == 4 && this.status != 200){
+          reject(this.status)
+        }
+      }
+
+      // xhttpIP.open('GET', 'http://api.ipstack.com/43.224.128.150?access_key=f6e584f19ad6fa9080e0434fb46ae508&format=1', true);
+      xhttpIP.open('GET', 'http://api.ipstack.com/'+ipAddress+'?access_key=f6e584f19ad6fa9080e0434fb46ae508&format=1', true);
+      xhttpIP.send();
+    })
+  }
+  var getLocationDataSecondApi =function(ipAddress){
+    return new Promise(function(resolve,reject){
+      var xhttpIP = new XMLHttpRequest();
+      xhttpIP.onreadystatechange = function() {
+        if (this.readyState == 4 && this.status == 200) {
+          resolve(JSON.parse(this.responseText))
+        }else if(this.readyState == 4 && this.status != 200){
+          reject(this.status)
+        }
+      }
+      xhttpIP.open('GET', 'http://ip-api.com/json/'+ipAddress, true);
+      // xhttpIP.open('GET', 'http://ip-api.com/json/43.224.128.150', true);
+      xhttpIP.send();
+    })
+  }
+  var patchLocationToChatThread=function(chatThreadPk,dataToSend){
+      var xhttp = new XMLHttpRequest();
+       xhttp.onreadystatechange = function() {
+         if (this.readyState == 4 && this.status == 200) {
+           console.log(this.responseText);
+         }
+       };
+       xhttp.open('PATCH', '{{serverAddress}}/api/support/chatThread/'+ chatThreadPk + '/', true);
+       xhttp.setRequestHeader("Content-type", "application/json");
+       xhttp.send(JSON.stringify({'location':dataToSend}));
+  }
+
 
   function sendMessage(inptText) {
       if (inptText.length<=0) {
@@ -3027,11 +3070,32 @@ setInterval(function () {
          var xhttp = new XMLHttpRequest();
           xhttp.onreadystatechange = function() {
             if (this.readyState == 4 && this.status == 201) {
-              console.log('posted successfully');
+              console.log('posted successfully',this.responseText);
               var data = JSON.parse(this.responseText)
               threadExist=true
-              // console.log(data , 'data$$$$$$$$$$$$$$$$$$$');
               chatThreadPk = data.pk
+
+              getLocationDataFirstApi(this.responseText.userDeviceIp).then((data)=>{
+                    console.log(data);
+                    patchLocationToChatThread(chatThreadPk,data)
+
+              }).catch((reason)=>{
+                console.log(reason);
+                getLocationDataSecondApi(this.responseText.userDeviceIp).then((data)=>{
+                  let myData=JSON.stringify({
+                    'city':data.city,
+                    'country_name':data.country,
+                    'region_code':data.region,
+                    'country_code':data.countryCode,
+                    'zip':data.zip,
+                    'latitude':data.lat,
+                    'longitude':data.lon,
+                  })
+                  patchLocationToChatThread(chatThreadPk,myData)
+                }).catch((err)=>{
+                  console.log(err);
+                })
+              })
               dataToPublish.push(chatThreadPk)
               publishMessageToAll(dataToPublish);
             }
