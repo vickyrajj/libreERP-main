@@ -166,7 +166,7 @@ class DeliveryChallanViewSet(viewsets.ModelViewSet):
     queryset = DeliveryChallan.objects.all()
     serializer_class = DeliveryChallanSerializer
     filter_backends = [DjangoFilterBackend]
-    filter_fields = ['materialIssue','customer','challanNo']
+    filter_fields = ['materialIssue','challanNo']
 
 class ProductsUploadAPIView(APIView):
     permission_classes = (permissions.IsAuthenticated ,)
@@ -2457,19 +2457,20 @@ def deliveryChallan(response , value , request):
     """ %(),styles['Normal'])
     td=[[detail,detail1]]
     t=Table(td)
-
     elements.append(t)
+    try:
+        address = materialdata.customeraddress.replace('\n', '<br />')
+    except:
+        address = materialdata.customeraddress
+
     detailaddress = Paragraph("""
     <para align="left">
     <font size ='8'>
     <bTo,</b> <br/>
     %s <br/>
-    %s <br/>
-    %s  %s <br/>
-    %s - %s <br/>
     GST IN : %s
     </font></para>
-    """ %(materialdata.customer.name,materialdata.customer.address.street,materialdata.customer.address.city,materialdata.customer.address.state,materialdata.customer.address.country,materialdata.customer.address.pincode,materialdata.customer.gst),styles['Normal'])
+    """ %(address,materialdata.customergst),styles['Normal'])
     detailval = Paragraph("""
     <para align="left">
     <font size ='8'>
@@ -2477,7 +2478,7 @@ def deliveryChallan(response , value , request):
     Kind Attn : %s <br/>
     Your reference : %s <br/>
     </font></para>
-    """ %(materialdata.deliveryThr,materialdata.customer.customerName,materialdata.refNo),styles['Normal'])
+    """ %(materialdata.deliveryThr,materialdata.customername,materialdata.refNo),styles['Normal'])
     td1=[[detailaddress,detailval]]
     t1=Table(td1)
     t.hAlign = 'LEFT'
@@ -2785,7 +2786,7 @@ def invoice(response, pkVal  , request):
         s32 =Paragraph("<para fontSize=8 alignment='right'> {:,} </para>".format(round(i.total,2)),styles['Normal'])
         data2.append([s21,s22,s23,s24,s25,s26,s27,s28,s29,s30,s31,s32])
     s21 =Paragraph("<para fontSize=8> </para>",styles['Normal'])
-    s22 =Paragraph("<para fontSize=8><b>Total </b></para>",styles['Normal'])
+    s22 =Paragraph("<para fontSize=8><b>Total in INR</b></para>",styles['Normal'])
     s23 =Paragraph("<para fontSize=8> </para>",styles['Normal'])
     s24 =Paragraph("<para fontSize=8> </para>",styles['Normal'])
     s25 =Paragraph("<para fontSize=8  alignment='right'><b>{:,}</b></para>".format(round(taxable,2)),styles['Normal'])

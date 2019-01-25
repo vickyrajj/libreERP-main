@@ -210,12 +210,6 @@ $scope.createDC= function(pkVal){
         else{
             $scope.form.challanDate = $scope.form.challanDate
         }
-        if(typeof $scope.form.customer=='object'){
-          $scope.customer = $scope.form.customer.pk
-        }
-        else{
-            $scope.customer = $scope.form.customer
-        }
         // if(typeof $scope.form.materialIssue=='object'){
         //   $scope.form.materialIssue = $scope.form.materialIssue.pk
         // }
@@ -224,7 +218,9 @@ $scope.createDC= function(pkVal){
         // }
 
         var dataToSend = {
-          customer : $scope.customer ,
+          customername : $scope.form.customername,
+          customeraddress : $scope.form.customeraddress,
+          customergst : $scope.form.customergst,
           materialIssue :$scope.form.materialIssue,
           heading : $scope.form.heading,
           challanNo :$scope.form.challanNo,

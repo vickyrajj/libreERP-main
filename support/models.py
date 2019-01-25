@@ -231,7 +231,9 @@ class InvoiceQty(models.Model):
 class DeliveryChallan(models.Model):
     created = models.DateTimeField(auto_now_add=True)
     materialIssue = models.ForeignKey(MaterialIssueMain , null = True)
-    customer = models.ForeignKey(service , related_name = 'customer' ,null = False)
+    customername = models.CharField( max_length = 50 , null=True,blank=True)
+    customeraddress = models.CharField( max_length = 200 , null=True,blank=True)
+    customergst = models.CharField( max_length = 200 , null=True,blank=True)
     heading = models.CharField( max_length = 200 , null=True,blank=True)
     challanNo = models.CharField( max_length = 20 , null=True,blank=True)
     challanDate = models.DateField(null = True)

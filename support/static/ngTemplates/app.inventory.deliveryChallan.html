@@ -18,8 +18,19 @@
           <input ng-model="form.challanNo" type="text" class="form-control">
         </div>
         <div class="col-md-6">
-          <label>Customer</label>
-          <input uib-typeahead="s as s.name for s in serviceSearch($viewValue)" ng-model="form.customer" type="text" class="form-control" placeholder="Select Customer">
+          <label>Customer Name</label>
+          <input  ng-model="form.customername" type="text" class="form-control">
+        </div>
+
+      </div>
+      <div class="row" style="padding:10px">
+        <div class="col-md-6">
+          <label>Customer GST</label>
+          <input  ng-model="form.customergst" type="text" class="form-control">
+        </div>
+        <div class="col-md-6">
+          <label>Customer Address</label>
+          <textarea type="text" class="form-control" ng-model = "form.customeraddress" rows="3"></textarea>
         </div>
 
       </div>

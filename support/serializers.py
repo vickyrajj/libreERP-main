@@ -295,28 +295,23 @@ class InvoiceQtySerializer(serializers.ModelSerializer):
         return instance
 
 class DeliveryChallanSerializer(serializers.ModelSerializer):
-    customer = serviceLiteSerializer(many = False , read_only = True)
     materialIssue = MaterialIssueMainSerializer(many = False , read_only = True)
     class Meta:
         model = DeliveryChallan
-        fields = ('pk','created','materialIssue','customer','heading','challanNo','challanDate','deliveryThr','refNo','apprx','notes')
+        fields = ('pk','created','materialIssue','customername','customeraddress','customergst','heading','challanNo','challanDate','deliveryThr','refNo','apprx','notes')
     def create(self, validated_data):
         i = DeliveryChallan(**validated_data)
         if 'materialIssue' in self.context['request'].data:
             i.materialIssue = MaterialIssueMain.objects.get(pk=int(self.context['request'].data['materialIssue']))
-        if 'customer' in self.context['request'].data:
-            i.customer = service.objects.get(pk=int(self.context['request'].data['customer']))
         i.save()
         return i
     def update (self, instance, validated_data):
-        for key in ['pk','created','materialIssue','customer','heading','challanNo','challanDate','deliveryThr','refNo','apprx','notes']:
+        for key in ['pk','created','materialIssue','customername','customeraddress','customergst','heading','challanNo','challanDate','deliveryThr','refNo','apprx','notes']:
             try:
                 setattr(instance , key , validated_data[key])
             except:
                 pass
         if 'materialIssue' in self.context['request'].data:
             instance.materialIssue = MaterialIssueMain.objects.get(pk=int(self.context['request'].data['materialIssue']))
-        if 'customer' in self.context['request'].data:
-            instance.customer = service.objects.get(pk=int(self.context['request'].data['customer']))
         instance.save()
         return instance

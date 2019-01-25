@@ -196,27 +196,27 @@ app.controller("businessManagement.invoice.form", function($scope, $state, $user
       return response.data.results;
     })
   };
-$scope.calculate=function(){
-  for (var i = 0; i < $scope.products.length; i++) {
-    console.log($scope.gstcode,$scope.gstCal,'kkkkkkkkkkkkkkkkkkk');
-    if ($scope.gstcode === $scope.gstCal) {
-      $scope.products[i].cgst = 9
-      $scope.products[i].cgstVal = parseFloat((($scope.products[i].cgst * $scope.products[i].taxableprice) / 100).toFixed(2))
-      $scope.products[i].sgst = 9
-      $scope.products[i].sgstVal = parseFloat((($scope.products[i].sgst * $scope.products[i].taxableprice) / 100).toFixed(2))
-      $scope.products[i].igst = 0
-      $scope.products[i].igstVal = 0
-    } else {
-      $scope.products[i].cgst = 0
-      $scope.products[i].cgstVal = 0
-      $scope.products[i].sgst = 0
-      $scope.products[i].sgstVal = 0
-      $scope.products[i].igst = 18
-      $scope.products[i].igstVal = parseFloat((($scope.products[i].igst * $scope.products[i].taxableprice) / 100).toFixed(2))
+  $scope.calculate=function(){
+    for (var i = 0; i < $scope.products.length; i++) {
+      console.log($scope.gstcode,$scope.gstCal,'kkkkkkkkkkkkkkkkkkk');
+      if ($scope.gstcode === $scope.gstCal) {
+        $scope.products[i].cgst = 9
+        $scope.products[i].cgstVal = parseFloat((($scope.products[i].cgst * $scope.products[i].taxableprice) / 100).toFixed(2))
+        $scope.products[i].sgst = 9
+        $scope.products[i].sgstVal = parseFloat((($scope.products[i].sgst * $scope.products[i].taxableprice) / 100).toFixed(2))
+        $scope.products[i].igst = 0
+        $scope.products[i].igstVal = 0
+      } else {
+        $scope.products[i].cgst = 0
+        $scope.products[i].cgstVal = 0
+        $scope.products[i].sgst = 0
+        $scope.products[i].sgstVal = 0
+        $scope.products[i].igst = 18
+        $scope.products[i].igstVal = parseFloat((($scope.products[i].igst * $scope.products[i].taxableprice) / 100).toFixed(2))
+      }
+      $scope.products[i].total = parseFloat(($scope.products[i].taxableprice + $scope.products[i].cgstVal + $scope.products[i].sgstVal + $scope.products[i].igstVal).toFixed(2))
     }
-    $scope.products[i].total = parseFloat(($scope.products[i].taxableprice + $scope.products[i].cgstVal + $scope.products[i].sgstVal + $scope.products[i].igstVal).toFixed(2))
   }
-}
 
 
   var gstData = '29AABCB6326Q1Z6'
