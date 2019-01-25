@@ -2932,6 +2932,7 @@ setInterval(function () {
 
 
   var getLocationDataFirstApi = function(ipAddress){
+
     return new Promise(function(resolve,reject){
       var xhttpIP = new XMLHttpRequest();
       xhttpIP.onreadystatechange = function() {
@@ -2941,6 +2942,7 @@ setInterval(function () {
           reject(this.status)
         }
       }
+      console.log(ipAddress);
 
       // xhttpIP.open('GET', 'http://api.ipstack.com/43.224.128.150?access_key=f6e584f19ad6fa9080e0434fb46ae508&format=1', true);
       xhttpIP.open('GET', 'http://api.ipstack.com/'+ipAddress+'?access_key=f6e584f19ad6fa9080e0434fb46ae508&format=1', true);
@@ -3075,13 +3077,13 @@ setInterval(function () {
               threadExist=true
               chatThreadPk = data.pk
 
-              getLocationDataFirstApi(this.responseText.userDeviceIp).then((data)=>{
+              getLocationDataFirstApi(data.userDeviceIp).then((data)=>{
                     console.log(data);
                     patchLocationToChatThread(chatThreadPk,data)
 
               }).catch((reason)=>{
                 console.log(reason);
-                getLocationDataSecondApi(this.responseText.userDeviceIp).then((data)=>{
+                getLocationDataSecondApi(data.userDeviceIp).then((data)=>{
                   let myData=JSON.stringify({
                     'city':data.city,
                     'country_name':data.country,

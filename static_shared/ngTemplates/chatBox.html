@@ -41,7 +41,7 @@
             <i ng-show="chatHistBtn" class="fa fa-eye pull-right " aria-hidden="true" style="cursor:pointer; font-size:20px; padding:4px 5px;" ng-click="getChatHistory(data.email)" title="Chat History"></i>
         </div>
         <div class="col-md-1" style="padding:4px 0px">
-            <img style="width:20px" ng-src="{{location.location.country_flag}}" alt="">
+          {{location.country_name}}
         </div>
         <div class="col-md-1">
             <i class="fa fa-times pull-right " aria-hidden="true" style="cursor:pointer; font-size:20px; padding:4px 5px;" ng-click="closeChatBox(index)"></i>

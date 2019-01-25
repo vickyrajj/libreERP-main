@@ -1014,7 +1014,6 @@ class getChatStatus(APIView):
         print request.data,'dddddddddddddddd'
         uid=request.GET['uid']
         sendMail=False;
-        isMailSent=False;
         changeStatus=False;
         chatT= ChatThread.objects.filter(uid=uid)[0]
         compPk=chatT.company.pk
@@ -1039,7 +1038,7 @@ class getChatStatus(APIView):
             if diffForstatusInMints>3 and chatT.user is None:
                 chatT.isLate=True
                 chatT.save()
-        return Response({'sendMail':sendMail,'changeStatus':changeStatus,'companyPk':compPk,'isMailSent':isMailSent}, status = status.HTTP_200_OK)
+        return Response({'sendMail':sendMail,'changeStatus':changeStatus,'companyPk':compPk}, status = status.HTTP_200_OK)
 
 
 # class SVGColor(APIView):

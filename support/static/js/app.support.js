@@ -176,6 +176,7 @@ app.controller("businessManagement.support", function($scope, $state, $users, $s
   }, 1000*60*1);
 
   setInterval(function () {
+
     for (let i = 0; i < $scope.myUsers.length; i++) {
       $http({
         method: 'GET',
