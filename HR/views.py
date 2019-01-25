@@ -352,8 +352,7 @@ class payrollViewSet(viewsets.ModelViewSet):
 class SendActivatedStatus(APIView):
     renderer_classes = (JSONRenderer,)
     def post(self , request , format = None):
-        print request.data
-
+        print request.data['email']
 
         try:
             phone = appSettingsField.objects.filter(name='phone')[0].value
@@ -378,7 +377,7 @@ class SendActivatedStatus(APIView):
         email_body = get_template('app.ecommerce.userActivated.html').render(ctx)
         email_subject = 'Welcome!'
         email_to=[]
-        email_to.append(str('vikas.motla@gmail.com'))
+        email_to.append(str(request.data['email']))
         email_cc = []
         email_bcc = []
         send_email(email_body,email_to,email_subject,email_cc,email_bcc,'html')

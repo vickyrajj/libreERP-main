@@ -3528,6 +3528,25 @@ app.controller('controller.ecommerce.checkout', function($scope, $rootScope, $st
         });
       }
 
+      $scope.sendShippingErrorStatus = function () {
+        var dataToSend = {
+          username:$scope.me.username,
+          firstName:$scope.me.first_name,
+          lastName:$scope.me.last_name,
+          email:$scope.me.email,
+          address:$scope.dataToSend.address,
+          billingAddress:$scope.dataToSend.billingAddress,
+          phone:$scope.dataToSend.mobile
+        }
+        $http({
+          method:'POST',
+          url:'/api/ecommerce/sendShippingErrorStatus/',
+          data:dataToSend
+        }).then(function (response) {
+          console.log('status sent');
+        })
+      }
+
 
       console.log($scope.isStoreGlobal);
       if (!$scope.isStoreGlobal) {
@@ -3586,6 +3605,7 @@ app.controller('controller.ecommerce.checkout', function($scope, $rootScope, $st
             $scope.errorInshipping = true
 
             $scope.openShippingErrorModal()
+            $scope.sendShippingErrorStatus()
 
             $scope.getShippingCharges = true
           })

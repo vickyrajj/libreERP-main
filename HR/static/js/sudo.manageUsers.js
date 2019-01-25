@@ -39,56 +39,60 @@ app.controller('admin.manageUsers.mailAccount' , function($scope , $http, Flash)
 app.controller('sudo.manageUsers.explore', function($scope, $http, $aside, $state, Flash, $users, $filter, $timeout) {
 
   $scope.data = $scope.tab.data;
-  console.log($scope.data);
-
-
-  console.log('aaaaaaaaaaaaaaaaaaaaaa', $scope.data.pk);
+  $scope.addresses = [];
   $http({
-    method: 'GET',
-    url: '/api/HR/payroll/?user=' + $scope.data.userPK
-  }).
-  then(function(response) {
-    $scope.payroll = response.data[0];
-    console.log($scope.payroll);
+    method:'GET',
+    url:'/api/ecommerce/address/?user='+$scope.data.pk
+  }).then(function (response) {
+    $scope.addresses = response.data
   })
 
-  $http({
-    method: 'GET',
-    url: '/api/HR/designation/?user=' + $scope.data.userPK
-  }).
-  then(function(response) {
-    console.log(response.data, '&&&&&&&&&&&&&&&&&&&&&&&7');
-    $scope.designation = response.data[0];
-    console.log($scope.designation);
+  $scope.details = ''
+  if ($scope.data.profile) {
+    if ($scope.data.profile.details) {
+      $scope.details =  $scope.data.profile.details
+    }
+  }
+  $scope.designation = ''
+  $scope.role = ''
+  $scope.company = ''
+  $scope.pincode = ''
+  $scope.statecode = ''
+  $scope.gst = ''
 
 
-    // if (typeof $scope.designation.division == 'number') {
-    //   $http({
-    //     method: 'GET',
-    //     url: '/api/organization/divisions/' + $scope.designation.division + '/'
-    //   }).
-    //   then(function(response) {
-    //     $scope.designation.division = response.data;
-    //   })
-    // }
+  $scope.designationTemp = $scope.details.split("u'designation': u'")[1]
+  if ($scope.designationTemp !=undefined) {
+    $scope.designation = $scope.designationTemp.split("'")[0]
+  }
 
-    // if (typeof $scope.designation.unit == 'number') {
-    //   $http({
-    //     method: 'GET',
-    //     url: '/api/organization/unit/' + $scope.designation.unit + '/'
-    //   }).
-    //   then(function(response) {
-    //     $scope.designation.unit = response.data;
-    //   })
-    //
-    // }
+  $scope.roleTemp = $scope.details.split("u'role': u'")[1]
+  if ($scope.roleTemp !=undefined) {
+    $scope.role = $scope.roleTemp.split("'")[0]
+  }
 
-  })
+  $scope.companyTemp = $scope.details.split("u'Company': u'")[1]
+  if ($scope.companyTemp !=undefined) {
+    $scope.company = $scope.companyTemp.split("'")[0]
+  }
 
+  $scope.pincodeTemp = $scope.details.split("u'pincode': u'")[1]
+  if ($scope.pincodeTemp !=undefined) {
+      $scope.pincode = $scope.pincodeTemp.split("'")[0]
+  }
 
+  $scope.statecodeTemp = $scope.details.split("u'statecode': u'")[1]
+  if ($scope.statecodeTemp !=undefined) {
+    $scope.statecode = $scope.statecodeTemp.split("'")[0]
+  }
 
+  $scope.gstTemp = $scope.details.split("u'GST': u'")[1]
+  if ($scope.gstTemp !=undefined) {
+    $scope.gst = $scope.gstTemp.split("'")[0]
+  }
 
 });
+
 
 app.controller('sudo.manageUsers.editPayroll' , function($scope , $http,Flash){
 
@@ -477,25 +481,36 @@ app.controller('admin.manageUsers' , function($scope , $http , $aside , $state ,
     } else if (action == 'viewProfile') {
       for (var i = 0; i < $scope.data.tableData.length; i++) {
         if ($scope.data.tableData[i].pk == target) {
-          u = $users.get(target)
-          $http.get('/api/HR/profileAdminMode/' + $scope.data.tableData[i].profile.pk + '/').
-          success((function(target) {
-            return function(response) {
-              response.userPK = target;
-              u = $users.get(target)
-              console.log("will add tab profile : ");
-              console.log(response);
-              $scope.addTab({
-                title: 'Profile for ' + u.first_name + ' ' + u.last_name,
-                cancel: true,
-                app: 'viewProfile',
-                data: response,
-                active: true
-              })
+          console.log($scope.data.tableData[i]);
 
-              console.log($scope.tabs);
-            }
-          })(target));
+          $scope.addTab({
+              title: 'Profile for ' + $scope.data.tableData[i].first_name + ' ' + $scope.data.tableData[i].last_name,
+              cancel: true,
+              app: 'viewProfile',
+              data: $scope.data.tableData[i],
+              active: true
+            })
+
+
+          // u = $users.get(target)
+          // $http.get('/api/HR/profileAdminMode/' + $scope.data.tableData[i].profile.pk + '/').
+          // success((function(target) {
+          //   return function(response) {
+          //     response.userPK = target;
+          //     u = $users.get(target)
+          //     console.log("will add tab profile : ");
+          //     console.log(response);
+          //     $scope.addTab({
+          //       title: 'Profile for ' + u.first_name + ' ' + u.last_name,
+          //       cancel: true,
+          //       app: 'viewProfile',
+          //       data: response,
+          //       active: true
+          //     })
+          //
+          //     console.log($scope.tabs);
+          //   }
+          // })(target));
         }
       }
     } else if (action == 'editDesignation') {

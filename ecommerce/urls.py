@@ -49,6 +49,8 @@ urlpatterns = [
     url(r'getDeliveredOrderDetails/$' , GetDeliveredOrderDetailsAPI.as_view()),
     url(r'userProfileSetting/$' , UserProfileSettingAPI.as_view()),
     url(r'reportsData/$' , ReportsDataAPI.as_view()),
+    url(r'sendShippingErrorStatus/$' , SendShippingErrorStatus.as_view()),
+
 
 
 

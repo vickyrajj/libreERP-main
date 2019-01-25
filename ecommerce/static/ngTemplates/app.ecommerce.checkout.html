@@ -837,14 +837,13 @@
           <div ng-if="!getShippingCharges" class="text-center" style="padding-top:60px">
             <img src="static/images/lg.dual-ring-loader.gif" alt="">
           </div>
-          <div class="row" ng-if="getShippingCharges" style="margin-left:15px; ">
+          <div class="row" ng-if="getShippingCharges" style="margin-left:15px;">
             <div class="row" style="padding-top:20px;">
               <span style="font-size:20px;">Order Summary<span >
             </div>
             <div class="row" style="padding-top:5px;">
                <span style="font-size:15px;">  Shipping Details </span>: <span style="font-size:14px;">  {{username}} ,{{data.address.mobileNo}} {{data.address.landMark}} {{data.address.street}}, {{data.address.city}}, {{data.address.state}}, {{data.address.country}} - {{data.address.pincode}} </span>
             </div>
-
           </div>
           <div class="row" ng-if="getShippingCharges">
             <div class="col-xs-12" style="padding:0px">

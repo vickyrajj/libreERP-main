@@ -542,7 +542,7 @@ class CreateOrderAPI(APIView):
                     else:
                         desc =""
                     productName = str(i.product.product.name) + ' ' + str(qtyValue)+ ' ' + str(desc)
-                    value.append({ "productName" : productName,"qty" : i.qty , "amount" : totalPrice,"price":price})
+                    value.append({ "productName" : productName,"qty" : i.qty , "amount" : i.totalAmount,"price":price , "gst":i.gstAmount})
                 else:
                     prodData = ProductVerient.objects.get(sku = i.prodSku)
                     price = prodData.discountedPrice
@@ -586,12 +586,10 @@ class CreateOrderAPI(APIView):
                     else:
                         desc =""
                     productName = str(i.product.product.name) + ' ' + str(qtyValue)+ ' ' + str(desc)
-                    value.append({ "productName" : productName,"qty" : i.qty , "amount" : totalPrice,"price":price})
-            grandTotal=total-(promoAmount * total)/100
-            print orderObj.shippingCharges,'orderrrrrrrrrrrrrrrOBBBBBBBBB'
+                    value.append({ "productName" : productName,"qty" : i.qty , "amount" : i.totalAmount,"price":price, "gst":i.gstAmount})
+
             shippingCharges = round(orderObj.shippingCharges,2)
-            grandTotal = grandTotal + shippingCharges
-            grandTotal=round(grandTotal, 2)
+            grandTotal = round(orderObj.totalAmount, 2)
             try:
                 isStoreGlobal = appSettingsField.objects.filter(name='isStoreGlobal')[0].flag
             except:
@@ -2143,7 +2141,6 @@ class PageCanvas(canvas.Canvas):
 
 def generateInvoiceBni(response, contract ,request):
 
-
     isStoreGlobal = False
     ab = appSettingsField.objects.filter(name='isStoreGlobal')
     if len(ab)>0:
@@ -2155,7 +2152,7 @@ def generateInvoiceBni(response, contract ,request):
     doc.request = request
     elements = []
     companyAddress = settingsFields.get(name = 'companyAddress').value
-    companyAddress = companyAddress.replace(',', '<br/>', 1)
+    companyAddress = companyAddress.replace('lutions,', 'lutions,<br/>', 1)
     companyAddress = companyAddress.replace('ross,', 'ross,<br/>', 1)
     companyAddress = companyAddress.replace('nagar,', 'nagar,<br/>', 1)
     telPhone  = str(settingsFields.get(name = 'phone').value)
@@ -2172,7 +2169,7 @@ def generateInvoiceBni(response, contract ,request):
         gstNumber = str(settingsFields.get(name = 'cstNo').value)
 
 
-    s01 =Paragraph("<para fontSize=8> "+ companyAddress +" <br/> Tel :'"+ telPhone +"' <br/> Email: "+ email +" <br/> "+websiteAddress+" <br/> "+ gstvarName +" "+ gstNumber +" </para>",styles['Normal'])
+    s01 =Paragraph("<para fontSize=8> "+ companyAddress +" <br/> Tel :"+ telPhone +" <br/> Email: "+ email +" <br/> "+websiteAddress+" <br/> "+ gstvarName +" "+ gstNumber +" </para>",styles['Normal'])
     s02 =Paragraph("<para fontSize=8> </para>",styles['Normal'])
     s03 = []
     brandLogo = globalSettings.ICON_LOGO.split('static/')[1]
@@ -2211,8 +2208,8 @@ def generateInvoiceBni(response, contract ,request):
     #
     # s12 =Paragraph("<para> </para>",styles['Normal'])
     # s13 = Paragraph("<para alignment='right' fontSize=18> INVOICE </para>",styles['Normal'])
-    s11 =Paragraph("<para fontSize=8> <b> Shipping Address </b> <br/> "+ str(contract.user.first_name) +" "+ str(contract.user.last_name) +"<br/>102 Eden Park, 20 Vittal Mallya Rd.<br/>"+ str(contract.city) +" - "+ str(contract.pincode) +"<br/>"+ str(contract.state) +" <br/> "+ str(contract.country) +"<br/>"+ str(contract.mobileNo) +"<br/><br/><br/></para>",styles['Normal'])
-    s12 =Paragraph("<para fontSize=8> <b> Billing Address </b> <br/> "+ str(contract.user.first_name) +" "+ str(contract.user.last_name) +"<br/>102 Eden Park, 20 Vittal Mallya Rd.<br/>"+ str(contract.billingCity) +" - "+ str(contract.billingPincode) +"<br/>"+ str(contract.billingState) +" <br/> "+ str(contract.billingState) +"<br/>"+ str(contract.mobileNo) +"<br/><br/><br/></para>",styles['Normal'])
+    s11 =Paragraph("<para fontSize=8>  <br/> <br/><b> Shipping Address </b> <br/> "+ str(contract.user.first_name) +" "+ str(contract.user.last_name) +"<br/>102 Eden Park, 20 Vittal Mallya Rd.<br/>"+ str(contract.city) +" - "+ str(contract.pincode) +"<br/>"+ str(contract.state) +" <br/> "+ str(contract.country) +"<br/>"+ str(contract.mobileNo) +"<br/><br/><br/></para>",styles['Normal'])
+    s12 =Paragraph("<para fontSize=8>  <br/> <br/><b> Billing Address </b> <br/> "+ str(contract.user.first_name) +" "+ str(contract.user.last_name) +"<br/>102 Eden Park, 20 Vittal Mallya Rd.<br/>"+ str(contract.billingCity) +" - "+ str(contract.billingPincode) +"<br/>"+ str(contract.billingState) +" <br/> "+ str(contract.billingState) +"<br/>"+ str(contract.mobileNo) +"<br/><br/><br/></para>",styles['Normal'])
     s13 = Paragraph("<para alignment='right' fontSize=18> INVOICE </para>",styles['Normal'])
     dataDetails +=[[s11,s12,s13]]
 
@@ -2880,7 +2877,7 @@ def updateAndProcessOrder(orderID , amnt, referenceId=None):
             else:
                 gst = 0
             total+=totalPrice
-            value.append({ "productName" : i.product.product.name,"qty" : i.qty , "amount" : round(totalPrice,2),"price":price,'gst':round(gst,1)})
+            value.append({ "productName" : i.product.product.name,"qty" : i.qty , "amount" : i.totalAmount,"price":price,"gst":i.gstAmount})
         else:
             prodData = ProductVerient.objects.get(sku = i.prodSku)
             price = prodData.discountedPrice
@@ -2898,11 +2895,9 @@ def updateAndProcessOrder(orderID , amnt, referenceId=None):
             else:
                 gst = 0
             total+=totalPrice
-            value.append({ "productName" : i.product.product.name,"qty" : i.qty , "amount" : round(totalPrice,2),"price":price,'gst':round(gst,1)})
-    grandTotal=total-(promoAmount * total)/100
+            value.append({ "productName" : i.product.product.name,"qty" : i.qty , "amount" : i.totalAmount,"price":price,"gst":i.gstAmount})
     shippingCharges = round(orderObj.shippingCharges,2)
-    grandTotal = grandTotal + shippingCharges
-    grandTotal=round(grandTotal, 2)
+    grandTotal = round(orderObj.totalAmount, 2)
     orderObj.user.cartItems.all().delete()
     print orderObj.user.email, 'email'
     print 'semndddddddddddddddd emaillllllllll'
@@ -3247,3 +3242,34 @@ class ReportsDataAPI(APIView):
                     return ExcelResponse(deliveryDownloadData, 'deliveryReport_'+str(dt),'Delivery Details')
 
         return Response(toRet,status = status.HTTP_200_OK)
+
+
+class SendShippingErrorStatus(APIView):
+    renderer_classes = (JSONRenderer,)
+    permission_classes = (permissions.IsAuthenticated ,)
+    def post(self , request , format = None):
+        username = request.data['username']
+        firstName = request.data['firstName']
+        lastName = request.data['lastName']
+        address = request.data['address']
+        billingAddress = request.data['billingAddress']
+        email = request.data['email']
+        phone = request.data['phone']
+        ctx = {
+            'username':username,
+            'firstName':firstName,
+            'lastName':lastName,
+            'address':address,
+            'email':email,
+            'phone':phone,
+            'billingAddress':billingAddress
+        }
+        email_body = get_template('app.ecommerce.sendShippingErrorStatus.html').render(ctx)
+        email_subject = "Error in calculating shipping charges"
+        email_to = []
+        for i in globalSettings.G_ADMIN:
+            email_to.append(str(i))
+        email_cc = []
+        email_bcc = []
+        send_email(email_body,email_to,email_subject,email_cc,email_bcc,'html')
+        return Response({"errorStatusSent":True}, status = status.HTTP_200_OK)
