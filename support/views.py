@@ -2972,7 +2972,7 @@ def stockSheet(response, value, created, request):
         try:
             count = 0
             tot = 0
-            matobj = Inventory.objects.filter(product__id = q.product.pk)
+            matobj = Inventory.objects.filter(product__id = q.product.pk,created__lt=created)
             count =  matobj.aggregate(total=Sum(F('qty'),output_field=PositiveIntegerField())).get('total',0)
             tot = count - q.qty
             i+=1
@@ -2989,7 +2989,7 @@ def stockSheet(response, value, created, request):
             pass
         else:
             count = 0
-            matobj = Inventory.objects.filter(product__id = k['product__pk'])
+            matobj = Inventory.objects.filter(product__id = k['product__pk'],created__lt=created)
             count =  matobj.aggregate(total=Sum(F('qty'),output_field=PositiveIntegerField())).get('total',0)
             if count>0:
                 s50 =Paragraph("<para fontSize=8 alignment='center'> {0} </para>".format(i),styles['Normal'])
