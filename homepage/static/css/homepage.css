@@ -1679,29 +1679,14 @@ hr {
   color: #fff
 }
 
-.clickchange span {
+.clickchange a {
   font-size: 20px;
+  color:#fff;
+}
+.clickchange:last-child{
+  border-right: 0px solid #fff;
 }
 
-.clickchange1 {
-  text-align: center;
-  margin-top: 2.5em;
-  color: #fff;
-}
-
-.clickchange1 span {
-  font-size: 20px;
-}
-
-.clickchange:hover, .clickchange .triangle-hover, .clickchange .triangle-hover1 {
-  color: #000;
-  cursor: pointer;
-}
-
-.clickchange1:hover {
-  color: #000;
-  cursor: pointer;
-}
 
 .triangle-hover {
   width: 0;
@@ -2725,7 +2710,7 @@ hr {
 
   /* mobile display size starts here.... */
   /* courses */
-  
+
   .heartsym {
     display: none;
   }

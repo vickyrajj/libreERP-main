@@ -215,7 +215,6 @@ app.controller("home.LMS.configure.form", function($scope, $state, $users, $stat
   $scope.addSection = function(index, position) {
     console.log('section clickeddddddddddddddddddddddd');
     console.log(index);
-
     $uibModal.open({
       templateUrl: '/static/ngTemplates/app.LMS.book.section.html',
       size: 'sm',
@@ -226,11 +225,12 @@ app.controller("home.LMS.configure.form", function($scope, $state, $users, $stat
         },
       },
       controller: function($scope, bookData, $uibModalInstance) {
+        $scope.editmode = false;
         console.log('bbbbbbbbb', bookData);
-
         $scope.Sectionform = {
           title: '',
-          shortUrl: ''
+          shortUrl: '',
+          description: '',
         }
         $scope.cancelSection = function() {
           $uibModalInstance.dismiss()
@@ -249,8 +249,10 @@ app.controller("home.LMS.configure.form", function($scope, $state, $users, $stat
           var secData = {
             title: $scope.Sectionform.title,
             shortUrl: $scope.Sectionform.shortUrl,
-            book: bookData.pk
+            book: bookData.pk,
+            description: $scope.Sectionform.description,
           }
+
           $http({
             method: 'POST',
             url: '/api/LMS/section/',
@@ -258,8 +260,8 @@ app.controller("home.LMS.configure.form", function($scope, $state, $users, $stat
           }).
           then(function(response) {
             $uibModalInstance.dismiss(response.data)
-          },function(err) {
-            Flash.create('danger' , 'This Short Url Already Exist Select Another')
+          }, function(err) {
+            Flash.create('danger', 'This Short Url Already Exist Select Another')
           })
         }
 
@@ -281,7 +283,63 @@ app.controller("home.LMS.configure.form", function($scope, $state, $users, $stat
 
     });
   }
-  console.log('typpppppppppp',$scope.blogType);
+
+  $scope.editSection = function(index) {
+    $uibModal.open({
+      templateUrl: '/static/ngTemplates/app.LMS.book.section.html',
+      size: 'sm',
+      backdrop: true,
+      resolve: {
+        bookData: function() {
+          return $scope.bookDetails;
+        },
+        secItem: function() {
+          return $scope.form.sections[index]
+        },
+      },
+      controller: function($scope, bookData, secItem, $uibModalInstance) {
+        $scope.editmode = true;
+        console.log(secItem, "----------------getting");
+        console.log(secItem.pk, "----------------getting pkkkkkkkkkkk");
+        $scope.Sectionform = secItem
+        $scope.cancelSection = function() {
+          $uibModalInstance.dismiss()
+        }
+        $scope.saveSection = function() {
+          console.log(secItem.shortUrl,'----------ssss');
+          if ($scope.Sectionform.title == null || $scope.Sectionform.title.length == 0) {
+            Flash.create('warning', 'Please Mention Some Title')
+            return;
+          }
+          if ($scope.Sectionform.shortUrl != secItem.shortUrl) {
+            Flash.create('warning', 'cannot Edit shortUrl')
+            return;
+          }
+          var secData = {
+            title: $scope.Sectionform.title,
+            shortUrl: $scope.Sectionform.shortUrl,
+            book: bookData.pk,
+            description: $scope.Sectionform.description,
+          }
+
+          $http({
+            method: 'PATCH',
+            url: '/api/LMS/section/' + secItem.pk + '/',
+            data: secData
+          }).
+          then(function(response) {
+            $uibModalInstance.dismiss(response.data)
+            Flash.create('success', 'Updated successfully')
+          })
+        }
+
+      },
+    })
+  }
+
+
+
+  console.log('typpppppppppp', $scope.blogType);
 
   $scope.blogPopup = function(bookId) {
 
@@ -297,8 +355,8 @@ app.controller("home.LMS.configure.form", function($scope, $state, $users, $stat
           return bookId;
         },
       },
-      controller: function($scope, blogData,bookId, $uibModalInstance) {
-        console.log('bbbbbbbbb', blogData , bookId);
+      controller: function($scope, blogData, bookId, $uibModalInstance) {
+        console.log('bbbbbbbbb', blogData, bookId);
 
         if (blogData.pk) {
           $scope.blogForm = blogData
@@ -311,7 +369,8 @@ app.controller("home.LMS.configure.form", function($scope, $state, $users, $stat
             description: '',
             tagsCSV: '',
             section: '',
-            author: ''
+            author: '',
+            title: '',
           }
         }
         console.log($scope.blogForm);
@@ -350,9 +409,11 @@ app.controller("home.LMS.configure.form", function($scope, $state, $users, $stat
           fd.append('section', $scope.blogForm.section);
           fd.append('author', $scope.blogForm.author);
           fd.append('description', $scope.blogForm.description);
-          fd.append('header' , bookId)
+          fd.append('header', bookId)
           fd.append('contentType', 'book');
-          fd.append('tags' , tags);
+          fd.append('tags', tags);
+          fd.append('title', $scope.blogForm.title);
+          fd.append('shortUrl', $scope.blogForm.shortUrl);
 
           if ($scope.blogForm.pk) {
             method = 'PATCH';

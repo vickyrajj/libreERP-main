@@ -90,134 +90,6 @@ app.controller("home.LMS.courses", function($scope, $state, $users, $stateParams
 
 app.controller("home.LMS.courses.explore", function($scope, $state, $users, $stateParams, $http, Flash, $uibModal, $aside, $rootScope) {
 
-  $http({
-    method: 'GET',
-    url: '/api/PIM/blog/?contentType=book&&header=' + $scope.dataPK,
-  }).
-  then(function(response) {
-    console.log($scope.dataPK);
-    if (response.data.length > 0) {
-      console.log('editttttt');
-      $scope.blogType = 'edit'
-      $scope.blogData = response.data[0]
-    } else {
-      console.log('newwwwwwwwww');
-      $scope.blogType = 'new'
-      $scope.blogData = {}
-    }
-  })
-
-  $scope.blogPopup = function(bookId) {
-    console.log('-------------dasdsad');
-    $uibModal.open({
-      templateUrl: '/static/ngTemplates/app.LMS.book.blogForm.html',
-      size: 'md',
-      backdrop: true,
-      resolve: {
-        blogData: function() {
-          return $scope.blogData;
-        },
-        bookId: function() {
-          return bookId;
-        },
-      },
-      controller: function($scope, blogData, bookId, $uibModalInstance) {
-        console.log('bbbbbbbbb', blogData, bookId);
-
-        if (blogData.pk) {
-          $scope.blogForm = blogData
-        } else {
-          $scope.blogForm = {
-            contentType: 'course',
-            tags: [],
-            ogimage: emptyFile,
-            ogimageUrl: '',
-            description: '',
-            tagsCSV: '',
-            section: '',
-            author: ''
-          }
-        }
-        console.log($scope.blogForm);
-        $scope.cancelBlog = function() {
-          $uibModalInstance.dismiss()
-        }
-        $scope.saveBlog = function() {
-          console.log('clickedddddddddddddddddd');
-          console.log($scope.blogForm);
-
-          var tags = [];
-          for (var i = 0; i < $scope.blogForm.tags.length; i++) {
-            tags.push($scope.blogForm.tags[i].pk)
-          }
-
-          var fd = new FormData();
-
-          if ($scope.blogForm.ogimage == emptyFile && ($scope.blogForm.ogimageUrl == '' || $scope.blogForm.ogimageUrl == undefined)) {
-            Flash.create('danger', 'Either the OG image file OR og image url is required')
-            return;
-          }
-          if ($scope.blogForm.tagsCSV == '' || $scope.blogForm.section == '' || $scope.blogForm.author == '' || $scope.blogForm.description == '') {
-            Flash.create('danger', 'Please check the All SEO related fields');
-            return;
-          }
-
-          if ($scope.blogForm.ogimage != emptyFile && typeof $scope.blogForm.ogimage != 'string' && $scope.blogForm.ogimage != null) {
-            fd.append('ogimage', $scope.blogForm.ogimage);
-
-          } else {
-            fd.append('ogimageUrl', $scope.blogForm.ogimageUrl);
-          }
-
-
-          fd.append('tagsCSV', $scope.blogForm.tagsCSV);
-          fd.append('section', $scope.blogForm.section);
-          fd.append('author', $scope.blogForm.author);
-          fd.append('description', $scope.blogForm.description);
-          fd.append('header', '1')
-          fd.append('contentType', 'course');
-          fd.append('tags', tags);
-
-          if ($scope.blogForm.pk) {
-            method = 'PATCH';
-            url = '/api/PIM/blog/' + $scope.blogForm.pk + '/';
-          } else {
-            method = 'POST';
-            url = '/api/PIM/blog/';
-          }
-
-          $http({
-            method: method,
-            url: url,
-            data: fd,
-            transformRequest: angular.identity,
-            headers: {
-              'Content-Type': undefined
-            }
-          }).
-          then(function(response) {
-            if ($scope.blogForm.pk) {
-              Flash.create('success', 'Updated');
-            } else {
-              Flash.create('success', 'Created');
-            }
-            $uibModalInstance.dismiss(response.data)
-          });
-
-        }
-
-      },
-    }).result.then(function() {
-
-    }, function(reason) {
-
-      if (reason != undefined) {
-        $scope.blogType = 'edit'
-        $scope.blogData = reason
-      }
-
-    });
-  }
 
   $scope.course = $scope.tab.data.course;
 
@@ -254,6 +126,7 @@ app.controller("home.LMS.courses.explore", function($scope, $state, $users, $sta
       icon: 'sticky-note-o'
     },
   ]
+
 
   $scope.enrollmentForm = {
     user: undefined
@@ -327,12 +200,135 @@ app.controller("home.LMS.courses.explore", function($scope, $state, $users, $sta
 
   }
 
-  // $scope.open = function () {
-  //   console.log('opening pop up');
-  //   var modalInstance = $modal.open({
-  //     // templateUrl: 'popup.html',
-  //   });
-  // }
+  $http({
+    method: 'GET',
+    url: '/api/PIM/blog/?contentType=course&&header='+ $scope.course.pk
+  }).then(function(response) {
+    $scope.linkedCourse = response.data;
+    if (response.data.length > 0) {
+      $scope.linkType = "edit"
+      $scope.linkData = $scope.linkedCourse[0];
+    } else{
+      $scope.linkType = "new"
+      $scope.linkData = {}
+    }
+  })
+
+
+  $scope.blogPopup = function() {
+    $uibModal.open({
+      templateUrl: '/static/ngTemplates/app.LMS.book.blogForm.html',
+      size: 'md',
+      backdrop: true,
+      resolve: {
+        blogData: function() {
+          return $scope.linkData;
+        },
+        courseId: function() {
+          return $scope.course.pk;
+        },
+      },
+      controller: function($scope, blogData, courseId, $uibModalInstance) {
+        console.log('bbbbbbbbb------------ccccccccccccc', blogData, courseId);
+        if (blogData.pk) {
+          $scope.blogForm = blogData
+        } else {
+          $scope.blogForm = {
+            contentType: 'course',
+            tags: [],
+            ogimage: emptyFile,
+            ogimageUrl: '',
+            description: '',
+            tagsCSV: '',
+            section: '',
+            author: '',
+            title:'',
+            shortUrl:'',
+          }
+        }
+        console.log($scope.blogForm);
+        $scope.cancelBlog = function() {
+          $uibModalInstance.dismiss()
+        }
+        $scope.saveBlog = function() {
+          console.log('clickedddddddddddddddddd');
+          console.log($scope.blogForm);
+
+          var tags = [];
+          for (var i = 0; i < $scope.blogForm.tags.length; i++) {
+            tags.push($scope.blogForm.tags[i].pk)
+          }
+
+          var fd = new FormData();
+
+          if ($scope.blogForm.ogimage == emptyFile && ($scope.blogForm.ogimageUrl == '' || $scope.blogForm.ogimageUrl == undefined)) {
+            Flash.create('danger', 'Either the OG image file OR og image url is required')
+            return;
+          }
+          if ($scope.blogForm.tagsCSV == '' || $scope.blogForm.section == '' || $scope.blogForm.author == '' || $scope.blogForm.description == '') {
+            Flash.create('danger', 'Please check the All SEO related fields');
+            return;
+          }
+
+          if ($scope.blogForm.ogimage != emptyFile && typeof $scope.blogForm.ogimage != 'string' && $scope.blogForm.ogimage != null) {
+            fd.append('ogimage', $scope.blogForm.ogimage);
+
+          } else {
+            fd.append('ogimageUrl', $scope.blogForm.ogimageUrl);
+          }
+
+
+          fd.append('tagsCSV', $scope.blogForm.tagsCSV);
+          fd.append('section', $scope.blogForm.section);
+          fd.append('author', $scope.blogForm.author);
+          fd.append('description', $scope.blogForm.description);
+          fd.append('header', courseId)
+          fd.append('contentType', 'course');
+          fd.append('tags', tags);
+          fd.append('title', $scope.blogForm.title);
+          fd.append('shortUrl', $scope.blogForm.shortUrl);
+
+          if ($scope.blogForm.pk) {
+            method = 'PATCH';
+            url = '/api/PIM/blog/' + $scope.blogForm.pk + '/';
+          } else {
+            method = 'POST';
+            url = '/api/PIM/blog/';
+          }
+
+          $http({
+            method: method,
+            url: url,
+            data: fd,
+            transformRequest: angular.identity,
+            headers: {
+              'Content-Type': undefined
+            }
+          }).
+          then(function(response) {
+            if ($scope.blogForm.pk) {
+              Flash.create('success', 'Updated');
+            } else {
+              Flash.create('success', 'Created');
+            }
+            $uibModalInstance.dismiss(response.data)
+          });
+
+        }
+
+      },
+    }).result.then(function() {
+
+    }, function(reason) {
+
+      if (reason != undefined) {
+        $scope.blogType = 'edit'
+        $scope.blogData = reason
+      }
+    });
+  }
+
+
 
   //------------fetch books
   // $scope.booksdata = [];
@@ -771,13 +767,19 @@ app.controller("home.LMS.courses.form", function($scope, $state, $users, $stateP
       var method = 'PATCH'
       var url = '/api/LMS/course/' + $scope.form.pk + '/'
     }
+    console.log($scope.form.TAs,'--------------------ta pk');
+    console.log($scope.form.instructor.pk,'---------innnnnssssttrr');
+    // var TAs = '';
+    // for (var i = 0; i < $scope.form.TAs.length; i++) {
+    //   TAs += $scope.form.TAs[i] +','
+    // }
     var fd = new FormData();
     fd.append('title', $scope.form.title);
     fd.append('topic', $scope.form.topic.pk);
     fd.append('enrollmentStatus', $scope.form.enrollmentStatus);
     fd.append('description', $scope.form.description);
     fd.append('dp', $scope.form.dp);
-    fd.append('TAs', $scope.form.TAs);
+    fd.append('TAs',$scope.form.TAs);
     fd.append('instructor', $scope.form.instructor.pk);
     $http({
       method: method,

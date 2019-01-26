@@ -146,15 +146,6 @@ class blogPost(models.Model):
     tags = models.ManyToManyField(blogCategory , related_name = 'articles' , blank = True)
     contentType = models.CharField(max_length = 15 , choices = CONTENT_TYPE_CHOICE , default = 'article')
     contentFK = models.PositiveIntegerField(null = True) # in case of book or question this will store the ID for the same
-    # url
-    #
-    # og image
-    # title
-    # description
-    # tags
-    # section
-    # author
-
     shortUrl = models.CharField(max_length =100 , null = True, unique = True)
     ogimageUrl = models.CharField(max_length =1000 , null = True)
     ogimage = models.ImageField( upload_to= getOGImageAttachment , null = True)

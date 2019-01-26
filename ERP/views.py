@@ -40,7 +40,6 @@ def dynamicTemplates(request , filename):
     print 'filename', filename
     try:
         blogobj = blogPost.objects.get(shortUrl=filename)
-
         if blogobj.contentType == 'book':
             book = Book.objects.get(pk=blogobj.header)
             print book.title,'gggggggggggggggggggggggggggg'
@@ -77,8 +76,14 @@ def dynamicTemplates(request , filename):
     # return render(request , filename , {"lang" : request.LANGUAGE_CODE})
 
 
-def courses(request):
-    return render(request, 'courses.html', {})
+
+#
+# def courses(request):
+#     print 'in courseeeeeeeeee'
+#     courseobj = Course.objects.none()
+#     notesobj = Note.objects.all()
+#     subobj = Subject.objects.all().order_by('level')
+#     return render(request, 'courses.html', {"typ" : page,"courseobj":courseobj,"subobj":subobj,"notesobj":notesobj})
 
 def mockTestView(request ,testID):
     # testID=1;
@@ -88,10 +93,23 @@ def testResultsView(request ):
     # testID=1;
     return render(request, 'examResults.html', {})
 
-def coursesContent(request , page):
-    print "coming in course content"
-    print page
-    return render(request, 'courses.html', {"typ" : page})
+# def coursesContent(request , page):
+#     print page,'-------------------'
+#     #
+#     # level = str(page).split('-')[1].split('-')[0]
+#     # title = str(page).split('-')[1].split('-')[1]
+#     # print level,title,"------------hhhhh"
+#
+#     try:
+#         subjectobj = Subject.objects.get(id=pk)
+#         # subPk = int(str(page).split('__')[1])
+#         # subTitle =(str(page).split('-')[1]).split('__')[0]
+#     except:
+#         return redirect('courses')
+#     courseobj = Course.objects.filter(topic__subject__pk=subjectobj)
+#     notesobj = Note.objects.all()
+#     subobj = Subject.objects.all().order_by('level')
+#     return render(request, 'courses.html', {"typ" : page,"courseobj":courseobj,"subobj":subobj,"notesobj":notesobj})
 
 def ncert(request):
     return render(request, 'ncert.html', {})

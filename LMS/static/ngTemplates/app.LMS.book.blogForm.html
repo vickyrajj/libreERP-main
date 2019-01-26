@@ -1,15 +1,20 @@
 <div class="row" style="margin-top:20px;margin-left:10px">
   <div class="col-md-11" style="padding-left:35px">
     <h3 align="center"><b>SEO related data </b></h3><br>
-    <div class="row">
+    <!-- <div class="row">
       <div class="form-group">
         <label>Tags :</label>
         <tags-input ng-model="blogForm.tags" add-on-paste="true" add-From-Autocomplete-Only="true" display-property="title">
           <auto-complete source="loadTags($query)" load-on-down-arrow="true"></auto-complete>
         </tags-input>
       </div>
+    </div> -->
+    <div class="row">
+      <div class="form-group">
+        <label>Title</label>
+        <input type="text" ng-model="blogForm.title" class="form-control">
+      </div>
     </div>
-
     <div class="row">
       <div class="form-group">
         <label>URL suffix</label>
