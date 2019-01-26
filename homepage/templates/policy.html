@@ -1,4 +1,10 @@
-<div class="body">
+{% extends "tutorBase.html" %}
+
+{% block tutorcontent %}
+
+{% verbatim %}
+
+<div class="body" style="padding-top: 3em;">
   <div class="container" style="padding-left:0px;padding-right:0px;">
     <div class="container-fluid">
       <section>
@@ -18,7 +24,7 @@
             This document is published and shall be construed in accordance with the provisions of the Information Technology (reasonable security practices and procedures and sensitive personal data of information) rules, 2011 under Information
             Technology Act, 2000; that require publishing of the Privacy Policy for collection, use, storage and transfer of sensitive personal data or information.<br>
 
-              Please read this Privacy Policy carefully by using the Website, you indicate that you understand, agree and consent to this Privacy Policy. If you do not agree with the terms of this Privacy Policy, please do not use this Website.<br>
+            Please read this Privacy Policy carefully by using the Website, you indicate that you understand, agree and consent to this Privacy Policy. If you do not agree with the terms of this Privacy Policy, please do not use this Website.<br>
 
             By providing us your Information or by making use of the facilities provided by the Website, You hereby consent to the collection, storage, processing and transfer of any or all of Your Personal Information and Non-Personal Information
             by us as specified under this Privacy Policy. You further agree that such collection, use, storage and transfer of Your Information shall not cause any loss or wrongful gain to you or any other person. </p><br><br>
@@ -66,11 +72,13 @@
 
         </div>
       </section>
+
+
+
+
+
     </div>
-
-
-
-
   </div>
 </div>
-</div>
+{% endverbatim %}
+{% endblock %}

@@ -77,20 +77,43 @@ def dynamicTemplates(request , filename):
 
 
 
+#
+# def courses(request):
+#     print 'in courseeeeeeeeee'
+#     courseobj = Course.objects.none()
+#     notesobj = Note.objects.all()
+#     subobj = Subject.objects.all().order_by('level')
+#     return render(request, 'courses.html', {"typ" : page,"courseobj":courseobj,"subobj":subobj,"notesobj":notesobj})
 
-def courses(request):
-    print 'in courseeeeeeeeee'
-    courseobj = Course.objects.all()
-    return render(request, 'courses.html', {"typ" : page,"courseobj":courseobj})
+def mockTestView(request ,testID):
+    # testID=1;
+    return render(request, 'exam.html', {'id':testID})
 
-def mockTestView(request , testID):
-    pass
+def testResultsView(request ):
+    # testID=1;
+    return render(request, 'examResults.html', {})
 
-def coursesContent(request , page):
-    return render(request, 'courses.html', {"typ" : page})
+# def coursesContent(request , page):
+#     print page,'-------------------'
+#     #
+#     # level = str(page).split('-')[1].split('-')[0]
+#     # title = str(page).split('-')[1].split('-')[1]
+#     # print level,title,"------------hhhhh"
+#
+#     try:
+#         subjectobj = Subject.objects.get(id=pk)
+#         # subPk = int(str(page).split('__')[1])
+#         # subTitle =(str(page).split('-')[1]).split('__')[0]
+#     except:
+#         return redirect('courses')
+#     courseobj = Course.objects.filter(topic__subject__pk=subjectobj)
+#     notesobj = Note.objects.all()
+#     subobj = Subject.objects.all().order_by('level')
+#     return render(request, 'courses.html', {"typ" : page,"courseobj":courseobj,"subobj":subobj,"notesobj":notesobj})
 
 def ncert(request):
     return render(request, 'ncert.html', {})
+
 
 class MakePaytmPayment(APIView):
     renderer_classes = (JSONRenderer,)

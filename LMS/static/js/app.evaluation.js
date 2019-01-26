@@ -97,7 +97,7 @@ app.controller("home.LMS.evaluation.form", function($scope, $state, $users, $sta
   $scope.resetForm=function(){
     $scope.selectedquestions=[]
     $scope.questions = []
-    $scope.form = {topic : '' , text : '' , subject : '' ,typ : '' ,book : '' ,section : ''}
+    $scope.form = {topic : '' , text : '' , subject : '' ,typ : '' ,book : '' ,section : '',name:''}
   }
   $scope.resetForm();
 
@@ -106,6 +106,7 @@ app.controller("home.LMS.evaluation.form", function($scope, $state, $users, $sta
   }else {
     $scope.mode = 'edit';
     $scope.selectedquestions = $scope.tab.data.paper.questions;
+    $scope.form.name=$scope.tab.data.paper.name
     console.log($scope.selectedquestions );
   }
 
@@ -172,6 +173,7 @@ app.controller("home.LMS.evaluation.form", function($scope, $state, $users, $sta
   };
 
   $scope.add = function() {
+    $scope.title = false;
     for (var i = 0; i < $scope.questions.length; i++) {
       console.log($scope.questions[i])
       if ($scope.questions[i].selected){
@@ -179,6 +181,7 @@ app.controller("home.LMS.evaluation.form", function($scope, $state, $users, $sta
       }
     }
   };
+
 
   $scope.delete=function(indx){
     $scope.selectedquestions.splice(indx,1)
@@ -199,24 +202,26 @@ app.controller("home.LMS.evaluation.form", function($scope, $state, $users, $sta
     if ($scope.mode=='edit'){
       var method='PATCH';
       var url='/api/LMS/paper/'+$scope.tab.data.paper.pk+'/';
-      $http({method : method , url : url , data :  {questions :toSend}}).
+      $http({method : method , url : url , data :  {questions :toSend,name:$scope.form.name}}).
       then(function(response) {
           Flash.create('success', 'Question Paper Updated');
           console.log(response.data);
       })
     }else {
       var method='POST';
-      var url='/api/LMS/quesPaper/';
-      $http({method : method , url : url , data :  {questions :toSend}}).
+
+      $http({method : method , url : '/api/LMS/paper/' , data :  {questions :toSend,name:$scope.form.name}}).
       then(function(response) {
         Flash.create('success', 'Question Paper Created');
-        console.log(response.data);
         resetForm();
       })
+
+
     }
 
   };
 
+      
 
 });
 

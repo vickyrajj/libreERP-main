@@ -305,6 +305,7 @@ app.controller('controller.examresults', function($rootScope, $scope, $state, $h
 })
 
 app.controller('controller.exam', function($scope, $state, $http, $timeout, $interval, $uibModal, $stateParams, $sce, Flash) {
+
   $scope.questionList = [{
 
       Question: 'Nunc gravida neque nec neque rutrum elementum.',

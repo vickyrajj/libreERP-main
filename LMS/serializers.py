@@ -159,25 +159,34 @@ class PaperSerializer(serializers.ModelSerializer):
         fields = ('pk' , 'created' , 'updated', 'questions', 'active' , 'user','name')
         read_only_fields = ('user', 'questions')
     def create(self , validated_data):
-        p=Paper(user=self.context['request'].user)
-        p.save()
+        m = Paper(**validated_data)
+        m.user = self.context['request'].user
+        if 'name' in self.context['request'].data:
+            m.name = self.context['request'].data['name']
+        m.save()
         print self.context['request'].data['questions']
         for i in self.context['request'].data['questions']:
             i['ques']=Question.objects.get(id=i['ques'])
             pq = PaperQues(**i)
             pq.user = self.context['request'].user
             pq.save()
-            p.questions.add(pq)
-        return p
+            m.questions.add(pq)
+        m.save()
+        return m
+
     def update(self , instance , validated_data):
-        for i in instance.questions.all():
-            instance.questions.remove(i)
+        # for i in instance.questions.all():
+        #     instance.questions.remove(i)
+        instance.questions.clear()
         for i in self.context['request'].data['questions']:
             i['ques']=Question.objects.get(id=i['ques'])
             pq = PaperQues(**i)
             pq.user = self.context['request'].user
             pq.save()
             instance.questions.add(pq)
+        if 'name' in self.context['request'].data:
+            instance.name = self.context['request'].data['name']
+        instance.save()
         return instance
 
 class AnswerSerializer(serializers.ModelSerializer):
@@ -232,10 +241,11 @@ class CourseSerializer(serializers.ModelSerializer):
     def create(self , validated_data):
         c = Course(**validated_data)
         c.user = self.context['request'].user
-        topic = Topic.objects.get(pk = self.context['request'].data['topic'])
-        c.topic = topic
-        for u in self.context['request'].data['TAs']:
-            c.TAs.add(User.objects.get(pk = u))
+        c.topic = Topic.objects.get(pk = self.context['request'].data['topic'])
+        c.instructor = User.objects.get(pk = self.context['request'].data['instructor'])
+        c.save()
+        for u in self.context['request'].data['TAs'].split(','):
+            c.TAs.add(User.objects.get(pk = int(u)))
         c.save()
         return c
     def update(self , instance , validated_data):
@@ -251,7 +261,7 @@ class CourseSerializer(serializers.ModelSerializer):
             instance.instructor = User.objects.get(pk =self.context['request'].data['instructor'])
 
         for u in self.context['request'].data['TAs'].split(','):
-            instance.TAs.add(User.objects.get(pk = u))
+            instance.TAs.add(User.objects.get(pk = int(u)))
 
         instance.save()
         return instance
