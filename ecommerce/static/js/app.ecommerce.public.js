@@ -3212,7 +3212,7 @@ app.controller('controller.ecommerce.checkout', function($scope, $rootScope, $st
       },
       controller: function($scope, $state, $http, $timeout, $uibModal, $users, Flash, $uibModalInstance, add) {
         $scope.adrForm = add;
-        console.log($scope.adrForm);
+        // console.log($scope.adrForm);
         if ($scope.adrForm.title == undefined) {
           $scope.adrForm.title = ''
         }
@@ -3231,7 +3231,7 @@ app.controller('controller.ecommerce.checkout', function($scope, $rootScope, $st
             method = 'PATCH'
             url += $scope.adrForm.pk + '/'
           }
-          console.log(method, url);
+          // console.log(method, url);
           $http({
             method: method,
             url: url,
@@ -3432,7 +3432,6 @@ app.controller('controller.ecommerce.checkout', function($scope, $rootScope, $st
   $scope.totalLimit = false
   $scope.next = function() {
 
-    console.log($scope.totalAfterPromo, $scope.totalAfterDiscount, '**************************8');
     if ($rootScope.limitValue) {
       if ($scope.totalAfterPromo > $rootScope.limitValue || $scope.totalAfterDiscount > $rootScope.limitValue) {
         $scope.totalLimit = true
@@ -3442,6 +3441,7 @@ app.controller('controller.ecommerce.checkout', function($scope, $rootScope, $st
     }
     window.scrollTo(0, 0);
     if ($scope.data.stage == 'review') {
+      console.log('review','***********************************************');
       $scope.dataToSend.promoCode = $scope.data.promoCode;
       $scope.dataToSend.promoCodeDiscount = $scope.promoDiscount;
       console.log($scope.cartItems, $scope.cartProducts, '$$$$$$$$$$$$$$$$$$$');
@@ -3511,7 +3511,7 @@ app.controller('controller.ecommerce.checkout', function($scope, $rootScope, $st
       $scope.data.stage = 'shippingDetails';
 
     } else if ($scope.data.stage == 'shippingDetails') {
-
+      console.log('shippingDetails','***********************************************');
       $scope.errorInshipping = false
       $scope.openShippingErrorModal = function() {
         $uibModal.open({
@@ -3550,13 +3550,13 @@ app.controller('controller.ecommerce.checkout', function($scope, $rootScope, $st
 
       console.log($scope.isStoreGlobal);
       if (!$scope.isStoreGlobal) {
-        if ($scope.data.address.street == '' || $scope.data.address.landMark == '') {
+        if ($scope.data.address.landMark == '') {
           Flash.create('warning', 'Please Fill All Details')
           return
         }
       }
 
-      if ($scope.data.address.mobileNo == '' || $scope.data.address.mobileNo == null || $scope.data.address.city == '' || $scope.data.address.pincode == '' || $scope.data.address.country == '' || $scope.data.address.state == '') {
+      if ($scope.data.address.mobileNo == '' || $scope.data.address.mobileNo == null || $scope.data.address.city == '' || $scope.data.address.pincode == '' || $scope.data.address.country == '' || $scope.data.address.state == '' || $scope.data.address.street == '') {
         Flash.create('warning', 'Please Fill All Details')
         return
       } else {
@@ -3571,6 +3571,39 @@ app.controller('controller.ecommerce.checkout', function($scope, $rootScope, $st
           $scope.dataToSend.billingAddress = $scope.data.billingAddress
         }
       }
+
+
+      console.log($scope.dataToSend , '^^^^^^^&&&&&&&&&&&');
+
+      if ($scope.dataToSend.address.pk == undefined) {
+        //post here
+
+        console.log('post and use');
+
+        var addressToPost = $scope.dataToSend.address
+        addressToPost.title = $scope.dataToSend.address.street
+        addressToPost.primary = false
+        console.log(addressToPost);
+
+        $http({
+          method: 'POST',
+          url: '/api/ecommerce/address/',
+          data: addressToPost
+        }).
+        then(function(response) {
+          console.log(response.data);
+          $scope.dataToSend.address = response.data
+          $scope.savedAddress.push($scope.dataToSend.address)
+          // $scope.newAdr = false
+          // $scope.addressview = false
+          $scope.resetAdd()
+        }, function(response) {
+          Flash.create('danger', response.status + ' : ' + response.statusText);
+        })
+
+
+      }
+
       $scope.data.stage = 'payment';
       $scope.getShippingCharges = false
       // grossWeight
