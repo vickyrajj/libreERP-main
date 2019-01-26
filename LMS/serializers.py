@@ -232,10 +232,11 @@ class CourseSerializer(serializers.ModelSerializer):
     def create(self , validated_data):
         c = Course(**validated_data)
         c.user = self.context['request'].user
-        topic = Topic.objects.get(pk = self.context['request'].data['topic'])
-        c.topic = topic
-        for u in self.context['request'].data['TAs']:
-            c.TAs.add(User.objects.get(pk = u))
+        c.topic = Topic.objects.get(pk = self.context['request'].data['topic'])
+        c.instructor = User.objects.get(pk = self.context['request'].data['instructor'])
+        c.save()
+        for u in self.context['request'].data['TAs'].split(','):
+            c.TAs.add(User.objects.get(pk = int(u)))
         c.save()
         return c
     def update(self , instance , validated_data):
@@ -251,7 +252,7 @@ class CourseSerializer(serializers.ModelSerializer):
             instance.instructor = User.objects.get(pk =self.context['request'].data['instructor'])
 
         for u in self.context['request'].data['TAs'].split(','):
-            instance.TAs.add(User.objects.get(pk = u))
+            instance.TAs.add(User.objects.get(pk = int(u)))
 
         instance.save()
         return instance

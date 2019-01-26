@@ -15,10 +15,11 @@
         <li class="header_element">
           <a href="" ng-mouseleave="show[0]=false" ng-mouseover="show[0]=true" class="nav_ele"> Courses</a>
           <ul ng-mouseleave="keepshow[0]=false" ng-click="keepshow[0] = false; toggleNavbar = false;" ng-mouseover="keepshow[0]=true" ng-show="show[0]||keepshow[0]" class="container_box">
-            <li><a href="/courses">class 12th</a></li>
-            <li><a href="">class 11th</a></li>
-            <li><a href="">class 10th</a></li>
-            <li><a href="">class 9th</a></li>
+            {% endverbatim %}
+            {% for c in subobj %}
+            <li><a href="/class-{{c.level}}-{{c.title}}/">Class {{c.level}} {{c.title}}</a></li>
+              {% endfor %}
+            {% verbatim %}
           </ul>
         </li>
         <li class="header_element">

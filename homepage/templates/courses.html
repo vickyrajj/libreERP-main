@@ -2,7 +2,7 @@
 
 {% block tutorcontent %}
 
-{% verbatim %}
+
 
 <div class="">
   <div class="row" style="margin:0px;">
@@ -13,8 +13,12 @@
     }
   </style>
 
+    {% if not subPart %}
     <div class="container-fluid" ng-class='banner' style="background-image: linear-gradient(rgba(36, 32, 32, 0.79), rgba(32, 32, 32, 0.74)), url('/static/images/24tut/studentimg.jpg');background-size:cover;background-repeat:no-repeat;height:40vh;">
     </div>
+    {% endif %}
+
+    {% verbatim %}
 
     <div class="container" style="padding-bottom:4em;">
       <div class="row" style="margin-top:4em;">
@@ -74,14 +78,64 @@
     {% endverbatim%}
 
     <div class="container-fluid" style="background-color:#FCC300;min-height:10vh;  position:relative;padding-bottom: 2em;" ng-hide="device.smallDevice">
-      <div class="container-fluid text-center"style="display: flex;align-items: center;">
-        {% for c in courseobj %}
-        <a href="#" class="a_div">
-        {{c.title}}
+      <div class="container">
+        <div class="col-md-2 clickchange" ng-class="click1" ng-click="clicks(1)">
+          <a href="/class-{{level}}-{{title}}/books/"><b>Books</b></a>
+          <div ng-class="class1"></div>
+        </div>
+        <div class="col-md-2 clickchange" ng-class="click2" ng-click="clicks(2)">
+          <a href="/class-{{level}}-{{title}}/video-course/"><b>Video Course</b></a>
+          <div ng-class="class2"></div>
+        </div>
+        <a href="/exam">
+          <div class="col-md-2 clickchange" ng-class="click3" ng-click="clicks(3)">
+            <a href="#"><b>Test Series</b></a>
+            <div ng-class="class3"></div>
+          </div>
         </a>
+        <!-- <a href="/forum"> -->
+        <div class="col-md-2 clickchange" ng-class="click4" ng-click="clicks(4)">
+          <a href="/class-{{level}}-{{title}}/forum/"><b>Forum</b></a>
+          <div ng-class="class4"></div>
+        </div>
+        <!-- </a> -->
+        <div class="col-md-2 clickchange" ng-class="click5" ng-click="clicks(5)">
+          <a href="/class-{{level}}-{{title}}/reference-book"><b>Refernce Books</b></a>
+          <div ng-class="class5"></div>
+        </div>
+        <div class="col-md-2 clickchange" ng-class="click6" ng-click="clicks(6)">
+          <a href="/class-{{level}}-{{title}}/notes"><b>Notes</b></a>
+          <div ng-class="class6"></div>
+        </div>
+      </div>
+    </div>
+    <div class="container-fluid"style="margin-top:20px;">
+      <div class="col-md-8 col-md-offset-2">
+        {% for c in courseobj %}
+        <div class="col-md-3" style="display:inline-block;padding-bottom: 20px;">
+          <img src="{{c.dp}}" class="courseobj_img">
+          <div class="container-fluid courseobj_container">
+            <h5> <b>{{c.title}}</b> </h5>
+            <span>{{c.description}}</span>
+          </div>
+        </div>
         {% endfor %}
       </div>
     </div>
+    <!-- <div class="col-md-3">
+      <h4>Notes</h4>
+      <div class="container-fluid">
+        {% for n in notesobj %}
+        <div>
+          <span> <b>{{n.title}}</b> </span><br>
+          <span>{{n.description}}</span><br>
+          <span>{{c.description}}</span>
+
+        </div>
+        {% endfor %}
+      </div>
+    </div> -->
+
     {% verbatim %}
     <div class="container-fluid" ng-hide="!device.smallDevice">
       <div class="container" style="background-color:#FCC300;min-height:10vh;  position:relative;padding-bottom: 2em;">

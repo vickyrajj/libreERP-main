@@ -22,18 +22,69 @@ import random, string
 from django.utils import timezone
 from rest_framework.views import APIView
 from PIM.models import blogPost
-from LMS.models import Book,Section
+from LMS.models import *
 import sys, traceback
 
 
 
 def index(request):
-    return render(request, 'index.html', {"home": True , "brandLogo" : globalSettings.BRAND_LOGO , "brandLogoInverted": globalSettings.BRAND_LOGO_INVERT})
+    subobj = Subject.objects.all().order_by('level')
+    return render(request, 'index.html', {"home": True , "subobj":subobj, "brandLogo" : globalSettings.BRAND_LOGO , "brandLogoInverted": globalSettings.BRAND_LOGO_INVERT})
 
 
 
 def blogDetails(request, blogname):
     print '*****************blognameeee',blogname
+
+    if blogname.startswith('class-') :
+        print blogname,'-------------------'
+        subPart = None
+        if '/' in blogname:
+            prts = blogname.split('/')
+            blogname = prts[0]
+            subPart = prts[1]
+
+
+        # subjectobj = Subject.objects.all()
+
+        level = str(blogname).split('-')[1]
+        title = str(blogname).split('-')[2]
+        sub = Subject.objects.get(title = title,level = int(level))
+        print sub.pk
+        print level,title,"------------hhhhh"
+        # try:
+            # subPk = int(str(blogname).split('__')[1])
+            # subTitle =(str(page).split('-')[1]).split('__')[0]
+            # print subTitle,'suuuuuuubbbbbbbbbbbbbbbjjjjjjjj'
+        # except:
+            # return redirect('courses')
+        courseobjs = Course.objects.filter(topic__subject__pk=sub.pk)
+        # notesobj = Note.objects.all()
+        subobjs = Subject.objects.all().order_by('level')
+        books = []
+        videoCourse = []
+        forum = []
+        referenceBook = []
+        notes = []
+        if subPart == 'Books':
+            # books = Book
+            pass
+        if subPart == 'videoCourse':
+            # books = Book
+            pass
+        if subPart == 'forum':
+            # books = Book
+            pass
+        if subPart == 'referenceBook':
+            # books = Book
+            pass
+        if subPart == 'notes':
+            # books = Book
+            pass
+
+        print "sub part" , subPart
+
+        return render(request, 'courses.html', {"courseobj":courseobjs,"subobj":subobjs,"level":level,"title":title , "subPart" : subPart} )
     try:
         # print "searching for blog post"
         # # print blogPost.objects.all()
@@ -81,8 +132,6 @@ def blogDetails(request, blogname):
     except:
 
         traceback.print_exc(file=sys.stdout)
-
-
         sectionobj = Section.objects.get(shortUrl=blogname)
         blogobj = blogPost.objects.get(header=sectionobj.book.pk)
         print 'boookkkkkk',sectionobj.book

@@ -1672,41 +1672,21 @@ hr {
   width: 12%;
 }
 
-.a_div {
+.clickchange {
   border-right: 1px solid #fff;
-  margin-top: 1.8em;
-  color: #fff;
-  text-transform:capitalize;
-  flex: 1;
-  font-size: 20px;
-  font-weight: bold;
-  text-decoration: none !important;
+  text-align: center;
+  margin-top: 2.5em;
+  color: #fff
 }
 
-
-.a_div:last-child {
+.clickchange a {
+  font-size: 20px;
+  color:#fff;
+}
+.clickchange:last-child{
   border-right: 0px solid #fff;
 }
 
-.clickchange span {
-  font-size: 20px;
-}
-
-.clickchange1 {
-  text-align: center;
-  margin-top: 2.5em;
-  color: #fff;
-}
-
-.clickchange1 span {
-  font-size: 20px;
-}
-
-.clickchange:hover, .clickchange .triangle-hover, .clickchange .triangle-hover1 {
-  cursor: pointer;
-}
-
-.clickchange1:hover {}
 
 .triangle-hover {
   width: 0;
@@ -2537,6 +2517,34 @@ hr {
 .tab_card:hover {
   background-color: #17EEAB;
   color: #fff;
+}
+
+.courseobj_container {
+  box-shadow: 1px 1px 8px 0 rgba(70, 70, 70, 0.25);
+  height: 230px;
+  padding: 15px;
+  overflow-y: hidden;
+}
+.courseobj_container h5{
+  margin-bottom: 20px;
+}
+.courseobj_img{
+  position: absolute;
+  top: 8px;
+  right: 18px;
+  z-index: 20;
+  width:13%;
+}
+.courseobj_container::before{
+  content: '';
+  background-color: #223657;
+  width:70px;
+  height: 70px;
+  position: absolute;
+  top: 0;
+  right: 13px;
+  border-bottom-left-radius: 100%;
+  z-index: 10;
 }
 
 /* exams css properties */
