@@ -1,5 +1,17 @@
 var app = angular.module('app', ['ui.router', 'ui.bootstrap', 'angular-owl-carousel-2', 'ui.bootstrap.datetimepicker', 'flash', 'ngAside']);
 // $scope, $state, $users, $stateParams, $http, $timeout, $uibModal , $sce,$rootScope
+app.factory('dataShare', function($rootScope) {
+  var service = {};
+  service.data = false;
+  service.sendData = function(data) {
+    this.data = data;
+    $rootScope.$broadcast('data_shared');
+  };
+  service.getData = function() {
+    return this.data;
+  };
+  return service;
+});
 app.controller('main', function($scope, $http, $sce, $interval, $uibModal) {
   console.log("main loded");
   $scope.crmBannerID = 1;
@@ -123,7 +135,7 @@ app.controller('main', function($scope, $http, $sce, $interval, $uibModal) {
 });
 
 
-app.config(function($stateProvider) {
+app.config(function($stateProvider, $locationProvider) {
   $stateProvider
     .state('courses', {
       url: "/courses/:courseType",
@@ -133,9 +145,10 @@ app.config(function($stateProvider) {
       // controller: 'controller.chapter'
     })
 
+
 })
 
-app.controller('exam', function($scope, $state, $http, $timeout, $interval, $uibModal, $stateParams, $sce, Flash, ) {
+app.controller('exam', function($scope, $state, $http, $timeout, $interval, $uibModal, $stateParams, $sce, Flash, $location) {
 
   $scope.questionList = [{
       subject: "Maths",
@@ -443,10 +456,10 @@ app.controller('exam', function($scope, $state, $http, $timeout, $interval, $uib
     $scope.questionList[idx].testquestions[0].status = "notanswered";
     for (var i = 0; i < $scope.questionList.length; i++) {
       if ($scope.questionList[i].subject == sub) {
-        if(idx){
-              $scope.count = 0
-        }else{
-            $scope.count = $scope.count;
+        if (idx == $scope.subcount) {
+          $scope.count = $scope.count;
+        } else {
+          $scope.count = 0;
         }
 
         $scope.subcount = idx;
@@ -483,12 +496,12 @@ app.controller('exam', function($scope, $state, $http, $timeout, $interval, $uib
 
       if ($scope.count == $scope.test.length - 1) {
         $scope.count = $scope.count;
-        $scope.questionno =$scope.count;
+        $scope.questionno = $scope.count;
         $scope.test[val].status = 'answered';
       } else {
         if ($scope.test[val].savedIndex != null) {
           $scope.count = $scope.count + 1;
-          $scope.questionno =$scope.count;
+          $scope.questionno = $scope.count;
           $scope.test[val].status = 'answered';
           if ($scope.test[$scope.count].status != 'answered' && $scope.test[$scope.count].status != 'reviewed' && $scope.test[$scope.count].status != 'attemptreviewed') {
             $scope.test[$scope.count].status = 'notanswered';
@@ -510,7 +523,7 @@ app.controller('exam', function($scope, $state, $http, $timeout, $interval, $uib
 
       if ($scope.count == $scope.test.length - 1) {
         $scope.count = $scope.count;
-        $scope.questionno =$scope.count;
+        $scope.questionno = $scope.count;
         if ($scope.test[val].savedIndex != null) {
           $scope.test[val].status = 'attemptreviewed';
         } else {
@@ -519,13 +532,13 @@ app.controller('exam', function($scope, $state, $http, $timeout, $interval, $uib
       } else {
         if ($scope.test[val].savedIndex != null) {
           $scope.count = $scope.count + 1;
-          $scope.questionno =$scope.count;
+          $scope.questionno = $scope.count;
           $scope.test[val].status = 'attemptreviewed';
           $scope.test[$scope.count].status = 'notanswered';
         } else {
 
           $scope.count = $scope.count + 1;
-          $scope.questionno =$scope.count;
+          $scope.questionno = $scope.count;
           $scope.test[val].status = 'reviewed';
           $scope.test[$scope.count].status = 'notanswered';
           // Flash.create('danger','Please Select One Option')
@@ -548,7 +561,7 @@ app.controller('exam', function($scope, $state, $http, $timeout, $interval, $uib
   $scope.queclick = function(val) {
 
     $scope.count = val;
-    $scope.questionno =$scope.count;
+    $scope.questionno = $scope.count;
     if ($scope.test[val].status != 'answered' && $scope.test[val].status != 'reviewed' && $scope.test[val].status != 'attemptreviewed') {
       $scope.test[val].status = 'notanswered'
     }
@@ -607,15 +620,30 @@ app.controller('exam', function($scope, $state, $http, $timeout, $interval, $uib
         $scope.arr = [1, 2, 3, 4, 5, 6, 7, 8, 9, 0]
         $scope.submit = function() {
           $uibModalInstance.close();
-          $scope.params = {
-            'attempt': $scope.attempted + $scope.attemptedreview,
-            'notattempt': $scope.notAnswered,
-            'reviewed': $scope.reviewed,
-            'notview': $scope.notview,
-            'answerlist': $scope.questions
-          }
-
-          $state.go("examresults", $scope.params);
+          // $scope.params = {
+          //   'attempt': $scope.attempted + $scope.attemptedreview,
+          //   'notattempt': $scope.notAnswered,
+          //   'reviewed': $scope.reviewed,
+          //   'notview': $scope.notview,
+          //   'answerlist': $scope.questions
+          // }
+          //
+          // $state.go("testresults", $scope.params);
+          // var params = {
+          //   'attempt': $scope.attempted + $scope.attemptedreview,
+          //   'notattempt': $scope.notAnswered,
+          //   'reviewed': $scope.reviewed,
+          //   'notview': $scope.notview,
+          //   'answerlist': $scope.questions
+          // };
+          // $http({
+          //   method: 'POST',
+          //   data: params,
+          //   url: '/api/'
+          // }).then(function(response) {
+          //   dataShare.sendData(response);
+          //   $location.path('/testresult');
+          // });
         }
         $scope.closeModal = function() {
           $uibModalInstance.dismiss();
@@ -626,12 +654,21 @@ app.controller('exam', function($scope, $state, $http, $timeout, $interval, $uib
   }
 });
 
-app.controller('examresults', function($rootScope, $scope, $state, $http, $timeout, $interval, $uibModal, $stateParams, $sce, Flash,) {
+app.controller('examresults', function($rootScope, $scope, $state, $http, $timeout, $interval, $uibModal, $stateParams, $sce, Flash, ) {
 
+  $scope.$on('data_shared', function() {
+    $scope.data = dataShare.getData();
+  });
   $scope.arr = [1, 2, 3, 4, 5, 6, 7, 8, 9, 0]
-  $scope.testresult = [{attempt:2,notattempt:3,reviewed:2,answerlist:3,answerlist:[]}]
-  $scope.summary = $scope.testresult;
-  console.log($scope.summary.attempt);
+  $scope.testresult = {
+    attempt: 2,
+    notattempt: 3,
+    reviewed: 2,
+    answerlist: 3,
+    answerlist: []
+  }
+  $scope.summary = $stateParams;
+  console.log($scope.summary);
   $scope.scorecard = $scope.summary.answerlist;
   $scope.correctanswers = [0, 1, 2, 2, 1, 1, 2, 3, 3, 2, 1, 0, 0, 2, 2, 1, 3, 2, 1, 0, 0, 2, 2, 1];
   $scope.exam = [{
@@ -643,12 +680,12 @@ app.controller('examresults', function($rootScope, $scope, $state, $http, $timeo
   }, {
     review: []
   }];
-  $scope.exam.attempted=[];
-  $scope.exam.notattempt=[];
-  $scope.exam.notview=[];
-  $scope.exam.review=[];
+  $scope.exam.attempted = [];
+  $scope.exam.notattempt = [];
+  $scope.exam.notview = [];
+  $scope.exam.review = [];
 
-  if($scope.scorecard!=null){
+  if ($scope.scorecard != null) {
 
     for (var i = 0; i < $scope.scorecard.length; i++) {
       $scope.attempted = 0;
@@ -668,7 +705,7 @@ app.controller('examresults', function($rootScope, $scope, $state, $http, $timeo
         } else if ($scope.scorecard[i].testquestions[j].status == 'attemptreviewed') {
           $scope.attempted += 1;
 
-        } else if (($scope.scorecard[i].testquestions[j].status == 'default') ||(!$scope.scorecard[i].testquestions[j].status)) {
+        } else if (($scope.scorecard[i].testquestions[j].status == 'default') || (!$scope.scorecard[i].testquestions[j].status)) {
           $scope.notview += 1;
 
         }
@@ -707,9 +744,9 @@ app.controller('examresults', function($rootScope, $scope, $state, $http, $timeo
   }
   $scope.checkanswers($scope.correctanswers, $scope.summary.answerlist);
 
-  $scope.labels = ["Attempted", "Not Attempted", "Reviewed","Not Visited"];
-  $scope.data = [$scope.summary.attempt, $scope.summary.notattempt, $scope.summary.reviewed,$scope.summary.notview];
-  $scope.colors = ["#29B999","#ED6060","#D2D2D2","#565FB8"]
+  $scope.labels = ["Attempted", "Not Attempted", "Reviewed", "Not Visited"];
+  $scope.data = [$scope.summary.attempt, $scope.summary.notattempt, $scope.summary.reviewed, $scope.summary.notview];
+  $scope.colors = ["#29B999", "#ED6060", "#D2D2D2", "#565FB8"]
 
   $scope.labels1 = ['Attempted', 'Not Attempted', 'Not Visited', 'Reviewed'];
 

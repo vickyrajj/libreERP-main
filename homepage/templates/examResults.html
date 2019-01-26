@@ -1,6 +1,12 @@
+{% extends "tutorexam.html" %}
+
+{% block examcontent %}
+
+{% verbatim %}
+
 <div class="container-fluid" ng-controller="examresults">
-  <h2 class="text-center" style="padding-top: 2em;"><b>Exam Summary</b></h2>
-  <div class="row">
+  <h2 class="text-center"  ><b>Exam Summary</b></h2>
+  <div class="row" style="padding-top: 2em;">
     <div class="col-md-offset-1 col-md-3" style="margin-top:2em;">
       <span style="font-size:18px;"><b>Total No of Questions:</b></span><span style="font-size:18px;"><b>&nbsp;{{summary.attempt+summary.notattempt+summary.reviewed+summary.notview}}</b></span>
     </div>
@@ -133,3 +139,7 @@
       </div>
     </div>
   </div>
+
+
+{% endverbatim %}
+{% endblock %}
