@@ -161,6 +161,10 @@ class PaperSerializer(serializers.ModelSerializer):
     def create(self , validated_data):
         p=Paper(user=self.context['request'].user)
         p.save()
+        m = Paper(**validated_data)
+        m.name =  Paper.objects.get(pk = self.context['request'].data['name'])
+        m.save()
+        return sm
         print self.context['request'].data['questions']
         for i in self.context['request'].data['questions']:
             i['ques']=Question.objects.get(id=i['ques'])
@@ -178,6 +182,9 @@ class PaperSerializer(serializers.ModelSerializer):
             pq.user = self.context['request'].user
             pq.save()
             instance.questions.add(pq)
+        if 'name' in validated_data:
+            instance.name = self.context['request'].data['name']
+        instance.save()
         return instance
 
 class AnswerSerializer(serializers.ModelSerializer):

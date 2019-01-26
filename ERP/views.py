@@ -96,6 +96,7 @@ def coursesContent(request , page):
 def ncert(request):
     return render(request, 'ncert.html', {})
 
+
 class MakePaytmPayment(APIView):
     renderer_classes = (JSONRenderer,)
     permission_classes = (permissions.IsAuthenticated ,)

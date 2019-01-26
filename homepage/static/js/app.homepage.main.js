@@ -149,7 +149,11 @@ app.config(function($stateProvider, $locationProvider) {
 })
 
 app.controller('exam', function($scope, $state, $http, $timeout, $interval, $uibModal, $stateParams, $sce, Flash, $location) {
-
+  $scope.list = []
+  $http.get('/api/LMS/paper/1').then(function(response){
+    $scope.list.push(response.data);
+  })
+    console.log(  $scope.list ,'yyyyyyyy');
   $scope.questionList = [{
       subject: "Maths",
       testquestions: [{
@@ -756,3 +760,13 @@ app.controller('examresults', function($rootScope, $scope, $state, $http, $timeo
   ];
 
 })
+app.controller('testimonials', function($scope, $state, $http, $timeout, $interval, $uibModal, $stateParams, $sce) {
+
+  $scope.myObj = {
+    "background-color": "#DDF6FB",
+  }
+  $scope.myObjcolor = {
+    "background-color": "#E5E7FC",
+  }
+
+});

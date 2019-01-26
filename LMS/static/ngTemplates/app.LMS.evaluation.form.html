@@ -50,8 +50,8 @@
       </div>
       <div class="col-md-6">
         <div class="form-group">
-        <label>Topic </label>
-        <input type="text" ng-model="form.topic" class="form-control" uib-typeahead="topic as topic.title for topic in topicSearch($viewValue)">
+          <label>Topic </label>
+          <input type="text" ng-model="form.topic" class="form-control" uib-typeahead="topic as topic.title for topic in topicSearch($viewValue)">
         </div>
       </div>
     </div>
@@ -59,8 +59,8 @@
     <div class="row" ng-if="form.topic.pk || form.section.pk">
       <div class="container-fluid">
         <div class="form-group">
-        <label>Text</label>
-        <input type="text" ng-enter="fetchQuestions()" class="form-control" ng-model="form.text">
+          <label>Text</label>
+          <input type="text" ng-enter="fetchQuestions()" class="form-control" ng-model="form.text">
         </div>
       </div>
     </div>
@@ -76,7 +76,9 @@
     <button class="btn btn-primary" ng-click="add()" ng-show="questions.length">Add To QuestionPaper</button>
   </div>
   <div class="col-md-6" ng-show="selectedquestions.length">
-    <label class="text-muted"><h4>Question Paper</h4></label>
+    <label class="text-muted">
+      <h4>Question Paper</h4>
+    </label>
     <div ng-repeat="y in selectedquestions">
       <div class="well well-sm">
         <div class="col-md-10">
@@ -87,7 +89,7 @@
         </div>
         <div class="col-md-2">
           <div class="from-group">
-            <button class="btn btn-sm btn-danger" ng-click="delete($index)" >Delete</button>
+            <button class="btn btn-sm btn-danger" ng-click="delete($index)">Delete</button>
           </div>
         </div>
         <div class="row">
@@ -112,6 +114,13 @@
         </div>
       </div>
     </div>
-    <buton class="btn btn-primary" ng-click="save()">Save</button>
+    <div class="form-group">
+      <label>QuestionPaper Title</label>
+      <input type="text" class="form-control" ng-model="titlename">
+    </div>
+    <button class="btn btn-primary" ng-click="save()">Save</button>
   </div>
+
+
+
 </div>

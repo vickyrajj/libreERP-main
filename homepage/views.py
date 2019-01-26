@@ -30,6 +30,29 @@ import sys, traceback
 def index(request):
     return render(request, 'index.html', {"home": True , "brandLogo" : globalSettings.BRAND_LOGO , "brandLogoInverted": globalSettings.BRAND_LOGO_INVERT})
 
+def aboutUs(request):
+    return render(request, 'aboutUs.html', {})
+
+def contactUs(request):
+    return render(request, 'contact.html', {})
+
+def career(request):
+    return render(request, 'career.html', {})
+
+def desclaimer(request):
+    return render(request, 'desclaimer.html', {})
+
+def policy(request):
+    return render(request, 'policy.html', {})
+
+def terms(request):
+    return render(request, 'terms.html', {})
+
+def refund(request):
+    return render(request, 'refund.html', {})
+
+def testimonials(request):
+    return render(request, 'testimonials.html', {})
 
 
 

@@ -172,6 +172,7 @@ app.controller("home.LMS.evaluation.form", function($scope, $state, $users, $sta
   };
 
   $scope.add = function() {
+    $scope.title = false;
     for (var i = 0; i < $scope.questions.length; i++) {
       console.log($scope.questions[i])
       if ($scope.questions[i].selected){
@@ -180,12 +181,14 @@ app.controller("home.LMS.evaluation.form", function($scope, $state, $users, $sta
     }
   };
 
+
   $scope.delete=function(indx){
     $scope.selectedquestions.splice(indx,1)
   }
 
   $scope.save= function(){
     var toSend=[]
+    var title = $scope.titlename;
     for (var i = 0; i < $scope.selectedquestions.length; i++) {
       console.log($scope.selectedquestions[i])
       var data = {
@@ -199,24 +202,32 @@ app.controller("home.LMS.evaluation.form", function($scope, $state, $users, $sta
     if ($scope.mode=='edit'){
       var method='PATCH';
       var url='/api/LMS/paper/'+$scope.tab.data.paper.pk+'/';
-      $http({method : method , url : url , data :  {questions :toSend}}).
+      $http({method : method , url : url , data :  {questions :toSend,name:title}}).
       then(function(response) {
           Flash.create('success', 'Question Paper Updated');
           console.log(response.data);
       })
     }else {
       var method='POST';
-      var url='/api/LMS/quesPaper/';
-      $http({method : method , url : url , data :  {questions :toSend}}).
+
+      $http({method : method , url : '/api/LMS/quesPaper/' , data :  {questions :toSend}}).
       then(function(response) {
         Flash.create('success', 'Question Paper Created');
-        console.log(response.data);
         resetForm();
       })
+    
+
     }
 
   };
 
+      if ($scope.mode=='edit'){
+        $http.get( '/api/LMS/paper/'+$scope.tab.data.paper.pk+'/').
+       then(function(response){
+         console.log(response.data,'oooo');
+         $scope.titlename = response.data.name;
+       })
+      }
 
 });
 
