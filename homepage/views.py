@@ -218,6 +218,38 @@ def blog(request):
 
     return render(request,"blog.html" , {"home" : False ,'data' : data, 'dataLen' : len(data) ,'pages':pages , "brandLogo" : globalSettings.BRAND_LOGO , "brandLogoInverted": globalSettings.BRAND_LOGO_INVERT})
 
+def blogAnotherView(request):
+    print
+    allBlogs = list(blogPost.objects.filter(contentType='article').order_by('-created').values())
+    pagesize = 13
+    try:
+        page = int(request.GET.get('page', 1))
+    except ValueError as error:
+        page = 1
+    total = len(allBlogs)
+    last = total/pagesize + (1 if total%pagesize !=0 else 0)
+    pages = {'first':1,
+			'prev':(page-1) if page >1 else 1,
+			'next':(page+1) if page !=last else last,
+			'last':last,
+			'currentpage':page}
+    firstSection = []
+    second_sec1 = []
+    second_sec2 = []
+    thirdSection = []
+
+    allBlogs = allBlogs[(page-1)*pagesize:(page*pagesize)]
+    for idx,val in enumerate(allBlogs):
+        if idx < 4 :
+            firstSection.append({'pk': val['id'] ,'title' : val['title'] , 'shortUrl' : val['shortUrl'], 'ogimage' : val['ogimage'] })
+        if idx >= 4 and idx < 7 :
+            second_sec1.append({'pk': val['id'] ,'title' : val['title'] , 'shortUrl' : val['shortUrl'], 'ogimage' : val['ogimage']})
+        if idx >= 7 and idx < 10 :
+            second_sec2.append({'pk': val['id'] ,'title' : val['title'] , 'shortUrl' : val['shortUrl'], 'ogimage' : val['ogimage']})
+        if idx >= 10 and idx < 14 :
+            thirdSection.append({'pk': val['id'] ,'title' : val['title'] , 'shortUrl' : val['shortUrl'], 'ogimage' : val['ogimage']})
+    return render(request,"blog.html" , {"home" : False,'pages':pages, "firstSection":firstSection , "second_sec1":second_sec1 , "second_sec2":second_sec2 , "thirdSection":thirdSection })
+
 def news(request):
     return render(request,"newssection.html" , {"home" : False , "brandLogo" : globalSettings.BRAND_LOGO , "brandLogoInverted": globalSettings.BRAND_LOGO_INVERT})
 

@@ -5,7 +5,7 @@ from django.conf.urls.static import static
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 from homepage.views import index
 from HR.views import loginView , logoutView , home , registerView , tokenAuthentication , root, generateOTP, documentView
-from homepage.views import blog,blogDetails,news,team, career ,policy ,terms ,refund , contacts , registration , desclaimer ,aboutUs ,contactUs,desclaimer,policy,terms,refund,testimonials
+from homepage.views import blog,blogAnotherView,blogDetails,news,team, career ,policy ,terms ,refund , contacts , registration , desclaimer ,aboutUs ,contactUs,desclaimer,policy,terms,refund,testimonials
 from ERP.views import serviceRegistration , dynamicTemplates , ncert , mockTestView , testResultsView
 from tutor.views import studentHome , tutorHome
 from ERP.views import PaymentResponse, renderedStatic
@@ -37,7 +37,7 @@ urlpatterns = [
     url(r'^robots\.txt', include('robots.urls')),
     url(r'^generateOTP', generateOTP, name="generateOTP"),
     url(r'^documents', documentView , name ='document'),
-    url(r'^blog/$', blog , name ='blog'),
+    url(r'^blog/$', blogAnotherView , name ='blog'),
     url(r'^news', news , name ='news'),
     url(r'^team', team , name ='team'),
     # url(r'^career', career , name ='career'),
