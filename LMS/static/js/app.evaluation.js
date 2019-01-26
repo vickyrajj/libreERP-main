@@ -221,13 +221,7 @@ app.controller("home.LMS.evaluation.form", function($scope, $state, $users, $sta
 
   };
 
-      if ($scope.mode=='edit'){
-        $http.get( '/api/LMS/paper/'+$scope.tab.data.paper.pk+'/').
-       then(function(response){
-         console.log(response.data,'oooo');
-         $scope.titlename = response.data.name;
-       })
-      }
+      
 
 });
 
