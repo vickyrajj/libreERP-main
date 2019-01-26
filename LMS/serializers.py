@@ -161,9 +161,9 @@ class PaperSerializer(serializers.ModelSerializer):
     def create(self , validated_data):
         p=Paper(user=self.context['request'].user)
         p.save()
-        m = Paper(**validated_data)
-        m.name =  Paper.objects.get(pk = self.context['request'].data['name'])
-        m.save()
+        # m = Paper(**validated_data)
+        # m.name =  Paper.objects.get(pk = self.context['request'].data['name'])
+        # m.save()
         return sm
         print self.context['request'].data['questions']
         for i in self.context['request'].data['questions']:
