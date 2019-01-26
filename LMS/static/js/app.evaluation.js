@@ -97,7 +97,7 @@ app.controller("home.LMS.evaluation.form", function($scope, $state, $users, $sta
   $scope.resetForm=function(){
     $scope.selectedquestions=[]
     $scope.questions = []
-    $scope.form = {topic : '' , text : '' , subject : '' ,typ : '' ,book : '' ,section : ''}
+    $scope.form = {topic : '' , text : '' , subject : '' ,typ : '' ,book : '' ,section : '',name:''}
   }
   $scope.resetForm();
 
@@ -106,6 +106,7 @@ app.controller("home.LMS.evaluation.form", function($scope, $state, $users, $sta
   }else {
     $scope.mode = 'edit';
     $scope.selectedquestions = $scope.tab.data.paper.questions;
+    $scope.form.name=$scope.tab.data.paper.name
     console.log($scope.selectedquestions );
   }
 
@@ -188,7 +189,6 @@ app.controller("home.LMS.evaluation.form", function($scope, $state, $users, $sta
 
   $scope.save= function(){
     var toSend=[]
-    var title = $scope.titlename;
     for (var i = 0; i < $scope.selectedquestions.length; i++) {
       console.log($scope.selectedquestions[i])
       var data = {
@@ -202,7 +202,7 @@ app.controller("home.LMS.evaluation.form", function($scope, $state, $users, $sta
     if ($scope.mode=='edit'){
       var method='PATCH';
       var url='/api/LMS/paper/'+$scope.tab.data.paper.pk+'/';
-      $http({method : method , url : url , data :  {questions :toSend,name:title}}).
+      $http({method : method , url : url , data :  {questions :toSend,name:$scope.form.name}}).
       then(function(response) {
           Flash.create('success', 'Question Paper Updated');
           console.log(response.data);
@@ -210,12 +210,12 @@ app.controller("home.LMS.evaluation.form", function($scope, $state, $users, $sta
     }else {
       var method='POST';
 
-      $http({method : method , url : '/api/LMS/quesPaper/' , data :  {questions :toSend}}).
+      $http({method : method , url : '/api/LMS/paper/' , data :  {questions :toSend,name:$scope.form.name}}).
       then(function(response) {
         Flash.create('success', 'Question Paper Created');
         resetForm();
       })
-    
+
 
     }
 
