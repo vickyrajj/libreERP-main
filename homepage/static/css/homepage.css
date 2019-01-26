@@ -2027,6 +2027,7 @@ hr {
   position: relative;
   background-size: 100%;
   min-height: 20vh;
+  color: white;
   background-image: url('https://epsilonai.com/static/images/blue_waves.jpg');
 }
 
