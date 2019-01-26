@@ -28,7 +28,6 @@ app.controller("businessManagement.support", function($scope, $state, $users, $s
   $scope.newUsers = [];
   $scope.myUsers = [];
 
-
   function setCookie(cname, cvalue, exdays) {
     var d = new Date();
     d.setTime(d.getTime() + (exdays * 24 * 60 * 60 * 1000));
@@ -118,6 +117,7 @@ app.controller("businessManagement.support", function($scope, $state, $users, $s
       Tinycon.reset();
     }
   }, 5000);
+
 
 
   function sendMail(mailId,uid){

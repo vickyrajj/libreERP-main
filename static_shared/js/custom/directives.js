@@ -743,6 +743,7 @@ app.directive('chatBox', function() {
     controller: function($scope, $users, $uibModal, $http, ngAudio, Flash, $sce, webNotification) {
       $scope.IsVisitorOn=true;
       $scope.isVisitorVideoShowing=true;
+      $scope.location={}
       console.log($scope.data,"^^^^^^^^^^^^^^^^^^^^^");
         $http({
             method: 'GET',
@@ -752,14 +753,32 @@ app.directive('chatBox', function() {
             $scope.companyName=response.data.cDetails[0]
             $scope.compContactPersons=response.data.contactP
           })
+
           $http({
             method: 'GET',
             url: '/api/support/chatThread/?uid='+$scope.data.uid
           }).
           then(function(response) {
             console.log(response.data,'dddddddddddd',typeof response.data);
-            $scope.location =JSON.parse(response.data[0].location)
-            console.log($scope.location);
+            var myLocationData=JSON.parse(response.data[0].location)
+            if(myLocationData.hasOwnProperty('timezone')){
+              $scope.location={
+                'city':myLocationData.city,
+                'country_name':myLocationData.country,
+                'region_name':myLocationData.regionName,
+                'zip':myLocationData.zip,
+                'ip':myLocationData.query,
+                'location':{
+                  'country_flag':'/static/Flags/'+myLocationData.countryCode.toLowerCase()+'.png',
+                  'capital':null,
+                  'languages':null
+                }
+
+              }
+            }else{
+              $scope.location =Object.assign(JSON.parse(response.data[0].location))
+              $scope.location.timezone=null
+            }
           });
 
       setTimeout(function () {
@@ -1147,7 +1166,7 @@ app.directive('chatBox', function() {
         }
       }
 
-      
+
 
 
       $http({
@@ -1708,6 +1727,42 @@ app.directive('chatBox', function() {
           }
         }
       }
+
+
+
+      $scope.showCountryDetails = function(uid) {
+
+        $uibModal.open({
+          templateUrl: '/static/ngTemplates/app.support.showCountryDetails.modal.html',
+          size: 'md',
+          backdrop: true,
+          resolve: {
+            locationData: function() {
+              return $scope.location;
+            }
+          },
+          controller: function($scope, locationData, $users, $uibModalInstance, Flash) {
+            $scope.locationInfo=locationData
+          },
+        }).result.then(function() {
+
+        }, function(data) {
+          if (data != 'backdrop click' && data != 'escape key press') {
+
+          }
+        });
+      }
+
+
+
+
+
+
+
+
+
+
+
 
 
 

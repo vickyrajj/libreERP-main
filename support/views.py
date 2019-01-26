@@ -1080,12 +1080,14 @@ class EmailChat(APIView):
         chatStarted=ChatThread.objects.filter(uid=request.data['uid'])[0].created
         sObj = SupportChat.objects.filter(uid = request.data['uid'])
         visitor = Visitor.objects.filter(uid = request.data['uid'])
+
         if len(visitor)>0:
             name = visitor[0].name
         else:
             name=request.data['uid']
         allChats = []
         for a in sObj:
+            print a.created,"*******************************"
             toAppend = {'user': a.user , 'message': a.message , 'created': a.created , 'uid': name }
             if a.sentByAgent:
                 toAppend['sentByAgent'] = True

@@ -3077,27 +3077,27 @@ setInterval(function () {
               threadExist=true
               chatThreadPk = data.pk
 
-              getLocationDataFirstApi(data.userDeviceIp).then((data)=>{
-                    console.log(data);
-                    patchLocationToChatThread(chatThreadPk,data)
-
-              }).catch((reason)=>{
-                console.log(reason);
-                getLocationDataSecondApi(data.userDeviceIp).then((data)=>{
-                  let myData=JSON.stringify({
-                    'city':data.city,
-                    'country_name':data.country,
-                    'region_code':data.region,
-                    'country_code':data.countryCode,
-                    'zip':data.zip,
-                    'latitude':data.lat,
-                    'longitude':data.lon,
-                  })
-                  patchLocationToChatThread(chatThreadPk,myData)
-                }).catch((err)=>{
-                  console.log(err);
-                })
-              })
+              // getLocationDataFirstApi(data.userDeviceIp).then((data)=>{
+              //       console.log(data);
+              //       patchLocationToChatThread(chatThreadPk,data)
+              //
+              // }).catch((reason)=>{
+              //   console.log(reason);
+              //   getLocationDataSecondApi(data.userDeviceIp).then((data)=>{
+              //     let myData=JSON.stringify({
+              //       'city':data.city,
+              //       'country_name':data.country,
+              //       'region_code':data.region,
+              //       'country_code':data.countryCode,
+              //       'zip':data.zip,
+              //       'latitude':data.lat,
+              //       'longitude':data.lon,
+              //     })
+              //     patchLocationToChatThread(chatThreadPk,myData)
+              //   }).catch((err)=>{
+              //     console.log(err);
+              //   })
+              // })
               dataToPublish.push(chatThreadPk)
               publishMessageToAll(dataToPublish);
             }

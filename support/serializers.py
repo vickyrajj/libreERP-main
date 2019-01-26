@@ -13,6 +13,8 @@ from django.conf import settings as globalSettings
 import datetime
 from django.contrib.auth.hashers import make_password,check_password
 from django.core.exceptions import SuspiciousOperation
+import requests
+import json
 
 import re
 regex = re.compile('^HTTP_')
@@ -114,6 +116,15 @@ class ChatThreadSerializer(serializers.ModelSerializer):
             c.userDevice = browserHeader.get('USER_AGENT')
         if self.context['request'].META.get('REMOTE_ADDR'):
             c.userDeviceIp = self.context['request'].META.get('REMOTE_ADDR')
+            try:
+                api1=requests.request('GET',"http://api.ipstack.com/43.224.128.150?access_key=f6e584f19ad6fa9080e0434fb46ae508&format=1")
+                # if api1.status_code==200:
+                y=json.dumps(api1.json())
+                c.location=y
+            except:
+                api2=requests.request('GET','http://ip-api.com/json/43.224.128.150')
+                z=json.dumps(api2.json())
+                c.location=z
         c.save()
         return c
     def update(self ,instance, validated_data):
