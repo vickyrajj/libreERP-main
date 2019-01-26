@@ -164,7 +164,6 @@ class PaperSerializer(serializers.ModelSerializer):
         # m = Paper(**validated_data)
         # m.name =  Paper.objects.get(pk = self.context['request'].data['name'])
         # m.save()
-        return sm
         print self.context['request'].data['questions']
         for i in self.context['request'].data['questions']:
             i['ques']=Question.objects.get(id=i['ques'])
