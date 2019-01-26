@@ -38,6 +38,8 @@ from django.template.loader import render_to_string, get_template
 from django.core.mail import send_mail, EmailMessage
 from django.utils import timezone
 import re
+import svgwrite
+import fileinput
 regex = re.compile('^HTTP_')
 
 BLOCK_SIZE = 16
@@ -1041,34 +1043,46 @@ class getChatStatus(APIView):
         return Response({'sendMail':sendMail,'changeStatus':changeStatus,'companyPk':compPk}, status = status.HTTP_200_OK)
 
 
-# class SVGColor(APIView):
-#     renderer_classes = (JSONRenderer,)
-#     permission_classes=(permissions.AllowAny,)
-#     def get(self , request , format = None):
-#         print request.GET,'dddddddddddddddd'
-#         filename = request.GET['fileName']
-#         print filename
-#         filepath=os.path.join(globalSettings.BASE_DIR,'media_root',filename)
-#         print filepath,'**************************************'
-#         # filename = "aus4.svg"
-#         tree = etree.parse(open(filepath, 'r'))
-#         print tree,"#################################"
-#         for element in tree.iter():
-#             print element.tag.split("}")[1],"elemnrtttttttttttttttttttttttttttttttt"
-#         # for element in tree.iter():
-#         #     if element.tag.split("}")[1] == "path":
-#         #         if element.get("id") == "Lingiari":
-#         #             yes_votes = element.get("data-yes")
-#         #             print(yes_votes)
-#         #             yes_votes.set(yes_votes, str(int(yes_votes) + 1))
-#         #             print(yes_votes)
-#
-#         #
-#         # with open(filepath, 'rwb') as destination:
-#         # #     for chunk in request.FILES['file'].chunks():
-#         # #         destination.write(chunk)
-#         # # print destination,'*********************************8888'
-#         return Response({}, status = status.HTTP_200_OK)
+class CreateSVG(APIView):
+    renderer_classes = (JSONRenderer,)
+    permission_classes=(permissions.AllowAny,)
+    def post(self , request , format = None):
+        nameOfFile="demo"
+        color='black';
+        strokeWidth='2';
+        fill="white";
+        path=request.data['path'];
+        svgHeight=500;
+        svgWidth=500;
+
+        if 'strokeWidth' in request.data:
+            strokeWidth=request.data['strokeWidth'];
+        if 'fill' in request.data:
+            fill=request.data['fill'];
+        if 'color' in request.data:
+            color=request.data['color'];
+        if 'fileName' in request.data:
+            nameOfFile=request.data['fileName'];
+        if 'svgHeight' in request.data:
+            svgHeight=request.data['svgHeight'];
+        if 'svgWidth' in request.data:
+            svgWidth=request.data['svgWidth'];
+
+        filepath=os.path.join(globalSettings.BASE_DIR,'media_root','index.svg')
+        filepathOfDest=os.path.join(globalSettings.BASE_DIR,'media_root',nameOfFile+'.svg')
+
+
+        # text_to_search='<svg></svg>'
+        replacement_text="<path d='"+path+"' stroke='"+color+"' stroke-width='"+strokeWidth+"' fill='"+fill+"'/>"
+        # replacement_text='<svg height="'+svgHeight+'" width="'+svgWidth+'"><path d="'+path+'" stroke="'+color+'" stroke-width="'+strokeWidth+'" fill="'+fill+'"/></svg>'
+
+
+        # with open(filepath) as f:
+        #     newText=f.read().replace(text_to_search, replacement_text)
+        # with open(filepathOfDest, "w") as f:
+        #     f.write(newText)
+        print replacement_text,"***************8"
+        return Response({'path':replacement_text}, status = status.HTTP_200_OK)
 
 
 class EmailChat(APIView):

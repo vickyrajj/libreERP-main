@@ -16,7 +16,7 @@
           <div class="row">
             <div class="col-xs-4" style="text-align:center">
               <i class="fa fa-bell-o fa-4x" aria-hidden="true" style="padding:3px"></i> <br>
-              <i class="fa fa-arrow-{{changeInAvgChatDur.increase?'up':'down'}}"></i> {{changeInMissedChat.percentage.toFixed(2)}}%
+              <i class="fa fa-arrow-{{changeInAvgChatDur.increase?'up':'down'}}"></i> {{changeInAvgChatDur.percentage.toFixed(2)}}%
             </div>
             <div class="col-xs-8 text-right" style="padding-top:5px">
               <p style="margin-bottom:5px">Missed Chats </p>
@@ -38,16 +38,14 @@
         </div>
       </div>
 
-      <div class="col-md-4">
-        <div style="position:absolute;top:10%;right:5%;text-align:center">
+      <div class="col-md-4" style="background-image:url('{{backgroundImage}}')">
+        <div style="position:absolute;top:10%;right:5%;text-align:center;">
           <p style="margin-bottom:5px">Average Chat Duration</p>
           <h3 style="margin:5px">{{avgChatDuration.toFixed(2)}} Min</h3>
           <p style="display:inline-block;"><i class="fa fa-arrow-{{changeInAvgChatDur.increase?'up':'down'}}" style="color:{{changeInAvgChatDur.increase? 'green':'red'}}"></i> &nbsp;{{changeInAvgChatDur.percentage.toFixed(2)}}%</p>
         </div>
-        <svg width="100%" height="220" style="background:#eee;border-radius: 6px">
-          <g>
-            <path d="M0,19.72381448671186Q183.08333333333334,89.97741879451104,211.25,90.411672746222C253.5,91.06305367378843,380.25,116.79260031266287,422.5,126.23762376237626S591.5,177.69671704012507,633.75,184.86190724335592Q661.9166666666666,189.63870071217647,845,197.88952579468474L845,250Q661.9166666666666,250,633.75,250C591.5,250,464.75,250,422.5,250S253.5,250,211.25,250Q183.08333333333334,250,0,250Z" class="area" fill="#f8ac59"></path>
-          </g>
+        <svg width="100%" height="220" style="background:#eee;border-radius: 6px" ng-bind-html="myHTML">
+
         </svg>
       </div>
 

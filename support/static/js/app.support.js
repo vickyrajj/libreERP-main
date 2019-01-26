@@ -28,6 +28,57 @@ app.controller("businessManagement.support", function($scope, $state, $users, $s
   $scope.newUsers = [];
   $scope.myUsers = [];
 
+  setTimeout(function () {
+    alert('Going')
+    // values you can provide fill,color,width,andFile name you want
+    // mandetory values is path,
+    let points=[{x:150,y:310},{x:250,y:110}]
+
+    function createPath(points=[],height=400,width=400){
+      return new Promise((response,reject)=>{
+        if(points.length==0){
+          reject("Please provide points for path")
+        }else{
+          let values=" L"
+          for (var i = 0; i < points.length; i++) {
+            let x=points[i].x
+            let y=height-points[i].y
+             values+=values+x+" "+y+" "
+          }
+          myPath="M0 "+height+values+" L"+width+" "+height+" Z"
+          resolve(myPath)
+        }
+      })
+    }
+
+
+    createPath(points,400,400).then((data)=>{
+      $http({
+        method: 'POST',
+        url: '/api/support/createSVG/',
+        data: {
+          path: data,
+          svgWidth:'400',
+          svgHeight:'220',
+          fill: 'purple',
+          color: 'green',
+          strokeWidth: '3',
+          fileName: 'balram2',
+        }
+      }).then(function(response) {
+        console.log(response);
+      }).catch((error)=>{
+        console.log(error);
+      })
+    }).catch((reason)=>{
+      console.log(reason);
+    })
+
+
+
+
+  }, 6000);
+
   function setCookie(cname, cvalue, exdays) {
     var d = new Date();
     d.setTime(d.getTime() + (exdays * 24 * 60 * 60 * 1000));

@@ -33,6 +33,6 @@ urlpatterns = [
     url(r'emailScript/$' , EmailScript.as_view()),
     url(r'heartbeat/$' , HeartbeatApi.as_view()),
     url(r'getChatStatus/$' , getChatStatus.as_view()),
-    # url(r'svgColor/$' , SVGColor.as_view()),
+    url(r'createSVG/$' , CreateSVG.as_view()),
 
 ]
