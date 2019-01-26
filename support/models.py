@@ -241,3 +241,13 @@ class DeliveryChallan(models.Model):
     refNo = models.CharField( max_length = 50 , null=True,blank=True)
     apprx = models.CharField( max_length = 50 , null=True,blank=True)
     notes = models.CharField(max_length = 500, null=True,blank=True)
+
+class StockCheckReport(models.Model):
+    created = models.DateTimeField(auto_now_add=True)
+    user = models.ForeignKey(User , related_name='useradded' , null = True)
+
+class StockCheckItem(models.Model):
+    product = models.ForeignKey( Products , null = True)
+    qty = models.PositiveIntegerField(null=True , default=0)
+    matching = models.BooleanField(default = False)
+    stockReport = models.ForeignKey(StockCheckReport , related_name='stockreportDetails' , null = True)

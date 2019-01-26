@@ -164,6 +164,12 @@ app.config(function($stateProvider) {
       controller: 'businessManagement.deliveryChallan'
     })
 
+    .state('home.stockReport', {
+      url: "/stockReport",
+      templateUrl: '/static/ngTemplates/app.stockReport.html',
+      controller: 'businessManagement.stockReport'
+    })
+
     // .state('home.settings', {
     //   url: "/settings",
     //   views: {

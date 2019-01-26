@@ -14,8 +14,8 @@ from django.conf import settings as globalSettings
 import datetime
 from django.contrib.auth.hashers import make_password,check_password
 from django.core.exceptions import SuspiciousOperation
-
-
+from django.db.models import Q,Count ,F,Sum
+from django.db.models import CharField,FloatField, Value , Func, PositiveIntegerField
 
 
 class ProductsSerializer(serializers.ModelSerializer):
@@ -313,5 +313,68 @@ class DeliveryChallanSerializer(serializers.ModelSerializer):
                 pass
         if 'materialIssue' in self.context['request'].data:
             instance.materialIssue = MaterialIssueMain.objects.get(pk=int(self.context['request'].data['materialIssue']))
+        instance.save()
+        return instance
+
+class StockCheckReportSerializer(serializers.ModelSerializer):
+    user = userSearchSerializer(many = False , read_only = True)
+    class Meta:
+        model = StockCheckReport
+        fields = ('pk','created','user')
+        read_only_fields = ('user',)
+    def create(self , validated_data):
+        s = StockCheckReport(**validated_data)
+        s.user = self.context['request'].user
+        s.save()
+        return s
+
+
+class StockCheckItemSerializer(serializers.ModelSerializer):
+    product = ProductsSerializer(many = False , read_only = True)
+    stockReport = StockCheckReportSerializer(many = False , read_only = True)
+    class Meta:
+        model = StockCheckItem
+        fields = ('pk','product','qty','matching','stockReport')
+    def create(self , validated_data):
+        s = StockCheckItem(**validated_data)
+        if 'product' in self.context['request'].data:
+            s.product = Products.objects.get(pk=int(self.context['request'].data['product']))
+            try:
+                count = 0
+                matobj = Inventory.objects.filter(product__id = self.context['request'].data['product'])
+                count =  matobj.aggregate(total=Sum(F('qty'),output_field=PositiveIntegerField())).get('total',0)
+                print self.context['request'].data['qty'] , count,'dddddddddddddd'
+                if int(self.context['request'].data['qty']) == int(count):
+                    s.matching = True
+                else:
+                    s.matching = False
+            except:
+                s.matching = False
+        print s.matching
+        if 'stockReport' in self.context['request'].data:
+            s.stockReport = StockCheckReport.objects.get(pk=int(self.context['request'].data['stockReport']))
+        s.save()
+        return s
+    def update (self, instance, validated_data):
+        for key in ['pk','product','qty','matching','stockReport']:
+            try:
+                setattr(instance , key , validated_data[key])
+            except:
+                pass
+        if 'product' in self.context['request'].data:
+            instance.product = Products.objects.get(pk=int(self.context['request'].data['product']))
+            try:
+                count = 0
+                matobj = Inventory.objects.filter(product__id = self.context['request'].data['product'])
+                count =  matobj.aggregate(total=Sum(F('qty'),output_field=PositiveIntegerField())).get('total',0)
+                print self.context['request'].data['qty'] , count,'dddddddddddddd'
+                if int(self.context['request'].data['qty']) == int(count):
+                    instance.matching = True
+                else:
+                    instance.matching = False
+            except:
+                instance.matching = False
+        if 'stockReport' in self.context['request'].data:
+            instance.stockReport = StockCheckReport.objects.get(pk=int(self.context['request'].data['stockReport']))
         instance.save()
         return instance

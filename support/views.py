@@ -168,6 +168,16 @@ class DeliveryChallanViewSet(viewsets.ModelViewSet):
     filter_backends = [DjangoFilterBackend]
     filter_fields = ['materialIssue','challanNo']
 
+class StockCheckReportViewSet(viewsets.ModelViewSet):
+    permission_classes = (permissions.AllowAny , )
+    queryset = StockCheckReport.objects.all()
+    serializer_class = StockCheckReportSerializer
+
+class StockCheckItemViewSet(viewsets.ModelViewSet):
+    permission_classes = (permissions.AllowAny , )
+    queryset = StockCheckItem.objects.all()
+    serializer_class = StockCheckItemSerializer
+
 class ProductsUploadAPIView(APIView):
     permission_classes = (permissions.IsAuthenticated ,)
 
@@ -2545,7 +2555,7 @@ class DeliveryChallanNoteAPIView(APIView):
         print request.GET,'aaaaaa'
         value = request.GET['value']
         response = HttpResponse(content_type='application/pdf')
-        response['Content-Disposition'] = 'attachment;filename="Quotationdownload.pdf"'
+        response['Content-Disposition'] = 'attachment;filename="Challandownload.pdf"'
         deliveryChallan(response , value ,request)
         return response
 
@@ -2835,6 +2845,170 @@ class InvoiceDownloadAPIView(APIView):
         # print request.GET,'aaaaaa'
         pkVal = request.GET['pkVal']
         response = HttpResponse(content_type='application/pdf')
-        response['Content-Disposition'] = 'attachment;filename="Quotationdownload.pdf"'
+        response['Content-Disposition'] = 'attachment;filename="Invoicedownload.pdf"'
         invoice(response, pkVal ,request)
+        return response
+
+class StockReportAPIView(APIView):
+    def get(self , request , format = None):
+        data ={}
+        toReturn = []
+        today_min = datetime.datetime.combine(datetime.date.today(), datetime.time.min)
+        today_max = datetime.datetime.combine(datetime.date.today(), datetime.time.max)
+        try:
+            obj = StockCheckReport.objects.get(created__range=(today_min, today_max))
+            count = 1
+            data = {'pk':obj.pk,'created':obj.created,'user':obj.user.pk}
+        except:
+            count = 0
+        toReturn.append({'count':count,'data':data})
+        return Response(toReturn,status=status.HTTP_200_OK)
+
+
+def stockSheet(response, value, created, request):
+    styles = getSampleStyleSheet()
+    style_right = ParagraphStyle(name='right', parent=styles['Normal'], alignment=TA_RIGHT)
+    doc = SimpleDocTemplate(response,pagesize=letter, topMargin=0.2*cm,leftMargin=0.1*cm,rightMargin=0.1*cm)
+    doc.request = request
+    elements = []
+    dateVal =  created.split('T')[0]
+    obj = StockCheckItem.objects.filter(stockReport__id=int(value))
+    objStock = StockCheckItem.objects.filter(stockReport__id=int(value),matching = True)
+    ntMatchingStock = StockCheckItem.objects.filter(stockReport__id=int(value),matching = False)
+    invobj = Inventory.objects.all()
+    invobjList = list(invobj.values('product').distinct().values('product__pk','product__description_1','product__part_no','product__description_2','product__weight','product__price','product__bar_code'))
+    print invobjList
+
+    header = Paragraph("""
+    <para align='left'>
+    <font size="10"><b>Stock Report</b></font><br/><br/>
+    <font size="8"><b>Dated : </b> %s </font>
+    </para>
+    """ %(dateVal),styles['Normal'])
+    tdata=[header]
+    tdheader=[tdata]
+    t=Table(tdheader)
+    t.setStyle(TableStyle([('ALIGN',(0,0),(-1,-1),'CENTER'),('VALIGN',(0,0),(-1,-1),'MIDDLE')]))
+    elements.append(t)
+    if len(objStock)>0:
+        relatedheader = Paragraph("""
+        <para align='left'>
+        <font size="8"><b> Related Item</b></font>
+        </para>
+        """ %(),styles['Normal'])
+        t1data=[relatedheader]
+        td1header=[t1data]
+        t1=Table(td1header)
+        t1.setStyle(TableStyle([('ALIGN',(0,0),(-1,-1),'CENTER'),('VALIGN',(0,0),(-1,-1),'MIDDLE')]))
+        elements.append(t1)
+        data2=[]
+        i = 0
+        s00 =Paragraph("<para fontSize=8>S.No </para>",styles['Normal'])
+        s01 =Paragraph("<para fontSize=8>Part No </para>",styles['Normal'])
+        s02 =Paragraph("<para fontSize=8>Product Description </para>",styles['Normal'])
+        s03 =Paragraph("<para fontSize=8>Qty </para>",styles['Normal'])
+        data2+=[[s01,s02,s03]]
+        for p in objStock:
+            i+=1
+            s10 =Paragraph("<para fontSize=8 alignment='center'> {0} </para>".format(i),styles['Normal'])
+            s11 =Paragraph("<para fontSize=8 alignment='left'> {0} </para>".format(smart_str(p.product.part_no)),styles['Normal'])
+            s12 =Paragraph("<para fontSize=8 alignment='left'> {0} </para>".format(smart_str(p.product.description_1)),styles['Normal'])
+            s13 =Paragraph("<para fontSize=8 alignment='center'> {0}</para>".format(p.qty),styles['Normal'])
+            data2.append([s11,s12,s13])
+        t2=Table(data2,colWidths=(30*mm,80*mm,12*mm))
+        t2.hAlign = 'LEFT'
+        t2.setStyle(TableStyle([('TEXTFONT', (0, 0), (-1, -1), 'Times-Bold'),('TEXTCOLOR',(0,0),(-1,-1),black),('ALIGN',(0,0),(-1,-1),'RIGHT'),('VALIGN',(0,0),(-1,-1),'TOP'),('BOX',(0,0),(-1,-1),0.25,colors.black),('INNERGRID', (0,0), (-1,-1), 0.25, colors.black)]))
+        elements.append(t2)
+        elements.append(Spacer(1,15))
+    if len(ntMatchingStock)>0:
+        ntmatheader = Paragraph("""
+        <para align='left'>
+        <font size="8"><b> Not Matching Item</b></font>
+        </para>
+        """ %(),styles['Normal'])
+        t3data=[ntmatheader]
+        td3header=[t3data]
+        t3=Table(td3header)
+        t3.setStyle(TableStyle([('ALIGN',(0,0),(-1,-1),'CENTER'),('VALIGN',(0,0),(-1,-1),'MIDDLE')]))
+        elements.append(t3)
+        data3=[]
+        i = 0
+        s20 =Paragraph("<para fontSize=8>S.No </para>",styles['Normal'])
+        s21 =Paragraph("<para fontSize=8>Part No </para>",styles['Normal'])
+        s22 =Paragraph("<para fontSize=8>Product Description </para>",styles['Normal'])
+        s23 =Paragraph("<para fontSize=8>Qty </para>",styles['Normal'])
+        data3+=[[s21,s22,s23]]
+        for j in ntMatchingStock:
+            i+=1
+            s30 =Paragraph("<para fontSize=8 alignment='center'> {0} </para>".format(i),styles['Normal'])
+            s31 =Paragraph("<para fontSize=8 alignment='left'> {0} </para>".format(smart_str(j.product.part_no)),styles['Normal'])
+            s32 =Paragraph("<para fontSize=8 alignment='left'> {0} </para>".format(smart_str(j.product.description_1)),styles['Normal'])
+            s33 =Paragraph("<para fontSize=8 alignment='center'> {0}</para>".format(j.qty),styles['Normal'])
+            data3.append([s31,s32,s33])
+        t4=Table(data3,colWidths=(30*mm,80*mm,12*mm))
+        t4.hAlign = 'LEFT'
+        t4.setStyle(TableStyle([('TEXTFONT', (0, 0), (-1, -1), 'Times-Bold'),('TEXTCOLOR',(0,0),(-1,-1),black),('ALIGN',(0,0),(-1,-1),'RIGHT'),('VALIGN',(0,0),(-1,-1),'TOP'),('BOX',(0,0),(-1,-1),0.25,colors.black),('INNERGRID', (0,0), (-1,-1), 0.25, colors.black)]))
+        elements.append(t4)
+        elements.append(Spacer(1,15))
+
+        missingheader = Paragraph("""
+        <para align='left'>
+        <font size="8"><b> Missing Item</b></font>
+        </para>
+        """ %(),styles['Normal'])
+        t5data=[missingheader]
+        td5header=[t5data]
+        t5=Table(td5header)
+        t5.setStyle(TableStyle([('ALIGN',(0,0),(-1,-1),'CENTER'),('VALIGN',(0,0),(-1,-1),'MIDDLE')]))
+        elements.append(t5)
+        data5=[]
+        i = 0
+        # s40 =Paragraph("<para fontSize=8>S.No </para>",styles['Normal'])
+        s41 =Paragraph("<para fontSize=8>Part No </para>",styles['Normal'])
+        s42 =Paragraph("<para fontSize=8>Product Description </para>",styles['Normal'])
+        s43 =Paragraph("<para fontSize=8>Qty </para>",styles['Normal'])
+        data5+=[[s41,s42,s43]]
+        for q in ntMatchingStock:
+            try:
+                count = 0
+                tot = 0
+                matobj = Inventory.objects.filter(product__id = q.product.pk)
+                count =  matobj.aggregate(total=Sum(F('qty'),output_field=PositiveIntegerField())).get('total',0)
+                tot = count - q.qty
+                i+=1
+                s50 =Paragraph("<para fontSize=8 alignment='center'> {0} </para>".format(i),styles['Normal'])
+                s51 =Paragraph("<para fontSize=8 alignment='left'> {0} </para>".format(smart_str(q.product.part_no)),styles['Normal'])
+                s52 =Paragraph("<para fontSize=8 alignment='left'> {0} </para>".format(smart_str(q.product.description_1)),styles['Normal'])
+                s53 =Paragraph("<para fontSize=8 alignment='center'> {0}</para>".format(tot),styles['Normal'])
+                data5.append([s51,s52,s53])
+            except:
+                pass
+        for k in invobjList:
+            objts = obj.filter(product_id=k['product__pk'])
+            if(len(objts)>0):
+                pass
+            else:
+                count = 0
+                matobj = Inventory.objects.filter(product__id = k['product__pk'])
+                count =  matobj.aggregate(total=Sum(F('qty'),output_field=PositiveIntegerField())).get('total',0)
+                if count>0:
+                    s50 =Paragraph("<para fontSize=8 alignment='center'> {0} </para>".format(i),styles['Normal'])
+                    s51 =Paragraph("<para fontSize=8 alignment='left'> {0} </para>".format(smart_str(k['product__part_no'])),styles['Normal'])
+                    s52 =Paragraph("<para fontSize=8 alignment='left'> {0} </para>".format(smart_str(k['product__description_1'])),styles['Normal'])
+                    s53 =Paragraph("<para fontSize=8 alignment='center'> {0}</para>".format(count),styles['Normal'])
+                    data5.append([s51,s52,s53])
+        t6=Table(data5,colWidths=(30*mm,80*mm,12*mm))
+        t6.hAlign = 'LEFT'
+        t6.setStyle(TableStyle([('TEXTFONT', (0, 0), (-1, -1), 'Times-Bold'),('TEXTCOLOR',(0,0),(-1,-1),black),('ALIGN',(0,0),(-1,-1),'RIGHT'),('VALIGN',(0,0),(-1,-1),'TOP'),('BOX',(0,0),(-1,-1),0.25,colors.black),('INNERGRID', (0,0), (-1,-1), 0.25, colors.black)]))
+        elements.append(t6)
+    doc.build(elements)
+
+class StockSheetAPIView(APIView):
+    def get(self , request , format = None):
+        print request.GET,'aaaaaa'
+        value = request.GET['value']
+        created = request.GET['created']
+        response = HttpResponse(content_type='application/pdf')
+        response['Content-Disposition'] = 'attachment;filename="Quotationdownload.pdf"'
+        stockSheet(response, value, created, request)
         return response
