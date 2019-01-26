@@ -180,7 +180,7 @@ STATUS_CHOICES = (
 class OutBoundInvoice(models.Model):
     created = models.DateTimeField(auto_now_add=True)
     user = models.ForeignKey(User , related_name='outBoundInvoiceUser' , null = True)
-    status = models.CharField(default = 'created' ,max_length = 12,choices = STATUS_CHOICES)
+    status = models.CharField(default = 'created' ,max_length = 30,choices = STATUS_CHOICES)
     isInvoice = models.BooleanField(default = False)
     poNumber = models.CharField(max_length = 50,null=True)
     name = models.CharField(max_length = 100 , null = True)

@@ -126,38 +126,46 @@ class ProjectPettyExpense(models.Model): # also petty cash
 
 STATUS_CHOICES = (
     ('created' , 'created'),
-    ('Sent' , 'Sent'),
     ('Approved' , 'Approved'),
-    ('Final' , 'Final'),
+    ('Sent' , 'Sent'),
+    ('Received' , 'Received'),
+    ('NotReceivedAndArchived' , 'NotReceivedAndArchived'),
+    ('Reconciled' , 'Reconciled'),
 )
 
 
 class PurchaseOrder(models.Model):
     created = models.DateTimeField(auto_now_add=True)
+    user = models.ForeignKey(User , related_name='purchaseorderUser' , null = True)
+    status = models.CharField(default = 'created' ,max_length = 30 ,choices = STATUS_CHOICES)
+    isInvoice = models.BooleanField(default = False)
     name = models.CharField(max_length = 100 , null = True)
-    address = models.CharField(max_length = 100 , null = True)
     personName = models.CharField(max_length = 100 , null = True)
     phone = models.CharField(max_length = 20 , null = True)
     email =  models.CharField(max_length = 50 , null = True)
-    pincode = models.PositiveIntegerField(null=True , default=0)
-    user = models.ForeignKey(User , related_name='purchaseorderUser' , null = True)
-    status = models.CharField(default = 'created' ,max_length = 5 ,choices = STATUS_CHOICES)
-    poNumber = models.CharField(max_length = 500,null=True, blank = True)
-    quoteNumber = models.CharField(max_length = 500,null=True)
+    address = models.TextField(max_length=200 , null = True)
+    pincode = models.CharField(max_length =10, null = True)
+    state = models.CharField(max_length = 50, null = True)
+    city =  models.CharField(max_length = 50, null = True)
+    country =  models.CharField(max_length = 30, null = True)
+    pin_status = models.CharField( max_length = 2, default = "1")
+    poNumber = models.CharField(max_length = 30,null=True)
+    quoteNumber = models.CharField(max_length = 30,null=True)
     quoteDate = models.DateField(null = True)
     deliveryDate = models.DateField(null = True)
-    terms = models.CharField(max_length = 500 , null = True)
+    paymentDueDate = models.DateField(null = True)
+    gstIn = models.CharField(max_length = 30 ,null = True)
+    terms = models.TextField(max_length=500 , null = True)
+    project = models.ForeignKey(project , related_name='purchaseorderProject'  , null = True )
     costcenter = models.ForeignKey(CostCenter , related_name='purchaseCostcenter' , null = True)
     bussinessunit =  models.ForeignKey(Unit, related_name='purchaseorderBusinessunit'  , null = True )
-    project = models.ForeignKey(project , related_name='purchaseorderProject'  , null = True )
-    isInvoice = models.BooleanField(default = False)
 
 class PurchaseOrderQty(models.Model):
     created = models.DateTimeField(auto_now_add=True)
-    product = models.CharField(max_length = 100 , null = True)
-    qty = models.PositiveIntegerField(null=True , default=0)
-    price = models.FloatField(null=True , default=0)
     purchaseorder = models.ForeignKey(PurchaseOrder , related_name='productorder' , null = True)
+    product = models.CharField(max_length = 100 , null = True)
+    qty = models.PositiveIntegerField(default=1)
+    price = models.FloatField(default=1)
     hsn = models.ForeignKey(ProductMeta, related_name='productmeta'  , null = True )
     tax = models.FloatField(null = True)
     total = models.FloatField(null = True)
