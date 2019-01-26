@@ -71,40 +71,18 @@
 
       </div>
     </div>
+    {% endverbatim%}
 
     <div class="container-fluid" style="background-color:#FCC300;min-height:10vh;  position:relative;padding-bottom: 2em;" ng-hide="device.smallDevice">
-      <div class="container">
-        <div class="col-md-2 clickchange" ng-class="click1" ng-click="clicks(1)">
-          <span><b>Books</b></span>
-          <div ng-class="class1"></div>
-        </div>
-        <div class="col-md-2 clickchange" ng-class="click2" ng-click="clicks(2)">
-          <span><b>Video Course</b></span>
-          <div ng-class="class2"></div>
-        </div>
-        <a href="/exam">
-          <div class="col-md-2 clickchange" ng-class="click3" ng-click="clicks(3)">
-            <span><b>Test Series</b></span>
-            <div ng-class="class3"></div>
-          </div>
+      <div class="container-fluid text-center"style="display: flex;align-items: center;">
+        {% for c in courseobj %}
+        <a href="#" class="a_div">
+        {{c.title}}
         </a>
-        <!-- <a href="/forum"> -->
-        <div class="col-md-2 clickchange" ng-class="click4" ng-click="clicks(4)">
-          <span><b>Forum</b></span>
-          <div ng-class="class4"></div>
-        </div>
-        <!-- </a> -->
-        <div class="col-md-2 clickchange" ng-class="click5" ng-click="clicks(5)">
-          <span><b>Refernce Books</b></span>
-          <div ng-class="class5"></div>
-        </div>
-        <div class="col-md-2 clickchange1" ng-class="click6" ng-click="clicks(6)">
-          <span><b>Notes</b></span>
-          <div ng-class="class6"></div>
-        </div>
+        {% endfor %}
       </div>
     </div>
-
+    {% verbatim %}
     <div class="container-fluid" ng-hide="!device.smallDevice">
       <div class="container" style="background-color:#FCC300;min-height:10vh;  position:relative;padding-bottom: 2em;">
         <ng-owl-carousel class="owl-theme" owl-items="items" owl-properties="properties" owl-ready="ready($api)">

@@ -100,6 +100,7 @@ class Section(models.Model):
     sequence = models.PositiveIntegerField(null = True)
     book = models.ForeignKey(Book , null = False , related_name='sections')
     shortUrl = models.CharField(max_length = 100 , null = True , unique = True)
+    description = models.TextField(max_length=2000 , null = True)
 
     def get_absolute_url(self):
         return '/'+ self.shortUrl + '/'

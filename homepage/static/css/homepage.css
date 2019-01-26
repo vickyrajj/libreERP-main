@@ -1672,11 +1672,20 @@ hr {
   width: 12%;
 }
 
-.clickchange {
+.a_div {
   border-right: 1px solid #fff;
-  text-align: center;
-  margin-top: 2.5em;
-  color: #fff
+  margin-top: 1.8em;
+  color: #fff;
+  text-transform:capitalize;
+  flex: 1;
+  font-size: 20px;
+  font-weight: bold;
+  text-decoration: none !important;
+}
+
+
+.a_div:last-child {
+  border-right: 0px solid #fff;
 }
 
 .clickchange span {
@@ -1694,14 +1703,10 @@ hr {
 }
 
 .clickchange:hover, .clickchange .triangle-hover, .clickchange .triangle-hover1 {
-  color: #000;
   cursor: pointer;
 }
 
-.clickchange1:hover {
-  color: #000;
-  cursor: pointer;
-}
+.clickchange1:hover {}
 
 .triangle-hover {
   width: 0;
@@ -2513,23 +2518,27 @@ hr {
   background-color: #fff;
   cursor: default;
 }
-.method_row h3{
+
+.method_row h3 {
   margin-top: 40px;
 }
-.session_tabs{
+
+.session_tabs {
   text-align: center;
 }
-.tab_card{
+
+.tab_card {
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.1);
   border-radius: 7px;
   cursor: pointer;
   background-color: #eee;
-
 }
-.tab_card:hover{
+
+.tab_card:hover {
   background-color: #17EEAB;
   color: #fff;
 }
+
 /* exams css properties */
 /* for normal screens ends here.... */
 @media only screen and (device-width: 1352px) and (device-height: 641px) {

@@ -42,7 +42,7 @@ class SectionSerializer(serializers.ModelSerializer):
     # book = BookSerializer(many = False , read_only = True)
     class Meta:
         model = Section
-        fields = ('pk' , 'title' , 'book','sequence' ,'shortUrl')
+        fields = ('pk' , 'title' , 'book','sequence' ,'shortUrl','description')
 
 
 class BookSerializer(serializers.ModelSerializer):

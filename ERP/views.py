@@ -40,7 +40,6 @@ def dynamicTemplates(request , filename):
     print 'filename', filename
     try:
         blogobj = blogPost.objects.get(shortUrl=filename)
-
         if blogobj.contentType == 'book':
             book = Book.objects.get(pk=blogobj.header)
             print book.title,'gggggggggggggggggggggggggggg'
@@ -77,15 +76,17 @@ def dynamicTemplates(request , filename):
     # return render(request , filename , {"lang" : request.LANGUAGE_CODE})
 
 
+
+
 def courses(request):
-    return render(request, 'courses.html', {})
+    print 'in courseeeeeeeeee'
+    courseobj = Course.objects.all()
+    return render(request, 'courses.html', {"typ" : page,"courseobj":courseobj})
 
 def mockTestView(request , testID):
     pass
 
 def coursesContent(request , page):
-    print "coming in course content"
-    print page
     return render(request, 'courses.html', {"typ" : page})
 
 def ncert(request):

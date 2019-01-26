@@ -32,21 +32,21 @@ def index(request):
 
 
 
-
 def blogDetails(request, blogname):
-    print '*****************',blogname
+    print '*****************blognameeee',blogname
     try:
         # print "searching for blog post"
-        # print blogPost.objects.all()
+        # # print blogPost.objects.all()
         # typ = None
+        # if blogname=='courses':
+        #     return render(request, 'courses.html', {})
         # if '/' in blogname:
         #     prts = blogname.split('/')
         #     typ = prts[1]
-        #
+        #     print prts,'----------------------parts'
         #     blogobj = blogPost.objects.get(shortUrl=prts[0])
         # else:
         blogobj = blogPost.objects.get(shortUrl=blogname)
-
         print "got blog post"  , blogobj
 
         if blogobj.contentType == 'article':
@@ -72,7 +72,12 @@ def blogDetails(request, blogname):
         #         pass
         #     elif typ == 'mock-tests':
         #         pass
-
+        #     elif typ == 'forum':
+        #         pass
+        #     elif typ == 'reference-books':
+        #         pass
+        #     elif typ == 'notes':
+        #         pass
     except:
 
         traceback.print_exc(file=sys.stdout)
@@ -105,9 +110,6 @@ def blogDetails(request, blogname):
                         nxtvobj = sec[a+1]
 
         return render(request, 'bookContent.html', { "sections" : sec , "home": False, "tagsCSV" :  blogobj.tagsCSV.split(','),'sectionobj':sectionobj, 'book' : sectionobj.book ,'blogobj' : blogobj, "brandLogo" : globalSettings.BRAND_LOGO , "brandLogoInverted": globalSettings.BRAND_LOGO_INVERT,'questions':sectionobj.questions.all(),'bot':{'prev':prev,'nxt':nxt,'prevobj':prevobj,'nxtvobj':nxtvobj}})
-
-
-
 
 
 def blog(request):

@@ -230,7 +230,8 @@ app.controller("home.LMS.configure.form", function($scope, $state, $users, $stat
 
         $scope.Sectionform = {
           title: '',
-          shortUrl: ''
+          shortUrl: '',
+          description:'',
         }
         $scope.cancelSection = function() {
           $uibModalInstance.dismiss()
@@ -249,7 +250,8 @@ app.controller("home.LMS.configure.form", function($scope, $state, $users, $stat
           var secData = {
             title: $scope.Sectionform.title,
             shortUrl: $scope.Sectionform.shortUrl,
-            book: bookData.pk
+            book: bookData.pk,
+            description:$scope.Sectionform.description,
           }
           $http({
             method: 'POST',
@@ -311,7 +313,8 @@ app.controller("home.LMS.configure.form", function($scope, $state, $users, $stat
             description: '',
             tagsCSV: '',
             section: '',
-            author: ''
+            author: '',
+            title: '',
           }
         }
         console.log($scope.blogForm);
@@ -353,6 +356,7 @@ app.controller("home.LMS.configure.form", function($scope, $state, $users, $stat
           fd.append('header' , bookId)
           fd.append('contentType', 'book');
           fd.append('tags' , tags);
+          fd.append('title',title);
 
           if ($scope.blogForm.pk) {
             method = 'PATCH';

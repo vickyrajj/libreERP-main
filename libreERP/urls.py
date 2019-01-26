@@ -53,7 +53,7 @@ urlpatterns = [
     url(r'^ngTemplates/(?P<filename>[\w|\W]+)', renderedStatic , name ='renderedStatic'),
     url(r'^dynamicTemplates/(?P<filename>[\w|\W]+).html', dynamicTemplates , name ='dynamicTemplates'),
     url(r'^courses/(?P<page>[\w|\W]+)', coursesContent , name ='coursesContent'),
-    url(r'^courses/', courses , name ='courses'),
+    url(r'^courses/$', courses , name ='courses'),
     url(r'^ncert/', ncert , name ='ncert'),
     url(r'^mock-test/(?P<testID>[\w|\W]+)', mockTestView , name ='mockTest'),
 
