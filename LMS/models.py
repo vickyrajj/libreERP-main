@@ -67,7 +67,8 @@ class Subject(models.Model):
     level = models.PositiveIntegerField(null=True) # class
     description = models.TextField(max_length=2000 , null = False)
     dp = models.FileField(upload_to = getCourseDPAttachmentPath , null = True)
-
+    class Meta:
+        unique_together = ('title', 'level',)
 
 class Topic(models.Model):
     created = models.DateTimeField(auto_now_add = True)

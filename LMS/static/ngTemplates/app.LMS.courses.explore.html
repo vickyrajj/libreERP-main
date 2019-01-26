@@ -119,10 +119,22 @@
     <div class="row">
       <hr>
       <div class="container-fluid">
-        <button type="button" name="button" class="btn btn-primary" ng-click="blogPopup(bookDetails.pk)">link course to blog</button>
+        <button type="button" name="button" class="btn btn-primary" ng-click="blogPopup()">{{linkType=='new'?'Create Link To Blog':'Update Link To Blog'}}</button>
+      </div>
+      <div class="container-fluid"style="padding-top:15px;">
+        <div class="col-md-8">
+          <label>Title : </label> {{linkData.title}} <br>
+          <label>URL suffix : </label> {{linkData.shortUrl}} <br>
+          <label>Description : </label> {{linkData.description}} <br>
+          <label>Tags : </label> {{linkData.tagsCSV}} <br>
+          <label>Section : </label> {{linkData.section}} <br>
+          <label>Author : </label> {{linkData.author}} <br>
+        </div>
+        <div class="col-md-4">
+          <img style="width: 100px;height:100px;" class="img" ng-src="{{linkData.ogimage}}" ng-if="linkData.ogimage != null">
+        </div>
       </div>
     </div>
-
   </div>
   <div class="col-md-9" style="padding:0px;">
 

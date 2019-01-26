@@ -34,7 +34,7 @@ class SectionViewSet(viewsets.ModelViewSet):
     serializer_class = SectionSerializer
     queryset = Section.objects.all()
     filter_backends = [DjangoFilterBackend]
-    filter_fields = ['title' , 'book']
+    filter_fields = ['id','title' , 'book']
 
 class BookViewSet(viewsets.ModelViewSet):
     permission_classes = (permissions.IsAuthenticated, isAdmin, )
