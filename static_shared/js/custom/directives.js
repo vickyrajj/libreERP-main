@@ -768,8 +768,8 @@ app.directive('chatBox', function() {
                 'region_name':myLocationData.regionName,
                 'zip':myLocationData.zip,
                 'ip':myLocationData.query,
+                'flag':'/static/Flags/'+myLocationData.countryCode.toLowerCase()+'.png',
                 'location':{
-                  'country_flag':'/static/Flags/'+myLocationData.countryCode.toLowerCase()+'.png',
                   'capital':null,
                   'languages':null
                 }
@@ -777,6 +777,7 @@ app.directive('chatBox', function() {
               }
             }else{
               $scope.location =Object.assign(JSON.parse(response.data[0].location))
+              $scope.location.flag='/static/Flags/'+myLocationData.country_code.toLowerCase()+'.png',
               $scope.location.timezone=null
             }
           });
