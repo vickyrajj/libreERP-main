@@ -2893,7 +2893,7 @@ def stockSheet(response, value, created, request):
     if len(objStock)>0:
         relatedheader = Paragraph("""
         <para align='left'>
-        <font size="8"><b> Related Item</b></font>
+        <font size="8"><b> Matching Items</b></font>
         </para>
         """ %(),styles['Normal'])
         t1data=[relatedheader]
@@ -2923,7 +2923,7 @@ def stockSheet(response, value, created, request):
     if len(ntMatchingStock)>0:
         ntmatheader = Paragraph("""
         <para align='left'>
-        <font size="8"><b> Not Matching Item</b></font>
+        <font size="8"><b> Not Matching Items</b></font>
         </para>
         """ %(),styles['Normal'])
         t3data=[ntmatheader]
@@ -2951,56 +2951,56 @@ def stockSheet(response, value, created, request):
         elements.append(t4)
         elements.append(Spacer(1,15))
 
-        missingheader = Paragraph("""
-        <para align='left'>
-        <font size="8"><b> Missing Item</b></font>
-        </para>
-        """ %(),styles['Normal'])
-        t5data=[missingheader]
-        td5header=[t5data]
-        t5=Table(td5header)
-        t5.setStyle(TableStyle([('ALIGN',(0,0),(-1,-1),'CENTER'),('VALIGN',(0,0),(-1,-1),'MIDDLE')]))
-        elements.append(t5)
-        data5=[]
-        i = 0
-        # s40 =Paragraph("<para fontSize=8>S.No </para>",styles['Normal'])
-        s41 =Paragraph("<para fontSize=8>Part No </para>",styles['Normal'])
-        s42 =Paragraph("<para fontSize=8>Product Description </para>",styles['Normal'])
-        s43 =Paragraph("<para fontSize=8>Qty </para>",styles['Normal'])
-        data5+=[[s41,s42,s43]]
-        for q in ntMatchingStock:
-            try:
-                count = 0
-                tot = 0
-                matobj = Inventory.objects.filter(product__id = q.product.pk)
-                count =  matobj.aggregate(total=Sum(F('qty'),output_field=PositiveIntegerField())).get('total',0)
-                tot = count - q.qty
-                i+=1
+    missingheader = Paragraph("""
+    <para align='left'>
+    <font size="8"><b> Missing Items</b></font>
+    </para>
+    """ %(),styles['Normal'])
+    t5data=[missingheader]
+    td5header=[t5data]
+    t5=Table(td5header)
+    t5.setStyle(TableStyle([('ALIGN',(0,0),(-1,-1),'CENTER'),('VALIGN',(0,0),(-1,-1),'MIDDLE')]))
+    elements.append(t5)
+    data5=[]
+    i = 0
+    # s40 =Paragraph("<para fontSize=8>S.No </para>",styles['Normal'])
+    s41 =Paragraph("<para fontSize=8>Part No </para>",styles['Normal'])
+    s42 =Paragraph("<para fontSize=8>Product Description </para>",styles['Normal'])
+    s43 =Paragraph("<para fontSize=8>Qty </para>",styles['Normal'])
+    data5+=[[s41,s42,s43]]
+    for q in ntMatchingStock:
+        try:
+            count = 0
+            tot = 0
+            matobj = Inventory.objects.filter(product__id = q.product.pk)
+            count =  matobj.aggregate(total=Sum(F('qty'),output_field=PositiveIntegerField())).get('total',0)
+            tot = count - q.qty
+            i+=1
+            s50 =Paragraph("<para fontSize=8 alignment='center'> {0} </para>".format(i),styles['Normal'])
+            s51 =Paragraph("<para fontSize=8 alignment='left'> {0} </para>".format(smart_str(q.product.part_no)),styles['Normal'])
+            s52 =Paragraph("<para fontSize=8 alignment='left'> {0} </para>".format(smart_str(q.product.description_1)),styles['Normal'])
+            s53 =Paragraph("<para fontSize=8 alignment='center'> {0}</para>".format(tot),styles['Normal'])
+            data5.append([s51,s52,s53])
+        except:
+            pass
+    for k in invobjList:
+        objts = obj.filter(product_id=k['product__pk'])
+        if(len(objts)>0):
+            pass
+        else:
+            count = 0
+            matobj = Inventory.objects.filter(product__id = k['product__pk'])
+            count =  matobj.aggregate(total=Sum(F('qty'),output_field=PositiveIntegerField())).get('total',0)
+            if count>0:
                 s50 =Paragraph("<para fontSize=8 alignment='center'> {0} </para>".format(i),styles['Normal'])
-                s51 =Paragraph("<para fontSize=8 alignment='left'> {0} </para>".format(smart_str(q.product.part_no)),styles['Normal'])
-                s52 =Paragraph("<para fontSize=8 alignment='left'> {0} </para>".format(smart_str(q.product.description_1)),styles['Normal'])
-                s53 =Paragraph("<para fontSize=8 alignment='center'> {0}</para>".format(tot),styles['Normal'])
+                s51 =Paragraph("<para fontSize=8 alignment='left'> {0} </para>".format(smart_str(k['product__part_no'])),styles['Normal'])
+                s52 =Paragraph("<para fontSize=8 alignment='left'> {0} </para>".format(smart_str(k['product__description_1'])),styles['Normal'])
+                s53 =Paragraph("<para fontSize=8 alignment='center'> {0}</para>".format(count),styles['Normal'])
                 data5.append([s51,s52,s53])
-            except:
-                pass
-        for k in invobjList:
-            objts = obj.filter(product_id=k['product__pk'])
-            if(len(objts)>0):
-                pass
-            else:
-                count = 0
-                matobj = Inventory.objects.filter(product__id = k['product__pk'])
-                count =  matobj.aggregate(total=Sum(F('qty'),output_field=PositiveIntegerField())).get('total',0)
-                if count>0:
-                    s50 =Paragraph("<para fontSize=8 alignment='center'> {0} </para>".format(i),styles['Normal'])
-                    s51 =Paragraph("<para fontSize=8 alignment='left'> {0} </para>".format(smart_str(k['product__part_no'])),styles['Normal'])
-                    s52 =Paragraph("<para fontSize=8 alignment='left'> {0} </para>".format(smart_str(k['product__description_1'])),styles['Normal'])
-                    s53 =Paragraph("<para fontSize=8 alignment='center'> {0}</para>".format(count),styles['Normal'])
-                    data5.append([s51,s52,s53])
-        t6=Table(data5,colWidths=(30*mm,80*mm,12*mm))
-        t6.hAlign = 'LEFT'
-        t6.setStyle(TableStyle([('TEXTFONT', (0, 0), (-1, -1), 'Times-Bold'),('TEXTCOLOR',(0,0),(-1,-1),black),('ALIGN',(0,0),(-1,-1),'RIGHT'),('VALIGN',(0,0),(-1,-1),'TOP'),('BOX',(0,0),(-1,-1),0.25,colors.black),('INNERGRID', (0,0), (-1,-1), 0.25, colors.black)]))
-        elements.append(t6)
+    t6=Table(data5,colWidths=(30*mm,80*mm,12*mm))
+    t6.hAlign = 'LEFT'
+    t6.setStyle(TableStyle([('TEXTFONT', (0, 0), (-1, -1), 'Times-Bold'),('TEXTCOLOR',(0,0),(-1,-1),black),('ALIGN',(0,0),(-1,-1),'RIGHT'),('VALIGN',(0,0),(-1,-1),'TOP'),('BOX',(0,0),(-1,-1),0.25,colors.black),('INNERGRID', (0,0), (-1,-1), 0.25, colors.black)]))
+    elements.append(t6)
     doc.build(elements)
 
 class StockSheetAPIView(APIView):
