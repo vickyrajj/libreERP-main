@@ -21,7 +21,6 @@ sitemaps = {
     'blogs': BlogsSitemap(),
     'sections': SectionsSitemap(),
     'subjects': SubjectSitemap(),
-    'topic': TopicSitemap()
 }
 
 
