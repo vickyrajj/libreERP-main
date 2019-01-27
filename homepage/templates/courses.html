@@ -79,31 +79,31 @@
 
     <div class="container-fluid" style="background-color:#FCC300;min-height:10vh;  position:relative;padding-bottom: 2em;" ng-hide="device.smallDevice">
       <div class="container">
-        <div class="col-md-2 clickchange" ng-class="click1" ng-click="clicks(1)">
+        <div class="col-md-2 clickchange">
           <a href="/class-{{level}}-{{title}}/books/"><b>Books</b></a>
           <div ng-class="class1"></div>
         </div>
-        <div class="col-md-2 clickchange" ng-class="click2" ng-click="clicks(2)">
+        <div class="col-md-2 clickchange">
           <a href="/class-{{level}}-{{title}}/video-course/"><b>Video Course</b></a>
           <div ng-class="class2"></div>
         </div>
-        <a href="/mock-test">
-          <div class="col-md-2 clickchange" ng-class="click3" ng-click="clicks(3)">
+        <!-- <a href="/mock-test"> -->
+          <div class="col-md-2 clickchange">
             <a href="/mock-test"><b>Test Series</b></a>
             <div ng-class="class3"></div>
           </div>
-        </a>
+        <!-- </a> -->
         <!-- <a href="/forum"> -->
-        <div class="col-md-2 clickchange" ng-class="click4" ng-click="clicks(4)">
+        <div class="col-md-2 clickchange">
           <a href="/class-{{level}}-{{title}}/forum/"><b>Forum</b></a>
           <div ng-class="class4"></div>
         </div>
         <!-- </a> -->
-        <div class="col-md-2 clickchange" ng-class="click5" ng-click="clicks(5)">
+        <div class="col-md-2 clickchange">
           <a href="/class-{{level}}-{{title}}/reference-book"><b>Refernce Books</b></a>
           <div ng-class="class5"></div>
         </div>
-        <div class="col-md-2 clickchange" ng-class="click6" ng-click="clicks(6)">
+        <div class="col-md-2 clickchange">
           <a href="/class-{{level}}-{{title}}/notes"><b>Notes</b></a>
           <div ng-class="class6"></div>
         </div>
@@ -137,7 +137,7 @@
     </div> -->
 
     {% verbatim %}
-    <div class="container-fluid" ng-hide="!device.smallDevice">
+    <div class="container-fluid">
       <div class="container" style="background-color:#FCC300;min-height:10vh;  position:relative;padding-bottom: 2em;">
         <ng-owl-carousel class="owl-theme" owl-items="items" owl-properties="properties" owl-ready="ready($api)">
           <div ng-repeat="a in items">

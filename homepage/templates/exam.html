@@ -23,9 +23,9 @@
     <div class="col-md-9" style="min-height:100vh;padding:0;">
       <div class="maindiv">
         <div class="text-center">
-          <div ng-repeat="a in questionList" style="display:inline-block;">
-            <div style="cursor:pointer;" class="headselected" ng-click="subjectSelect(a.subject,$index) " ng-class="{'selectedhead':$index==subcount}"  >
-              <h4  ng-class="{'selectedsub':$index==subcount}"><b>{{a.subject}}</b></h4>
+          <div ng-repeat="a in sublist" style="display:inline-block;" ng-hide="sublist.length==1">
+            <div style="cursor:pointer;" class="headselected" ng-click="subjectSelect(a,$index) " ng-class="{'selectedhead':$index==subcount}"  >
+              <h4  ng-class="{'selectedsub':$index==subcount}"><b>{{a}}</b></h4>
             </div>
           </div>
         </div>

@@ -1,17 +1,18 @@
 var app = angular.module('app', ['ui.router', 'ui.bootstrap', 'angular-owl-carousel-2', 'ui.bootstrap.datetimepicker', 'flash', 'ngAside']);
 // $scope, $state, $users, $stateParams, $http, $timeout, $uibModal , $sce,$rootScope
-app.factory('dataShare', function($rootScope) {
-  var service = {};
-  service.data = false;
-  service.sendData = function(data) {
-    this.data = data;
-    $rootScope.$broadcast('data_shared');
-  };
-  service.getData = function() {
-    return this.data;
-  };
-  return service;
-});
+
+
+app.config(function($stateProvider, $urlRouterProvider, $httpProvider) {
+
+
+  $urlRouterProvider.otherwise('/');
+  $httpProvider.defaults.xsrfCookieName = 'csrftoken';
+  $httpProvider.defaults.xsrfHeaderName = 'X-CSRFToken';
+  $httpProvider.defaults.withCredentials = true;
+
+})
+
+
 app.controller('main', function($scope, $http, $sce, $interval, $uibModal) {
   console.log("main loded");
   $scope.crmBannerID = 1;
@@ -113,7 +114,87 @@ app.controller('main', function($scope, $http, $sce, $interval, $uibModal) {
       templateUrl: '/static/ngTemplates/app.homepage.signin.html',
       size: 'lg',
       backdrop: false,
-      controller: function($scope, $uibModalInstance) {
+      controller: function($scope, $uibModalInstance, $timeout, Flash) {
+        $scope.form = {
+          number: '',
+          otp: '',
+          otpmode: false,
+          errorMessage: '',
+          errorType: 'default'
+        }
+        $scope.loginFunction = function() {
+          console.log($scope.form);
+          if (!$scope.form.otpmode) {
+            if ($scope.form.number.length != 10) {
+              $scope.form.errorMessage = 'Enter Valid Mobile Number'
+              $scope.form.errorType = 'danger'
+              return
+            } else {
+              $scope.form.errorMessage = ''
+              $scope.form.errorType = 'default'
+            }
+            $http({
+              method: 'POST',
+              url: '/generateOTP',
+              data: {
+                'id': $scope.form.number
+              }
+            }).
+            then(function(response) {
+              console.log(response.data);
+              $scope.form.otpmode = true
+            }, function(err) {
+              if (err.status == 404) {
+                $http({
+                  method: 'POST',
+                  url: '/api/homepage/registration/',
+                  data: {
+                    mobile: $scope.form.number
+                  }
+                }).
+                then(function(response) {
+                  console.log(response.data);
+                  $scope.form.errorMessage = 'You Have No Account , We Are Creating New Account For You'
+                  $scope.form.errorType = 'warning'
+                  $scope.form.otpmode = true
+                  $scope.form.token = response.data.token
+                }).catch(function(err) {
+                  $scope.form.errorMessage = 'Invalid Data'
+                  $scope.form.errorType = 'danger'
+                })
+              } else if (err.status == 400) {
+                $scope.form.errorMessage = 'No Account'
+                $scope.form.errorType = 'danger'
+              } else if (err.status == 500) {
+                $scope.form.errorMessage = 'Error While Sending OTP'
+                $scope.form.errorType = 'danger'
+              }
+            });
+          } else {
+            console.log('enter otp mode');
+            if ($scope.form.token != undefined) {
+              var toSend = {
+                mobile: $scope.form.number,
+                mobileOTP: $scope.form.otp,
+                token: $scope.form.token
+              }
+            } else {
+              var toSend = {
+                mobile: $scope.form.number,
+                mobileOTP: $scope.form.otp
+              }
+            }
+            $http({
+              method: 'POST',
+              url: '/registerLite',
+              data: toSend
+            }).
+            then(function(response) {
+              console.log('Registered');
+              window.location.href = "/";
+            })
+          }
+        }
         $scope.close = function() {
           $uibModalInstance.dismiss('cancel');
         }
@@ -149,11 +230,49 @@ app.config(function($stateProvider, $locationProvider) {
 })
 
 app.controller('exam', function($scope, $state, $http, $timeout, $interval, $uibModal, $stateParams, $sce, Flash, $location) {
-  $scope.list = []
-  $http.get('/api/LMS/paper/1').then(function(response){
-    $scope.list.push(response.data);
+
+  $scope.sublist = []
+  $scope.subquestions = []
+  $scope.data = []
+  $http({
+    method: 'GET',
+    url: '/api/LMS/paper/1/'
+  }).then(function(response) {
+    // $scope.paperData = response.data
+    for (var i = 0; i < response.data.questions.length; i++) {
+      $scope.data.push(response.data.questions[i].ques)
+    }
+
+    // $scope.data.push(response.data.questions.ques)
+    // for (var i = 0; i < $scope.paperData.questions.length; i++) {
+    //   $scope.paperData.questions[i].ques
+    //   $scope.sublist.push($scope.paperData.questions[i].ques.topic.subject.title);
+    //   $scope.subname = $scope.paperData.questions[i].ques.topic.subject.title;
+    //
+    //   console.log($scope.paperData.questions[i].ques.topic.subject.title, 'lll');
+    // }
+
   })
-    console.log(  $scope.list ,'yyyyyyyy');
+  // for (var i = 0; i < $scope.data.length; i++) {
+  //   $scope.sublist.push($scope.data.topic.subject.title);
+  //   console.log($scope.sublist, 'ooo');
+  //   $scope.subname = $scope.data[i].topic.subject.title;
+  //   for (var i = 0; i < $scope.sublist.length; i++) {
+  //     $scope.subquestions.push({
+  //       subname: $scope.sublist[i],
+  //       ques: []
+  //     })
+  //   }
+  //   for (var i = 0; i < $scope.subquestions.length; i++) {
+  //     if ($scope.subname == $scope.subquestions[i].subname) {
+  //
+  //       $scope.subquestions[i].ques.push($scope.paperData.questions[i].ques.ques)
+  //     }
+  //   }
+  // }
+
+
+  console.log($scope.data.length, 'vvv');
   $scope.questionList = [{
       subject: "Maths",
       testquestions: [{
@@ -459,7 +578,7 @@ app.controller('exam', function($scope, $state, $http, $timeout, $interval, $uib
     console.log($scope.selections, 'lll');
     $scope.questionList[idx].testquestions[0].status = "notanswered";
     for (var i = 0; i < $scope.questionList.length; i++) {
-      if ($scope.questionList[i].subject == sub) {
+      if ($scope.sublist[i] == sub) {
         if (idx == $scope.subcount) {
           $scope.count = $scope.count;
         } else {

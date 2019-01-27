@@ -7,9 +7,6 @@ app.config(function($stateProvider, $urlRouterProvider, $httpProvider, $provide,
   $httpProvider.defaults.xsrfCookieName = 'csrftoken';
   $httpProvider.defaults.xsrfHeaderName = 'X-CSRFToken';
   $httpProvider.defaults.withCredentials = true;
-  $locationProvider.html5Mode(true);
-  $urlMatcherFactoryProvider.strictMode(false);
-
 });
 
 app.run(['$rootScope', '$state', '$stateParams', '$http', function($rootScope, $state, $stateParams, $http) {
