@@ -157,7 +157,12 @@ def blogDetails(request, blogname):
     except:
 
         traceback.print_exc(file=sys.stdout)
-        sectionobj = Section.objects.get(shortUrl=blogname)
+
+        try:
+            sectionobj = Section.objects.get(shortUrl=blogname)
+        except:
+            return render(request, 'notFound404.html', {}, status=404)
+
         blogobj = blogPost.objects.get(header=sectionobj.book.pk)
         print 'boookkkkkk',sectionobj.book
         sec = sectionobj.book.sections.order_by('sequence')
