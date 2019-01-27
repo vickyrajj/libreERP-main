@@ -27,7 +27,7 @@ class TopicSerializer(serializers.ModelSerializer):
     subject = SubjectSerializer(many = False , read_only = True)
     class Meta:
         model = Topic
-        fields = ('pk' , 'created' , 'subject', 'title' , 'description' )
+        fields = ('pk' , 'created' , 'subject', 'title' , 'description' , 'seoTitle' )
 
     def create(self , validated_data):
         print 'came here'

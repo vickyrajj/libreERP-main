@@ -80,9 +80,10 @@ class Topic(models.Model):
     subject = models.ForeignKey(Subject , null = False , related_name='topics')
     title = models.CharField(max_length = 30 , null = False)
     description = models.TextField(max_length=2000 , null = False)
+    seoTitle = models.CharField(max_length = 30 , null = True)
 
     def get_absolute_url(self):
-        return '/class-' + str(self.subject.level) +'-' + self.subject.title + '-' + self.title +'-online-course/'
+        return '/class-' + str(self.subject.level) +'-' + self.subject.title + '-' + self.seoTitle +'-online-course/'
 
 
 class Book(models.Model):
