@@ -126,11 +126,11 @@ class ProjectPettyExpense(models.Model): # also petty cash
 
 STATUS_CHOICES = (
     ('created' , 'created'),
-    ('Approved' , 'Approved'),
     ('Sent' , 'Sent'),
-    ('Received' , 'Received'),
-    ('NotReceivedAndArchived' , 'NotReceivedAndArchived'),
-    ('Reconciled' , 'Reconciled'),
+    ('Approved' , 'Approved'),
+    # ('Received' , 'Received'),
+    # ('NotReceivedAndArchived' , 'NotReceivedAndArchived'),
+    # ('Reconciled' , 'Reconciled'),
 )
 
 
@@ -150,15 +150,19 @@ class PurchaseOrder(models.Model):
     country =  models.CharField(max_length = 30, null = True)
     pin_status = models.CharField( max_length = 2, default = "1")
     poNumber = models.CharField(max_length = 30,null=True, blank=True)
-    quoteNumber = models.CharField(max_length = 30,null=True)
-    quoteDate = models.DateField(null = True)
-    deliveryDate = models.DateField(null = True)
+    quoteNumber = models.CharField(max_length = 30,null=True, blank=True)
+    quoteDate = models.DateField(null = True, blank=True)
+    deliveryDate = models.DateField(null = True, blank=True)
     paymentDueDate = models.DateField(null = True)
     gstIn = models.CharField(max_length = 30 ,null = True)
-    terms = models.TextField(max_length=500 , null = True)
+    terms = models.TextField(max_length=500 , null = True, blank=True)
+    invoiceTerms = models.TextField(max_length=500 , null = True, blank=True)
     project = models.ForeignKey(project , related_name='purchaseorderProject'  , null = True )
     costcenter = models.ForeignKey(CostCenter , related_name='purchaseCostcenter' , null = True)
     bussinessunit =  models.ForeignKey(Unit, related_name='purchaseorderBusinessunit'  , null = True )
+    accNo =  models.CharField(max_length = 30, null = True)
+    ifsc = models.CharField(max_length = 30, null = True)
+    bankName =  models.CharField(max_length = 30, null = True)
 
 class PurchaseOrderQty(models.Model):
     created = models.DateTimeField(auto_now_add=True)
@@ -166,6 +170,8 @@ class PurchaseOrderQty(models.Model):
     product = models.CharField(max_length = 100 , null = True)
     qty = models.PositiveIntegerField(default=1)
     price = models.FloatField(default=1)
-    hsn = models.ForeignKey(ProductMeta, related_name='productmeta'  , null = True )
+    productMeta = models.ForeignKey(ProductMeta, related_name='productmeta'  , null = True )
+    hsn =  models.CharField(max_length = 100 , null = True)
     tax = models.FloatField(null = True)
     total = models.FloatField(null = True)
+    receivedQty = models.PositiveIntegerField(default=0)

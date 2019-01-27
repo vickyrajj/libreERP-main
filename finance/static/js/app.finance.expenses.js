@@ -1,3 +1,26 @@
+var projectsStepsData = [{
+    indx: 1,
+    text: 'created',
+    display: 'Created'
+  },
+  {
+    indx: 2,
+    text: 'Sent',
+    display: 'Sent For Approval'
+  },
+  {
+    indx: 3,
+    text: 'Approved',
+    display: 'Approved'
+  },
+  // {
+  //   indx: 4,
+  //   text: 'ongoing',
+  //   display: 'OnGoing'
+  // },
+];
+
+
 app.controller('businessManagement.finance.expenses', function($scope, $http, $aside, $state, Flash, $users, $filter, $permissions) {
   // settings main page controller
 
@@ -486,6 +509,7 @@ $scope.showOption = function() {
     }
   }
 
+
 $scope.deleteData = function(pkVal,idx){
   console.log(pkVal,idx);
   if(pkVal==undefined){
@@ -508,7 +532,23 @@ $scope.deleteData = function(pkVal,idx){
 
 })
 app.controller('businessManagement.finance.purchaseOrder.explore', function($scope, $http, $aside, $state, Flash, $users, $filter, $permissions) {
+  $scope.projectSteps = {
+    steps: projectsStepsData
+  }
+
   $scope.data = $scope.data.tableData[$scope.tab.data.index]
+
+  $scope.updateStatus = function() {
+  for (var i = 0; i < $scope.projectSteps.steps.length; i++) {
+    console.log($scope.projectSteps.steps[i].text,'lllllllllllllllllllllll');
+    if ($scope.projectSteps.steps[i].text == $scope.data.status) {
+      $scope.data.selectedStatus = $scope.projectSteps.steps[i].indx;
+      console.log($scope.data.selectedStatus);
+      break;
+    }
+  }
+}
+$scope.updateStatus()
   $scope.getAllData = function(){
     $http({
       method: 'GET',
@@ -521,6 +561,79 @@ app.controller('businessManagement.finance.purchaseOrder.explore', function($sco
 
 
 $scope.getAllData()
+$scope.saveData=function(){
+  console.log("hhhhhhhhhhhhhhhhhhhh");
+    for (var i = 0; i < $scope.products.length; i++) {
+      $http({
+        method: 'PATCH',
+        url:'/api/finance/purchaseorderqty/' + $scope.products[i].pk +'/',
+        data: {
+        receivedQty:$scope.products[i].receivedQty,
+        }
+      }).
+      then(function(response) {})
+  }
+}
+
+// $scope.bankList = [
+//   {'name' : 'Allahabad Bank'},
+//   {'name' : '	Andhra Bank'},
+//   {'name' : 'Bank of Baroda'},
+//   {'name' : 'Bank of India'},
+//   {'name' : 'Bank of Maharashtra'},
+//   {'name' : 'Canara Bank'},
+//   {'name' : 'Central Bank of India'},
+//   {'name' : 'Corporation Bank'},
+//   {'name' : 'Dena Bank'},
+//   {'name' : 'Indian Bank'},
+//   {'name' : 'Indian Overseas Bank'},
+//   {'name' : 'Oriental Bank of Commerce'},
+//   {'name' : 'Punjab National Bank'},
+//   {'name' : 'Punjab & Sind Bank'},
+//   {'name' : 'Syndicate Bank'},
+//   {'name' : 'UCO Bank'},
+//   {'name' : 'Union Bank of India'},
+//   {'name' : 'United Bank of India'},
+//   {'name' : 'Vijaya Bank'},
+//   {'name' : 'IDBI Bank Ltd'},
+//   {'name' : 'Bharatiya Mahila Bank'},
+//   {'name' : 'State Bank of India'},
+//   {'name' : 'State Bank of Bikaner'},
+//   {'name' : 'State Bank of Hyderabad'},
+//   {'name' : 'State Bank of Mysore'},
+//   {'name' : 'State Bank of Patiala'},
+//   {'name' : 'State Bank of Travancore'},
+// ]
+
+$scope.bankList = [
+  'Allahabad Bank',
+  'Andhra Bank',
+   'Bank of Baroda',
+  'Bank of India',
+  'Bank of Maharashtra',
+  'Canara Bank',
+  'Central Bank of India',
+  'Corporation Bank',
+  'Dena Bank',
+  'Indian Bank',
+  'Indian Overseas Bank',
+  'Oriental Bank of Commerce',
+  'Punjab National Bank',
+  'Punjab & Sind Bank',
+  'Syndicate Bank',
+  'UCO Bank',
+  'Union Bank of India',
+  'United Bank of India',
+  'Vijaya Bank',
+  'IDBI Bank Ltd',
+  'Bharatiya Mahila Bank',
+  'State Bank of India',
+  'State Bank of Bikaner',
+  'State Bank of Hyderabad',
+  'State Bank of Mysore',
+  'State Bank of Patiala',
+  'State Bank of Travancore',
+]
 
 $scope.sendForApproval=function(){
   dataToSend = {
@@ -532,8 +645,8 @@ $scope.sendForApproval=function(){
     data: dataToSend
   }).then(function(response) {
      $scope.data = response.data
-    })
-
+       $scope.updateStatus()
+  })
 }
 $scope.approve=function(){
   dataToSend = {
@@ -545,6 +658,7 @@ $scope.approve=function(){
     data: dataToSend
   }).then(function(response) {
      $scope.data = response.data
+       $scope.updateStatus()
     })
 }
 $scope.reject=function(){
@@ -557,9 +671,50 @@ $scope.reject=function(){
     data: dataToSend
   }).then(function(response) {
      $scope.data = response.data
+      $scope.updateStatus()
     })
 
 }
+  $scope.invoice = false
+  $scope.addToInvoice=function(){
+    $scope.invoice = true
+    if($scope.data.accNo!=null||$scope.data.ifsc!=null){
+      $scope.data.reaccNo = $scope.data.accNo
+       $scope.data.reifsc = $scope.data.ifsc
+    }
+  }
+  $scope.saveBankDetails=function(){
+    console.log($scope.data.reifsc,'aaaaaaaaa');
+    if($scope.data.accNo!=$scope.data.reaccNo||$scope.data.accNo==undefined||$scope.data.reaccNo==undefined){
+        Flash.create('danger', 'Account Number Doesnt Match');
+        return
+    }
+    if($scope.data.ifsc!=$scope.data.reifsc||$scope.data.ifsc==undefined||$scope.data.reifsc==undefined){
+        Flash.create('danger', 'IFSC Number Doesnt Match');
+        return
+    }
+    if($scope.data.bankName==undefined){
+        Flash.create('danger', 'Add Bank Name');
+        return
+    }
+    dataToSend = {
+      accNo : $scope.data.accNo,
+      ifsc : $scope.data.ifsc,
+      bankName : $scope.data.bankName,
+      isInvoice : true,
+    }
+    $http({
+      method: 'PATCH',
+      url: '/api/finance/purchaseorder/' + $scope.data.pk +'/',
+      data: dataToSend
+    }).then(function(response) {
+      Flash.create('success', 'Saved');
+       // $scope.data = response.data
+       // $scope.data.reaccNo = response.data.accNo
+       //  $scope.data.reifsc = response.data.ifsc
+      })
+
+  }
 
 
 })
@@ -625,6 +780,7 @@ app.controller('businessManagement.finance.inboundInvoices.form', function($scop
       price: 0,
       qty: 0,
       productMeta:'',
+      hsn:'',
       tax:'',
       total:0
     });
@@ -654,6 +810,13 @@ app.controller('businessManagement.finance.inboundInvoices.form', function($scop
 
   $scope.productMetaSearch = function(query) {
       return $http.get('/api/clientRelationships/productMeta/?code__contains=' + query).
+      then(function(response) {
+        return response.data;
+      })
+  };
+
+  $scope.pinSearch = function(query) {
+      return $http.get('/api/ERP/genericPincode/?pincode__contains=' + query).
       then(function(response) {
         return response.data;
       })
@@ -699,12 +862,13 @@ app.controller('businessManagement.finance.inboundInvoices.form', function($scop
   })
 
   $scope.$watch('form.products', function(newValue, oldValue) {
-  console.log(newValue);
   for (var i = 0; i < newValue.length; i++) {
-    if(newValue[i].productMeta){
-      $scope.form.products[i].productMeta = newValue[i].productMeta
-      $scope.form.products[i].tax = newValue[i].productMeta.taxRate
-      $scope.form.products[i].total = ((newValue[i].qty*newValue[i].price) * newValue[i].productMeta.taxRate/ (100+newValue[i].productMeta.taxRate)).toFixed(2)
+    if(typeof newValue[i].hsn=='object'){
+      console.log(newValue[i]);
+      $scope.form.products[i].tax = newValue[i].hsn.taxRate
+      $scope.form.products[i].total = ((newValue[i].qty*newValue[i].price) * newValue[i].hsn.taxRate/ (100+newValue[i].hsn.taxRate)).toFixed(2)
+      $scope.form.products[i].productMeta = newValue[i].hsn
+      $scope.form.products[i].hsn = newValue[i].productMeta.code
     }
   }
   },true)
@@ -781,30 +945,33 @@ app.controller('businessManagement.finance.inboundInvoices.form', function($scop
         data: dataToSend
       }).
       then(function(response) {
-        console.log("herereeeeeeeeeeee");
-        if ($scope.products.length > 0) {
+        console.log("herereeeeeeeeeeee",$scope.form.products);
+        if ($scope.form.products.length > 0) {
           for (var i = 0; i < $scope.form.products.length; i++) {
-            if(typeof $scope.products[i].hsn == 'object'){
-              $scope.form.products[i].hsn = $scope.form.products[i].hsn.hsn
-              $scope.form.products[i].tax = $scope.form.products[i].hsn.tax
+            if(typeof $scope.form.products[i].hsn == 'object'){
+              $scope.form.products[i].hsn = $scope.form.products[i].hsn.code
+              $scope.form.products[i].tax = $scope.form.products[i].hsn.taxRate
+              $scope.form.products[i].productMeta = $scope.form.products[i].hsn
             }
             else{
-              $scope.form.products[i].hsn = $scope.products[i].hsn
-              $scope.products[i].tax = $scope.products[i].tax
+              $scope.form.products[i].hsn = $scope.form.products[i].hsn
+              $scope.form.products[i].tax = $scope.form.products[i].tax
+                $scope.form.products[i].productMeta = $scope.form.products[i].productMeta
             }
 
             var toSend = {
-              product: $scope.products[i].product,
-              qty: $scope.products[i].qty,
-              price: $scope.products[i].price,
+              product: $scope.form.products[i].product,
+              qty: $scope.form.products[i].qty,
+              price: $scope.form.products[i].price,
               purchaseorder: response.data.pk,
-              hsn: $scope.products[i].hsn,
-              tax: $scope.products[i].tax,
-              total: $scope.products[i].total
+              hsn: $scope.form.products[i].hsn,
+              tax: $scope.form.products[i].tax,
+              productMeta :  $scope.form.products[i].productMeta.pk,
+              total: $scope.form.products[i].total
             }
-            if($scope.products[i].pk){
+            if($scope.form.products[i].pk){
               method = 'PATCH',
-              url = '/api/finance/purchaseorderqty/' + $scope.products[i].pk +'/'
+              url = '/api/finance/purchaseorderqty/' + $scope.form.products[i].pk +'/'
             }
             else{
               method = 'POST'
@@ -868,7 +1035,7 @@ app.controller('businessManagement.finance.inboundInvoices.form', function($scop
         data: dataToSend
       }).
       then(function(response) {
-
+        Flash.create('success', 'Saved');
       })
     }
   }
@@ -903,6 +1070,7 @@ $scope.sendForApproval=function(){
     data: dataToSend
   }).then(function(response) {
      $scope.data = response.data
+     Flash.create('success', 'Saved');
     })
 
 }
@@ -916,6 +1084,7 @@ $scope.approve=function(){
     data: dataToSend
   }).then(function(response) {
      $scope.data = response.data
+     Flash.create('success', 'Saved');
     })
 }
 $scope.reject=function(){
@@ -928,6 +1097,7 @@ $scope.reject=function(){
     data: dataToSend
   }).then(function(response) {
      $scope.data = response.data
+     Flash.create('success', 'Saved');
     })
 
 }
