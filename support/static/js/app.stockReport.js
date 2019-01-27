@@ -88,13 +88,23 @@ app.controller("businessManagement.stockReport", function($scope, $state, $users
             console.log(response.data);
             $scope.count = response.data[0].count
             $scope.data = response.data[0].data
-            $http({
-              method: 'GET',
-              url: '/api/support/stockCheckItem/?pk=' +$scope.data.pk
-            }).
-            then(function(response) {
-              $scope.products = response.data
-            })
+            console.log($scope.data,'aaaaaaaaa');
+            if($scope.data.pk!=undefined){
+              console.log("heeeeeeeerrrrrrrrrrreeeeeeeeeeee",$scope.data.pk);
+              $http({
+                method: 'GET',
+                url: '/api/support/stockCheckItem/' +$scope.data.pk
+              }).
+              then(function(response) {
+                $scope.products = response.data
+                return
+              })
+            }
+            else{
+              console.log("thhhhhhhhhhhhhheeeeeeeerrrrrrrrrrrreeeeeeeee");
+              $scope.products =[]
+              return
+            }
 
           })
         }
