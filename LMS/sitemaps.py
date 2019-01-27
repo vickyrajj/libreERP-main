@@ -32,6 +32,3 @@ class NotesSitemap(Sitemap):
 
     def items(self):
        return Note.objects.all()
-
-    def lastmod(self, obj):
-       return obj.updated
