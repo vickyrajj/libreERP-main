@@ -110,7 +110,8 @@ app.controller("home.LMS.evaluation.form", function($scope, $state, $users, $sta
     $scope.selectedquestions = $scope.tab.data.paper.questions;
     $scope.form.name=$scope.tab.data.paper.name
     console.log($scope.selectedquestions );
-    $scope.form.timelimit = $scope.time.setHours($scope.tab.data.paper.timelimit);
+    console.log($scope.tab.data.paper.timelimit,'ddddd');
+    $scope.form.timelimit =$scope.tab.data.paper.timelimit;
   }
 
   $scope.$watch('form.topic' , function(newValue , oldValue){
@@ -190,6 +191,7 @@ app.controller("home.LMS.evaluation.form", function($scope, $state, $users, $sta
     $scope.selectedquestions.splice(indx,1)
   }
 
+console.log($scope.form.timelimit,'eeee');
   $scope.save= function(){
     var toSend=[]
     for (var i = 0; i < $scope.selectedquestions.length; i++) {
@@ -230,7 +232,18 @@ app.controller("home.LMS.evaluation.form", function($scope, $state, $users, $sta
 
   console.log($scope.time,'jjj');
 
+  function msToTime(duration) {
+    var minutes = parseInt((duration / (1000 * 60)) % 60)
+    var hours = parseInt((duration / (1000 * 60 * 60)) % 24);
 
+   hours = (hours < 10) ? "0" + hours : hours;
+   minutes = (minutes < 10) ? "0" + minutes : minutes;
+
+
+   return hours + ":" + minutes ;
+ }
+msToTime(  $scope.form.timelimit);
+console.log(msToTime(  $scope.form.timelimit),'hhh');
 
 });
 
