@@ -317,7 +317,7 @@ app.directive('genericForm', function() {
 });
 app.directive('reviewInfo', function() {
   return {
-    templateUrl: '/static/ngTemplates/reviewInfo.html',
+    templateUrl: '/static/ngTemplates/reviewInfoQC.html',
     restrict: 'E',
     replace: true,
     scope: {

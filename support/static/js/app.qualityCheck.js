@@ -20,10 +20,18 @@ app.controller("businessManagement.reviews.explore", function($scope, $state, $u
   $scope.msgData=[]
   $scope.fullChatData=[]
   $scope.msgData = $scope.tab.data.chatThreadData
-  $scope.location =Object.assign(JSON.parse($scope.tab.data.chatThreadData.location))
   $scope.fullChatData=$scope.tab.data.supportChatData
   $scope.me = $users.get('mySelf');
   $scope.reviewCommentData = [];
+
+  $http({
+    method: 'GET',
+    url: '/api/support/visitor/?uid=' + $scope.msgData.uid,
+  }).
+  then(function(response) {
+    console.log(response.data, typeof response.data, response.data.length);
+    $scope.visitorDetails=response.data[0]
+  });
 
   $http({
     method: 'GET',

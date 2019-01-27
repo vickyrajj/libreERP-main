@@ -26,6 +26,15 @@ app.controller("businessManagement.sessionHistory.explore", function($scope, $st
 
   $http({
     method: 'GET',
+    url: '/api/support/visitor/?uid=' + $scope.msgData.uid,
+  }).
+  then(function(response) {
+    console.log(response.data, typeof response.data, response.data.length);
+    $scope.visitorDetails=response.data[0]
+  });
+
+  $http({
+    method: 'GET',
     url: '/api/support/reviewComment/?uid='+$scope.msgData.uid+'&chatedDate='+$scope.msgData.created.split('T')[0],
   }).
   then(function(response) {

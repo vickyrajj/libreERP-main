@@ -287,6 +287,15 @@ app.controller("app.customerReviews.explore", function($scope, $http, $permissio
   $scope.msgData = $scope.tab.data.chatThreadData
   $scope.fullChatData=$scope.tab.data.supportChatData
 
+  $http({
+    method: 'GET',
+    url: '/api/support/visitor/?uid=' + $scope.msgData.uid,
+  }).
+  then(function(response) {
+    console.log(response.data, typeof response.data, response.data.length);
+    $scope.visitorDetails=response.data[0]
+  });
+
   $scope.calculateTime = function(user, agent) {
 
     if (user != undefined) {
