@@ -750,39 +750,39 @@ app.controller("controller.home.main", function($scope, $state, $http , $permiss
 
 
 
-    let myPErc=$scope.changeInAvgChatDur.percentage/100
-    let startPoint=$scope.avgChatDuration/(1+myPErc)
-    console.log(startPoint,"my start point");
-
-    function randomNumbers(min, max) {
-      return Math.random() * (max - min) + min;
-    }
-    var canvasHeight=220
-    console.log($scope.avgChatDuration);
-    var multiplier= canvasHeight/$scope.avgChatDuration;
-    console.log(multiplier,"multiplier");
-        // var points=[{x:0,y:startPoint},{x:100,y:startPoint},{x:150,y:startPoint},{x:200,y:startPoint},{x:300,y:startPoint},{x:400,y:$scope.avgChatDuration}]
-        var tempArray=[{x:0,y:startPoint*multiplier}]
-
-
-
-        function addPoints(minX,maxX,minY,maxY,times){
-          let xVal=tempArray[0].x;
-          let yVal=tempArray[0].y;
-          for (var i = 1; i < times; i++) {
-            xVal+= (Math.random()+.3)*(maxX/times+1)
-            yVal=randomNumbers(minY,maxY)
-            tempArray.push({x:xVal,y:yVal})
-          }
-          tempArray.push({x:maxX,y:maxY})
-          return tempArray
-        }
-
-
-
-
-        var points =addPoints(0,400,startPoint*multiplier,$scope.avgChatDuration*multiplier,5)
-        console.log(points,"my arrayyyyyyyyyyyyyyyyyyyyyyy");
+    // let myPErc=$scope.changeInAvgChatDur.percentage/100
+    // let startPoint=$scope.avgChatDuration/(1+myPErc)
+    // console.log(startPoint,"my start point");
+    //
+    // function randomNumbers(min, max) {
+    //   return Math.random() * (max - min) + min;
+    // }
+    // var canvasHeight=220
+    // console.log($scope.avgChatDuration);
+    // var multiplier= canvasHeight/$scope.avgChatDuration;
+    // console.log(multiplier,"multiplier");
+    //     // var points=[{x:0,y:startPoint},{x:100,y:startPoint},{x:150,y:startPoint},{x:200,y:startPoint},{x:300,y:startPoint},{x:400,y:$scope.avgChatDuration}]
+    //     var tempArray=[{x:0,y:startPoint*multiplier}]
+    //
+    //
+    //
+    //     function addPoints(minX,maxX,minY,maxY,times){
+    //       let xVal=tempArray[0].x;
+    //       let yVal=tempArray[0].y;
+    //       for (var i = 1; i < times; i++) {
+    //         xVal+= (Math.random()+.3)*(maxX/times+1)
+    //         yVal=randomNumbers(minY,maxY)
+    //         tempArray.push({x:xVal,y:yVal})
+    //       }
+    //       tempArray.push({x:maxX,y:maxY})
+    //       return tempArray
+    //     }
+    //
+    //
+    //
+    //
+    //     var points =addPoints(0,400,startPoint*multiplier,$scope.avgChatDuration*multiplier,5)
+    //     console.log(points,"my arrayyyyyyyyyyyyyyyyyyyyyyy");
 
       // setTimeout(function () {
       //   createPath(points).then(function(data){
@@ -806,9 +806,9 @@ app.controller("controller.home.main", function($scope, $state, $http , $permiss
       //   })
       //
       // }, 15000);
-      setTimeout(function () {
-        createPAth(points)
-      }, 10000);
+      // setTimeout(function () {
+      //   createPAth(points)
+      // }, 10000);
 
   }
 
@@ -832,35 +832,33 @@ app.controller("controller.home.main", function($scope, $state, $http , $permiss
 
 
 
-    function createPAth(points){
-      let values=""
-        for (var i = 1; i < points.length-1; i++) {
-          let x=points[i].x
-          let y=220-points[i].y
-           values+=" L"+x+" "+y+" "
-        }
-        let height=points[points.length-1].y
-        let width=points[points.length-1].x
-        myPath="M0 "+height+values+" L"+width+" "+height+" Z";
-      $http({
-        method: 'POST',
-        url: '/api/support/createSVG/',
-        data: {
-          path: myPath,
-          svgWidth:'400',
-          svgHeight:'220',
-          fill: 'purple',
-          color: 'green',
-          strokeWidth: '3',
-          fileName: 'balram2',
-        }
-      }).then(function(response) {
-        console.log(response.data);
-        $scope.myHTML=$sce.trustAsHtml(response.data.path)
-        console.log(typeof response.data.path);
-        // $scope.myHTML="My name is: <h1>John Doe</h1>"
-      })
-    }
+    // function createPAth(points){
+    //   let values=""
+    //     for (var i = 1; i < points.length-1; i++) {
+    //       let x=points[i].x
+    //       let y=220-points[i].y
+    //        values+=" L"+x+" "+y+" "
+    //     }
+    //     let height=points[points.length-1].y
+    //     let width=points[points.length-1].x
+    //     myPath="M0 "+height+values+" L"+width+" "+height+" Z";
+    //   $http({
+    //     method: 'POST',
+    //     url: '/api/support/createSVG/',
+    //     data: {
+    //       path: myPath,
+    //       svgWidth:'400',
+    //       svgHeight:'220',
+    //       fill: 'purple',
+    //       color: 'green',
+    //       strokeWidth: '3',
+    //       fileName: 'balram2',
+    //     }
+    //   }).then(function(response) {
+    //     console.log(response.data);
+    //     $scope.myHTML=$sce.trustAsHtml(response.data.path)
+    //   })
+    // }
 
 
 

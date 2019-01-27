@@ -56,7 +56,7 @@ class SupportChat(models.Model):
 class Visitor(models.Model):
     created = models.DateTimeField(auto_now_add = True)
     uid = models.CharField(max_length = 50 , null = True )
-    email = models.EmailField(null = True)
+    email = models.EmailField(null = True,blank = True)
     name = models.CharField(max_length = 50, null = True , blank = True)
     phoneNumber = models.CharField(max_length = 20, null = True , blank = True)
     notes = models.CharField(max_length = 1000, null = True , blank = True)

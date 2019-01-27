@@ -38,8 +38,6 @@ from django.template.loader import render_to_string, get_template
 from django.core.mail import send_mail, EmailMessage
 from django.utils import timezone
 import re
-import svgwrite
-import fileinput
 regex = re.compile('^HTTP_')
 
 BLOCK_SIZE = 16
@@ -581,7 +579,7 @@ class VisitorViewSet(viewsets.ModelViewSet):
     serializer_class = VisitorSerializer
     queryset = Visitor.objects.all()
     filter_backends = [DjangoFilterBackend]
-    filter_fields = ['uid','email' ,'name']
+    filter_fields = ['uid','email' ,'name','phoneNumber']
 
 class ReviewCommentViewSet(viewsets.ModelViewSet):
     permission_classes = (permissions.AllowAny,)

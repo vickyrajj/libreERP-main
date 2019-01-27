@@ -337,6 +337,15 @@ app.directive('reviewInfo', function() {
         $scope.commentPerm =  $permissions.myPerms('module.reviews.comment')
       }, 500);
 
+      $http({
+        method: 'GET',
+        url: '/api/support/visitor/?uid=' + $scope.msgData.uid,
+      }).
+      then(function(response) {
+        console.log(response.data, typeof response.data, response.data.length);
+        $scope.visitorDetails=response.data[0]
+      });
+
       $scope.reviewForm = {message:''}
 
       $scope.calculateTime = function(user, agent) {
@@ -761,24 +770,26 @@ app.directive('chatBox', function() {
           then(function(response) {
             console.log(response.data,'dddddddddddd',typeof response.data);
             var myLocationData=JSON.parse(response.data[0].location)
-            if(myLocationData.hasOwnProperty('timezone')){
-              $scope.location={
-                'city':myLocationData.city,
-                'country_name':myLocationData.country,
-                'region_name':myLocationData.regionName,
-                'zip':myLocationData.zip,
-                'ip':myLocationData.query,
-                'flag':'/static/Flags/'+myLocationData.countryCode.toLowerCase()+'.png',
-                'location':{
-                  'capital':null,
-                  'languages':null
-                }
+            if(myLocationData.city!=null){
+              if(myLocationData.hasOwnProperty('timezone')){
+                $scope.location={
+                  'city':myLocationData.city,
+                  'country_name':myLocationData.country,
+                  'region_name':myLocationData.regionName,
+                  'zip':myLocationData.zip,
+                  'ip':myLocationData.query,
+                  'flag':'/static/Flags/'+myLocationData.countryCode.toLowerCase()+'.png',
+                  'location':{
+                    'capital':null,
+                    'languages':null
+                  }
 
+                }
+              }else{
+                $scope.location =Object.assign(JSON.parse(response.data[0].location))
+                $scope.location.flag='/static/Flags/'+myLocationData.country_code.toLowerCase()+'.png',
+                $scope.location.timezone=null
               }
-            }else{
-              $scope.location =Object.assign(JSON.parse(response.data[0].location))
-              $scope.location.flag='/static/Flags/'+myLocationData.country_code.toLowerCase()+'.png',
-              $scope.location.timezone=null
             }
           });
 
@@ -897,7 +908,6 @@ app.directive('chatBox', function() {
       $scope.isTyping = false;
       $scope.chatHistBtn = false;
       $scope.chatHistory = []
-      console.log($scope.data);
       console.log('adsd', $scope.data);
 
       $scope.takeSnapshot = function(imageUrl) {
@@ -1142,6 +1152,7 @@ app.directive('chatBox', function() {
         console.log(response.data, typeof response.data, response.data.length);
         if (response.data.length > 0) {
           $scope.visitorForm = response.data[0]
+          console.log($scope.visitorForm , "Visitor Data");
         }
       });
 
@@ -1792,6 +1803,7 @@ app.directive('chatBox', function() {
               $scope.form = visitorData
             }
             checkEmail = function() {
+
               $http({
                 method: 'GET',
                 url: '/api/support/visitor/?email=' + $scope.form.email,
@@ -1805,12 +1817,27 @@ app.directive('chatBox', function() {
                 }
               });
             }
+            checkPhone = function() {
+
+              $http({
+                method: 'GET',
+                url: '/api/support/visitor/?phoneNumber=' + $scope.form.phoneNumber,
+              }).
+              then(function(response) {
+                if (response.data.length > 0 && response.data[0].phoneNumber == $scope.form.phoneNumber) {
+                  $scope.form.name = response.data[0].name
+                  $scope.form.email = response.data[0].email
+                  $scope.form.phoneNumber = response.data[0].phoneNumber
+                  $scope.form.notes = response.data[0].notes
+                }
+              });
+            }
 
             $scope.submit = function() {
-              if ($scope.form.email == '') {
-                Flash.create('danger', 'Email is required')
-                return
-              }
+              // if ($scope.form.email == '') {
+              //   Flash.create('danger', 'Email is required')
+              //   return
+              // }
               $scope.toSend = $scope.form
               $scope.toSend.uid = $scope.uid;
 

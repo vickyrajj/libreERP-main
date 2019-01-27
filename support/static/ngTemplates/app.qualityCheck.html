@@ -34,11 +34,14 @@
                                 <img class="table_image" ng-if="data.user_id" src="{{data.user_id | getDP}}" alt="">
                                 <img class="table_image" ng-if="!data.user_id" ng-src="/static/images/avatar04.png" alt="">
                                 <span style="display:inline-block">
-                                   <div ng-if="data.name">
-                                     <span style="font-weight: 500;font-size:90%">{{data.name}}</span>
-                                   </div>
-                                   <span style="font-size:83%">{{data.uid}}</span>
+                                   <!-- <div ng-if="data.user_id">
+                                     <span style="font-weight: 500;font-size:90%">{{data.user_id|getName}}</span>
+                                   </div> -->
+                                   <span style="font-size:83%">{{data.uid}} , {{data.location.country_name}}</span>
                                    <span ng-if="data.isLate" style="color:#C83737;font-size:75%">-Late</span>
+                                   <!-- <div class="">
+                                     <span style="font-size:83%">{{data.userDeviceIp}}</span>
+                                   </div> -->
                                    <div>
                                      <span ng-if="data.chatDuration>0.0" style="font-size:90%"><i class="fa fa-clock-o" aria-hidden="true"></i>  {{data.chatDuration}} Min</span>
                                    </div>

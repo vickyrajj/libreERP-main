@@ -306,6 +306,8 @@ app.filter('linkInText',()=>{
   }
 })
 
+
+
 app.filter('getTime',function(){
    return function(date) {
      if(date==null||date==undefined){
@@ -333,7 +335,6 @@ app.filter('toSet',function(){
     return date.toFixed(2);
   }
 })
-
 
 app.filter('trusted', ['$sce', function ($sce) {
     return function(url) {

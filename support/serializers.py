@@ -117,12 +117,12 @@ class ChatThreadSerializer(serializers.ModelSerializer):
         if self.context['request'].META.get('REMOTE_ADDR'):
             c.userDeviceIp = self.context['request'].META.get('REMOTE_ADDR')
             try:
-                api1=requests.request('GET',"http://api.ipstack.com/43.224.128.150?access_key=f6e584f19ad6fa9080e0434fb46ae508&format=1")
+                api1=requests.request('GET',"http://api.ipstack.com/"+c.userDeviceIp+"?access_key=f6e584f19ad6fa9080e0434fb46ae508&format=1")
                 # if api1.status_code==200:
                 y=json.dumps(api1.json())
                 c.location=y
             except:
-                api2=requests.request('GET','http://ip-api.com/json/43.224.128.150')
+                api2=requests.request('GET','http://ip-api.com/json/'+c.userDeviceIp)
                 z=json.dumps(api2.json())
                 c.location=z
         c.save()

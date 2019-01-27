@@ -20,6 +20,7 @@ app.controller("businessManagement.reviews.explore", function($scope, $state, $u
   $scope.msgData=[]
   $scope.fullChatData=[]
   $scope.msgData = $scope.tab.data.chatThreadData
+  $scope.location =Object.assign(JSON.parse($scope.tab.data.chatThreadData.location))
   $scope.fullChatData=$scope.tab.data.supportChatData
   $scope.me = $users.get('mySelf');
   $scope.reviewCommentData = [];
@@ -596,6 +597,9 @@ app.controller("businessManagement.reviews", function($scope, $state, $users, $s
       then(function(response) {
         $scope.archivedData = response.data.data
         console.log($scope.archivedData , " Archieve data");
+        for (var i = 0; i < $scope.archivedData.length; i++) {
+          $scope.archivedData[i].location=JSON.parse($scope.archivedData[i].location)
+        }
         $scope.archivedDataLength = response.data.dataLength
         $scope.totalItemsArch = response.data.dataLength
         if($scope.archivedData.length>0){
@@ -659,7 +663,12 @@ app.controller("businessManagement.reviews", function($scope, $state, $users, $s
       }).
       then(function(response) {
         $scope.reviewData = response.data.data
+        // $scope.locationData=response.data.data.location
         console.log($scope.reviewData , " Review data");
+        // $scope.locationData=$scope.reviewData.location
+        for (var i = 0; i < $scope.reviewData.length; i++) {
+          $scope.reviewData[i].location=Object.assign(JSON.parse($scope.reviewData[i].location))
+        }
         $scope.reviewDataLength = response.data.dataLength
         $scope.totalItems = response.data.dataLength
         if($scope.reviewData.length>0){
