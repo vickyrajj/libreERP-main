@@ -210,8 +210,6 @@ app.controller("home.LMS.knowledgeBank", function($scope, $timeout, $filter, $st
 
 app.controller("home.LMS.knowledgeBank.form", function($scope, $state, $users, $stateParams, $http, Flash, $filter) {
 
-  console.log($scope.tab,'tabbbbbbbbbbbb------------');
-
   $scope.subjectSearch = function(query) {
     return $http.get('/api/LMS/subject/?title__contains=' + query).
     then(function(response) {
@@ -281,7 +279,7 @@ app.controller("home.LMS.knowledgeBank.form", function($scope, $state, $users, $
 
       $scope.form.quesParts = $scope.form.quesParts.sort(function(a, b){return a.sequence - b.sequence});
       $scope.form.solutionParts = $scope.form.solutionParts.sort(function(a, b){return a.sequence - b.sequence});
-      $scope.form.optionsParts = = $scope.form.optionsParts.sort(function(a, b){return a.sequence - b.sequence});
+      $scope.form.optionsParts = $scope.form.optionsParts.sort(function(a, b){return a.sequence - b.sequence});
 
     })
 
