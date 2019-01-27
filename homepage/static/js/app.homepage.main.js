@@ -216,19 +216,6 @@ app.controller('main', function($scope, $http, $sce, $interval, $uibModal) {
 });
 
 
-app.config(function($stateProvider, $locationProvider) {
-  $stateProvider
-    .state('courses', {
-      url: "/courses/:courseType",
-      templateUrl: function(params) {
-        return '/courses/' + params.courseType + '/';
-      },
-      // controller: 'controller.chapter'
-    })
-
-
-})
-
 app.controller('exam', function($scope, $state, $http, $timeout, $interval, $uibModal, $stateParams, $sce, Flash, $location) {
 
   $scope.sublist = []

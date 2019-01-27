@@ -68,23 +68,13 @@ def blogDetails(request, blogname):
             prts = blogname.split('/')
             blogname = prts[0]
             subPart = prts[1]
-
-
-        # subjectobj = Subject.objects.all()
-
         level = str(blogname).split('-')[1]
         title = str(blogname).split('-')[2]
         sub = Subject.objects.get(title = title,level = int(level))
         print sub.pk
         print level,title,"------------hhhhh"
-        # try:
-            # subPk = int(str(blogname).split('__')[1])
-            # subTitle =(str(page).split('-')[1]).split('__')[0]
-            # print subTitle,'suuuuuuubbbbbbbbbbbbbbbjjjjjjjj'
-        # except:
-            # return redirect('courses')
         courseobjs = Course.objects.filter(topic__subject__pk=sub.pk)
-        # notesobj = Note.objects.all()
+        booklen = len(Book.objects.filter(subject__pk=sub.pk))
         subobjs = Subject.objects.all().order_by('level')
         books = []
         videoCourse = []
@@ -92,36 +82,19 @@ def blogDetails(request, blogname):
         referenceBook = []
         notes = []
         if subPart == 'Books':
-            # books = Book
             pass
         if subPart == 'videoCourse':
-            # books = Book
             pass
         if subPart == 'forum':
-            # books = Book
             pass
         if subPart == 'referenceBook':
-            # books = Book
             pass
         if subPart == 'notes':
-            # books = Book
             pass
-
         print "sub part" , subPart
 
-        return render(request, 'courses.html', {"courseobj":courseobjs,"subobj":subobjs,"level":level,"title":title , "subPart" : subPart} )
+        return render(request, 'courses.html', {"courseobj":courseobjs,"subobj":subobjs,"level":level,"title":title , "subPart" : subPart, "booklen":booklen} )
     try:
-        # print "searching for blog post"
-        # # print blogPost.objects.all()
-        # typ = None
-        # if blogname=='courses':
-        #     return render(request, 'courses.html', {})
-        # if '/' in blogname:
-        #     prts = blogname.split('/')
-        #     typ = prts[1]
-        #     print prts,'----------------------parts'
-        #     blogobj = blogPost.objects.get(shortUrl=prts[0])
-        # else:
         blogobj = blogPost.objects.get(shortUrl=blogname)
         print "got blog post"  , blogobj
 
@@ -141,19 +114,6 @@ def blogDetails(request, blogname):
             book = Book.objects.get(pk=blogobj.header)
             sectionobj = Section.objects.filter(book = book.pk)
             return render(request, 'book.html', {"home": False, "tagsCSV" :  blogobj.tagsCSV.split(','), 'book' : book ,'sectionobj':sectionobj,'blogobj' : blogobj, "brandLogo" : globalSettings.BRAND_LOGO , "brandLogoInverted": globalSettings.BRAND_LOGO_INVERT})
-        # elif blogobj.contentType == 'course':
-        #     if typ == 'books':
-        #         pass
-        #     elif typ == 'video-couse':
-        #         pass
-        #     elif typ == 'mock-tests':
-        #         pass
-        #     elif typ == 'forum':
-        #         pass
-        #     elif typ == 'reference-books':
-        #         pass
-        #     elif typ == 'notes':
-        #         pass
     except:
 
         traceback.print_exc(file=sys.stdout)

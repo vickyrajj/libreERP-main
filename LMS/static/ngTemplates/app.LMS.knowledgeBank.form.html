@@ -213,6 +213,12 @@
         <button type="button" class="btn btn-primary btn-sm" ng-if="qp.mode == 'text'" ng-click="quesPartsEdit($index)">
           Edit
         </button>&nbsp;
+        <button type="button" class="btn btn-default" ng-click="quesSecMove($index,'down')">
+          <i class="fa fa-arrow-down " ></i>
+        </button>
+        <button type="button" class="btn btn-default" ng-click="quesSecMove($index,'up')">
+          <i class="fa fa-arrow-up"></i>
+        </button>
           <span mathjax-bind="qp.txt" ng-if="qp.mode == 'text'"></span>
           <img ng-src="{{qp.image}}" style="width:90%;" ng-if="qp.mode == 'image'"> <br>
         </div>
@@ -261,10 +267,19 @@
         <button type="button" class="btn btn-primary btn-sm" ng-if="o.mode == 'text'" ng-click="solutionPartsEdit($index)">
           Edit
         </button>&nbsp;
+        <button type="button" class="btn btn-default" ng-click="solSecMove($index,'down')">
+          <i class="fa fa-arrow-down "></i>
+        </button>
+        <button type="button" class="btn btn-default" ng-click="solSecMove($index,'up')">
+          <i class="fa fa-arrow-up"></i>
+        </button>
         <span mathjax-bind="o.txt" ng-if="o.mode == 'text'"></span>
         <img ng-src="{{o.image}}" style="width:90%;" ng-if="o.mode == 'image'">
       </div>
     </div>
+    <button type="button" class="btn btn-success pull-right" ng-click="saveSequence()">
+      save
+    </button>
     <!-- {{form}} -->
   </div>
 

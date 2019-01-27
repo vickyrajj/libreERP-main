@@ -18,13 +18,12 @@
     </div>
     {% endif %}
 
-    {% verbatim %}
 
     <div class="container" style="padding-bottom:4em;">
       <div class="row" style="margin-top:4em;">
         <div class="col-md-6 col-xs-12">
           <div style="margin-right:2em;display:inline-block;">
-            <span style="font-size:30px;color:#000;"><b>Class 12 std</b></span>
+            <span style="font-size:30px;color:#000;"><b>Class {{level}} std</b></span>
           </div>
         </div>
       </div>
@@ -32,8 +31,8 @@
         <div class="col-md-3 col-xs-12 rightborder">
           <table>
             <tr>
-              <td style="width:35%;"><img src="/static/images/24tut/author1.png" class="img-responsive img-circle" style="height:50px;width:50px;" /></td>
-              <td><span style="font-size:20px;"><b>Video Course</b></span><br /><span style="color: #9E9E9E">Adden On 29 sep'18</span></td>
+              <td style="width:35%;"><img src="/static/images/BooksStack.png" class="img-responsive img-circle" style="height:70px;width:70px;" /></td>
+              <td><span style="font-size:20px;"><b>{{title}}</b></span><br /><span style="color: #9E9E9E">Adden On 29 sep'18</span></td>
             </tr>
           </table>
         </div>
@@ -41,7 +40,7 @@
           <table>
             <tr>
               <td style="width:25%;"><i class="fa fa-book"></i></td>
-              <td><span style="font-size:20px;"><b>3 Books</b></span></td>
+              <td><span style="font-size:20px;"><b>{{booklen}} Books</b></span></td>
             </tr>
           </table>
         </div>
@@ -75,41 +74,38 @@
 
       </div>
     </div>
-    {% endverbatim%}
 
-    <div class="container-fluid" style="background-color:#FCC300;min-height:10vh;  position:relative;padding-bottom: 2em;" ng-hide="device.smallDevice">
+    <div class="container-fluid" style="background-color:#FCC300;min-height:10vh;  position:relative;padding-bottom: 2em;">
       <div class="container">
         <div class="col-md-2 clickchange">
           <a href="/class-{{level}}-{{title}}/books/"><b>Books</b></a>
           <div ng-class="class1"></div>
         </div>
         <div class="col-md-2 clickchange">
-          <a href="/class-{{level}}-{{title}}/video-course/"><b>Video Course</b></a>
+          <a href="/class-{{level}}-{{title}}/videoCourse/"><b>Video Course</b></a>
           <div ng-class="class2"></div>
         </div>
-        <!-- <a href="/mock-test"> -->
-          <div class="col-md-2 clickchange">
-            <a href="/mock-test"><b>Test Series</b></a>
-            <div ng-class="class3"></div>
-          </div>
-        <!-- </a> -->
-        <!-- <a href="/forum"> -->
+        <div class="col-md-2 clickchange">
+          <a href="/mock-test"><b>Test Series</b></a>
+          <div ng-class="class3"></div>
+        </div>
         <div class="col-md-2 clickchange">
           <a href="/class-{{level}}-{{title}}/forum/"><b>Forum</b></a>
           <div ng-class="class4"></div>
         </div>
         <!-- </a> -->
         <div class="col-md-2 clickchange">
-          <a href="/class-{{level}}-{{title}}/reference-book"><b>Refernce Books</b></a>
+          <a href="/class-{{level}}-{{title}}/referenceBook/"><b>Refernce Books</b></a>
           <div ng-class="class5"></div>
         </div>
         <div class="col-md-2 clickchange">
-          <a href="/class-{{level}}-{{title}}/notes"><b>Notes</b></a>
+          <a href="/class-{{level}}-{{title}}/notes/"><b>Notes</b></a>
           <div ng-class="class6"></div>
         </div>
       </div>
     </div>
-    <div class="container-fluid"style="margin-top:20px;">
+    {% if not subPart %}
+    <div class="container-fluid" style="margin-top:20px;">
       <div class="col-md-8 col-md-offset-2">
         {% for c in courseobj %}
         <div class="col-md-3" style="display:inline-block;padding-bottom: 20px;">
@@ -122,45 +118,11 @@
         {% endfor %}
       </div>
     </div>
-    <!-- <div class="col-md-3">
-      <h4>Notes</h4>
-      <div class="container-fluid">
-        {% for n in notesobj %}
-        <div>
-          <span> <b>{{n.title}}</b> </span><br>
-          <span>{{n.description}}</span><br>
-          <span>{{c.description}}</span>
+    {% endif %}
 
-        </div>
-        {% endfor %}
-      </div>
-    </div> -->
-
+    {% if subPart == 'books' %}
     {% verbatim %}
-    <div class="container-fluid">
-      <div class="container" style="background-color:#FCC300;min-height:10vh;  position:relative;padding-bottom: 2em;">
-        <ng-owl-carousel class="owl-theme" owl-items="items" owl-properties="properties" owl-ready="ready($api)">
-          <div ng-repeat="a in items">
-            <div ng-if="$index==2">
-              <a href="/exam">
-                <div class="col-xs-12 clickchange" ng-class="a.class1" ng-click="clicks($index+1)">
-                  <span style="font-size:35px;"><b>{{a.head}}</b></span>
-                  <div ng-class="a.class2"></div>
-                </div>
-              </a>
-            </div>
-            <div ng-if="$index!=2">
-              <div class="col-xs-12 clickchange" ng-class="a.class1" ng-click="clicks($index+1)">
-                <span style="font-size:35px;"><b>{{a.head}}</b></span>
-                <div ng-class="a.class2"></div>
-              </div>
-            </div>
-
-          </div>
-        </ng-owl-carousel>
-      </div>
-    </div>
-
+    <h1>books</h1>
     <div class="container" ng-show="books">
       <div class="col-md-8 col-md-offset-2">
         <div ng-repeat="a in bookscontent">
@@ -194,16 +156,25 @@
         </div>
       </div>
     </div>
-    <div class="container-fluid no_padding" ng-show="videos">
+    {% endverbatim %}
+    {% endif %}
+
+    {% if subPart == 'videoCourse' %}
+
+    <h1>video course</h1>
+    <div class="container-fluid no_padding">
       <div class="col-md-12 min_padd text-center" style="background:#eee;">
-        <div class="col-md-3 video_card text-center" ng-repeat="i in subject">
+        <div class="col-md-3 video_card text-center">
           <a href="/courseVideo">
-            <h2>{{i.name}}</h2>
           </a>
         </div>
       </div>
     </div>
+    {% endif %}
 
+    {% if subPart == 'forum' %}
+    {% verbatim %}
+    <h1>forum</h1>
     <div class="container-fluid" ng-show="forum">
       <div ng-repeat="a in forumlist" style="margin-top:3em;">
         <div class="col-md-6 col-md-offset-3 col-xs-12 no_padding">
@@ -267,9 +238,14 @@
           </div>
         </div>
       </div>
-
     </div>
+    {% endverbatim %}
+    {% endif %}
 
+
+    {% if subPart == 'referenceBook' %}
+    {% verbatim %}
+    <h1>refbook</h1>
     <div class="container no_padding" ng-show="refbook">
       <div class="row min_padd text-center" style="">
         <div class="col-md-6" style="position: relative;" ng-repeat="b in refbooks">
@@ -298,6 +274,12 @@
         </div>
       </div>
     </div>
+    {% endverbatim %}
+    {% endif %}
+
+    {% if subPart == 'notes' %}
+    {% verbatim %}
+    <h1>notes</h1>
     <div class="container" ng-show="notes">
       <div class="row">
         <div class="col-md-10 col-md-offset-1">
@@ -319,29 +301,30 @@
         </div>
       </div>
     </div>
-  </div>
+    {% endverbatim %}
+    {% endif %}
 
-
-
-  <div class="container-fluid" style="background-color: #fff;">
-    <div class="container" style=" margin-bottom: 2em;text-align: center;">
-      <h1 style="margin-top:2em;"><b>Related Courses</b></h1>
-      <span class="heading_small">COURSES YOU MIGHT BE INTERESTED IN</span>
-      <div class="row" style="margin-bottom:2em;">
-        <div ng-repeat="a in cardss">
-          <div class="anim-in-out anim-zoom-out">
-            <div style="margin-top: 2em;">
-              <div class="col-md-4">
-                <div class="cardstype">
-                  <img src="{{a.img1}}" class="img-radiuss" alt="Avatar" style="width:100%">
-                  <div class="body1" style="background-color: #fff;border-bottom-left-radius: 10px;border-bottom-right-radius: 10px;">
-                    <h4 style="border-bottom:1px solid #C9C9C9;padding-bottom:1em;"><b>{{a.title}}</b></h4>
-                    <p style="padding-top:1em;">{{a.content}}</p>
-                    <table class="table-align">
-                      <td class="tablealign1"><span style="text-align: center"><img src="{{a.img2}}" class="img-responsive img-circle" style="height:50px;width:50px;"></span></td>
-                      <td class="tablealign2"><b>{{a.name}}</b></td>
-                      <td style="cursor:pointer;"><a href="/checkout" class="badge badge-pills">&#8377;{{a.price}}/hr</a></td>
-                    </table>
+    {% verbatim %}
+    <div class="container-fluid" style="background-color: #fff;">
+      <div class="container" style=" margin-bottom: 2em;text-align: center;">
+        <h1 style="margin-top:2em;"><b>Related Courses</b></h1>
+        <span class="heading_small">COURSES YOU MIGHT BE INTERESTED IN</span>
+        <div class="row" style="margin-bottom:2em;">
+          <div ng-repeat="a in cardss">
+            <div class="anim-in-out anim-zoom-out">
+              <div style="margin-top: 2em;">
+                <div class="col-md-4">
+                  <div class="cardstype">
+                    <img src="{{a.img1}}" class="img-radiuss" alt="Avatar" style="width:100%">
+                    <div class="body1" style="background-color: #fff;border-bottom-left-radius: 10px;border-bottom-right-radius: 10px;">
+                      <h4 style="border-bottom:1px solid #C9C9C9;padding-bottom:1em;"><b>{{a.title}}</b></h4>
+                      <p style="padding-top:1em;">{{a.content}}</p>
+                      <table class="table-align">
+                        <td class="tablealign1"><span style="text-align: center"><img src="{{a.img2}}" class="img-responsive img-circle" style="height:50px;width:50px;"></span></td>
+                        <td class="tablealign2"><b>{{a.name}}</b></td>
+                        <td style="cursor:pointer;"><a href="/checkout" class="badge badge-pills">&#8377;{{a.price}}/hr</a></td>
+                      </table>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -350,59 +333,58 @@
         </div>
       </div>
     </div>
+
+    <div class="container-fluid" style="min-height:60vh;background-color:#F9F9F9;">
+      <div class="col-md-12 min_padd text-center">
+        <h1 class="heading_big">eLearny's Testimonials</h1>
+        <h5 class="heading_small">WHAT STUDENTS THINK OF US</h5>
+      </div>
+      <div class="col-md-8 col-md-offset-2">
+        <div class="col-md-4">
+          <div class="container-fluid tell_card">
+            <img src="/static/images/24tut/tell1.jpeg" class="tell_abt">
+            <img src="/static/images/24tut/clip.png" class="tell_abt_overlay">
+            <div class="text-center tell_c_info">
+              <h2 class="pro_head">Lauren Ralph</h2>
+              <h5 class="text-muted">eLearny Student</h5>
+              <div class="" style="padding:10px 30px;line-height:2;">
+                <span class="heading_small">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod sed do eiusmod.</span>
+                <img src="/static/images/24tut/qleft.png" class="quotes_img">
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="container-fluid tell_card">
+            <img src="/static/images/24tut/tell2.jpeg" class="tell_abt">
+            <img src="/static/images/24tut/clip.png" class="tell_abt_overlay">
+            <div class="text-center  tell_c_info">
+              <h2 class="pro_head">Stan Lee</h2>
+              <h5 class="text-muted">Music Student</h5>
+              <div class="" style="padding:10px 30px;line-height:2;">
+                <span class="heading_small">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod sed do eiusmod.</span>
+                <img src="/static/images/24tut/qleft.png" class="quotes_img">
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="container-fluid tell_card">
+            <img src="/static/images/24tut/tell5.png" class="tell_abt">
+            <img src="/static/images/24tut/clip.png" class="tell_abt_overlay">
+            <div class="text-center tell_c_info">
+              <h2 class="pro_head">Joseph Irvin</h2>
+              <h5 class="text-muted">Programmer</h5>
+              <div class="" style="padding:10px 30px;line-height:2;">
+                <span class="heading_small">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod sed do eiusmod.</span>
+                <img src="/static/images/24tut/qleft.png" class="quotes_img">
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 
-  <div class="container-fluid" style="min-height:60vh;background-color:#F9F9F9;">
-    <div class="col-md-12 min_padd text-center">
-      <h1 class="heading_big">eLearny's Testimonials</h1>
-      <h5 class="heading_small">WHAT STUDENTS THINK OF US</h5>
-    </div>
-    <div class="col-md-8 col-md-offset-2">
-      <div class="col-md-4">
-        <div class="container-fluid tell_card">
-          <img src="/static/images/24tut/tell1.jpeg" class="tell_abt">
-          <img src="/static/images/24tut/clip.png" class="tell_abt_overlay">
-          <div class="text-center tell_c_info">
-            <h2 class="pro_head">Lauren Ralph</h2>
-            <h5 class="text-muted">eLearny Student</h5>
-            <div class="" style="padding:10px 30px;line-height:2;">
-              <span class="heading_small">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod sed do eiusmod.</span>
-              <img src="/static/images/24tut/qleft.png" class="quotes_img">
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="col-md-4">
-        <div class="container-fluid tell_card">
-          <img src="/static/images/24tut/tell2.jpeg" class="tell_abt">
-          <img src="/static/images/24tut/clip.png" class="tell_abt_overlay">
-          <div class="text-center  tell_c_info">
-            <h2 class="pro_head">Stan Lee</h2>
-            <h5 class="text-muted">Music Student</h5>
-            <div class="" style="padding:10px 30px;line-height:2;">
-              <span class="heading_small">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod sed do eiusmod.</span>
-              <img src="/static/images/24tut/qleft.png" class="quotes_img">
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="col-md-4">
-        <div class="container-fluid tell_card">
-          <img src="/static/images/24tut/tell5.png" class="tell_abt">
-          <img src="/static/images/24tut/clip.png" class="tell_abt_overlay">
-          <div class="text-center tell_c_info">
-            <h2 class="pro_head">Joseph Irvin</h2>
-            <h5 class="text-muted">Programmer</h5>
-            <div class="" style="padding:10px 30px;line-height:2;">
-              <span class="heading_small">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod sed do eiusmod.</span>
-              <img src="/static/images/24tut/qleft.png" class="quotes_img">
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-
-{% endverbatim %}
-{% endblock %}
+  {% endverbatim %}
+  {% endblock %}
