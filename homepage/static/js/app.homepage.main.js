@@ -232,10 +232,17 @@ app.config(function($stateProvider, $locationProvider) {
 })
 
 app.controller('exam', function($scope, $state, $http, $timeout, $interval, $uibModal, $stateParams, $sce, Flash, $location) {
-  $scope.list = []
-  $http.get('/api/LMS/paper/1').then(function(response){
-    $scope.list.push(response.data);
+
+
+  $http({
+    method: 'GET',
+    url: '/api/LMS/paper/'
+  }).then(function(response) {
+    $scope.paperData = response.data
+    console.log($scope.paperData,'----------ppapapapapa');
   })
+
+
     console.log(  $scope.list ,'yyyyyyyy');
   $scope.questionList = [{
       subject: "Maths",
