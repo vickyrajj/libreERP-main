@@ -85,6 +85,7 @@ def blogDetails(request, blogname):
             # return redirect('courses')
         courseobjs = Course.objects.filter(topic__subject__pk=sub.pk)
         # notesobj = Note.objects.all()
+        booklen = len(Book.objects.filter(subject__pk=sub.pk))
         subobjs = Subject.objects.all().order_by('level')
         books = []
         videoCourse = []
@@ -109,7 +110,7 @@ def blogDetails(request, blogname):
 
         print "sub part" , subPart
 
-        return render(request, 'courses.html', {"courseobj":courseobjs,"subobj":subobjs,"level":level,"title":title , "subPart" : subPart} )
+        return render(request, 'courses.html', {"courseobj":courseobjs,"subobj":subobjs,"level":level,"title":title , "subPart" : subPart, "booklen":booklen} )
     try:
         # print "searching for blog post"
         # # print blogPost.objects.all()

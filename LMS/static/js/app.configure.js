@@ -231,6 +231,7 @@ app.controller("home.LMS.configure.form", function($scope, $state, $users, $stat
           title: '',
           shortUrl: '',
           description: '',
+          seoTitle: '',
         }
         $scope.cancelSection = function() {
           $uibModalInstance.dismiss()
@@ -251,6 +252,7 @@ app.controller("home.LMS.configure.form", function($scope, $state, $users, $stat
             shortUrl: $scope.Sectionform.shortUrl,
             book: bookData.pk,
             description: $scope.Sectionform.description,
+            seoTitle: $scope.Sectionform.seoTitle,
           }
 
           $http({
@@ -311,15 +313,12 @@ app.controller("home.LMS.configure.form", function($scope, $state, $users, $stat
             Flash.create('warning', 'Please Mention Some Title')
             return;
           }
-          if ($scope.Sectionform.shortUrl != secItem.shortUrl) {
-            Flash.create('warning', 'cannot Edit shortUrl')
-            return;
-          }
           var secData = {
             title: $scope.Sectionform.title,
             shortUrl: $scope.Sectionform.shortUrl,
             book: bookData.pk,
             description: $scope.Sectionform.description,
+            seoTitle: $scope.Sectionform.seoTitle,
           }
 
           $http({

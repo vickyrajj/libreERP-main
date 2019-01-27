@@ -42,7 +42,7 @@ class SectionSerializer(serializers.ModelSerializer):
     # book = BookSerializer(many = False , read_only = True)
     class Meta:
         model = Section
-        fields = ('pk' , 'title' , 'book','sequence' ,'shortUrl','description')
+        fields = ('pk' , 'title' , 'book','sequence' ,'shortUrl','description','seoTitle')
 
 
 class BookSerializer(serializers.ModelSerializer):
@@ -61,7 +61,7 @@ class BookSerializer(serializers.ModelSerializer):
 class QPartSerializer(serializers.ModelSerializer):
     class Meta:
         model = QPart
-        fields = ('pk' , 'mode' , 'txt', 'image' )
+        fields = ('pk' , 'mode' , 'txt', 'image' ,'sequence')
 
 class SubjectLiteSerializer(serializers.ModelSerializer):
     class Meta:

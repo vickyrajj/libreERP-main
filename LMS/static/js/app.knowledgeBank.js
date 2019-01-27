@@ -1,4 +1,4 @@
-app.config(function($stateProvider){
+app.config(function($stateProvider) {
   $stateProvider.state('home.knowledgeBank', {
     url: "/knowledgeBank",
     templateUrl: '/static/ngTemplates/app.LMS.knowledgeBank.html',
@@ -13,13 +13,13 @@ app.config(function($stateProvider){
 
 app.controller("home.LMS.knowledgeBank.book.explore", function($scope, $state, $users, $stateParams, $http, Flash) {
   $scope.bookData = $scope.bookDetails
-  $scope.showQues = function(idx){
+  $scope.showQues = function(idx) {
     $scope.sectionQuestion = $scope.bookData.sections[idx].questions
     $scope.view.typ = 'questions'
   }
-  console.log('ccccccccccccc',$scope.bookData);
+  console.log('ccccccccccccc', $scope.bookData);
 
-  $scope.editQuestion = function(idx){
+  $scope.editQuestion = function(idx) {
     $scope.$parent.$parent.$parent.$parent.$parent.$parent.addTab({
       title: 'EditBookQuestion : ' + $scope.sectionQuestion[idx].pk,
       cancel: true,
@@ -39,7 +39,7 @@ app.controller("home.LMS.knowledgeBank.book.explore", function($scope, $state, $
       active: true
     }));
   }
-  $scope.viewAnswer = function(idx){
+  $scope.viewAnswer = function(idx) {
     $scope.$parent.$parent.$parent.$parent.$parent.$parent.addTab({
       title: 'View Solution : ' + $scope.sectionQuestion[idx].pk,
       cancel: true,
@@ -62,7 +62,7 @@ app.controller("home.LMS.knowledgeBank.book.explore", function($scope, $state, $
 })
 
 
-app.controller("home.LMS.knowledgeBank", function($scope,$timeout,$filter, $state, $users, $stateParams, $http, Flash) {
+app.controller("home.LMS.knowledgeBank", function($scope, $timeout, $filter, $state, $users, $stateParams, $http, Flash) {
 
   $scope.data = {
     tableData: [],
@@ -87,7 +87,10 @@ app.controller("home.LMS.knowledgeBank", function($scope,$timeout,$filter, $stat
   $scope.config = {
     views: views,
     url: '/api/LMS/question/',
-    getParams : [{key : 'typ' , value : 'bank'},],
+    getParams: [{
+      key: 'typ',
+      value: 'bank'
+    }, ],
     searchField: 'ques',
     deletable: true,
     itemsNumPerView: [16, 32, 48],
@@ -136,7 +139,7 @@ app.controller("home.LMS.knowledgeBank", function($scope,$timeout,$filter, $stat
 
     for (var i = 0; i < $scope.data.booksTableData.length; i++) {
       if ($scope.data.booksTableData[i].pk == parseInt(target)) {
-        if (action == 'details'){
+        if (action == 'details') {
           var title = 'Details :';
           var appType = 'BookExplorer';
         }
@@ -150,23 +153,23 @@ app.controller("home.LMS.knowledgeBank", function($scope,$timeout,$filter, $stat
             url: '/api/LMS/question/?bookSection=' + $scope.bookDetails.sections[j].pk,
           }).
           then((function(j) {
-            return function(response){
+            return function(response) {
               $scope.bookDetails.sections[j].questions = response.data
             }
           })(j))
         }
         console.log($scope.bookDetails);
         // $timeout(function(){
-          $scope.addTab({
-            title: title + $scope.bookDetails.pk,
-            cancel: true,
-            app: appType,
-            data:{
-              pk: target,
-              index: i
-            },
-            active: true
-          })
+        $scope.addTab({
+          title: title + $scope.bookDetails.pk,
+          cancel: true,
+          app: appType,
+          data: {
+            pk: target,
+            index: i
+          },
+          active: true
+        })
         // },1000);
       }
     }
@@ -205,34 +208,34 @@ app.controller("home.LMS.knowledgeBank", function($scope,$timeout,$filter, $stat
 
 });
 
-app.controller("home.LMS.knowledgeBank.form", function($scope, $state, $users, $stateParams, $http, Flash) {
+app.controller("home.LMS.knowledgeBank.form", function($scope, $state, $users, $stateParams, $http, Flash, $filter) {
 
-  console.log($scope.tab);
+  console.log($scope.tab,'tabbbbbbbbbbbb------------');
 
   $scope.subjectSearch = function(query) {
-    return $http.get( '/api/LMS/subject/?title__contains=' + query).
-    then(function(response){
+    return $http.get('/api/LMS/subject/?title__contains=' + query).
+    then(function(response) {
       return response.data;
     })
   };
 
   $scope.topicSearch = function(query) {
-    return $http.get( '/api/LMS/topic/?title__contains=' + query +'&subject='+ $scope.form.subject.pk).
-    then(function(response){
+    return $http.get('/api/LMS/topic/?title__contains=' + query + '&subject=' + $scope.form.subject.pk).
+    then(function(response) {
       return response.data;
     })
   };
 
   $scope.bookSearch = function(query) {
-    return $http.get( '/api/LMS/book/?title__contains=' + query).
-    then(function(response){
+    return $http.get('/api/LMS/book/?title__contains=' + query).
+    then(function(response) {
       return response.data;
     })
   };
 
   $scope.sectionSearch = function(query) {
-    return $http.get( '/api/LMS/section/?title__contains=' + query +'&book='+ $scope.form.book.pk).
-    then(function(response){
+    return $http.get('/api/LMS/section/?title__contains=' + query + '&book=' + $scope.form.book.pk).
+    then(function(response) {
       return response.data;
     })
   };
@@ -241,7 +244,10 @@ app.controller("home.LMS.knowledgeBank.form", function($scope, $state, $users, $
 
   $scope.fetchQuestion = function(pk) {
 
-    $http({method : 'GET' , url : '/api/LMS/question/' + pk + '/'}).
+    $http({
+      method: 'GET',
+      url: '/api/LMS/question/' + pk + '/'
+    }).
     then(function(response) {
       $scope.form = response.data;
       $scope.form.quesPartTxt = '';
@@ -249,7 +255,7 @@ app.controller("home.LMS.knowledgeBank.form", function($scope, $state, $users, $
       $scope.form.quesPartFile = emptyFile;
       $scope.form.optionTxt = '';
       $scope.form.textModeOption = false;
-      $scope.form.optionFile= emptyFile;
+      $scope.form.optionFile = emptyFile;
 
       // if ($scope.form.bookSection != null) {
       //   $scope.form.typ = 'book';
@@ -257,11 +263,11 @@ app.controller("home.LMS.knowledgeBank.form", function($scope, $state, $users, $
       //   $scope.form.typ = 'bank';
       // }
 
-      $scope.form.answer= response.data.objectiveAnswer;
+      $scope.form.answer = response.data.objectiveAnswer;
       $scope.form.solutionVideoPath = response.data.solutionVideo;
       $scope.form.solutionVideo = emptyFile;
 
-      if (response.data.topic != null ) {
+      if (response.data.topic != null) {
         $scope.form.subject = response.data.topic.subject;
         $scope.form.topic = response.data.topic;
       }
@@ -272,70 +278,84 @@ app.controller("home.LMS.knowledgeBank.form", function($scope, $state, $users, $
 
       $scope.mode = 'edit';
 
+
+      $scope.form.quesParts = $scope.form.quesParts.sort(function(a, b){return a.sequence - b.sequence});
+      $scope.form.solutionParts = $scope.form.solutionParts.sort(function(a, b){return a.sequence - b.sequence});
+      $scope.form.optionsParts = = $scope.form.optionsParts.sort(function(a, b){return a.sequence - b.sequence});
+
     })
 
 
   }
 
   $scope.removePart = function(indx) {
-    $http({method : 'DELETE' , url : '/api/LMS/qPart/' + $scope.form.quesParts[indx].pk + '/' }).
+    $http({
+      method: 'DELETE',
+      url: '/api/LMS/qPart/' + $scope.form.quesParts[indx].pk + '/'
+    }).
     then((function(indx) {
       return function(response) {
-        $scope.form.quesParts.splice(indx , 1);
+        $scope.form.quesParts.splice(indx, 1);
       }
     })(indx))
   }
   $scope.removeOption = function(indx) {
-    $http({method : 'DELETE' , url : '/api/LMS/qPart/' + $scope.form.optionsParts[indx].pk + '/' }).
+    $http({
+      method: 'DELETE',
+      url: '/api/LMS/qPart/' + $scope.form.optionsParts[indx].pk + '/'
+    }).
     then((function(indx) {
       return function(response) {
-        $scope.form.optionsParts.splice(indx , 1);
+        $scope.form.optionsParts.splice(indx, 1);
       }
     })(indx))
   }
-  $scope.removeSolution= function(indx) {
-    $http({method : 'DELETE' , url : '/api/LMS/qPart/' + $scope.form.solutionParts[indx].pk + '/' }).
+  $scope.removeSolution = function(indx) {
+    $http({
+      method: 'DELETE',
+      url: '/api/LMS/qPart/' + $scope.form.solutionParts[indx].pk + '/'
+    }).
     then((function(indx) {
       return function(response) {
-        $scope.form.solutionParts.splice(indx , 1);
+        $scope.form.solutionParts.splice(indx, 1);
       }
     })(indx))
   }
 
   $scope.updateQesPart = null
   $scope.updateQuesPartIndex = null
-  $scope.quesPartsEdit = function(idx){
-    console.log('quespartssssssssssss',idx);
+  $scope.quesPartsEdit = function(idx) {
+    console.log('quespartssssssssssss', idx);
     console.log($scope.form.quesParts);
     $scope.form.textMode = true
     $scope.form.quesPartTxt = $scope.form.quesParts[idx].txt
     $scope.updateQesPart = $scope.form.quesParts[idx].pk
     $scope.updateQuesPartIndex = idx
-    $scope.form.quesParts.splice(idx , 1);
+    $scope.form.quesParts.splice(idx, 1);
   }
 
   $scope.updateOptPart = null
   $scope.updateOptPartIndex = null
-  $scope.optionPartsEdit = function(idx){
-    console.log('quespartssssssssssss',idx);
+  $scope.optionPartsEdit = function(idx) {
+    console.log('quespartssssssssssss', idx);
     console.log($scope.form.optionsParts);
     $scope.form.textModeOption = true
     $scope.form.optionTxt = $scope.form.optionsParts[idx].txt
     $scope.updateOptPart = $scope.form.optionsParts[idx].pk
     $scope.updateOptPartIndex = idx
-    $scope.form.optionsParts.splice(idx , 1);
+    $scope.form.optionsParts.splice(idx, 1);
   }
 
   $scope.updateSolPart = null
   $scope.updateSolPartIndex = null
-  $scope.solutionPartsEdit = function(idx){
-    console.log('quespartssssssssssss',idx);
+  $scope.solutionPartsEdit = function(idx) {
+    console.log('quespartssssssssssss', idx);
     console.log($scope.form.solutionParts);
     $scope.form.textModeSolution = true
     $scope.form.solutionTxt = $scope.form.solutionParts[idx].txt
     $scope.updateSolPart = $scope.form.solutionParts[idx].pk
     $scope.updateSolPartIndex = idx
-    $scope.form.solutionParts.splice(idx , 1);
+    $scope.form.solutionParts.splice(idx, 1);
   }
 
   $scope.resetForm = function() {
@@ -344,7 +364,7 @@ app.controller("home.LMS.knowledgeBank.form", function($scope, $state, $users, $
       var topic = $scope.form.topic;
       var book = $scope.form.book;
       var bookSection = $scope.form.bookSection
-    }else{
+    } else {
       var subject = '';
       var topic = '';
       var book = '';
@@ -352,7 +372,24 @@ app.controller("home.LMS.knowledgeBank.form", function($scope, $state, $users, $
     }
 
     $scope.mode = 'new';
-    $scope.form = {ques : '' , quesParts : [], quesPartTxt : '' , textMode : false , quesPartFile : emptyFile , optionsParts : [], optionTxt : '' , optionFile : emptyFile   , textModeOption : false , level : 'easy' ,qtype : 'mcq' , typ : '' , solutionParts : [] , answer : '' , solutionVideo : emptyFile , solutionVideoPath : ''}
+    $scope.form = {
+      ques: '',
+      quesParts: [],
+      quesPartTxt: '',
+      textMode: false,
+      quesPartFile: emptyFile,
+      optionsParts: [],
+      optionTxt: '',
+      optionFile: emptyFile,
+      textModeOption: false,
+      level: 'easy',
+      qtype: 'mcq',
+      typ: '',
+      solutionParts: [],
+      answer: '',
+      solutionVideo: emptyFile,
+      solutionVideoPath: ''
+    }
 
     $scope.form.subject = subject;
     $scope.form.topic = topic;
@@ -368,19 +405,19 @@ app.controller("home.LMS.knowledgeBank.form", function($scope, $state, $users, $
   }
 
   // $scope.form.ques = " Is it true that \\(x^n + y^n = z^n\\) if \\(x,y,z\\) and \\(n\\) are positive integers?. Explain.";
-  console.log('QQQQQQQQQQ',$scope.form);
+  console.log('QQQQQQQQQQ', $scope.form);
   $scope.saveQuestion = function() {
 
     if ($scope.form.typ == null || $scope.form.typ.length == 0) {
       Flash.create('warning', 'Please select a Type');
       return;
-    }else {
+    } else {
       if ($scope.form.typ == 'book') {
-        if ($scope.form.bookSection.length>0 && !$scope.form.bookSection.pk) {
+        if ($scope.form.bookSection.length > 0 && !$scope.form.bookSection.pk) {
           Flash.create('warning', 'Please select a valid Section');
           return;
         }
-      }else {
+      } else {
         if ($scope.form.topic.length > 0 && !$scope.form.topic.pk) {
           Flash.create('warning', 'Please select a valid topic');
           return;
@@ -396,14 +433,14 @@ app.controller("home.LMS.knowledgeBank.form", function($scope, $state, $users, $
     var f = $scope.form;
     console.log(f);
     var toSend = {
-      ques : f.ques,
-      typ : f.typ,
-      level : f.level,
-      qtype : f.qtype,
+      ques: f.ques,
+      typ: f.typ,
+      level: f.level,
+      qtype: f.qtype,
       solutionVideoLink: f.solutionVideoLink,
     }
     if (f.answer != null && f.answer.length > 0) {
-      toSend.objectiveAnswer= f.answer;
+      toSend.objectiveAnswer = f.answer;
     }
 
 
@@ -411,10 +448,10 @@ app.controller("home.LMS.knowledgeBank.form", function($scope, $state, $users, $
       if ($scope.form.bookSection.pk) {
         console.log('book');
         toSend.bookSection = f.bookSection.pk
-      }else {
+      } else {
         toSend.typ = 'bank'
       }
-    }else {
+    } else {
       if ($scope.form.topic.pk) {
         console.log('bank');
         toSend.topic = f.topic.pk
@@ -424,17 +461,21 @@ app.controller("home.LMS.knowledgeBank.form", function($scope, $state, $users, $
     var url = '/api/LMS/question/';
     if (!$scope.form.pk) {
       var method = 'POST';
-    }else {
+    } else {
       var method = 'PATCH';
       url += f.pk + '/'
     }
 
-    $http({method : method , url : url , data : toSend}).
+    $http({
+      method: method,
+      url: url,
+      data: toSend
+    }).
     then(function(response) {
 
 
       $scope.mode = 'edit';
-      Flash.create('success' , 'Saved');
+      Flash.create('success', 'Saved');
       $scope.form.pk = response.data.pk;
       if ($scope.form.solutionVideo == emptyFile || $scope.form.solutionVideo == null || typeof $scope.form.solutionVideo == 'string') {
         return;
@@ -442,12 +483,12 @@ app.controller("home.LMS.knowledgeBank.form", function($scope, $state, $users, $
 
 
       var fd = new FormData();
-      fd.append('solutionVideo' , $scope.form.solutionVideo);
+      fd.append('solutionVideo', $scope.form.solutionVideo);
 
       var url = '/api/LMS/question/';
       if (!$scope.form.pk) {
         var method = 'POST';
-      }else {
+      } else {
         var method = 'PATCH';
         url += $scope.form.pk + '/'
       }
@@ -462,7 +503,7 @@ app.controller("home.LMS.knowledgeBank.form", function($scope, $state, $users, $
         }
       }).
       then(function(response) {
-        Flash.create('success' , 'Saved');
+        Flash.create('success', 'Saved');
         $scope.form.solutionVideoPath = response.data.solutionVideo;
       })
 
@@ -473,19 +514,19 @@ app.controller("home.LMS.knowledgeBank.form", function($scope, $state, $users, $
     var toSend = new FormData();
 
     if ($scope.form.textMode) {
-      toSend.append('txt' , $scope.form.quesPartTxt);
-      toSend.append('mode' , 'text');
+      toSend.append('txt', $scope.form.quesPartTxt);
+      toSend.append('mode', 'text');
       if ($scope.form.quesPartTxt == '') {
         return;
       }
-    }else {
-      toSend.append('image' , $scope.form.quesPartFile);
-      toSend.append('mode' , 'image');
+    } else {
+      toSend.append('image', $scope.form.quesPartFile);
+      toSend.append('mode', 'image');
     }
     if ($scope.updateQesPart != null) {
       var method = 'PATCH'
       var url = '/api/LMS/qPart/' + $scope.updateQesPart + '/'
-    }else {
+    } else {
       var method = 'POST'
       var url = '/api/LMS/qPart/'
     }
@@ -500,7 +541,13 @@ app.controller("home.LMS.knowledgeBank.form", function($scope, $state, $users, $
     }).
     then(function(response) {
       $scope.updateQesPart = null
-      $http({method : 'PATCH' , url : '/api/LMS/question/' + $scope.form.pk + '/' , data : {qPartToAdd : response.data.pk}}).
+      $http({
+        method: 'PATCH',
+        url: '/api/LMS/question/' + $scope.form.pk + '/',
+        data: {
+          qPartToAdd: response.data.pk
+        }
+      }).
       then((function(response) {
         return function(res) {
           Flash.create('success', 'Saved');
@@ -508,17 +555,17 @@ app.controller("home.LMS.knowledgeBank.form", function($scope, $state, $users, $
           $scope.form.quesPartFile = emptyFile;
           if ($scope.updateQuesPartIndex != null) {
             if ($scope.updateQuesPartIndex == 0) {
-              if ($scope.form.quesParts.length>0) {
-                $scope.form.quesParts.splice($scope.updateQuesPartIndex,0,response.data);
-              }else {
+              if ($scope.form.quesParts.length > 0) {
+                $scope.form.quesParts.splice($scope.updateQuesPartIndex, 0, response.data);
+              } else {
                 $scope.form.quesParts.push(response.data);
               }
-            }else if ($scope.updateQuesPartIndex == $scope.form.quesParts.length) {
+            } else if ($scope.updateQuesPartIndex == $scope.form.quesParts.length) {
               $scope.form.quesParts.push(response.data);
-            }else {
-              $scope.form.quesParts.splice($scope.updateQuesPartIndex,0,response.data);
+            } else {
+              $scope.form.quesParts.splice($scope.updateQuesPartIndex, 0, response.data);
             }
-          }else {
+          } else {
             $scope.form.quesParts.push(response.data);
           }
           $scope.updateQuesPartIndex = null
@@ -528,7 +575,6 @@ app.controller("home.LMS.knowledgeBank.form", function($scope, $state, $users, $
 
   }
 
-
   $scope.addSolution = function() {
 
     var toSend = new FormData();
@@ -537,16 +583,16 @@ app.controller("home.LMS.knowledgeBank.form", function($scope, $state, $users, $
       if ($scope.form.solutionTxt == '') {
         return;
       }
-      toSend.append('txt' , $scope.form.solutionTxt);
-      toSend.append('mode' , 'text');
-    }else {
-      toSend.append('image' , $scope.form.solutionFile);
-      toSend.append('mode' , 'image');
+      toSend.append('txt', $scope.form.solutionTxt);
+      toSend.append('mode', 'text');
+    } else {
+      toSend.append('image', $scope.form.solutionFile);
+      toSend.append('mode', 'image');
     }
     if ($scope.updateSolPart != null) {
       var method = 'PATCH'
       var url = '/api/LMS/qPart/' + $scope.updateSolPart + '/'
-    }else {
+    } else {
       var method = 'POST'
       var url = '/api/LMS/qPart/'
     }
@@ -562,7 +608,13 @@ app.controller("home.LMS.knowledgeBank.form", function($scope, $state, $users, $
     }).
     then(function(response) {
       $scope.updateSolPart = null
-      $http({method : 'PATCH' , url : '/api/LMS/question/' + $scope.form.pk + '/' , data : {qSolutionToAdd : response.data.pk}}).
+      $http({
+        method: 'PATCH',
+        url: '/api/LMS/question/' + $scope.form.pk + '/',
+        data: {
+          qSolutionToAdd: response.data.pk
+        }
+      }).
       then((function(response) {
         return function(res) {
           Flash.create('success', 'Saved');
@@ -570,17 +622,17 @@ app.controller("home.LMS.knowledgeBank.form", function($scope, $state, $users, $
           $scope.form.solutionFile = emptyFile;
           if ($scope.updateSolPartIndex != null) {
             if ($scope.updateSolPartIndex == 0) {
-              if ($scope.form.solutionParts.length>0) {
-                $scope.form.solutionParts.splice($scope.updateSolPartIndex,0,response.data);
-              }else {
+              if ($scope.form.solutionParts.length > 0) {
+                $scope.form.solutionParts.splice($scope.updateSolPartIndex, 0, response.data);
+              } else {
                 $scope.form.solutionParts.push(response.data);
               }
-            }else if ($scope.updateSolPartIndex == $scope.form.solutionParts.length) {
+            } else if ($scope.updateSolPartIndex == $scope.form.solutionParts.length) {
               $scope.form.solutionParts.push(response.data);
-            }else {
-              $scope.form.solutionParts.splice($scope.updateSolPartIndex,0,response.data);
+            } else {
+              $scope.form.solutionParts.splice($scope.updateSolPartIndex, 0, response.data);
             }
-          }else {
+          } else {
             $scope.form.solutionParts.push(response.data);
           }
           $scope.updateSolPartIndex = null
@@ -598,17 +650,17 @@ app.controller("home.LMS.knowledgeBank.form", function($scope, $state, $users, $
       if ($scope.form.optionTxt == '') {
         return;
       }
-      toSend.append('txt' , $scope.form.optionTxt);
-      toSend.append('mode' , 'text');
-    }else {
-      toSend.append('image' , $scope.form.optionFile);
-      toSend.append('mode' , 'image');
+      toSend.append('txt', $scope.form.optionTxt);
+      toSend.append('mode', 'text');
+    } else {
+      toSend.append('image', $scope.form.optionFile);
+      toSend.append('mode', 'image');
     }
 
     if ($scope.updateOptPart != null) {
       var method = 'PATCH'
       var url = '/api/LMS/qPart/' + $scope.updateOptPart + '/'
-    }else {
+    } else {
       var method = 'POST'
       var url = '/api/LMS/qPart/'
     }
@@ -624,7 +676,13 @@ app.controller("home.LMS.knowledgeBank.form", function($scope, $state, $users, $
     }).
     then(function(response) {
       $scope.updateOptPart = null
-      $http({method : 'PATCH' , url : '/api/LMS/question/' + $scope.form.pk + '/' , data : {qOptionToAdd : response.data.pk}}).
+      $http({
+        method: 'PATCH',
+        url: '/api/LMS/question/' + $scope.form.pk + '/',
+        data: {
+          qOptionToAdd: response.data.pk
+        }
+      }).
       then((function(response) {
         return function(res) {
           Flash.create('success', 'Saved');
@@ -632,23 +690,84 @@ app.controller("home.LMS.knowledgeBank.form", function($scope, $state, $users, $
           $scope.form.emptyFileOption = emptyFile;
           if ($scope.updateOptPartIndex != null) {
             if ($scope.updateOptPartIndex == 0) {
-              if ($scope.form.optionsParts.length>0) {
-                $scope.form.optionsParts.splice($scope.updateOptPartIndex,0,response.data);
-              }else {
+              if ($scope.form.optionsParts.length > 0) {
+                $scope.form.optionsParts.splice($scope.updateOptPartIndex, 0, response.data);
+              } else {
                 $scope.form.optionsParts.push(response.data);
               }
-            }else if ($scope.updateOptPartIndex == $scope.form.optionsParts.length) {
+            } else if ($scope.updateOptPartIndex == $scope.form.optionsParts.length) {
               $scope.form.optionsParts.push(response.data);
-            }else {
-              $scope.form.optionsParts.splice($scope.updateOptPartIndex,0,response.data);
+            } else {
+              $scope.form.optionsParts.splice($scope.updateOptPartIndex, 0, response.data);
             }
-          }else {
+          } else {
             $scope.form.optionsParts.push(response.data);
           }
           $scope.updateOptPartIndex = null
         }
       })(response))
     })
+  }
+
+  $scope.quesSecMove = function(index, position) {
+    console.log('clickkkkkkk-----que sec', index, position);
+    if ($scope.form.quesParts.length > 1) {
+      var a = $scope.form.quesParts[index]
+      if (position == 'up') {
+        if (index > 0) {
+          $scope.form.quesParts.splice(index, 1)
+          $scope.form.quesParts.splice(index - 1, 0, a)
+        }
+      } else {
+        if (index < $scope.form.quesParts.length - 1) {
+          $scope.form.quesParts.splice(index, 1)
+          $scope.form.quesParts.splice(index + 1, 0, a)
+        }
+      }
+    }
+  }
+  $scope.solSecMove = function(index, position) {
+    console.log('clickkkkkkk-----sol sec', index, position);
+    if ($scope.form.solutionParts.length > 1) {
+      var a = $scope.form.solutionParts[index]
+      if (position == 'up') {
+        if (index > 0) {
+          $scope.form.solutionParts.splice(index, 1)
+          $scope.form.solutionParts.splice(index - 1, 0, a)
+        }
+      } else {
+        if (index < $scope.form.solutionParts.length - 1) {
+          $scope.form.solutionParts.splice(index, 1)
+          $scope.form.solutionParts.splice(index + 1, 0, a)
+        }
+      }
+    }
+  }
+  $scope.saveSequence = function() {
+    for (var i = 0; i < $scope.form.solutionParts.length; i++) {
+      $http({
+        method: 'PATCH',
+        url: '/api/LMS/qPart/' + $scope.form.solutionParts[i].pk + '/',
+        data: {
+          sequence: i
+        }
+      }).
+      then(function(response) {
+        Flash.create('success', 'Saved');
+      })
+    }
+    for (var i = 0; i < $scope.form.quesParts.length; i++) {
+      $http({
+        method: 'PATCH',
+        url: '/api/LMS/qPart/' + $scope.form.quesParts[i].pk + '/',
+        data: {
+          sequence: i
+        }
+      }).
+      then(function(response) {
+        Flash.create('success', 'Saved');
+      })
+    }
   }
 
 

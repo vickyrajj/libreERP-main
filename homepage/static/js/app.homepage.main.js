@@ -11,18 +11,7 @@ app.config(function($stateProvider, $urlRouterProvider, $httpProvider) {
   $httpProvider.defaults.withCredentials = true;
 
 })
-app.factory('dataShare', function($rootScope) {
-  var service = {};
-  service.data = false;
-  service.sendData = function(data) {
-    this.data = data;
-    $rootScope.$broadcast('data_shared');
-  };
-  service.getData = function() {
-    return this.data;
-  };
-  return service;
-});
+
 
 app.controller('main', function($scope, $http, $sce, $interval, $uibModal) {
   console.log("main loded");
@@ -217,19 +206,6 @@ app.controller('main', function($scope, $http, $sce, $interval, $uibModal) {
 
 });
 
-
-app.config(function($stateProvider, $locationProvider) {
-  $stateProvider
-    .state('courses', {
-      url: "/courses/:courseType",
-      templateUrl: function(params) {
-        return '/courses/' + params.courseType + '/';
-      },
-      // controller: 'controller.chapter'
-    })
-
-
-})
 
 app.controller('exam', function($scope, $state, $http, $timeout, $interval, $uibModal, $stateParams, $sce, Flash, $location) {
 

@@ -102,6 +102,8 @@ class Section(models.Model):
     book = models.ForeignKey(Book , null = False , related_name='sections')
     shortUrl = models.CharField(max_length = 100 , null = True , unique = True)
     description = models.TextField(max_length=2000 , null = True)
+    seoTitle = models.CharField(max_length = 100 , null = True , unique = True)
+
 
     def get_absolute_url(self):
         return '/'+ self.shortUrl + '/'
@@ -134,6 +136,7 @@ class QPart(models.Model):
     mode = models.CharField(choices = PART_TYPE_CHOICES , default = 'text' , null = False, max_length = 10)
     txt = models.CharField(max_length = 2000 , null = True)
     image = models.FileField(upload_to = getQAttachmentPath , null = True)
+    sequence = models.PositiveIntegerField(null = True)
 
 
 class Question(models.Model):

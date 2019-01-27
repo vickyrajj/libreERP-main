@@ -101,9 +101,11 @@
 
     <div class="col-md-12 top_header">
       <div class="hidden-md hidden-lg" style="padding-top:10px;">
-        <div class="user" id="flybtn" ng-click="signin()">
-          <i class="fa fa-user" aria-hidden="true" style="position:fixed;top:13px;right:70px;font-size:30px;color:#eee;cursor:pointer;"></i>
-        </div>
+        <a href="#">
+          <div class="user" id="flybtn" ng-click="signin()">
+            <i class="fa fa-user" aria-hidden="true" style="position:fixed;top:13px;right:70px;font-size:30px;color:#eee;cursor:pointer;"></i>
+          </div>
+        </a>
         <button type="button" class="btn btn-default pull-right show_menu" id="flybtn1" ng-click="show_menu()">
           <i class="fa fa-bars" aria-hidden="true"></i>
         </button>
@@ -118,7 +120,6 @@
         <h2>{{book.title}}</h2>
         <h3>-{{book.author}}</h3>
       </div>
-
       <button class="btn btn-primary pull-right sign_btn" ng-click="signin()">sign in</button>
     </div>
     <!-- <div ng-show="displ">

@@ -62,13 +62,11 @@
 <div class="container-fluid" style="background-color:#FCC300;min-height:10vh;  position:relative;padding-bottom: 2em;">
   {% verbatim %}
   <div class="col-md-12">
-    <div class="col-md-6 clickchange" ng-model='forum' ng-class="click4" ng-click="clicks(4)">
-      <span><b>Solutions</b><i ng-if="device.smallDevice " class="fa {{forum==true?'fa-times':'fa-angle-up'}}" style="font-size:30px;position:absolute;right:1em;"></i></span>
-      <div ng-class="class1"></div>
+    <div class="col-md-6 clickchange">
+      <span style="font-size:25px;"><b>Solutions</b></span>
     </div>
-    <div class="col-md-6 clickchange1" ng-model='refbook' ng-class="click5" ng-click="clicks(5)">
-      <span><b> Forum</b><i ng-if="device.smallDevice " class="fa {{refbook==true?'fa-times':'fa-angle-up'}}" style="font-size:30px;position:absolute;right:1em;"></i></span>
-      <div ng-class="class2"></div>
+    <div class="col-md-6 clickchange">
+      <span style="font-size:25px;"><b> Forum</b></span>
     </div>
   </div>
   {% endverbatim %}
