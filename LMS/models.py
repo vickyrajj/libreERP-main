@@ -325,6 +325,9 @@ class Note(models.Model):
     urlSuffix = models.CharField(max_length = 100 , null = True)
     image =  models.FileField(upload_to = getNoteImagePath , null = True)
 
+    def get_absolute_url(self):
+        return '/'+ self.urlSuffix + '/'
+
 
 class NotesSection(models.Model):
     note = models.ForeignKey(Note , null = True , related_name="note")

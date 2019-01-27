@@ -26,12 +26,12 @@ class SubjectSitemap(Sitemap):
        return obj.updated
 
 
-class TopicSitemap(Sitemap):
+class NotesSitemap(Sitemap):
     changefreq = "weekly"
     priority = 0.8
 
     def items(self):
-       return Topic.objects.all()
+       return Note.objects.all()
 
     def lastmod(self, obj):
        return obj.updated
