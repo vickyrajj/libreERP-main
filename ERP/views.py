@@ -85,8 +85,13 @@ def dynamicTemplates(request , filename):
 #     subobj = Subject.objects.all().order_by('level')
 #     return render(request, 'courses.html', {"typ" : page,"courseobj":courseobj,"subobj":subobj,"notesobj":notesobj})
 
-def mockTestView(request , testID):
-    pass
+def mockTestView(request ,testID):
+    # testID=1;
+    return render(request, 'exam.html', {'id':testID})
+
+def testResultsView(request ):
+    # testID=1;
+    return render(request, 'examResults.html', {})
 
 # def coursesContent(request , page):
 #     print page,'-------------------'
@@ -108,6 +113,7 @@ def mockTestView(request , testID):
 
 def ncert(request):
     return render(request, 'ncert.html', {})
+
 
 class MakePaytmPayment(APIView):
     renderer_classes = (JSONRenderer,)

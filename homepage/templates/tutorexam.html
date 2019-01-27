@@ -26,22 +26,17 @@
 <link rel="icon" href="/static/images/tutor.ico" type="image/gif" sizes="16x16">
 
 {% endblock %} {% block specific_css %}
-<link href="{% static 'css/homepage.css' %}" rel="stylesheet">
+<link href="{% static 'css/exam.css' %}" rel="stylesheet">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/animatecss/3.5.1/animate.min.css" charset="utf-8">
 
-{% endblock %} {% block header %}
-{% include "header.html" %}
 {% endblock %}
-<!-- Header -->
-{% block tutorbookcontent %}
 
-{% block bookcontent %}{% endblock %}
+<!-- Header -->
+{% block tutorexamcontent %}
+
+{% block examcontent %}{% endblock %}
 
 <div class="container-fluid" style="padding:0px;">
-  {% endblock %} {% block footer %}
-  {% include "footer.html" %}
-</div>
-</div>
 </div>
 
 {% endblock %}{% block specific_js %}
@@ -60,7 +55,6 @@
 <script src="{% static 'js/datetimepicker.js' %}"></script>
 <script src="{% static 'js/angular-flash.js' %}"></script>
 <script src="{% static 'js/custom/filters.js' %}"></script>
-<script src="{% static 'js/app.tutor.bookSection.js' %}"></script>
 <script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/MathJax.js?config=TeX-MML-AM_CHTML'></script>
 <script type="text/x-mathjax-config">
   MathJax.Hub.Config({ tex2jax: {inlineMath: [['$','$']]} });
@@ -70,7 +64,6 @@
 <script>
   document.addEventListener('DOMContentLoaded', function() {
     console.log('document - DOMContentLoaded - capture'); // 2nd
-
 
   }, true);
 </script>

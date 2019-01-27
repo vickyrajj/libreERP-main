@@ -159,25 +159,34 @@ class PaperSerializer(serializers.ModelSerializer):
         fields = ('pk' , 'created' , 'updated', 'questions', 'active' , 'user','name')
         read_only_fields = ('user', 'questions')
     def create(self , validated_data):
-        p=Paper(user=self.context['request'].user)
-        p.save()
+        m = Paper(**validated_data)
+        m.user = self.context['request'].user
+        if 'name' in self.context['request'].data:
+            m.name = self.context['request'].data['name']
+        m.save()
         print self.context['request'].data['questions']
         for i in self.context['request'].data['questions']:
             i['ques']=Question.objects.get(id=i['ques'])
             pq = PaperQues(**i)
             pq.user = self.context['request'].user
             pq.save()
-            p.questions.add(pq)
-        return p
+            m.questions.add(pq)
+        m.save()
+        return m
+
     def update(self , instance , validated_data):
-        for i in instance.questions.all():
-            instance.questions.remove(i)
+        # for i in instance.questions.all():
+        #     instance.questions.remove(i)
+        instance.questions.clear()
         for i in self.context['request'].data['questions']:
             i['ques']=Question.objects.get(id=i['ques'])
             pq = PaperQues(**i)
             pq.user = self.context['request'].user
             pq.save()
             instance.questions.add(pq)
+        if 'name' in self.context['request'].data:
+            instance.name = self.context['request'].data['name']
+        instance.save()
         return instance
 
 class AnswerSerializer(serializers.ModelSerializer):

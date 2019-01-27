@@ -7,9 +7,6 @@ app.config(function($stateProvider, $urlRouterProvider, $httpProvider, $provide,
   $httpProvider.defaults.xsrfCookieName = 'csrftoken';
   $httpProvider.defaults.xsrfHeaderName = 'X-CSRFToken';
   $httpProvider.defaults.withCredentials = true;
-  $locationProvider.html5Mode(true);
-  $urlMatcherFactoryProvider.strictMode(false);
-
 });
 
 app.run(['$rootScope', '$state', '$stateParams', '$http', function($rootScope, $state, $stateParams, $http) {
@@ -305,6 +302,7 @@ app.controller('controller.examresults', function($rootScope, $scope, $state, $h
 })
 
 app.controller('controller.exam', function($scope, $state, $http, $timeout, $interval, $uibModal, $stateParams, $sce, Flash) {
+
   $scope.questionList = [{
 
       Question: 'Nunc gravida neque nec neque rutrum elementum.',

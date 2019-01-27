@@ -76,9 +76,9 @@
         <ul class="list-unstyled other_chap">
           {% for sec in sections %}
           {% if sectionobj.shortUrl == sec.shortUrl %}
-          <li id="activeli" class="activeli"><a class="activea" ui-sref="chapter({chapterName: '{{sec.shortUrl}}' })"><span>{{sec.title}}</span></a></li>
+          <li id="activeli" class="activeli"><a class="activea" href="/{{sec.shortUrl}}"><span>{{sec.title}}</span></a></li>
           {% else %}
-          <li><a ui-sref="chapter({chapterName: '{{sec.shortUrl}}' })"><span>{{sec.title}}</span></a></li>
+          <li><a href="/{{sec.shortUrl}}"><span>{{sec.title}}</span></a></li>
           {% endif %}
           {% endfor %}
         </ul>

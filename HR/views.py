@@ -15,12 +15,15 @@ from url_filter.integrations.drf import DjangoFilterBackend
 from .serializers import *
 from API.permissions import *
 from ERP.models import application, permission , module
+from homepage.models import Registration
 from ERP.views import getApps, getModules
 from django.db.models import Q
 from django.http import JsonResponse
 import random, string
 from django.utils import timezone
 from rest_framework.views import APIView
+import requests
+import ast
 
 
 def documentView(request):
@@ -85,17 +88,56 @@ def tokenAuthentication(request):
     return render(request , globalSettings.LOGIN_TEMPLATE , {'authStatus' : authStatus ,'useCDN' : globalSettings.USE_CDN})
 
 
+@csrf_exempt
 def generateOTP(request):
-    print request.POST
+    # print request.POST ,'*****************',request.body
+    if len(request.POST.keys())==0:
+        postData = ast.literal_eval(request.body)
+    else:
+        postData = request.POST
     key_expires = timezone.now() + datetime.timedelta(2)
     otp = generateOTPCode()
-    user = get_object_or_404(User, username = request.POST['id'])
+    user = get_object_or_404(User, username = postData['id'])
     ak = accountsKey(user= user, activation_key= otp,
         key_expires=key_expires , keyType = 'otp')
     ak.save()
     print ak.activation_key
     # send a SMS with the OTP
+    url = globalSettings.SMS_API_PREFIX + 'number=%s&message=%s'%(postData['id'] , 'Dear Customer,\nPlease use OTP : %s to verify your mobile number' %(otp))
+    requests.get(url)
     return JsonResponse({} ,status =200 )
+
+@csrf_exempt
+def registrationLite(request):
+    # print request.body
+    if len(request.POST.keys())==0:
+        postData = ast.literal_eval(request.body)
+    else:
+        postData = request.POST
+    if 'token' in postData:
+        rejObj = Registration.objects.filter(token=postData['token'],mobileOTP=postData['mobileOTP'])
+        if rejObj.count()==1:
+            u = User(username = postData['mobile'])
+            u.first_name = postData['mobile']
+            u.email = ''
+            u.last_name = ''
+            u.set_password('titan@1')
+            u.is_active = True
+            u.save()
+            login(request , u,backend='django.contrib.auth.backends.ModelBackend')
+            rejObj[0].delete()
+            return JsonResponse({} ,status =200 )
+        else:
+            raise SuspiciousOperation('Invalid Data')
+    else:
+        user = get_object_or_404(User, username = postData['mobile'])
+        # print user,user.pk,postData['mobileOTP']
+        accObj = accountsKey.objects.filter(user=user,activation_key=postData['mobileOTP'] , keyType='otp')
+        if accObj.exists():
+            login(request , user,backend='django.contrib.auth.backends.ModelBackend')
+            return JsonResponse({} ,status =200 )
+        else:
+            raise SuspiciousOperation('Invalid Data')
 
 def loginView(request):
 
@@ -121,8 +163,12 @@ def loginView(request):
         else:
             password = request.POST['password']
         if '@' in usernameOrEmail and '.' in usernameOrEmail:
-            u = User.objects.get(email = usernameOrEmail)
-            username = u.username
+            try:
+                u = User.objects.get(email = usernameOrEmail)
+                username = u.username
+            except:
+                statusCode = 404
+                username = usernameOrEmail
         else:
             username = usernameOrEmail
             try:
@@ -154,7 +200,7 @@ def loginView(request):
 
     	if user is not None:
             login(request , user)
-            if request.GET:
+            if request.GET  and 'next' in request.GET:
                 return redirect(request.GET['next'])
             else:
                 return redirect(reverse(globalSettings.LOGIN_REDIRECT))
