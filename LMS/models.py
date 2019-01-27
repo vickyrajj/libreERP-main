@@ -72,7 +72,7 @@ class Subject(models.Model):
 
     def get_absolute_url(self):
         #class-11-Mathematics
-        return '/class-' + str(self.title) +'-' + self.title + '/'
+        return '/class-' + str(self.level) +'-' + self.title + '/'
 
 class Topic(models.Model):
     created = models.DateTimeField(auto_now_add = True)
@@ -82,7 +82,7 @@ class Topic(models.Model):
     description = models.TextField(max_length=2000 , null = False)
 
     def get_absolute_url(self):
-        return '/class-' + str(self.subject.title) +'-' + self.subject.title + '-' + self.title +'-online-course/'
+        return '/class-' + str(self.subject.level) +'-' + self.subject.title + '-' + self.title +'-online-course/'
 
 
 class Book(models.Model):
