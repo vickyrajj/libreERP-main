@@ -90,10 +90,9 @@ app.controller("businessManagement.stockReport", function($scope, $state, $users
             $scope.data = response.data[0].data
             console.log($scope.data,'aaaaaaaaa');
             if($scope.data.pk!=undefined){
-              console.log("heeeeeeeerrrrrrrrrrreeeeeeeeeeee",$scope.data.pk);
               $http({
                 method: 'GET',
-                url: '/api/support/stockCheckItem/' +$scope.data.pk
+                url: '/api/support/stockCheckItem/?stockReport=' + $scope.data.pk
               }).
               then(function(response) {
                 $scope.products = response.data
@@ -101,7 +100,6 @@ app.controller("businessManagement.stockReport", function($scope, $state, $users
               })
             }
             else{
-              console.log("thhhhhhhhhhhhhheeeeeeeerrrrrrrrrrrreeeeeeeee");
               $scope.products =[]
               return
             }

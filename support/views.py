@@ -177,6 +177,8 @@ class StockCheckItemViewSet(viewsets.ModelViewSet):
     permission_classes = (permissions.AllowAny , )
     queryset = StockCheckItem.objects.all()
     serializer_class = StockCheckItemSerializer
+    filter_backends = [DjangoFilterBackend]
+    filter_fields = ['stockReport']
 
 class ProductsUploadAPIView(APIView):
     permission_classes = (permissions.IsAuthenticated ,)
