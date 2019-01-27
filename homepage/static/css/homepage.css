@@ -1681,12 +1681,12 @@ hr {
 
 .clickchange a {
   font-size: 20px;
-  color:#fff;
-}
-.clickchange:last-child{
-  border-right: 0px solid #fff;
+  color: #fff;
 }
 
+.clickchange:last-child {
+  border-right: 0px solid #fff;
+}
 
 .triangle-hover {
   width: 0;
@@ -1719,14 +1719,14 @@ hr {
   position: relative;
 }
 
-.headblocklast {
+/* .headblocklast {
   margin-top: 2em;
   padding: 1em 1em 1em 1em;
   background-color: #FAFAFA;
   color: #C9C9C9;
   border-radius: 10px;
   position: relative;
-}
+} */
 
 .contentblock {
   margin: 1em 1em;
@@ -1786,13 +1786,12 @@ hr {
 
 .cardstype {
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
-  /* transition: 0.3s; */
-  text-align: center;
-  margin-left: 1.8em;
-  width: 90%;
   border-radius: 5px;
-  min-height: 41vh;
   background-color: #fff;
+  border-top-left-radius: 50px;
+  cursor:pointer;
+  padding:20px 15px 15px 15px;
+  margin-bottom: 15px;
 }
 
 .img-radiuss {
@@ -1803,12 +1802,12 @@ hr {
   border-top-left-radius:  50px;
 
 } */
-.cardstype:hover {
+/* .cardstype:hover {
   border-top-left-radius: 50px;
   box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2);
   transform: scale(1.1);
   transition: 0.2s;
-}
+} */
 
 .rightborder {
   border-right: 1px solid #9E9E9E;
@@ -2038,6 +2037,9 @@ hr {
   border-right: 1px solid #bebebe;
   flex: 1 1 auto;
   justify-content: center;
+  font-size: 18px;
+  font-weight: bold;
+  cursor: pointer;
 }
 
 .video_card:last-child {
@@ -2063,8 +2065,6 @@ hr {
   width: 135px;
   height: 128px;
 }
-
-
 
 .visible {
   visibility: hidden;
@@ -2249,6 +2249,16 @@ hr {
   background-color: #17EEAB;
   color: #fff;
 }
+.tips:before {
+  content: "";
+  border-left: 20px solid transparent;
+  border-right: 20px solid transparent;
+  border-bottom: 20px solid #fff;
+  position: absolute;
+  bottom: -33px;
+  left: 45%;
+}
+
 
 /* exams css properties */
 /* for normal screens ends here.... */
@@ -2710,7 +2720,6 @@ hr {
 
   /* mobile display size starts here.... */
   /* courses */
-
   .heartsym {
     display: none;
   }

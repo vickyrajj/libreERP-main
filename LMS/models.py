@@ -216,7 +216,7 @@ class Course(models.Model):
     created = models.DateTimeField(auto_now_add = True)
     updated = models.DateField(auto_now=True)
     title = models.CharField(max_length = 100 , null = False)
-    topic = models.ForeignKey(Topic , null = False)
+    topic = models.ForeignKey(Topic , null = False, related_name='courses')
     enrollmentStatus = models.CharField(choices = ENROLLMENT_STATUS_CHOICES , max_length = 20 , default = 'pdf')
     instructor = models.ForeignKey(User , related_name='lmsCoursesInstructing' , null = True)
     TAs = models.ManyToManyField(User , related_name='lmsCourseAssisting' , blank = True)
@@ -315,6 +315,7 @@ class Note(models.Model):
     description = models.TextField( null = False)
     urlSuffix = models.CharField(max_length = 100 , null = True)
     image =  models.FileField(upload_to = getNoteImagePath , null = True)
+
 
 class NotesSection(models.Model):
     note = models.ForeignKey(Note , null = True , related_name="note")
