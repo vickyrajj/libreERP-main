@@ -97,17 +97,20 @@ app.controller("home.LMS.evaluation.form", function($scope, $state, $users, $sta
   $scope.resetForm=function(){
     $scope.selectedquestions=[]
     $scope.questions = []
-    $scope.form = {topic : '' , text : '' , subject : '' ,typ : '' ,book : '' ,section : '',name:''}
+    $scope.form = {topic : '' , text : '' , subject : '' ,typ : '' ,book : '' ,section : '',name:'',timelimit:''}
   }
   $scope.resetForm();
+  $scope.time = new Date();
 
   if ($scope.tab == undefined || $scope.tab.data == undefined) {
     $scope.mode = 'new';
+    $scope.form.timelimit = $scope.time.setHours(01, 00);
   }else {
     $scope.mode = 'edit';
     $scope.selectedquestions = $scope.tab.data.paper.questions;
     $scope.form.name=$scope.tab.data.paper.name
     console.log($scope.selectedquestions );
+    $scope.form.timelimit = $scope.time.setHours($scope.tab.data.paper.timelimit);
   }
 
   $scope.$watch('form.topic' , function(newValue , oldValue){
@@ -221,7 +224,13 @@ app.controller("home.LMS.evaluation.form", function($scope, $state, $users, $sta
 
   };
 
-      
+
+  $scope.hstep = 1;
+  $scope.mstep = 15;
+
+  console.log($scope.time,'jjj');
+
+
 
 });
 

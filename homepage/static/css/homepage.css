@@ -1,4 +1,17 @@
 /*properties for normal screen size starts here  */
+.fof h2{
+	  font-size: 50px;
+	  display: inline-block;
+	  padding-right: 12px;
+	  animation: type .5s alternate infinite;
+}
+
+@keyframes type{
+	  from{box-shadow: inset -3px 0px 0px #000;}
+	  to{box-shadow: inset -3px 0px 0px transparent;}
+}
+
+
 .navbar-toggle:hover {
   background-color: #3b3a3a !important;
 }
