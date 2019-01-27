@@ -76,14 +76,10 @@
 <div class="container-fluid">
   <div class="col-md-12">
     <div class="col-md-6" style="min-height:60vh;padding:0px;">
-      <!-- <img src="/static/images/24tut/atomic.png" width="50%"style="position:absolute;z-index:-100;top:18%;left:21%;opacity:0.2;"> -->
       <div class="row text-center" style="font-size:18px;display:inline-block;width:100%;">
         <ul class="list-unstyled chap_list">
           {% for s in sectionobj %}
-          <li><a  href="/{{s.shortUrl}}"><span>{{s.title}}</span></a></li>
-          <!-- <div class="row"> -->
-              <!-- <a href="/{{s.shortUrl}}"><h3 style="font-size:15px;">{{s.title}}</h3></a> -->
-          <!-- </div> -->
+          <li><a  href="/{{s.shortUrl}}/"><span>{{s.title}}</span></a></li>
           {% endfor %}
         </ul>
       </div>
