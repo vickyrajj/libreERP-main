@@ -18,18 +18,23 @@
       </div>
     </div>
   </div> -->
+
   <div class="row">
 
     <div class="col-md-9" style="min-height:100vh;padding:0;">
+      <div class="text-right">
+          <span style="padding-right: 1em;"><b>Time Left: {{theTime}}:{{timeinsec}}</b></span>
+        </div>
       <div class="maindiv">
         <div class="text-center">
           <div ng-repeat="a in sublist" style="display:inline-block;" ng-hide="sublist.length==1">
-            <div style="cursor:pointer;" class="headselected" ng-click="subjectSelect(a,$index) " ng-class="{'selectedhead':$index==subcount}"  >
-              <h4  ng-class="{'selectedsub':$index==subcount}"><b>{{a}}</b></h4>
+            <div style="cursor:pointer;" class="headselected" ng-click="subjectSelect(a,$index) " ng-class="{'selectedhead':$index==subcount}">
+              <h4 ng-class="{'selectedsub':$index==subcount}"><b>{{a}}</b></h4>
             </div>
           </div>
         </div>
         <div style="border-bottom:1px solid  #25B5E9;height:40px;">
+
           <h4 style="float:left;" class="subtext"><b>Question No {{count+1}}</b></h4>
           <h4 class="text-right subtext" style="float:right;"><b>Single Choice Type Question</b></h4>
         </div>
@@ -39,14 +44,15 @@
               <h3 style="margin-left:1em;" ng-show="$index === count" math-jax-bind="questionList[subindex].testquestions[$index].Question">{{b.Question}}</h3>
 
               <ol style="margin-left:2em;font-size:20px;color:#6C6464;" type='A' class="answers" ng-show="$index === count">
-                <li ng-repeat="c in b.Options track by $index" class="optionhover" style="padding:0.5em;position:relative;" ng-click="selection(subindex,$parent.$index,$index)" ng-class="{'selected' : selections[subindex].answers[$parent.$index] == $index}" math-jax-bind="questionList[subindex].testquestions[$parent.$index].Options[$index]">{{c}}</li>
+                <li ng-repeat="c in b.Options track by $index" class="optionhover" style="padding:0.5em;position:relative;" ng-click="selection(subindex,$parent.$index,$index)" ng-class="{'selected' : selections[subindex].answers[$parent.$index] == $index}"
+                  math-jax-bind="questionList[subindex].testquestions[$parent.$index].Options[$index]">{{c}}</li>
               </ol>
             </div>
           </div>
         </div>
       </div>
       <div class="text-center btn-section">
-        <button class="savebtn saves"  ng-click="save(subcount,count)"><b>Save</b></button>
+        <button class="savebtn saves" ng-click="save(subcount,count)"><b>Save</b></button>
         <button class="btnaction1" ng-click="review(subcount,count)"><b>Review Later</b></button>
         <button class="btnaction" ng-click="clearselection(subcount,count)"><b>Clear Selection</b></button>
       </div>

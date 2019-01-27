@@ -216,50 +216,50 @@ app.controller('main', function($scope, $http, $sce, $interval, $uibModal) {
 });
 
 
-app.controller('exam', function($scope, $state, $http, $timeout, $interval, $uibModal, $stateParams, $sce, Flash, $location) {
+app.controller('exam', function($scope, $state, $http, $timeout, $interval, $uibModal, $stateParams, $sce, Flash, $location,$rootScope) {
 
   $scope.sublist = []
   $scope.subquestions = []
-  $scope.data = []
+  $scope.timelimit = []
   $http({
     method: 'GET',
     url: '/api/LMS/paper/1/'
   }).then(function(response) {
-    // $scope.paperData = response.data
-    for (var i = 0; i < response.data.questions.length; i++) {
-      $scope.data.push(response.data.questions[i].ques)
+    $scope.paperData = response.data
+    $scope.timelimit.push($scope.paperData.timelimit)
+    for (var i = 0; i < $scope.paperData.questions.length; i++) {
+      $scope.paperData.questions[i].ques
+      $scope.sublist.push($scope.paperData.questions[i].ques.topic.subject.title);
+      $scope.subname = $scope.paperData.questions[i].ques.topic.subject.title;
+      $scope.subquestions.push({
+        subname: $scope.sublist[i],
+        ques: []
+      })
+      $scope.subquestions[i].ques.push($scope.paperData.questions[i].ques.ques)
     }
 
-    // $scope.data.push(response.data.questions.ques)
-    // for (var i = 0; i < $scope.paperData.questions.length; i++) {
-    //   $scope.paperData.questions[i].ques
-    //   $scope.sublist.push($scope.paperData.questions[i].ques.topic.subject.title);
-    //   $scope.subname = $scope.paperData.questions[i].ques.topic.subject.title;
-    //
-    //   console.log($scope.paperData.questions[i].ques.topic.subject.title, 'lll');
-    // }
 
   })
-  // for (var i = 0; i < $scope.data.length; i++) {
-  //   $scope.sublist.push($scope.data.topic.subject.title);
-  //   console.log($scope.sublist, 'ooo');
-  //   $scope.subname = $scope.data[i].topic.subject.title;
-  //   for (var i = 0; i < $scope.sublist.length; i++) {
-  //     $scope.subquestions.push({
-  //       subname: $scope.sublist[i],
-  //       ques: []
-  //     })
-  //   }
-  //   for (var i = 0; i < $scope.subquestions.length; i++) {
-  //     if ($scope.subname == $scope.subquestions[i].subname) {
-  //
-  //       $scope.subquestions[i].ques.push($scope.paperData.questions[i].ques.ques)
-  //     }
-  //   }
-  // }
+
+  $scope.theTime = $scope.timelimit[0]-1;
+  $scope.timeinsec = 60
 
 
-  console.log($scope.data.length, 'vvv');
+  console.log($scope.sublist, 'pppp');
+
+  $interval(function() {
+    if ($scope.theTime != 0) {
+      $scope.theTime -= 1;
+    }
+  }, 60000);
+  $interval(function() {
+    if ($scope.timeinsec != 1) {
+      $scope.timeinsec -= 1;
+    } else {
+      $scope.timeinsec = 60;
+    }
+  }, 1000);
+  console.log($scope.data, 'vvv');
   $scope.questionList = [{
       subject: "Maths",
       testquestions: [{
