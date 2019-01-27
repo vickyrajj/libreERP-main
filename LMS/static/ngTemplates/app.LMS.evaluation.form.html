@@ -4,11 +4,23 @@
     <h4 ng-if="mode=='edit'">Update Question Paper</h4>
 
     <div class="row">
-      <div class="form-group">
-        <label style="margin-top:20px;margin-left:20px">QuestionPaper Title</label>
-        <div class="row" style="margin-top:10px;margin-left:10px">
-          <div class="col-md-4 text-center">
-            <input type="text" class="form-control" ng-model="form.name">
+      <div class="col-md-6">
+        <div class="form-group">
+          <label style="margin-top:20px;">QuestionPaper Title</label>
+          <div class="row" style="margin-top:20px;">
+            <div class="col-md-10 text-center" >
+              <input type="text" class="form-control" ng-model="form.name">
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="form-group">
+          <label style="margin-top:20px;">Set Time</label>
+          <div class="row" style="margin-top:0px;">
+            <div class="col-md-10 text-center">
+                 <div uib-timepicker ng-model="form.timelimit"  hour-step="hstep" minute-step="mstep" show-meridian="false"></div>
+            </div>
           </div>
         </div>
       </div>

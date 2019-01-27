@@ -176,6 +176,7 @@ class Paper(models.Model):
     active = models.BooleanField(default = False)
     user = models.ForeignKey(User , null = False , related_name='papersAuthored')
     name = models.CharField(null = True , max_length = 100)
+    timelimit = models.PositiveIntegerField(default= 0)
 
 CORRECTION_CHOICES = (
     ('yes' , 'yes'),

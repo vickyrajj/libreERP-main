@@ -156,13 +156,15 @@ class PaperSerializer(serializers.ModelSerializer):
     questions = PaperQuesSerializer(many = True , read_only = True)
     class Meta:
         model = Paper
-        fields = ('pk' , 'created' , 'updated', 'questions', 'active' , 'user','name')
+        fields = ('pk' , 'created' , 'updated', 'questions', 'active' , 'user','name','timelimit')
         read_only_fields = ('user', 'questions')
     def create(self , validated_data):
         m = Paper(**validated_data)
         m.user = self.context['request'].user
         if 'name' in self.context['request'].data:
             m.name = self.context['request'].data['name']
+        if 'timelimit' in self.context['request'].data:
+            m.timelimit = self.context['request'].data['timelimit']
         m.save()
         print self.context['request'].data['questions']
         for i in self.context['request'].data['questions']:
@@ -186,6 +188,8 @@ class PaperSerializer(serializers.ModelSerializer):
             instance.questions.add(pq)
         if 'name' in self.context['request'].data:
             instance.name = self.context['request'].data['name']
+        if 'timelimit' in self.context['request'].data:
+            instance.timelimit = self.context['request'].data['timelimit']
         instance.save()
         return instance
 

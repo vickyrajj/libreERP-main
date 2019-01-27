@@ -148,7 +148,9 @@ app.controller('main', function($scope, $http, $sce, $interval, $uibModal) {
                 $http({
                   method: 'POST',
                   url: '/api/homepage/registration/',
-                  data: {mobile:$scope.form.number}
+                  data: {
+                    mobile: $scope.form.number
+                  }
                 }).
                 then(function(response) {
                   console.log(response.data);
@@ -170,10 +172,17 @@ app.controller('main', function($scope, $http, $sce, $interval, $uibModal) {
             });
           } else {
             console.log('enter otp mode');
-            if ($scope.form.token!=undefined) {
-              var toSend = {mobile:$scope.form.number,mobileOTP:$scope.form.otp,token:$scope.form.token}
-            }else {
-              var toSend = {mobile:$scope.form.number,mobileOTP:$scope.form.otp}
+            if ($scope.form.token != undefined) {
+              var toSend = {
+                mobile: $scope.form.number,
+                mobileOTP: $scope.form.otp,
+                token: $scope.form.token
+              }
+            } else {
+              var toSend = {
+                mobile: $scope.form.number,
+                mobileOTP: $scope.form.otp
+              }
             }
             $http({
               method: 'POST',
@@ -209,17 +218,48 @@ app.controller('main', function($scope, $http, $sce, $interval, $uibModal) {
 
 app.controller('exam', function($scope, $state, $http, $timeout, $interval, $uibModal, $stateParams, $sce, Flash, $location) {
 
-
+  $scope.sublist = []
+  $scope.subquestions = []
+  $scope.data = []
   $http({
     method: 'GET',
-    url: '/api/LMS/paper/'
+    url: '/api/LMS/paper/1/'
   }).then(function(response) {
-    $scope.paperData = response.data
-    console.log($scope.paperData,'----------ppapapapapa');
+    // $scope.paperData = response.data
+    for (var i = 0; i < response.data.questions.length; i++) {
+      $scope.data.push(response.data.questions[i].ques)
+    }
+
+    // $scope.data.push(response.data.questions.ques)
+    // for (var i = 0; i < $scope.paperData.questions.length; i++) {
+    //   $scope.paperData.questions[i].ques
+    //   $scope.sublist.push($scope.paperData.questions[i].ques.topic.subject.title);
+    //   $scope.subname = $scope.paperData.questions[i].ques.topic.subject.title;
+    //
+    //   console.log($scope.paperData.questions[i].ques.topic.subject.title, 'lll');
+    // }
+
   })
+  // for (var i = 0; i < $scope.data.length; i++) {
+  //   $scope.sublist.push($scope.data.topic.subject.title);
+  //   console.log($scope.sublist, 'ooo');
+  //   $scope.subname = $scope.data[i].topic.subject.title;
+  //   for (var i = 0; i < $scope.sublist.length; i++) {
+  //     $scope.subquestions.push({
+  //       subname: $scope.sublist[i],
+  //       ques: []
+  //     })
+  //   }
+  //   for (var i = 0; i < $scope.subquestions.length; i++) {
+  //     if ($scope.subname == $scope.subquestions[i].subname) {
+  //
+  //       $scope.subquestions[i].ques.push($scope.paperData.questions[i].ques.ques)
+  //     }
+  //   }
+  // }
 
 
-    console.log(  $scope.list ,'yyyyyyyy');
+  console.log($scope.data.length, 'vvv');
   $scope.questionList = [{
       subject: "Maths",
       testquestions: [{
@@ -525,7 +565,7 @@ app.controller('exam', function($scope, $state, $http, $timeout, $interval, $uib
     console.log($scope.selections, 'lll');
     $scope.questionList[idx].testquestions[0].status = "notanswered";
     for (var i = 0; i < $scope.questionList.length; i++) {
-      if ($scope.questionList[i].subject == sub) {
+      if ($scope.sublist[i] == sub) {
         if (idx == $scope.subcount) {
           $scope.count = $scope.count;
         } else {
