@@ -70,12 +70,19 @@ class Subject(models.Model):
     class Meta:
         unique_together = ('title', 'level',)
 
+    def get_absolute_url(self):
+        #class-11-Mathematics
+        return '/class-' + str(self.title) +'-' + self.title + '/'
+
 class Topic(models.Model):
     created = models.DateTimeField(auto_now_add = True)
     updated = models.DateField(auto_now=True)
     subject = models.ForeignKey(Subject , null = False , related_name='topics')
     title = models.CharField(max_length = 30 , null = False)
     description = models.TextField(max_length=2000 , null = False)
+
+    def get_absolute_url(self):
+        return '/class-' + str(self.subject.title) +'-' + self.subject.title + '-' + self.title +'-online-course/'
 
 
 class Book(models.Model):

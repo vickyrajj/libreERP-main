@@ -11,3 +11,27 @@ class SectionsSitemap(Sitemap):
 
     def lastmod(self, obj):
        return obj.updated
+
+
+
+class SubjectSitemap(Sitemap):
+    #class-11-Mathematics
+    changefreq = "weekly"
+    priority = 0.8
+
+    def items(self):
+       return Subject.objects.all()
+
+    def lastmod(self, obj):
+       return obj.updated
+
+
+class TopicSitemap(Sitemap):
+    changefreq = "weekly"
+    priority = 0.8
+
+    def items(self):
+       return Topic.objects.all()
+
+    def lastmod(self, obj):
+       return obj.updated
