@@ -96,7 +96,7 @@
           <div ng-class="class4"></div>
         </div> -->
         <div class="col-md-4 clickchange">
-          <a href="/class-{{level}}-{{title}}/referenceBook/"><b>Refernce Books</b></a>
+          <a href="/class-{{level}}-{{title}}/referenceBook/"><b>Refernce Books ({{refbooklen}})</b></a>
           {% if subPart == 'referenceBook' %}
           <div class="tips"></div>
           {% endif %}
@@ -237,38 +237,39 @@
 
 
     {% if subPart == 'referenceBook' %}
-    {% verbatim %}
-    <h1 class="text-center">OOps...</h1>
-    <h1 class="text-center">Reference Books Coming Soon...</h1>
-    <div class="container no_padding" ng-show="refbook">
+    <div class="container no_padding">
       <div class="row min_padd text-center" style="">
-        <div class="col-md-6" style="position: relative;" ng-repeat="b in refbooks">
+        {% for r in refbookobjs %}
+        <div class="col-md-6" style="position: relative;">
           <div class="movie-card">
             <div class="col-md-5 studentcard" style="min-height:300px;">
-              <img src="{{b.img}}" class="imgstyle" />
+              <img src="/media/{{r.book.dp}}" class="imgstyle">
             </div>
-            <!-- <div class="circle">
-            <div><b>83%</b></div>
-          </div> -->
-            <div class="colorcircle" style="background-color:{{arr[$index]}}">
+            <div class="colorcircle" style="background-color:{{color}}">
             </div>
             <div class="col-md-7 text-left">
-              <div style="margin-top:3em;">
-                <span style="font-size:18px;color:#5B5B5B;"> <strong>{{b.name}}</strong> </span><br>
-                <span style="font-size:18px;color:#5B5B5B;">{{b.detail}}</span>
+              <div style="margin-top:1em;">
+                <span style="font-size:18px;color:#5B5B5B;"> <strong>{{r.book.title}}</strong> </span><br>
+                <span style="color:#5B5B5B;"> <b>Volume - </b> {{r.book.volume}}</span><br>
               </div>
-              <div class="stucardtext">
-                <span style="font-size:18px;"><b>{{b.author}}</b></span>
+              <div class="container-fluid"style="height:63px;overflow-y:hidden;">
+                <h6>{{r.book.description}}</h6>
               </div>
-              <div style="padding-bottom: 20px;">
-                <span style="font-size:15px;color:#5B5B5B;padding-bottom: 20px;"></span>
+              <div class=""style="padding-top:20px;">
+                <span style="font-size:18px;color:#5B5B5B;"><b>By - {{r.book.author}}</b></span><br>
+                <h5> <b>Subject - </b> {{r.book.subject.title}}</h5>
+                <h5> <b>Version - </b> {{r.book.version}}</h5>
+                <h5> <b>License - </b> {{r.book.license}}</h5>
+              </div>
+              <div class=""style="padding-top:10px;">
+                <span style="color:#5B5B5B;"> <b>ISSN - </b> {{r.book.ISSN}}</span>
               </div>
             </div>
           </div>
         </div>
+        {% endfor %}
       </div>
     </div>
-    {% endverbatim %}
     {% endif %}
 
     {% if subPart == 'notes' %}
