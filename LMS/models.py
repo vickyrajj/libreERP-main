@@ -70,12 +70,20 @@ class Subject(models.Model):
     class Meta:
         unique_together = ('title', 'level',)
 
+    def get_absolute_url(self):
+        #class-11-Mathematics
+        return '/class-' + str(self.level) +'-' + self.title + '/'
+
 class Topic(models.Model):
     created = models.DateTimeField(auto_now_add = True)
     updated = models.DateField(auto_now=True)
     subject = models.ForeignKey(Subject , null = False , related_name='topics')
     title = models.CharField(max_length = 30 , null = False)
     description = models.TextField(max_length=2000 , null = False)
+    seoTitle = models.CharField(max_length = 30 , null = True)
+
+    def get_absolute_url(self):
+        return '/class-' + str(self.subject.level) +'-' + self.subject.title + '-' + self.seoTitle +'-online-course/'
 
 
 class Book(models.Model):
@@ -217,7 +225,7 @@ class Course(models.Model):
     created = models.DateTimeField(auto_now_add = True)
     updated = models.DateField(auto_now=True)
     title = models.CharField(max_length = 100 , null = False)
-    topic = models.ForeignKey(Topic , null = False)
+    topic = models.ForeignKey(Topic , null = False, related_name='courses')
     enrollmentStatus = models.CharField(choices = ENROLLMENT_STATUS_CHOICES , max_length = 20 , default = 'pdf')
     instructor = models.ForeignKey(User , related_name='lmsCoursesInstructing' , null = True)
     TAs = models.ManyToManyField(User , related_name='lmsCourseAssisting' , blank = True)
@@ -316,6 +324,13 @@ class Note(models.Model):
     description = models.TextField( null = False)
     urlSuffix = models.CharField(max_length = 100 , null = True)
     image =  models.FileField(upload_to = getNoteImagePath , null = True)
+    course = models.ForeignKey(Course , null = False , related_name="courseNote")
+    subject = models.ForeignKey(Subject , null = False , related_name='subject')
+
+
+    def get_absolute_url(self):
+        return '/'+ self.urlSuffix + '/'
+
 
 class NotesSection(models.Model):
     note = models.ForeignKey(Note , null = True , related_name="note")

@@ -27,7 +27,7 @@ class TopicSerializer(serializers.ModelSerializer):
     subject = SubjectSerializer(many = False , read_only = True)
     class Meta:
         model = Topic
-        fields = ('pk' , 'created' , 'subject', 'title' , 'description' )
+        fields = ('pk' , 'created' , 'subject', 'title' , 'description' , 'seoTitle' )
 
     def create(self , validated_data):
         print 'came here'
@@ -250,7 +250,7 @@ class CourseSerializer(serializers.ModelSerializer):
     topic = TopicSerializer(many = False , read_only = True)
     class Meta:
         model = Course
-        fields = ('pk' , 'created' , 'updated', 'topic', 'enrollmentStatus', 'instructor' , 'TAs' , 'user' , 'description' , 'title' , 'enrollments' , 'studyMaterials')
+        fields = ('pk' , 'created' , 'updated', 'topic', 'enrollmentStatus', 'instructor' , 'TAs' , 'user' , 'description' , 'title' , 'enrollments' ,'dp', 'studyMaterials')
         read_only_fields = ('user', 'TAs')
     def create(self , validated_data):
         c = Course(**validated_data)
@@ -263,7 +263,7 @@ class CourseSerializer(serializers.ModelSerializer):
         c.save()
         return c
     def update(self , instance , validated_data):
-        for key in ['enrollmentStatus', 'description' , 'title' , 'enrollments' , 'studyMaterials','user']:
+        for key in ['enrollmentStatus', 'description' , 'title' , 'enrollments' , 'studyMaterials','user','dp']:
             try:
                 setattr(instance , key , validated_data[key])
             except:
@@ -337,7 +337,7 @@ class BookCourseMapSerializer(serializers.ModelSerializer):
 class NoteSerializer(serializers.ModelSerializer):
     class Meta:
         model = Note
-        fields = ('pk' , 'title' , 'description', 'urlSuffix', 'image' )
+        fields = ('pk' , 'title' , 'description', 'urlSuffix', 'image' ,'course','subject')
 
 class NoteLiteSerializer(serializers.ModelSerializer):
     class Meta:

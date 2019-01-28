@@ -65,7 +65,7 @@
       <div class="col-md-6">
         <div class="form-group">
           <label>Subject </label>
-          <input type="text" ng-model="form.subject" class="form-control" uib-typeahead="subject as subject.title for subject in subjectSearch($viewValue)">
+          <input type="text" ng-model="form.subject" class="form-control" uib-typeahead="subject as (subject.title +'- Class ' + subject.level) for subject in subjectSearch($viewValue)">
         </div>
       </div>
       <div class="col-md-6">
