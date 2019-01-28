@@ -86,7 +86,7 @@ def blogDetails(request, blogname):
         booklen = len(Book.objects.filter(subject__pk=sub.pk))
         bookobjs = Book.objects.all()
         subobjs = Subject.objects.all().order_by('level')
-        noteobj = Note.objects.all()
+        noteobj = Note.objects.filter(subject__pk=sub.pk)
         refbookobjs = BookCourseMap.objects.filter(book__subject__pk=sub.pk)
         refbooklen = len(refbookobjs)
         r = lambda: random.randint(150,250)
