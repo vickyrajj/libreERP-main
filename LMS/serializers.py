@@ -194,18 +194,24 @@ class PaperSerializer(serializers.ModelSerializer):
         return instance
 
 class AnswerSerializer(serializers.ModelSerializer):
-    subject = SubjectSerializer(many = False , read_only = True)
+    # subject = SubjectSerializer(many = False , read_only = True)
+    question = QuestionSerializer(many = False , read_only = True)
+    paper = PaperSerializer(many = False , read_only = True)
     class Meta:
         model = Answer
-        fields = ('pk' , 'created' , 'question', 'paper' , 'evaluated' , 'correct', 'marksObtained' , 'attachment', 'txt' , 'subject')
+        fields = ('pk' , 'created' , 'question', 'paper' , 'evaluated' , 'correct', 'marksObtained' , 'attachment', 'txt' )
         read_only_fields = ('user', )
     def create(self , validated_data):
         m = Answer(**validated_data)
         m.user = self.context['request'].user
         if 'question' in self.context['request'].data:
-            m.question = self.context['request'].data['question']
+            m.question = Question.objects.get(pk = self.context['request'].data['question'])
         if 'paper' in self.context['request'].data:
-            m.paper = self.context['request'].data['paper']
+            m.paper = Paper.objects.get(pk = self.context['request'].data['paper'])
+        if 'correct' in self.context['request'].data:
+            m.correct = self.context['request'].data['correct']
+        if 'marksObtained' in self.context['request'].data:
+            m.marksObtained = self.context['request'].data['marksObtained']
         m.save()
         return m
 

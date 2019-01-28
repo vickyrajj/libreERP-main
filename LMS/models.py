@@ -200,7 +200,7 @@ class Answer(models.Model):
     user = models.ForeignKey(User , null = False , related_name='answersSubmssions')
     evaluated = models.BooleanField(default = False)
     correct = models.CharField(choices = CORRECTION_CHOICES , default = 'no' , max_length = 10)
-    marksObtained = models.PositiveIntegerField(default= 0)
+    marksObtained = models.FloatField(default=0)
     attachment = models.FileField(upload_to = getAnswerAttachmentPath , null = True)
     txt = models.TextField(max_length=10000 , null = True)
 
