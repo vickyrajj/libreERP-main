@@ -130,6 +130,10 @@ def blogDetails(request, blogname):
             book = Book.objects.get(pk=blogobj.header)
             sectionobj = Section.objects.filter(book = book.pk)
             return render(request, 'book.html', {"home": False, "tagsCSV" :  blogobj.tagsCSV.split(','), 'book' : book ,'sectionobj':sectionobj,'blogobj' : blogobj, "brandLogo" : globalSettings.BRAND_LOGO , "brandLogoInverted": globalSettings.BRAND_LOGO_INVERT})
+        elif blogobj.contentType == 'course':
+            course = Course.objects.get(pk=blogobj.header)
+            return render(request, 'homepageCourses.html', {"home": False, "tagsCSV" :  blogobj.tagsCSV.split(','), 'course' : course ,'blogobj' : blogobj, "brandLogo" : globalSettings.BRAND_LOGO , "brandLogoInverted": globalSettings.BRAND_LOGO_INVERT})
+
     except:
 
         traceback.print_exc(file=sys.stdout)
@@ -137,9 +141,12 @@ def blogDetails(request, blogname):
         try:
             sectionobj = Section.objects.get(shortUrl=blogname)
         except:
-            return render(request, 'notFound404.html', {}, status=404)
+            try:
+                noteObj = Note.objects.get(urlSuffix=blogname)
+            except:
+                return render(request, 'notFound404.html', {}, status=404)
 
-        blogobj = blogPost.objects.get(header=sectionobj.book.pk)
+        # blogobj = blogPost.objects.get(header=sectionobj.book.pk)
         print 'boookkkkkk',sectionobj.book
         sec = sectionobj.book.sections.order_by('sequence')
         prev = False
@@ -164,7 +171,7 @@ def blogDetails(request, blogname):
                         prevobj = sec[a-1]
                         nxtvobj = sec[a+1]
 
-        return render(request, 'bookContent.html', { "sections" : sec , "home": False, "tagsCSV" :  blogobj.tagsCSV.split(','),'sectionobj':sectionobj, 'book' : sectionobj.book ,'blogobj' : blogobj, "brandLogo" : globalSettings.BRAND_LOGO , "brandLogoInverted": globalSettings.BRAND_LOGO_INVERT,'questions':sectionobj.questions.all(),'bot':{'prev':prev,'nxt':nxt,'prevobj':prevobj,'nxtvobj':nxtvobj}})
+        return render(request, 'bookContent.html', { "sections" : sec , "home": False,'sectionobj':sectionobj, 'book' : sectionobj.book , "brandLogo" : globalSettings.BRAND_LOGO , "brandLogoInverted": globalSettings.BRAND_LOGO_INVERT,'questions':sectionobj.questions.all(),'bot':{'prev':prev,'nxt':nxt,'prevobj':prevobj,'nxtvobj':nxtvobj}})
 
 
 def blog(request):
