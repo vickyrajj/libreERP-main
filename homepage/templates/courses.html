@@ -240,7 +240,7 @@
     <div class="container no_padding">
       <div class="row min_padd text-center" style="">
         {% for r in refbookobjs %}
-        <div class="col-md-6" style="position: relative;">
+        <a href="/" class="col-md-6" style="position: relative;text-decoration:none;">
           <div class="movie-card">
             <div class="col-md-5 studentcard" style="min-height:300px;">
               <img src="/media/{{r.book.dp}}" class="imgstyle">
@@ -266,7 +266,7 @@
               </div>
             </div>
           </div>
-        </div>
+        </a>
         {% endfor %}
       </div>
     </div>
