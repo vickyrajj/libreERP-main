@@ -201,7 +201,7 @@
       </div>
     </div>
     <div class="container-fluid" style="padding-top:15px;">
-      <div class="col-md-3" ng-repeat="n in noteData" style="margin-bottom:10px;">
+      <div class="col-md-3" ng-repeat="n in noteData[0]" style="margin-bottom:10px;">
         <div class="container-fluid card">
           <div ng-click="noteInfo($index)">
             <h3>{{n.title}}</h3>
@@ -214,6 +214,7 @@
             <a href="">
               <h5>{{n.urlSuffix}}</h5>
             </a>
+            <i class="fa fa-pencil" ng-click="addNotes(n.pk)" aria-hidden="true" style="cursor:pointer;"></i>
             <i class="fa fa-plus-square pull-right" ng-click="noteSection($index)" aria-hidden="true" style="cursor:pointer;"></i>
           </div>
         </div>

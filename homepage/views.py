@@ -24,6 +24,8 @@ from rest_framework.views import APIView
 from PIM.models import blogPost
 from LMS.models import *
 import sys, traceback
+import random
+
 
 
 
@@ -85,6 +87,11 @@ def blogDetails(request, blogname):
         bookobjs = Book.objects.all()
         subobjs = Subject.objects.all().order_by('level')
         noteobj = Note.objects.all()
+        refbookobjs = BookCourseMap.objects.filter(book__subject__pk=sub.pk)
+        refbooklen = len(refbookobjs)
+        r = lambda: random.randint(150,250)
+        for i in refbookobjs:
+            color = ('#%02X%02X%02X' % (r(),r(),r()))
         books = []
         videoCourse = []
         forum = []
@@ -100,9 +107,9 @@ def blogDetails(request, blogname):
             pass
         if subPart == 'notes':
             pass
-        print "sub part" , subPart
+        # print "sub part" , subPart
 
-        return render(request, 'courses.html', {"courseobj":courseobjs,"subobj":subobjs,"level":level,"title":title , "subPart" : subPart, "booklen":booklen , "noteobj":noteobj, "bookobjs":bookobjs} )
+        return render(request, 'courses.html', {"courseobj":courseobjs,"subobj":subobjs,"level":level,"title":title , "subPart" : subPart, "booklen":booklen , "noteobj":noteobj, "bookobjs":bookobjs,"refbookobjs":refbookobjs,"refbooklen":refbooklen, "color":color} )
     try:
         blogobj = blogPost.objects.get(shortUrl=blogname)
         print "got blog post"  , blogobj

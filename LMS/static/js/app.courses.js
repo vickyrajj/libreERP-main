@@ -202,13 +202,13 @@ app.controller("home.LMS.courses.explore", function($scope, $state, $users, $sta
 
   $http({
     method: 'GET',
-    url: '/api/PIM/blog/?contentType=course&&header='+ $scope.course.pk
+    url: '/api/PIM/blog/?contentType=course&&header=' + $scope.course.pk
   }).then(function(response) {
     $scope.linkedCourse = response.data;
     if (response.data.length > 0) {
       $scope.linkType = "edit"
       $scope.linkData = $scope.linkedCourse[0];
-    } else{
+    } else {
       $scope.linkType = "new"
       $scope.linkData = {}
     }
@@ -242,8 +242,8 @@ app.controller("home.LMS.courses.explore", function($scope, $state, $users, $sta
             tagsCSV: '',
             section: '',
             author: '',
-            title:'',
-            shortUrl:'',
+            title: '',
+            shortUrl: '',
           }
         }
         console.log($scope.blogForm);
@@ -394,29 +394,70 @@ app.controller("home.LMS.courses.explore", function($scope, $state, $users, $sta
 
 
   //-------fetch note
+  $scope.noteData = []
   $http({
     method: 'GET',
     url: '/api/LMS/note/'
   }).then(function(response) {
-    $scope.noteData = response.data;
+    // $scope.noteData = response.data;
+    $scope.noteData.push(response.data);
   })
+  console.log($scope.noteData,'---------------nnnnnndddddd');
   //---------adding notes
-  $scope.addNotes = function() {
+  $scope.addNotes = function(index) {
+
+    if (index == undefined) {
+      $scope.form = {
+        'title': '',
+        'description': '',
+        'url': '',
+        'image': emptyFile,
+      }
+    }else {
+      $scope.form = $scope.noteData[0][index]
+    }
+
+
     $uibModal.open({
       templateUrl: '/static/ngTemplates/app.LMs.course.notesUpload.html',
       size: 'md',
       backdrop: true,
-      controller: function($scope, $uibModalInstance) {
+      resolve: {
+        cData: function() {
+          return $scope.course;
+        },
+        sData: function() {
+          return $scope.course.topic.subject;
+        },
+        fData: function() {
+            return $scope.form;
+        }
+      },
+      controller: function($scope, $uibModalInstance, cData, sData,fData) {
+        // console.log(cData.pk, '---------courseeeeeeesssssssssssssssss--------');
+        // console.log(sData.pk, '---------ssuuuuuuuuubbbbbbbbbbb--------');
+        console.log(fData);
+        $scope.form = fData;
+        console.log($scope.form.pk,'-------fpk');
         $scope.saveNote = function() {
+          var f = $scope.form;
+          var url = '/api/LMS/note/';
+          if ($scope.form.pk) {
+            var method = 'PATCH';
+            url += $scope.form.pk + '/';
+          } else {
+            var method = 'POST';
+          }
           var fd = new FormData();
-          fd.append('title', $scope.form.title);
-          fd.append('description', $scope.form.description);
-          fd.append('urlSuffix', $scope.form.url);
-          fd.append('image', $scope.form.image);
-
+          fd.append('title', f.title);
+          fd.append('description', f.description);
+          fd.append('urlSuffix', f.url);
+          fd.append('image', f.image);
+          fd.append('course', cData.pk);
+          fd.append('subject', sData.pk);
           $http({
-            method: 'POST',
-            url: '/api/LMS/note/',
+            method: method,
+            url: url,
             data: fd,
             transformRequest: angular.identity,
             headers: {
@@ -428,8 +469,16 @@ app.controller("home.LMS.courses.explore", function($scope, $state, $users, $sta
             $uibModalInstance.dismiss(response.data);
           })
         }
+
       }, //controller ends
-    })
+    }).result.then(function(n) {
+
+    }, function(n) {
+      // console.log(a,typeof a);
+      if (typeof n == 'object') {
+        $scope.noteData[0].push(n)
+      }
+    });
   } //addnotesfunction ends
 
 
@@ -767,8 +816,8 @@ app.controller("home.LMS.courses.form", function($scope, $state, $users, $stateP
       var method = 'PATCH'
       var url = '/api/LMS/course/' + $scope.form.pk + '/'
     }
-    console.log($scope.form.TAs,'--------------------ta pk');
-    console.log($scope.form.instructor.pk,'---------innnnnssssttrr');
+    console.log($scope.form.TAs, '--------------------ta pk');
+    console.log($scope.form.instructor.pk, '---------innnnnssssttrr');
     // var TAs = '';
     // for (var i = 0; i < $scope.form.TAs.length; i++) {
     //   TAs += $scope.form.TAs[i] +','
@@ -779,7 +828,7 @@ app.controller("home.LMS.courses.form", function($scope, $state, $users, $stateP
     fd.append('enrollmentStatus', $scope.form.enrollmentStatus);
     fd.append('description', $scope.form.description);
     fd.append('dp', $scope.form.dp);
-    fd.append('TAs',$scope.form.TAs);
+    fd.append('TAs', $scope.form.TAs);
     fd.append('instructor', $scope.form.instructor.pk);
     $http({
       method: method,

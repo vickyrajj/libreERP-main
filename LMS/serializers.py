@@ -327,7 +327,7 @@ class BookCourseMapSerializer(serializers.ModelSerializer):
 class NoteSerializer(serializers.ModelSerializer):
     class Meta:
         model = Note
-        fields = ('pk' , 'title' , 'description', 'urlSuffix', 'image' )
+        fields = ('pk' , 'title' , 'description', 'urlSuffix', 'image' ,'course','subject')
 
 class NoteLiteSerializer(serializers.ModelSerializer):
     class Meta:
