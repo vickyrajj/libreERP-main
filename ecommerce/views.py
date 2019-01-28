@@ -1041,7 +1041,8 @@ def manifest(response,item,typ,packingSlip):
     txt4 = '<para size=10 leftIndent=150 rightIndent=150><b>SOLD BY : </b>{0}</para>'.format(settingsFields.get(name = 'companyAddress').value)
     elements.append(Paragraph(txt4, styles['Normal']))
     elements.append(Spacer(1, 3))
-    txt5 = '<para size=10 leftIndent=150 rightIndent=150><b>VAT/TIN No. : </b>{0} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br/><b>CST No. : </b>{1}</para>'.format(settingsFields.get(name = 'vat_tinNo').value,settingsFields.get(name = 'cstNo').value)
+    # txt5 = '<para size=10 leftIndent=150 rightIndent=150><b>VAT/TIN No. : </b>{0} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br/><b>CST No. : </b>{1}</para>'.format(settingsFields.get(name = 'vat_tinNo').value,settingsFields.get(name = 'cstNo').value)
+    txt5 = '<para size=10 leftIndent=150 rightIndent=150><b>GST No. : </b>{0}</para>'.format(settingsFields.get(name = 'cstNo').value)
     elements.append(Paragraph(txt5, styles['Normal']))
     elements.append(Spacer(1, 10))
     invNo = str(now.year)+str(now.month)+str(now.day)+str(order.pk)
@@ -1122,7 +1123,7 @@ def manifest(response,item,typ,packingSlip):
     elements.append(Paragraph(txt8, styles['Normal']))
     elements.append(Spacer(1, 10))
     barVal = str(courierAWBNo)
-    print barVal,'bar vallllllllllllllllllllllll'
+    # print barVal,'bar vallllllllllllllllllllllll'
     barcode=code39.Extended39(barVal,barWidth=0.4*mm,barHeight=10*mm,checksum=0)
     elements.append(Indenter(left=140))
     elements.append(barcode)
@@ -1239,12 +1240,12 @@ class DownloadManifestAPI(APIView):
     renderer_classes = (JSONRenderer,)
     # permission_classes = (permissions.IsAuthenticated ,)
     def get(self , request , format = None):
-        print self.request.GET
+        # print self.request.GET
         if 'trackingId' in request.GET:
             try:
                 qtyObjs = OrderQtyMap.objects.filter(courierAWBNo=request.GET['trackingId'])
                 for i in qtyObjs:
-                    print i.status,'statusssssssssss'
+                    # print i.status,'statusssssssssss'
                     if i.status == 'created':
                         i.status = 'packed'
                         i.save()
@@ -1287,7 +1288,7 @@ class DownloadManifestAPI(APIView):
                             print 'small slipppppppppp'
                             doubleCopyData = resData['doubleCopyData']
                             for i in doubleCopyData:
-                                print 'product data',i
+                                # print 'product data',i
                                 requests.post("http://"+globalSettings.WAMP_SERVER+":8080/notify",json={'topic': 'service.POS.Printer.{0}'.format(request.GET['printerDeviceId']),'args': [{'id':item.pk,'name':i['name'],'qty':i['qty'],'smallBill':'yes'}]})
                     except:
                         pass
