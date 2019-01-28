@@ -127,8 +127,8 @@ class ProjectPettyExpense(models.Model): # also petty cash
 STATUS_CHOICES = (
     ('created' , 'created'),
     ('Sent' , 'Sent'),
+    ('GRN' , 'GRN'),
     ('Approved' , 'Approved'),
-    # ('Received' , 'Received'),
     # ('NotReceivedAndArchived' , 'NotReceivedAndArchived'),
     # ('Reconciled' , 'Reconciled'),
 )

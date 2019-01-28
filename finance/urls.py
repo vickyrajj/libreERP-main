@@ -29,4 +29,6 @@ urlpatterns = [
     url(r'expensesGraphData/$' , ExpensesGraphDataAPI.as_view()),
     url(r'monthsExpensesData/$' , MonthsExpensesDataAPI.as_view()),
     url(r'downloadExpenseSummary/$' , DownloadExpenseSummaryAPI.as_view()),
+    url(r'grnDownload/$' , GrnAPIView.as_view()),
+
 ]

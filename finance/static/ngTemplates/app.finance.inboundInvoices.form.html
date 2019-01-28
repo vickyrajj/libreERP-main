@@ -8,7 +8,7 @@
           <div class="form-group">
             <label>PO Number</label>
             <!-- <input type="text " class="form-control" ng-model="form.poNumber"> -->
-              <input type="text" class="form-control" ng-model="form.poNumber" uib-typeahead="po as po.poNumber for po in poSearch($viewValue)">
+              <input type="text" class="form-control" ng-model="form.poNumber" uib-typeahead="po as po.pk for po in poSearch($viewValue)">
           </div>
           <div class="form-group">
             <label>Company Name</label>
@@ -34,36 +34,57 @@
             <label>Pincode</label>
             <input type="text " class="form-control" ng-model="form.pincode"  uib-typeahead="pin as pin.pincode for pin in pinSearch($viewValue)">
           </div>
+          <div class="form-group">
+            <label>Delivery Date</label>
+            <div class="input-group">
+              <input type="text" class="form-control" show-weeks="false" uib-datepicker-popup="dd-MMMM-yyyy" ng-model="form.deliveryDate" is-open="status.opened" />
+              <span class="input-group-btn">
+                <button type="button" class="btn btn-default" ng-click="status.opened = true;"><i class="glyphicon glyphicon-calendar"></i></button>
+              </span>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label>Payment Due Date</label>
+            <div class="input-group">
+              <input type="text" class="form-control" show-weeks="false" uib-datepicker-popup="dd-MMMM-yyyy" ng-model="form.paymentDueDate" is-open="status.payment" />
+              <span class="input-group-btn">
+                <button type="button" class="btn btn-default" ng-click="status.payment = true;"><i class="glyphicon glyphicon-calendar"></i></button>
+              </span>
+            </div>
+          </div>
         </div>
       </div>
 
       <div class="col-md-4">
-
-        <div class="form-group">
-          <label>Delivery Date</label>
-          <div class="input-group">
-            <input type="text" class="form-control" show-weeks="false" uib-datepicker-popup="dd-MMMM-yyyy" ng-model="form.deliveryDate" is-open="status.opened" />
-            <span class="input-group-btn">
-                <button type="button" class="btn btn-default" ng-click="status.opened = true;"><i class="glyphicon glyphicon-calendar"></i></button>
-              </span>
-          </div>
-        </div>
-
-        <div class="form-group">
-          <label>Payment Due Date</label>
-          <div class="input-group">
-            <input type="text" class="form-control" show-weeks="false" uib-datepicker-popup="dd-MMMM-yyyy" ng-model="form.paymentDueDate" is-open="status.payment" />
-            <span class="input-group-btn">
-                <button type="button" class="btn btn-default" ng-click="status.payment = true;"><i class="glyphicon glyphicon-calendar"></i></button>
-              </span>
-          </div>
-        </div>
-
         <div class="form-group">
           <label>GSTIN</label>
-          <input type="text " class="form-control" ng-model="form.gstTin">
+          <input type="text " class="form-control" ng-model="form.gstIn">
         </div>
-
+        <div class="form-group">
+          <label>Terms & Condition</label>
+          <textarea class="form-control" ng-model="form.invoiceTerms" rows="8" cols="80"></textarea>
+        </div>
+        <div class="form-group">
+          <label>Bank Account Number</label>
+          <input type="password" class="form-control" ng-model="form.accNo">
+        </div>
+        <div class="form-group">
+          <label>Re-Enter Bank Account Number</label>
+          <input type="text" class="form-control" ng-model="form.reaccNo">
+        </div>
+        <div class="form-group">
+          <label>Bank IFSC Code</label>
+          <input type="password" class="form-control" ng-model="form.ifsc">
+        </div>
+        <div class="form-group">
+          <label>Re-Enter Bank IFSC Code</label>
+          <input type="text" class="form-control" ng-model="form.reifsc">
+        </div>
+        <div class="form-group">
+          <label>Bank Name</label>
+          <input type="text" class="form-control" ng-model="form.bankName" typeahead="bank as bank for bank in bankList | filter:$viewValue">
+        </div>
       </div>
 
       <div class="col-md-4">
@@ -112,7 +133,7 @@
               <th>Price</th>
               <th>Quantity</th>
               <th>HSN/SAC Code</th>
-              <th>Tax</th>
+              <th>Tax (%)</th>
               <th>Sub Total</th>
               <th></th>
             </tr>
@@ -120,11 +141,11 @@
               <td>{{$index + 1}}</td>
               <td><input type="text" class="form-control-pos text-center" ng-model="v.product"></td>
               <td><input type="text" class="form-control-pos text-center" ng-model="v.price"></td>
-              <td><input type="text" class="form-control-pos text-center" ng-model="v.qty"></td>
+              <td><input type="text" class="form-control-pos text-center" ng-model="v.receivedQty"></td>
               <td><input type="text" class="form-control-pos text-center" ng-model="v.hsn" uib-typeahead="meta as meta.code for meta in productMetaSearch($viewValue)"></td>
               <td><input type="text" class="form-control-pos text-center" ng-model="v.tax"></td>
               <td><input type="text" class="form-control-pos text-center" ng-model="v.total"></td>
-              <td><button type="button" class="btn btn-danger btn-sm" ng-click="deleteData(v.pk , $index)"> <i class="fa fa-trash"></i> </button></td>
+              <td><button type="button" class="btn btn-danger btn-sm"  ng-click="deleteData(v.pk , $index)"> <i class="fa fa-trash"></i> </button></td>
             </tr>
             <tr>
               <td><button style="background-color:white;border:none;" ng-click="addTableRow($index)"><i class="fa fa-plus" style="cursor:pointer"></i></button></td>

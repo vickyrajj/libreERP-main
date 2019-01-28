@@ -278,7 +278,7 @@ class PurchaseOrderSerializer(serializers.ModelSerializer):
     project = projectLiteSerializer(many = False , read_only = True)
     class Meta:
         model = PurchaseOrder
-        fields = ('pk', 'created' , 'name' , 'address' , 'personName' , 'phone', 'email' , 'pincode' , 'user' , 'status', 'poNumber' , 'quoteNumber' ,'quoteDate', 'deliveryDate' , 'terms' , 'costcenter' , 'bussinessunit' , 'project' , 'isInvoice','pin_status','country','city','state','accNo','ifsc','bankName')
+        fields = ('pk', 'created' , 'name' , 'address' , 'personName' , 'phone', 'email' , 'pincode' , 'user' , 'status', 'poNumber' , 'quoteNumber' ,'quoteDate', 'deliveryDate' , 'terms' , 'costcenter' , 'bussinessunit' , 'project' , 'isInvoice','pin_status','country','city','state','accNo','ifsc','bankName','paymentDueDate','gstIn','invoiceTerms')
         read_only_fields = ('user', )
     def create(self , validated_data):
         u = self.context['request'].user
@@ -295,7 +295,7 @@ class PurchaseOrderSerializer(serializers.ModelSerializer):
         # po.save()
         return po
     def update(self , instance , validated_data):
-        for key in ['pk', 'created' , 'name' , 'address' , 'personName' , 'phone', 'email' , 'pincode' , 'user' , 'status', 'poNumber' , 'quoteNumber' ,'quoteDate', 'deliveryDate' , 'terms' , 'costcenter' , 'bussinessunit' , 'project' , 'isInvoice','pin_status','country','city','state','accNo','ifsc','bankName']:
+        for key in ['pk', 'created' , 'name' , 'address' , 'personName' , 'phone', 'email' , 'pincode' , 'user' , 'status', 'poNumber' , 'quoteNumber' ,'quoteDate', 'deliveryDate' , 'terms' , 'costcenter' , 'bussinessunit' , 'project' , 'isInvoice','pin_status','country','city','state','accNo','ifsc','bankName','paymentDueDate','gstIn','invoiceTerms']:
             try:
                 setattr(instance , key , validated_data[key])
             except:

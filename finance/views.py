@@ -19,6 +19,24 @@ import datetime
 from dateutil.relativedelta import relativedelta
 import calendar
 from django.http import HttpResponse
+from reportlab import *
+from reportlab.pdfgen import canvas
+from reportlab.lib.pagesizes import A4
+from reportlab.lib.pagesizes import letter, landscape
+from reportlab.lib.units import cm, mm
+from reportlab.lib import colors , utils
+from reportlab.platypus import Paragraph, Table, TableStyle, Image, Frame, Spacer, PageBreak, BaseDocTemplate, PageTemplate, SimpleDocTemplate, Flowable,ListItem,ListFlowable,NextPageTemplate
+from PIL import Image
+from reportlab.lib.styles import ParagraphStyle, getSampleStyleSheet, TA_CENTER
+from reportlab.graphics import barcode , renderPDF
+from reportlab.graphics.shapes import *
+from reportlab.graphics.barcode.qr import QrCodeWidget
+from reportlab.lib.pagesizes import letter,A5,A4,A3,A2
+from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph
+from reportlab.lib.styles import ParagraphStyle,getSampleStyleSheet
+from reportlab.lib.enums import TA_LEFT, TA_CENTER
+from reportlab.lib.colors import *
+from reportlab.lib.units import inch, cm
 # Create your views here.
 
 class AccountViewSet(viewsets.ModelViewSet):
@@ -304,4 +322,89 @@ class DownloadExpenseSummaryAPI(APIView):
 
         response = HttpResponse(content=save_virtual_workbook(workbook),content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
         response['Content-Disposition'] = 'attachment; filename=ExpenseSummary.xlsx'
+        return response
+
+
+def grn(response , project , purchaselist , request):
+    styles = getSampleStyleSheet()
+    doc = SimpleDocTemplate(response,pagesize=letter, topMargin=0.2*cm,leftMargin=0.1*cm,rightMargin=0.1*cm)
+    doc.request = request
+    elements = []
+
+    p1 = Paragraph("<para alignment='center'fontSize=15  ><b> Goods Received Note </b></para>",styles['Normal'])
+    elements.append(p1)
+    elements.append(Spacer(1, 10))
+    try:
+        address = project.address.replace('\n', '<br />')
+    except:
+        address = project.address
+    addrdetails = Paragraph("""
+    <para >
+    <b>%s</b><br/>
+    %s <br/>
+    </para>
+    """ %(project.name ,address),styles['Normal'])
+    td=[[addrdetails]]
+    t=Table(td,colWidths=[4*inch])
+    t.hAlign = 'LEFT'
+    elements.append(t)
+
+    elements.append(Spacer(1,10))
+
+    details = Paragraph("""
+    <para>
+    <b>PO Number - </b>%s<br/>
+    </para>
+    """ %(project.poNumber),styles['Normal'])
+    td=[[details]]
+    t=Table(td,colWidths=[4*inch])
+    t.hAlign = 'LEFT'
+    elements.append(t)
+
+    # p7_01 =Paragraph("<para fontSize=8>Name</para>",styles['Normal'])
+    # p7_02 =Paragraph("<para fontSize=8>{0}</para>".format(project.title),styles['Normal'])
+    # p7_03 =Paragraph("<para fontSize=8>{0}</para>".format(''),styles['Normal'])
+    # p7_04 =Paragraph("<para fontSize=8>{0}</para>".format(''),styles['Normal'])
+    #
+    # p8_01 =Paragraph("<para fontSize=8>Date</para>",styles['Normal'])
+    # p8_02 =Paragraph("<para fontSize=8>{0}</para>".format(project.approved2_date),styles['Normal'])
+    # p8_03 =Paragraph("<para fontSize=8>{0}</para>".format(''),styles['Normal'])
+    # p8_04 =Paragraph("<para fontSize=8>{0}</para>".format(''),styles['Normal'])
+    #
+    # data1=[[p7_01,p7_02,p7_03,p7_04],[p8_01,p8_02,p8_03,p8_04]]
+    # t1=Table(data1,4*[2.1*inch],2*[0.2*inch])
+    # elements.append(t1)
+    # elements.append(Spacer(1,10))
+    p9_01 =Paragraph("<para fontSize=8> <b>Sl. no</b></para>",styles['Normal'])
+    p9_02 =Paragraph("<para fontSize=8><b>Product</b></para>",styles['Normal'])
+    p9_03 =Paragraph("<para fontSize=8><b>Quantity</b></para>",styles['Normal'])
+    data2=[[p9_01,p9_02,p9_03]]
+    # t2=Table(data2,3*[2.8*inch],1*[0.2*inch])
+    # t2.setStyle(TableStyle([('TEXTFONT', (0, 0), (-1, -1), 'Times-Bold'),('TEXTCOLOR',(0,0),(-1,-1),black),('ALIGN',(0,0),(-1,-1),'LEFT'),('VALIGN',(0,0),(-1,-1),'TOP'),('BOX',(0,0),(-1,-1),0.25,colors.black),('INNERGRID', (0,0), (-1,-1), 0.25, colors.black)]))
+    # data3 = []
+    id=0
+    for i in purchaselist:
+        id+=1
+        product = i.product
+        quanty = i.receivedQty
+        p10_01 =Paragraph("<para fontSize=8>{0}</para>".format(id),styles['Normal'])
+        p10_02 =Paragraph("<para fontSize=8>{0}</para>".format(product),styles['Normal'])
+        p10_03 =Paragraph("<para fontSize=8>{0}</para>".format(quanty),styles['Normal'])
+        data2.append([p10_01,p10_02,p10_03])
+
+    t3=Table(data2,colWidths=[0.5*inch , 3*inch , 1*inch])
+    t3.hAlign = 'LEFT'
+    t3.setStyle(TableStyle([('TEXTFONT', (0, 0), (-1, -1), 'Times-Bold'),('TEXTCOLOR',(0,0),(-1,-1),black),('ALIGN',(0,0),(-1,-1),'LEFT'),('VALIGN',(0,0),(-1,-1),'TOP'),('BOX',(0,0),(-1,-1),0.25,colors.black),('INNERGRID', (0,0), (-1,-1), 0.25, colors.black)]))
+    elements.append(t3)
+
+    doc.build(elements)
+
+
+class GrnAPIView(APIView):
+    def get(self , request , format = None):
+        project = PurchaseOrder.objects.get(pk = request.GET['value'])
+        purchaselist = PurchaseOrderQty.objects.filter(purchaseorder = request.GET['value'])
+        response = HttpResponse(content_type='application/pdf')
+        response['Content-Disposition'] = 'attachment;filename="Grndownload.pdf"'
+        grn(response , project , purchaselist , request)
         return response

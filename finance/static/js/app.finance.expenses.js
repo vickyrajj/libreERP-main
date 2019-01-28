@@ -10,6 +10,11 @@ var projectsStepsData = [{
   },
   {
     indx: 3,
+    text: 'GRN',
+    display: 'GRN'
+  },
+  {
+    indx: 4,
     text: 'Approved',
     display: 'Approved'
   },
@@ -47,7 +52,10 @@ app.controller('businessManagement.finance.expenses', function($scope, $http, $a
     views: views,
     url: '/api/finance/purchaseorder/',
     searchField: 'name',
-    getParams : [{key : 'isInvoice' , value : false}],
+    getParams: [{
+      key: 'isInvoice',
+      value: false
+    }],
     deletable: true,
     itemsNumPerView: [12, 24, 48],
   }
@@ -108,22 +116,23 @@ app.controller('businessManagement.finance.expenses', function($scope, $http, $a
     views: invoiceViews,
     url: '/api/finance/purchaseorder/',
     searchField: 'name',
-    getParams : [{key : 'isInvoice' , value : true}],
+    getParams: [{
+      key: 'isInvoice',
+      value: true
+    }],
     deletable: true,
     itemsNumPerView: [12, 24, 48],
   }
 
 
   $scope.invoicetableAction = function(target, action, mode) {
-    console.log(target, action, mode);
-    console.log($scope.data.invoiceData);
 
     for (var i = 0; i < $scope.data.invoiceData.length; i++) {
       if ($scope.data.invoiceData[i].pk == parseInt(target)) {
         if (action == 'details') {
           var title = 'Invoice Details :';
-          var appType = 'detailsinvoice';
-        } else if (action == 'edit') {
+          var appType = 'idetails';
+        }else if (action == 'edit') {
           var title = 'edit :';
           var appType = 'editinvoice';
         } else if (action == 'delete') {
@@ -135,7 +144,6 @@ app.controller('businessManagement.finance.expenses', function($scope, $http, $a
           $scope.data.invoiceData.splice(i, 1)
           return
         }
-
         $scope.addTab({
           title: title + $scope.data.invoiceData[i].name,
           cancel: true,
@@ -150,33 +158,6 @@ app.controller('businessManagement.finance.expenses', function($scope, $http, $a
     }
 
   }
-
-  // $scope.tableAction = function(target , action , mode){
-  //   for (var i = 0; i < $scope.data.tableData.length; i++) {
-  //     if ($scope.data.tableData[i].pk == parseInt(target)) {
-  //       if (action == 'details') {
-  //         var title = 'Details :';
-  //         var appType = 'PO Details';
-  //       } else if (action == 'edit') {
-  //         var title = 'edit :';
-  //         var appType = 'PO Edit';
-  //       }
-  //       $scope.addTab({
-  //         title: title + $scope.data.tableData[i].name,
-  //         cancel: true,
-  //         app: appType,
-  //         data: {
-  //           pk: target,
-  //           index: i
-  //         },
-  //         active: true
-  //       })
-  //     }
-  //   }
-  // }
-
-
-
 
   $scope.tabs = [];
   $scope.searchTabActive = true;
@@ -214,24 +195,24 @@ app.controller('businessManagement.finance.purchaseOrder.form', function($scope,
       name: '',
       address: '',
       personName: '',
-      phone : '',
-      email : '',
-      pincode : '',
-      state:'',
-      pin_status:'',
-      city:'',
-      country:'',
-      poNumber : '',
-      quoteNumber : '',
-      quoteDate:'',
-      terms : '',
-      project : '',
-      costcenter : '',
-      bussinessunit : '',
+      phone: '',
+      email: '',
+      pincode: '',
+      state: '',
+      pin_status: '',
+      city: '',
+      country: '',
+      poNumber: '',
+      quoteNumber: '',
+      quoteDate: '',
+      terms: '',
+      project: '',
+      costcenter: '',
+      bussinessunit: '',
     }
   }
   $scope.mode = 'new';
-  $scope.getAllData = function(){
+  $scope.getAllData = function() {
     $http({
       method: 'GET',
       url: '/api/finance/purchaseorderqty/?purchaseorder=' + $scope.form.pk,
@@ -263,115 +244,109 @@ app.controller('businessManagement.finance.purchaseOrder.form', function($scope,
     $scope.showButton = false
   }
 
-  $scope.refresh = function(){
-      $scope.resetForm()
-      $scope.options = false
-  }
-
-
-$scope.showOption = function() {
-  if ($scope.options == false) {
-    $scope.options = true
-  } else {
+  $scope.refresh = function() {
+    $scope.resetForm()
     $scope.options = false
   }
-}
+
+
+  $scope.showOption = function() {
+    if ($scope.options == false) {
+      $scope.options = true
+    } else {
+      $scope.options = false
+    }
+  }
 
 
   $scope.projectSearch = function(query) {
-      return $http.get('/api/projects/project/?title__contains=' + query).
-      then(function(response) {
-        return response.data;
-      })
+    return $http.get('/api/projects/project/?title__contains=' + query).
+    then(function(response) {
+      return response.data;
+    })
   };
 
   $scope.pinSearch = function(query) {
-      return $http.get('/api/ERP/genericPincode/?pincode__contains=' + query).
-      then(function(response) {
-        return response.data;
-      })
+    return $http.get('/api/ERP/genericPincode/?pincode__contains=' + query).
+    then(function(response) {
+      return response.data;
+    })
   };
 
   $scope.costCenterSearch = function(query) {
-      return $http.get('/api/finance/costCenter/?name__contains=' + query).
-      then(function(response) {
-        return response.data;
-      })
+    return $http.get('/api/finance/costCenter/?name__contains=' + query).
+    then(function(response) {
+      return response.data;
+    })
   };
 
   $scope.bussinessUnit = function(query) {
-      return $http.get('/api/organization/unit/?name__contains=' + query).
-      then(function(response) {
-        return response.data;
-      })
+    return $http.get('/api/organization/unit/?name__contains=' + query).
+    then(function(response) {
+      return response.data;
+    })
   };
 
   $scope.save = function() {
-    console.log($scope.form,'hhhhhhhhhhhhhh');
     // .toJSON().split('T')[0])
-    console.log($scope.form.deliveryDate, typeof $scope.form.deliveryDate);
-    if(typeof $scope.form.deliveryDate == 'object'){
+    if (typeof $scope.form.deliveryDate == 'object') {
       $scope.form.deliveryDate = $scope.form.deliveryDate.toJSON().split('T')[0]
-    }
-    else{
+    } else {
       $scope.form.deliveryDate = $scope.form.deliveryDate
     }
-    if(typeof $scope.form.quoteDate == 'object'){
+    if (typeof $scope.form.quoteDate == 'object') {
       $scope.form.quoteDate = $scope.form.quoteDate.toJSON().split('T')[0]
-    }
-    else{
+    } else {
       $scope.form.quoteDate = $scope.form.quoteDate
     }
 
 
 
     if ($scope.mode == 'new') {
-      if($scope.form.name==''||$scope.form.address==''){
-        Flash.create('danger','Fill the Details')
+      if ($scope.form.name == '' || $scope.form.address == '') {
+        Flash.create('danger', 'Fill the Details')
         return
       }
       var dataToSend = {
-        name:$scope.form.name,
-        personName : $scope.form.personName,
-        address : $scope.form.address,
-        phone : $scope.form.phone,
-        email : $scope.form.email,
+        name: $scope.form.name,
+        personName: $scope.form.personName,
+        address: $scope.form.address,
+        phone: $scope.form.phone,
+        email: $scope.form.email,
         pincode: $scope.form.pincode.pincode,
         state: $scope.form.pincode.state,
         city: $scope.form.pincode.city,
         country: $scope.form.pincode.country,
         pin_status: $scope.form.pincode.pin_status,
-        deliveryDate : $scope.form.deliveryDate,
-        poNumber : $scope.form.poNumber,
-        quoteNumber : $scope.form.quoteNumber,
-        quoteDate :  $scope.form.quoteDate,
-        terms :  $scope.form.terms,
+        deliveryDate: $scope.form.deliveryDate,
+        // poNumber: $scope.form.poNumber,
+        quoteNumber: $scope.form.quoteNumber,
+        quoteDate: $scope.form.quoteDate,
+        terms: $scope.form.terms,
       }
 
-      if($scope.form.project!=undefined){
-          dataToSend.project = $scope.form.project.pk
-        if($scope.form.project.costCenter!=undefined||$scope.form.project.costCenter!=null){
-          console.log($scope.form.project.costCenter);
+      if ($scope.form.project != undefined) {
+        dataToSend.project = $scope.form.project.pk
+        if ($scope.form.project.costCenter != undefined || $scope.form.project.costCenter != null) {
           $scope.form.costCenter = $scope.form.project.costCenter
           dataToSend.costcenter = $scope.form.costCenter.pk
-          if($scope.form.costCenter.unit!=undefined){
+          if ($scope.form.costCenter.unit != undefined) {
             $scope.form.bussinessunit = $scope.form.costCenter.unit
             dataToSend.bussinessunit = $scope.form.bussinessunit.pk
           }
         }
       }
-      if($scope.form.costcenter!=undefined||$scope.form.costcenter!=null){
+      if ($scope.form.costcenter != undefined || $scope.form.costcenter != null) {
         dataToSend.costcenter = $scope.form.costcenter.pk
-        if($scope.form.costcenter.unit!=undefined||$scope.form.costcenter.unit!=null){
+        if ($scope.form.costcenter.unit != undefined || $scope.form.costcenter.unit != null) {
           $scope.form.bussinessunit = $scope.form.costcenter.unit
           dataToSend.bussinessunit = $scope.form.bussinessunit.pk
         }
       }
 
-      if($scope.form.bussinessunit!=undefined||$scope.form.bussinessunit!=null){
+      if ($scope.form.bussinessunit != undefined || $scope.form.bussinessunit != null) {
         dataToSend.bussinessunit = $scope.form.bussinessunit.pk
       }
-      console.log(dataToSend,'aaaaaaaaa');
       $http({
         method: 'POST',
         url: '/api/finance/purchaseorder/',
@@ -386,95 +361,87 @@ $scope.showOption = function() {
               qty: $scope.products[i].qty,
               price: $scope.products[i].price,
               purchaseorder: response.data.pk,
-
             }
             $http({
               method: 'POST',
               url: '/api/finance/purchaseorderqty/',
               data: toSend
             }).
-            then(function(response) {})
+            then(function(response) {
+
+            })
           }
         }
-        $http({
-          method: 'PATCH',
-          url: '/api/finance/purchaseorder/'+response.data.pk+'/',
-          data: {
-            poNumber:response.data.pk
-          }
-        }).
-        then(function(response) {
-        })
+        // $http({
+        //   method: 'PATCH',
+        //   url: '/api/finance/purchaseorder/' + response.data.pk + '/',
+        //   data: {
+        //     poNumber: response.data.pk
+        //   }
+        // }).
+        // then(function(response) {})
         $scope.resetForm()
         $scope.products = []
         $scope.options = false
       }, function(response) {
         Flash.create('danger', response.status + ' : ' + response.statusText);
       })
-    }
-    else{
-      console.log(typeof $scope.form.pincode,$scope.form.pincode,'aaaaaaaaa');
-      if(typeof $scope.form.pincode=='object'){
-        console.log("hhhhhhhhhhhheeeeeeeeeeeeeee",$scope.form.pincode);
+    } else {
+      if (typeof $scope.form.pincode == 'object') {
         var data = $scope.form.pincode
-        $scope.form.pincode= data['pincode'],
-        $scope.form.state= data['state'],
-        $scope.form.city= data['city'],
-        $scope.form.country= data['country'],
-        $scope.form.pin_status= data['pin_status']
+        $scope.form.pincode = data['pincode'],
+          $scope.form.state = data['state'],
+          $scope.form.city = data['city'],
+          $scope.form.country = data['country'],
+          $scope.form.pin_status = data['pin_status']
+      } else {
+        $scope.form.pincode = $scope.form.pincode,
+          $scope.form.state = $scope.form.state,
+          $scope.form.city = $scope.form.city,
+          $scope.form.country = $scope.form.country,
+          $scope.form.pin_status = $scope.form.pin_status
       }
-      else{
-        $scope.form.pincode= $scope.form.pincode,
-        $scope.form.state= $scope.form.state,
-        $scope.form.city= $scope.form.city,
-        $scope.form.country= $scope.form.country,
-        $scope.form.pin_status= $scope.form.pin_status
-      }
-      console.log($scope.form,'aaaaaaaaaaaaaaaa');
       var dataToSend = {
-        name:$scope.form.name,
-        personName : $scope.form.personName,
-        address : $scope.form.address,
-        phone : $scope.form.phone,
-        email : $scope.form.email,
-        pincode : $scope.form.pincode,
+        name: $scope.form.name,
+        personName: $scope.form.personName,
+        address: $scope.form.address,
+        phone: $scope.form.phone,
+        email: $scope.form.email,
+        pincode: $scope.form.pincode,
         state: $scope.form.state,
         city: $scope.form.city,
         country: $scope.form.country,
         pin_status: $scope.form.pin_status,
-        deliveryDate : $scope.form.deliveryDate,
-        poNumber : $scope.form.poNumber,
-        quoteNumber : $scope.form.quoteNumber,
-        quoteDate :  $scope.form.quoteDate,
-        terms :  $scope.form.terms,
-    }
-    if($scope.form.project!=undefined){
+        deliveryDate: $scope.form.deliveryDate,
+        // poNumber: $scope.form.poNumber,
+        quoteNumber: $scope.form.quoteNumber,
+        quoteDate: $scope.form.quoteDate,
+        terms: $scope.form.terms,
+      }
+      if ($scope.form.project != undefined) {
         dataToSend.project = $scope.form.project.pk
-      if($scope.form.project.costCenter!=undefined||$scope.form.project.costCenter!=null){
-        console.log($scope.form.project.costCenter);
-        $scope.form.costCenter = $scope.form.project.costCenter
+        if ($scope.form.project.costCenter != undefined || $scope.form.project.costCenter != null) {
+          $scope.form.costCenter = $scope.form.project.costCenter
+          dataToSend.costcenter = $scope.form.costCenter.pk
+          if ($scope.form.costCenter.unit != undefined) {
+            $scope.form.bussinessunit = $scope.form.costCenter.unit
+            dataToSend.bussinessunit = $scope.form.bussinessunit.pk
+          }
+        }
+      }
+      if ($scope.form.costcenter != undefined || $scope.form.costcenter != null) {
         dataToSend.costcenter = $scope.form.costCenter.pk
-        if($scope.form.costCenter.unit!=undefined){
-          $scope.form.bussinessunit = $scope.form.costCenter.unit
+        if ($scope.form.costcenter.unit != undefined || $scope.form.costcenter.unit != null) {
+          $scope.form.bussinessunit = $scope.form.costcenter.unit
           dataToSend.bussinessunit = $scope.form.bussinessunit.pk
         }
       }
-    }
-    if($scope.form.costcenter!=undefined||$scope.form.costcenter!=null){
-      dataToSend.costcenter = $scope.form.costCenter.pk
-      if($scope.form.costcenter.unit!=undefined||$scope.form.costcenter.unit!=null){
-        $scope.form.bussinessunit = $scope.form.costcenter.unit
+      if ($scope.form.bussinessunit != undefined || $scope.form.bussinessunit != null) {
         dataToSend.bussinessunit = $scope.form.bussinessunit.pk
       }
-    }
-
-    if($scope.form.bussinessunit!=undefined||$scope.form.bussinessunit!=null){
-      dataToSend.bussinessunit = $scope.form.bussinessunit.pk
-    }
-
       $http({
         method: 'PATCH',
-        url: '/api/finance/purchaseorder/' + $scope.form.pk +'/',
+        url: '/api/finance/purchaseorder/' + $scope.form.pk + '/',
         data: dataToSend
       }).
       then(function(response) {
@@ -487,11 +454,10 @@ $scope.showOption = function() {
               price: $scope.products[i].price,
               purchaseorder: response.data.pk
             }
-            if($scope.products[i].pk){
+            if ($scope.products[i].pk) {
               method = 'PATCH',
-              url = '/api/finance/purchaseorderqty/' + $scope.products[i].pk +'/'
-            }
-            else{
+                url = '/api/finance/purchaseorderqty/' + $scope.products[i].pk + '/'
+            } else {
               method = 'POST'
               url = '/api/finance/purchaseorderqty/'
             }
@@ -510,28 +476,25 @@ $scope.showOption = function() {
   }
 
 
-$scope.deleteData = function(pkVal,idx){
-  console.log(pkVal,idx);
-  if(pkVal==undefined){
+  $scope.deleteData = function(pkVal, idx) {
+    console.log(pkVal, idx);
+    if (pkVal == undefined) {
       $scope.products.splice(idx, 1)
       return
+    } else {
+      $http({
+        method: 'DELETE',
+        url: '/api/finance/purchaseorderqty/' + pkVal + '/'
+      }).
+      then(function(response) {
+        $scope.products.splice(idx, 1)
+        Flash.create('success', 'Deleted');
+        return
+      })
+    }
   }
-  else{
-    $http({
-      method: 'DELETE',
-      url: '/api/finance/purchaseorderqty/' + pkVal + '/'
-    }).
-    then(function(response) {
-      $scope.products.splice(idx, 1)
-      return
-    })
-  }
-  }
-
-
-
 })
-app.controller('businessManagement.finance.purchaseOrder.explore', function($scope, $http, $aside, $state, Flash, $users, $filter, $permissions) {
+app.controller('businessManagement.finance.purchaseOrder.explore', function($scope, $http, $aside, $state, Flash, $users, $filter, $permissions,$uibModal) {
   $scope.projectSteps = {
     steps: projectsStepsData
   }
@@ -539,17 +502,15 @@ app.controller('businessManagement.finance.purchaseOrder.explore', function($sco
   $scope.data = $scope.data.tableData[$scope.tab.data.index]
 
   $scope.updateStatus = function() {
-  for (var i = 0; i < $scope.projectSteps.steps.length; i++) {
-    console.log($scope.projectSteps.steps[i].text,'lllllllllllllllllllllll');
-    if ($scope.projectSteps.steps[i].text == $scope.data.status) {
-      $scope.data.selectedStatus = $scope.projectSteps.steps[i].indx;
-      console.log($scope.data.selectedStatus);
-      break;
+    for (var i = 0; i < $scope.projectSteps.steps.length; i++) {
+      if ($scope.projectSteps.steps[i].text == $scope.data.status) {
+        $scope.data.selectedStatus = $scope.projectSteps.steps[i].indx;
+        break;
+      }
     }
   }
-}
-$scope.updateStatus()
-  $scope.getAllData = function(){
+  $scope.updateStatus()
+  $scope.getAllData = function() {
     $http({
       method: 'GET',
       url: '/api/finance/purchaseorderqty/?purchaseorder=' + $scope.data.pk,
@@ -560,161 +521,199 @@ $scope.updateStatus()
   }
 
 
-$scope.getAllData()
-$scope.saveData=function(){
-  console.log("hhhhhhhhhhhhhhhhhhhh");
-    for (var i = 0; i < $scope.products.length; i++) {
-      $http({
-        method: 'PATCH',
-        url:'/api/finance/purchaseorderqty/' + $scope.products[i].pk +'/',
-        data: {
-        receivedQty:$scope.products[i].receivedQty,
-        }
-      }).
-      then(function(response) {})
-  }
-}
-
-// $scope.bankList = [
-//   {'name' : 'Allahabad Bank'},
-//   {'name' : '	Andhra Bank'},
-//   {'name' : 'Bank of Baroda'},
-//   {'name' : 'Bank of India'},
-//   {'name' : 'Bank of Maharashtra'},
-//   {'name' : 'Canara Bank'},
-//   {'name' : 'Central Bank of India'},
-//   {'name' : 'Corporation Bank'},
-//   {'name' : 'Dena Bank'},
-//   {'name' : 'Indian Bank'},
-//   {'name' : 'Indian Overseas Bank'},
-//   {'name' : 'Oriental Bank of Commerce'},
-//   {'name' : 'Punjab National Bank'},
-//   {'name' : 'Punjab & Sind Bank'},
-//   {'name' : 'Syndicate Bank'},
-//   {'name' : 'UCO Bank'},
-//   {'name' : 'Union Bank of India'},
-//   {'name' : 'United Bank of India'},
-//   {'name' : 'Vijaya Bank'},
-//   {'name' : 'IDBI Bank Ltd'},
-//   {'name' : 'Bharatiya Mahila Bank'},
-//   {'name' : 'State Bank of India'},
-//   {'name' : 'State Bank of Bikaner'},
-//   {'name' : 'State Bank of Hyderabad'},
-//   {'name' : 'State Bank of Mysore'},
-//   {'name' : 'State Bank of Patiala'},
-//   {'name' : 'State Bank of Travancore'},
-// ]
-
-$scope.bankList = [
-  'Allahabad Bank',
-  'Andhra Bank',
-   'Bank of Baroda',
-  'Bank of India',
-  'Bank of Maharashtra',
-  'Canara Bank',
-  'Central Bank of India',
-  'Corporation Bank',
-  'Dena Bank',
-  'Indian Bank',
-  'Indian Overseas Bank',
-  'Oriental Bank of Commerce',
-  'Punjab National Bank',
-  'Punjab & Sind Bank',
-  'Syndicate Bank',
-  'UCO Bank',
-  'Union Bank of India',
-  'United Bank of India',
-  'Vijaya Bank',
-  'IDBI Bank Ltd',
-  'Bharatiya Mahila Bank',
-  'State Bank of India',
-  'State Bank of Bikaner',
-  'State Bank of Hyderabad',
-  'State Bank of Mysore',
-  'State Bank of Patiala',
-  'State Bank of Travancore',
-]
-
-$scope.sendForApproval=function(){
-  dataToSend = {
-    status:'Sent'
-  }
-  $http({
-    method: 'PATCH',
-    url: '/api/finance/purchaseorder/' + $scope.data.pk +'/',
-    data: dataToSend
-  }).then(function(response) {
-     $scope.data = response.data
-       $scope.updateStatus()
-  })
-}
-$scope.approve=function(){
-  dataToSend = {
-    status:'Approved'
-  }
-  $http({
-    method: 'PATCH',
-    url: '/api/finance/purchaseorder/' + $scope.data.pk +'/',
-    data: dataToSend
-  }).then(function(response) {
-     $scope.data = response.data
-       $scope.updateStatus()
-    })
-}
-$scope.reject=function(){
-  dataToSend = {
-    status:'created'
-  }
-  $http({
-    method: 'PATCH',
-    url: '/api/finance/purchaseorder/' + $scope.data.pk +'/',
-    data: dataToSend
-  }).then(function(response) {
-     $scope.data = response.data
+  $scope.getAllData()
+  $scope.saveData = function() {
+    $http({
+      method: 'PATCH',
+      url: '/api/finance/purchaseorder/' + $scope.data.pk + '/',
+      data:{
+        status: 'Approved'
+      }
+    }).then(function(response) {
+      $scope.data = response.data
       $scope.updateStatus()
+      for (var i = 0; i < $scope.products.length; i++) {
+        $http({
+          method: 'PATCH',
+          url: '/api/finance/purchaseorderqty/' + $scope.products[i].pk + '/',
+          data: {
+            receivedQty: $scope.products[i].receivedQty,
+          }
+        }).
+        then(function(response) {})
+      }
     })
-
-}
-  $scope.invoice = false
-  $scope.addToInvoice=function(){
-    $scope.invoice = true
-    if($scope.data.accNo!=null||$scope.data.ifsc!=null){
-      $scope.data.reaccNo = $scope.data.accNo
-       $scope.data.reifsc = $scope.data.ifsc
-    }
   }
-  $scope.saveBankDetails=function(){
-    console.log($scope.data.reifsc,'aaaaaaaaa');
-    if($scope.data.accNo!=$scope.data.reaccNo||$scope.data.accNo==undefined||$scope.data.reaccNo==undefined){
-        Flash.create('danger', 'Account Number Doesnt Match');
-        return
-    }
-    if($scope.data.ifsc!=$scope.data.reifsc||$scope.data.ifsc==undefined||$scope.data.reifsc==undefined){
-        Flash.create('danger', 'IFSC Number Doesnt Match');
-        return
-    }
-    if($scope.data.bankName==undefined){
-        Flash.create('danger', 'Add Bank Name');
-        return
-    }
+
+  // $scope.bankList = [
+  //   {'name' : 'Allahabad Bank'},
+  //   {'name' : '	Andhra Bank'},
+  //   {'name' : 'Bank of Baroda'},
+  //   {'name' : 'Bank of India'},
+  //   {'name' : 'Bank of Maharashtra'},
+  //   {'name' : 'Canara Bank'},
+  //   {'name' : 'Central Bank of India'},
+  //   {'name' : 'Corporation Bank'},
+  //   {'name' : 'Dena Bank'},
+  //   {'name' : 'Indian Bank'},
+  //   {'name' : 'Indian Overseas Bank'},
+  //   {'name' : 'Oriental Bank of Commerce'},
+  //   {'name' : 'Punjab National Bank'},
+  //   {'name' : 'Punjab & Sind Bank'},
+  //   {'name' : 'Syndicate Bank'},
+  //   {'name' : 'UCO Bank'},
+  //   {'name' : 'Union Bank of India'},
+  //   {'name' : 'United Bank of India'},
+  //   {'name' : 'Vijaya Bank'},
+  //   {'name' : 'IDBI Bank Ltd'},
+  //   {'name' : 'Bharatiya Mahila Bank'},
+  //   {'name' : 'State Bank of India'},
+  //   {'name' : 'State Bank of Bikaner'},
+  //   {'name' : 'State Bank of Hyderabad'},
+  //   {'name' : 'State Bank of Mysore'},
+  //   {'name' : 'State Bank of Patiala'},
+  //   {'name' : 'State Bank of Travancore'},
+  // ]
+
+
+
+  $scope.sendForApproval = function() {
     dataToSend = {
-      accNo : $scope.data.accNo,
-      ifsc : $scope.data.ifsc,
-      bankName : $scope.data.bankName,
-      isInvoice : true,
+      status: 'Sent'
     }
     $http({
       method: 'PATCH',
-      url: '/api/finance/purchaseorder/' + $scope.data.pk +'/',
+      url: '/api/finance/purchaseorder/' + $scope.data.pk + '/',
       data: dataToSend
     }).then(function(response) {
-      Flash.create('success', 'Saved');
-       // $scope.data = response.data
-       // $scope.data.reaccNo = response.data.accNo
-       //  $scope.data.reifsc = response.data.ifsc
-      })
+      $scope.data = response.data
+      $scope.updateStatus()
+    })
+  }
+  $scope.approve = function() {
+    dataToSend = {
+      status: 'GRN'
+    }
+    $http({
+      method: 'PATCH',
+      url: '/api/finance/purchaseorder/' + $scope.data.pk + '/',
+      data: dataToSend
+    }).then(function(response) {
+      $scope.data = response.data
+      $scope.updateStatus()
+    })
+  }
+  $scope.reject = function() {
+    dataToSend = {
+      status: 'created'
+    }
+    $http({
+      method: 'PATCH',
+      url: '/api/finance/purchaseorder/' + $scope.data.pk + '/',
+      data: dataToSend
+    }).then(function(response) {
+      $scope.data = response.data
+      $scope.updateStatus()
+    })
 
   }
+  $scope.invoice = false
+  $scope.addToInvoice = function() {
+    console.log('gggggggggggggggggggggggg');
+    $uibModal.open({
+      templateUrl: '/static/ngTemplates/app.finance.purchaseOrder.bankDetails.modal.html',
+      size: 'lg',
+      backdrop: true,
+      resolve: {
+        data: function() {
+          return $scope.data.pk;
+        }
+      },
+      controller: function($scope , data,$uibModalInstance,$rootScope){
+        // $scope.data.pk = data
+        $scope.bankList = [
+          'Allahabad Bank',
+          'Andhra Bank',
+          'Bank of Baroda',
+          'Bank of India',
+          'Bank of Maharashtra',
+          'Canara Bank',
+          'Central Bank of India',
+          'Corporation Bank',
+          'Dena Bank',
+          'Indian Bank',
+          'Indian Overseas Bank',
+          'Oriental Bank of Commerce',
+          'Punjab National Bank',
+          'Punjab & Sind Bank',
+          'Syndicate Bank',
+          'UCO Bank',
+          'Union Bank of India',
+          'United Bank of India',
+          'Vijaya Bank',
+          'IDBI Bank Ltd',
+          'Bharatiya Mahila Bank',
+          'State Bank of India',
+          'State Bank of Bikaner',
+          'State Bank of Hyderabad',
+          'State Bank of Mysore',
+          'State Bank of Patiala',
+          'State Bank of Travancore',
+        ]
+
+        $scope.close = function() {
+            $uibModalInstance.close();
+        }
+
+
+        $scope.saveBankDetails = function() {
+          if ($scope.data.accNo != $scope.data.reaccNo || $scope.data.accNo == undefined || $scope.data.reaccNo == undefined) {
+            Flash.create('danger', 'Account Number Doesnt Match');
+            return
+          }
+          if ($scope.data.ifsc != $scope.data.reifsc || $scope.data.ifsc == undefined || $scope.data.reifsc == undefined) {
+            Flash.create('danger', 'IFSC Number Doesnt Match');
+            return
+          }
+          if ($scope.data.bankName == undefined) {
+            Flash.create('danger', 'Add Bank Name');
+            return
+          }
+          dataToSend = {
+            accNo: $scope.data.accNo,
+            ifsc: $scope.data.ifsc,
+            bankName: $scope.data.bankName,
+            isInvoice: true,
+          }
+          $http({
+            method: 'PATCH',
+            url: '/api/finance/purchaseorder/' + data + '/',
+            data: dataToSend
+          }).then(function(response) {
+            Flash.create('success', 'Saved');
+            // $scope.data = response.data
+            // $scope.data.reaccNo = response.data.accNo
+            //  $scope.data.reifsc = response.data.ifsc
+          })
+          $rootScope.$broadcast('forceRefetch', {});
+          $uibModalInstance.close();
+        }
+      },
+    }).result.then(function() {
+
+    }, function() {
+
+    });
+    // $scope.invoice = true
+    // if ($scope.data.accNo != null || $scope.data.ifsc != null) {
+    //   $scope.data.reaccNo = $scope.data.accNo
+    //   $scope.data.reifsc = $scope.data.ifsc
+    // }
+    $scope.data = response.data
+    // $scope.updateStatus()
+  }
+
+
 
 
 })
@@ -726,25 +725,29 @@ app.controller('businessManagement.finance.inboundInvoices.form', function($scop
       name: '',
       address: '',
       personName: '',
-      phone : '',
-      email : '',
-      pincode : 0,
-      city:'',
-      state:'',
-      country:'',
-      poNumber : '',
-      quoteNumber : '',
-      quoteDate:'',
-      terms : '',
-      project : '',
-      // costcenter : '',
-      bussinessunit : '',
-      poNumber:'',
-      products:[]
+      phone: '',
+      email: '',
+      pincode: 0,
+      city: '',
+      state: '',
+      country: '',
+      poNumber: '',
+      paymentDueDate: '',
+      invoiceTerms: '',
+      terms: '',
+      project: '',
+      costcenter : '',
+      bussinessunit: '',
+      products: [],
+      accNo:'',
+      reaccNo:'',
+      ifsc:'',
+      reifsc:'',
+      bankName:''
     }
   }
   $scope.mode = 'new';
-  $scope.getAllData = function(){
+  $scope.getAllData = function() {
     $http({
       method: 'GET',
       url: '/api/finance/purchaseorderqty/?purchaseorder=' + $scope.form.pk,
@@ -762,71 +765,104 @@ app.controller('businessManagement.finance.inboundInvoices.form', function($scop
     $scope.mode = 'edit';
     $scope.products = []
     $scope.form = $scope.data.invoiceData[$scope.tab.data.index]
-    console.log( $scope.form,'aaaaaaaaaaa');
+    $scope.form.reaccNo = $scope.form.accNo
+    $scope.form.reifsc = $scope.form.ifsc
     $scope.getAllData()
     $scope.options = true
   }
 
+
+  $scope.bankList = [
+    'Allahabad Bank',
+    'Andhra Bank',
+    'Bank of Baroda',
+    'Bank of India',
+    'Bank of Maharashtra',
+    'Canara Bank',
+    'Central Bank of India',
+    'Corporation Bank',
+    'Dena Bank',
+    'Indian Bank',
+    'Indian Overseas Bank',
+    'Oriental Bank of Commerce',
+    'Punjab National Bank',
+    'Punjab & Sind Bank',
+    'Syndicate Bank',
+    'UCO Bank',
+    'Union Bank of India',
+    'United Bank of India',
+    'Vijaya Bank',
+    'IDBI Bank Ltd',
+    'Bharatiya Mahila Bank',
+    'State Bank of India',
+    'State Bank of Bikaner',
+    'State Bank of Hyderabad',
+    'State Bank of Mysore',
+    'State Bank of Patiala',
+    'State Bank of Travancore',
+  ]
   $scope.projectSearch = function(query) {
-      return $http.get('/api/projects/project/?title__contains=' + query).
-      then(function(response) {
-        return response.data;
-      })
+    return $http.get('/api/projects/project/?title__contains=' + query).
+    then(function(response) {
+      return response.data;
+    })
   };
+
+  $scope.refresh = function() {
+    $scope.resetForm()
+  }
 
   $scope.addTableRow = function(indx) {
     $scope.form.products.push({
       product: '',
       price: 0,
-      qty: 0,
-      productMeta:'',
-      hsn:'',
-      tax:'',
-      total:0
+      receivedQty: 0,
+      productMeta: '',
+      hsn: '',
+      tax: '',
+      total: 0
     });
     // $scope.showButton = false
   }
 
   $scope.costCenterSearch = function(query) {
-      return $http.get('/api/finance/costCenter/?name__contains=' + query).
-      then(function(response) {
-        return response.data;
-      })
+    return $http.get('/api/finance/costCenter/?name__contains=' + query).
+    then(function(response) {
+      return response.data;
+    })
   };
 
   $scope.bussinessUnit = function(query) {
-      return $http.get('/api/organization/unit/?name__contains=' + query).
-      then(function(response) {
-        return response.data;
-      })
+    return $http.get('/api/organization/unit/?name__contains=' + query).
+    then(function(response) {
+      return response.data;
+    })
   };
 
   $scope.poSearch = function(query) {
-      return $http.get('/api/finance/purchaseorder/?poNumber__contains=' + query).
-      then(function(response) {
-        return response.data;
-      })
+    return $http.get('/api/finance/purchaseorder/?pk__contains=' + query+'&isInvoice=false').
+    then(function(response) {
+      return response.data;
+    })
   };
 
   $scope.productMetaSearch = function(query) {
-      return $http.get('/api/clientRelationships/productMeta/?code__contains=' + query).
-      then(function(response) {
-        return response.data;
-      })
+    return $http.get('/api/clientRelationships/productMeta/?code__contains=' + query).
+    then(function(response) {
+      return response.data;
+    })
   };
 
   $scope.pinSearch = function(query) {
-      return $http.get('/api/ERP/genericPincode/?pincode__contains=' + query).
-      then(function(response) {
-        return response.data;
-      })
+    return $http.get('/api/ERP/genericPincode/?pincode__contains=' + query).
+    then(function(response) {
+      return response.data;
+    })
   };
 
 
   $scope.$watch('form.poNumber', function(newValue, oldValue) {
-    console.log(newValue,'aaaaaaaaaa');
     if (typeof newValue == "object") {
-      console.log(newValue);
       $scope.form.pk = newValue.pk
       $scope.form.name = newValue.name
       $scope.form.address = newValue.address
@@ -846,7 +882,7 @@ app.controller('businessManagement.finance.inboundInvoices.form', function($scop
       $scope.form.bussinessunit = newValue.bussinessunit
       $scope.form.project = newValue.project
       $scope.form.isInvoice = newValue.isInvoice
-      if($scope.form.pk){
+      if ($scope.form.pk) {
         $http({
           method: 'GET',
           url: '/api/finance/purchaseorderqty/?purchaseorder=' + $scope.form.pk,
@@ -854,126 +890,148 @@ app.controller('businessManagement.finance.inboundInvoices.form', function($scop
         then(function(response) {
           $scope.form.products = response.data
         })
-      }
-      else{
-          $scope.form.products =[]
+      } else {
+        $scope.form.products = []
       }
     }
   })
 
   $scope.$watch('form.products', function(newValue, oldValue) {
-  for (var i = 0; i < newValue.length; i++) {
-    if(typeof newValue[i].hsn=='object'){
-      console.log(newValue[i]);
-      $scope.form.products[i].tax = newValue[i].hsn.taxRate
-      $scope.form.products[i].total = ((newValue[i].qty*newValue[i].price) * newValue[i].hsn.taxRate/ (100+newValue[i].hsn.taxRate)).toFixed(2)
-      $scope.form.products[i].productMeta = newValue[i].hsn
-      $scope.form.products[i].hsn = newValue[i].productMeta.code
+    for (var i = 0; i < newValue.length; i++) {
+      if (typeof newValue[i].hsn == 'object') {
+        $scope.form.products[i].tax = newValue[i].hsn.taxRate
+        $scope.form.products[i].total = ((newValue[i].receivedQty * newValue[i].price) +  (((newValue[i].receivedQty * newValue[i].price)*$scope.form.products[i].tax)/100) ).toFixed(2)
+        $scope.form.products[i].productMeta = newValue[i].hsn
+        $scope.form.products[i].hsn = newValue[i].productMeta.code
+      }
     }
-  }
-  },true)
+  }, true)
 
-  $scope.saveInvoice = function(){
-    if(typeof $scope.form.pincode=='object'){
+  $scope.saveInvoice = function() {
+    if (typeof $scope.form.pincode == 'object') {
       var data = $scope.form.pincode
-      $scope.form.pincode= data['pincode'],
-      $scope.form.state= data['state'],
-      $scope.form.city= data['city'],
-      $scope.form.country= data['country'],
-      $scope.form.pin_status= data['pin_status']
+      $scope.form.pincode = data['pincode'],
+        $scope.form.state = data['state'],
+        $scope.form.city = data['city'],
+        $scope.form.country = data['country'],
+        $scope.form.pin_status = data['pin_status']
+    } else {
+      $scope.form.pincode = $scope.form.pincode,
+        $scope.form.state = $scope.form.state,
+        $scope.form.city = $scope.form.city,
+        $scope.form.country = $scope.form.country,
+        $scope.form.pin_status = $scope.form.pin_status
     }
-    else{
-      $scope.form.pincode= $scope.form.pincode,
-      $scope.form.state= $scope.form.state,
-      $scope.form.city= $scope.form.city,
-      $scope.form.country= $scope.form.country,
-      $scope.form.pin_status= $scope.form.pin_status
+    if (typeof $scope.form.deliveryDate == 'object') {
+      $scope.form.deliveryDate = $scope.form.deliveryDate.toJSON().split('T')[0]
+    } else {
+      $scope.form.deliveryDate = $scope.form.deliveryDate
     }
-    if($scope.form.pk){
+    if (typeof $scope.form.paymentDueDate == 'object') {
+      $scope.form.paymentDueDate = $scope.form.paymentDueDate.toJSON().split('T')[0]
+    } else {
+      $scope.form.paymentDueDate = $scope.form.paymentDueDate
+    }
+    // if (typeof $scope.form.poNumber == 'object') {
+    //   $scope.form.poNumber = $scope.form.poNumber.poNumber
+    // } else {
+    //   $scope.form.poNumber = $scope.form.poNumber
+    // }
+
+
+
+    if ($scope.form.accNo != $scope.form.reaccNo || $scope.form.accNo == undefined || $scope.form.reaccNo == undefined) {
+      Flash.create('danger', 'Account Number Doesnt Match');
+      return
+    }
+    if ($scope.form.ifsc != $scope.form.reifsc || $scope.form.ifsc == undefined || $scope.form.reifsc == undefined) {
+      Flash.create('danger', 'IFSC Number Doesnt Match');
+      return
+    }
+    if ($scope.form.bankName == undefined) {
+      Flash.create('danger', 'Add Bank Name');
+      return
+    }
+    if ($scope.form.pk) {
       // $scope.form.isInvoice = true
-      if (typeof $scope.form.poNumber =='object'){
-        $scope.form.poNumber = $scope.form.poNumber.poNumber
-      }
-      else{
-          $scope.form.poNumber = $scope.form.poNumber
-      }
+
       var dataToSend = {
-        name:$scope.form.name,
-        personName : $scope.form.personName,
-        address : $scope.form.address,
-        phone : $scope.form.phone,
-        email : $scope.form.email,
-        pincode : $scope.form.pincode,
+        name: $scope.form.name,
+        personName: $scope.form.personName,
+        address: $scope.form.address,
+        phone: $scope.form.phone,
+        email: $scope.form.email,
+        pincode: $scope.form.pincode,
         state: $scope.form.state,
         city: $scope.form.city,
         country: $scope.form.country,
         pin_status: $scope.form.pin_status,
-        deliveryDate : $scope.form.deliveryDate,
-        poNumber : $scope.form.poNumber,
-        quoteNumber : $scope.form.quoteNumber,
-        quoteDate :  $scope.form.quoteDate,
-        terms :  $scope.form.terms,
-        poNumber : $scope.form.poNumber,
-        isInvoice : true
+        deliveryDate: $scope.form.deliveryDate,
+        // poNumber: $scope.form.poNumber,
+        paymentDueDate: $scope.form.paymentDueDate,
+        gstIn: $scope.form.gstIn,
+        invoiceTerms: $scope.form.invoiceTerms,
+        // poNumber: $scope.form.poNumber,
+        isInvoice: true,
+        accNo: $scope.form.accNo,
+        ifsc: $scope.form.ifsc,
+        bankName: $scope.form.bankName,
       }
-      if($scope.form.project!=undefined){
-          dataToSend.project = $scope.form.project.pk
-        if($scope.form.project.costCenter!=undefined||$scope.form.project.costCenter!=null){
-          console.log($scope.form.project.costCenter);
+      if ($scope.form.project != undefined) {
+        dataToSend.project = $scope.form.project.pk
+        if ($scope.form.project.costCenter != undefined || $scope.form.project.costCenter != null) {
           $scope.form.costCenter = $scope.form.project.costCenter
           dataToSend.costcenter = $scope.form.costCenter.pk
-          if($scope.form.costCenter.unit!=undefined){
+          if ($scope.form.costCenter.unit != undefined) {
             $scope.form.bussinessunit = $scope.form.costCenter.unit
             dataToSend.bussinessunit = $scope.form.bussinessunit.pk
           }
         }
       }
-      if($scope.form.costcenter!=undefined||$scope.form.costcenter!=null){
+      if ($scope.form.costcenter != undefined || $scope.form.costcenter != null) {
         dataToSend.costcenter = $scope.form.costcenter.pk
-        if($scope.form.costcenter.unit!=undefined||$scope.form.costcenter.unit!=null){
+        if ($scope.form.costcenter.unit != undefined || $scope.form.costcenter.unit != null) {
           $scope.form.bussinessunit = $scope.form.costcenter.unit
           dataToSend.bussinessunit = $scope.form.bussinessunit.pk
         }
       }
 
-      if($scope.form.bussinessunit!=undefined||$scope.form.bussinessunit!=null){
+      if ($scope.form.bussinessunit != undefined || $scope.form.bussinessunit != null) {
         dataToSend.bussinessunit = $scope.form.bussinessunit.pk
       }
       $http({
         method: 'PATCH',
-        url: '/api/finance/purchaseorder/'+$scope.form.pk+'/',
+        url: '/api/finance/purchaseorder/' + $scope.form.pk + '/',
         data: dataToSend
       }).
       then(function(response) {
-        console.log("herereeeeeeeeeeee",$scope.form.products);
+        Flash.create('success', 'Saved');
         if ($scope.form.products.length > 0) {
           for (var i = 0; i < $scope.form.products.length; i++) {
-            if(typeof $scope.form.products[i].hsn == 'object'){
+            if (typeof $scope.form.products[i].hsn == 'object') {
               $scope.form.products[i].hsn = $scope.form.products[i].hsn.code
               $scope.form.products[i].tax = $scope.form.products[i].hsn.taxRate
               $scope.form.products[i].productMeta = $scope.form.products[i].hsn
-            }
-            else{
+            } else {
               $scope.form.products[i].hsn = $scope.form.products[i].hsn
               $scope.form.products[i].tax = $scope.form.products[i].tax
-                $scope.form.products[i].productMeta = $scope.form.products[i].productMeta
+              $scope.form.products[i].productMeta = $scope.form.products[i].productMeta
             }
 
             var toSend = {
               product: $scope.form.products[i].product,
-              qty: $scope.form.products[i].qty,
+              receivedQty: $scope.form.products[i].receivedQty,
               price: $scope.form.products[i].price,
               purchaseorder: response.data.pk,
               hsn: $scope.form.products[i].hsn,
               tax: $scope.form.products[i].tax,
-              productMeta :  $scope.form.products[i].productMeta.pk,
+              productMeta: $scope.form.products[i].productMeta.pk,
               total: $scope.form.products[i].total
             }
-            if($scope.form.products[i].pk){
+            if ($scope.form.products[i].pk) {
               method = 'PATCH',
-              url = '/api/finance/purchaseorderqty/' + $scope.form.products[i].pk +'/'
-            }
-            else{
+                url = '/api/finance/purchaseorderqty/' + $scope.form.products[i].pk + '/'
+            } else {
               method = 'POST'
               url = '/api/finance/purchaseorderqty/'
             }
@@ -982,51 +1040,55 @@ app.controller('businessManagement.finance.inboundInvoices.form', function($scop
               url: url,
               data: toSend
             }).
-            then(function(response) {})
+            then(function(response) {
+              $scope.resetForm()
+            })
           }
         }
       })
-    }else{
+    } else {
       var dataToSend = {
-        name:$scope.form.name,
-        personName : $scope.form.personName,
-        address : $scope.form.address,
-        phone : $scope.form.phone,
-        email : $scope.form.email,
-        pincode : $scope.form.pincode,
+        name: $scope.form.name,
+        personName: $scope.form.personName,
+        address: $scope.form.address,
+        phone: $scope.form.phone,
+        email: $scope.form.email,
+        pincode: $scope.form.pincode,
         state: $scope.form.state,
         city: $scope.form.city,
         country: $scope.form.country,
         pin_status: $scope.form.pin_status,
-        deliveryDate : $scope.form.deliveryDate,
-        poNumber : $scope.form.poNumber,
-        quoteNumber : $scope.form.quoteNumber,
-        quoteDate :  $scope.form.quoteDate,
-        terms :  $scope.form.terms,
-        poNumber : $scope.form.poNumber.poNumber,
-        isInvoice : true
+        deliveryDate: $scope.form.deliveryDate,
+        // poNumber: $scope.form.poNumber,
+        paymentDueDate: $scope.form.paymentDueDate,
+        gstIn: $scope.form.gstIn,
+        invoiceTerms: $scope.form.invoiceTerms,
+        // poNumber: $scope.form.poNumber,
+        isInvoice: true,
+        accNo: $scope.form.accNo,
+        ifsc: $scope.form.ifsc,
+        bankName: $scope.form.bankName,
       }
-      if($scope.form.project!=undefined){
-          dataToSend.project = $scope.form.project.pk
-        if($scope.form.project.costCenter!=undefined||$scope.form.project.costCenter!=null){
-          console.log($scope.form.project.costCenter);
+      if ($scope.form.project != undefined) {
+        dataToSend.project = $scope.form.project.pk
+        if ($scope.form.project.costCenter != undefined || $scope.form.project.costCenter != null) {
           $scope.form.costCenter = $scope.form.project.costCenter
           dataToSend.costcenter = $scope.form.costCenter.pk
-          if($scope.form.costCenter.unit!=undefined){
+          if ($scope.form.costCenter.unit != undefined) {
             $scope.form.bussinessunit = $scope.form.costCenter.unit
             dataToSend.bussinessunit = $scope.form.bussinessunit.pk
           }
         }
       }
-      if($scope.form.costcenter!=undefined||$scope.form.costcenter!=null){
+      if ($scope.form.costcenter != undefined || $scope.form.costcenter != null) {
         dataToSend.costcenter = $scope.form.costcenter.pk
-        if($scope.form.costcenter.unit!=undefined||$scope.form.costcenter.unit!=null){
+        if ($scope.form.costcenter.unit != undefined || $scope.form.costcenter.unit != null) {
           $scope.form.bussinessunit = $scope.form.costcenter.unit
           dataToSend.bussinessunit = $scope.form.bussinessunit.pk
         }
       }
 
-      if($scope.form.bussinessunit!=undefined||$scope.form.bussinessunit!=null){
+      if ($scope.form.bussinessunit != undefined || $scope.form.bussinessunit != null) {
         dataToSend.bussinessunit = $scope.form.bussinessunit.pk
       }
       $http({
@@ -1036,10 +1098,64 @@ app.controller('businessManagement.finance.inboundInvoices.form', function($scop
       }).
       then(function(response) {
         Flash.create('success', 'Saved');
+        if ($scope.form.products.length > 0) {
+          for (var i = 0; i < $scope.form.products.length; i++) {
+            if (typeof $scope.form.products[i].hsn == 'object') {
+              $scope.form.products[i].hsn = $scope.form.products[i].hsn.code
+              $scope.form.products[i].tax = $scope.form.products[i].hsn.taxRate
+              $scope.form.products[i].productMeta = $scope.form.products[i].hsn
+            } else {
+              $scope.form.products[i].hsn = $scope.form.products[i].hsn
+              $scope.form.products[i].tax = $scope.form.products[i].tax
+              $scope.form.products[i].productMeta = $scope.form.products[i].productMeta
+            }
+
+            var toSend = {
+              product: $scope.form.products[i].product,
+              receivedQty: $scope.form.products[i].receivedQty,
+              price: $scope.form.products[i].price,
+              purchaseorder: response.data.pk,
+              hsn: $scope.form.products[i].hsn,
+              tax: $scope.form.products[i].tax,
+              productMeta: $scope.form.products[i].productMeta.pk,
+              total: $scope.form.products[i].total
+            }
+            if ($scope.form.products[i].pk) {
+              method = 'PATCH',
+                url = '/api/finance/purchaseorderqty/' + $scope.form.products[i].pk + '/'
+            } else {
+              method = 'POST'
+              url = '/api/finance/purchaseorderqty/'
+            }
+            $http({
+              method: method,
+              url: url,
+              data: toSend
+            }).
+            then(function(response) {
+              $scope.resetForm()
+            })
+          }
+        }
       })
     }
   }
-
+  $scope.deleteData = function(pkVal, idx) {
+    if (pkVal == undefined) {
+      $scope.form.products.splice(idx, 1)
+      return
+    } else {
+      $http({
+        method: 'DELETE',
+        url: '/api/finance/purchaseorderqty/' + pkVal + '/'
+      }).
+      then(function(response) {
+        $scope.form.products.splice(idx, 1)
+        Flash.create('success', 'Deleted');
+        return
+      })
+    }
+  }
 
 
 
@@ -1047,7 +1163,7 @@ app.controller('businessManagement.finance.inboundInvoices.form', function($scop
 
 app.controller('businessManagement.finance.inboundInvoices.explore', function($scope, $http, $aside, $state, Flash, $users, $filter, $permissions) {
   $scope.data = $scope.data.invoiceData[$scope.tab.data.index]
-  $scope.getAllData = function(){
+  $scope.getAllData = function() {
     $http({
       method: 'GET',
       url: '/api/finance/purchaseorderqty/?purchaseorder=' + $scope.data.pk,
@@ -1058,49 +1174,49 @@ app.controller('businessManagement.finance.inboundInvoices.explore', function($s
   }
 
 
-$scope.getAllData()
+  $scope.getAllData()
 
-$scope.sendForApproval=function(){
-  dataToSend = {
-    status:'Sent'
-  }
-  $http({
-    method: 'PATCH',
-    url: '/api/finance/purchaseorder/' + $scope.data.pk +'/',
-    data: dataToSend
-  }).then(function(response) {
-     $scope.data = response.data
-     Flash.create('success', 'Saved');
+  $scope.sendForApproval = function() {
+    dataToSend = {
+      status: 'Sent'
+    }
+    $http({
+      method: 'PATCH',
+      url: '/api/finance/purchaseorder/' + $scope.data.pk + '/',
+      data: dataToSend
+    }).then(function(response) {
+      $scope.data = response.data
+      Flash.create('success', 'Saved');
     })
 
-}
-$scope.approve=function(){
-  dataToSend = {
-    status:'Approved'
   }
-  $http({
-    method: 'PATCH',
-    url: '/api/finance/purchaseorder/' + $scope.data.pk +'/',
-    data: dataToSend
-  }).then(function(response) {
-     $scope.data = response.data
-     Flash.create('success', 'Saved');
+  $scope.approve = function() {
+    dataToSend = {
+      status: 'Approved'
+    }
+    $http({
+      method: 'PATCH',
+      url: '/api/finance/purchaseorder/' + $scope.data.pk + '/',
+      data: dataToSend
+    }).then(function(response) {
+      $scope.data = response.data
+      Flash.create('success', 'Saved');
     })
-}
-$scope.reject=function(){
-  dataToSend = {
-    status:'created'
   }
-  $http({
-    method: 'PATCH',
-    url: '/api/finance/purchaseorder/' + $scope.data.pk +'/',
-    data: dataToSend
-  }).then(function(response) {
-     $scope.data = response.data
-     Flash.create('success', 'Saved');
+  $scope.reject = function() {
+    dataToSend = {
+      status: 'created'
+    }
+    $http({
+      method: 'PATCH',
+      url: '/api/finance/purchaseorder/' + $scope.data.pk + '/',
+      data: dataToSend
+    }).then(function(response) {
+      $scope.data = response.data
+      Flash.create('success', 'Saved');
     })
 
-}
+  }
 
 
 })
