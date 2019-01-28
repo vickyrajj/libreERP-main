@@ -25,21 +25,22 @@ from PIM.models import blogPost
 from LMS.models import *
 import sys, traceback
 import random
+from django.core.files.images import get_image_dimensions
 
 
 
 
 def index(request):
     subobj = Subject.objects.all().order_by('level')
-    return render(request, 'index.html', {"home": True , "subobj":subobj, "brandLogo" : globalSettings.BRAND_LOGO , "brandLogoInverted": globalSettings.BRAND_LOGO_INVERT})
+    return render(request, 'index.html', {"home": True , "subobj":subobj, "brandLogo" : globalSettings.BRAND_LOGO , "brandLogoInverted": globalSettings.BRAND_LOGO_INVERT,'seoDetails':{'title':globalSettings.SEO_TITLE,'description':globalSettings.SEO_DESCRIPTION,'image':globalSettings.SEO_IMG,'width':globalSettings.SEO_IMG_WIDTH,'height':globalSettings.SEO_IMG_HEIGHT}})
 
 def aboutUs(request):
     subobjs = Subject.objects.all().order_by('level')
-    return render(request, 'aboutUs.html', {"subobj":subobjs})
+    return render(request, 'aboutUs.html', {"subobj":subobjs,'seoDetails':{'title':globalSettings.SEO_TITLE,'description':globalSettings.SEO_DESCRIPTION,'image':globalSettings.SEO_IMG,'width':globalSettings.SEO_IMG_WIDTH,'height':globalSettings.SEO_IMG_HEIGHT}})
 
 def contactUs(request):
     subobjs = Subject.objects.all().order_by('level')
-    return render(request, 'contact.html', {"subobj":subobjs})
+    return render(request, 'contact.html', {"subobj":subobjs,'seoDetails':{'title':globalSettings.SEO_TITLE,'description':globalSettings.SEO_DESCRIPTION,'image':globalSettings.SEO_IMG,'width':globalSettings.SEO_IMG_WIDTH,'height':globalSettings.SEO_IMG_HEIGHT}})
 
 # def career(request):
 #     subobjs = Subject.objects.all().order_by('level')
@@ -63,13 +64,14 @@ def contactUs(request):
 #
 def testimonials(request):
     subobjs = Subject.objects.all().order_by('level')
-    return render(request, 'testimonials.html', {"subobj":subobjs})
+    return render(request, 'testimonials.html', {"subobj":subobjs,'seoDetails':{'title':globalSettings.SEO_TITLE,'description':globalSettings.SEO_DESCRIPTION,'image':globalSettings.SEO_IMG,'width':globalSettings.SEO_IMG_WIDTH,'height':globalSettings.SEO_IMG_HEIGHT}})
 
 
 
 
 def blogDetails(request, blogname):
     print '*****************blognameeee',blogname
+    data = {"home": False,"brandLogo" : globalSettings.BRAND_LOGO , "brandLogoInverted": globalSettings.BRAND_LOGO_INVERT , 'seoDetails':{'title':globalSettings.SEO_TITLE,'description':globalSettings.SEO_DESCRIPTION,'image':globalSettings.SEO_IMG,'width':globalSettings.SEO_IMG_WIDTH,'height':globalSettings.SEO_IMG_HEIGHT}}
     if blogname.startswith('class-') :
         print blogname,'-------------------'
         subPart = None
@@ -109,8 +111,29 @@ def blogDetails(request, blogname):
         if subPart == 'notes':
             pass
         # print "sub part" , subPart
+        data['courseobj'] = courseobjs
+        data['subobj'] = subobjs
+        data['level'] = level
+        data['title'] = title
+        data['subPart'] = subPart
+        data['booklen'] = booklen
+        data['noteobj'] = noteobj
+        data['bookobjs'] = bookobjs
+        data['refbookobjs'] = refbookobjs
+        data['refbooklen'] = refbooklen
+        data['color'] = color
+        if sub.title:
+            data['seoDetails']['title'] = sub.title
+        if sub.description:
+            data['seoDetails']['description'] = sub.description
+        if sub.dp:
+            data['seoDetails']['image'] = sub.dp.url
+            w, h = get_image_dimensions(sub.dp.file)
+            print w,h
+            data['seoDetails']['width'] = w
+            data['seoDetails']['height'] = h
 
-        return render(request, 'courses.html', {"courseobj":courseobjs,"subobj":subobjs,"level":level,"title":title , "subPart" : subPart, "booklen":booklen , "noteobj":noteobj, "bookobjs":bookobjs,"refbookobjs":refbookobjs,"refbooklen":refbooklen, "color":color} )
+        return render(request, 'courses.html', data )
     try:
         blogobj = blogPost.objects.get(shortUrl=blogname)
         print "got blog post"  , blogobj
@@ -126,14 +149,54 @@ def blogDetails(request, blogname):
                     us += ' , ' + j.first_name + ' ' + j.last_name
                 count += 1
             blogobj.created = blogobj.created.replace(microsecond=0)
-            return render(request, 'blogdetails.html', {"home": False, "tagsCSV" :  blogobj.tagsCSV.split(',') , 'user': us, 'blogobj' : blogobj , "brandLogo" : globalSettings.BRAND_LOGO , "brandLogoInverted": globalSettings.BRAND_LOGO_INVERT})
+            data['tagsCSV'] = blogobj.tagsCSV.split(',')
+            data['user'] = us
+            data['blogobj'] = blogobj
+            if blogobj.title:
+                data['seoDetails']['title'] = blogobj.title
+            if blogobj.description:
+                data['seoDetails']['description'] = blogobj.description
+            if blogobj.ogimage:
+                data['seoDetails']['image'] = blogobj.ogimage.url
+                w, h = get_image_dimensions(blogobj.ogimage.file)
+                print w,h
+                data['seoDetails']['width'] = w
+                data['seoDetails']['height'] = h
+            return render(request, 'blogdetails.html', data)
         elif blogobj.contentType == 'book':
             book = Book.objects.get(pk=blogobj.header)
             sectionobj = Section.objects.filter(book = book.pk)
-            return render(request, 'book.html', {"home": False, "tagsCSV" :  blogobj.tagsCSV.split(','), 'book' : book ,'sectionobj':sectionobj,'blogobj' : blogobj, "brandLogo" : globalSettings.BRAND_LOGO , "brandLogoInverted": globalSettings.BRAND_LOGO_INVERT})
+            data['tagsCSV'] = blogobj.tagsCSV.split(',')
+            data['book'] = book
+            data['sectionobj'] = sectionobj
+            data['blogobj'] = blogobj
+            if book.title:
+                data['seoDetails']['title'] = book.title
+            if book.description:
+                data['seoDetails']['description'] = book.description
+            if book.dp:
+                data['seoDetails']['image'] = book.dp.url
+                w, h = get_image_dimensions(book.dp.file)
+                print w,h
+                data['seoDetails']['width'] = w
+                data['seoDetails']['height'] = h
+            return render(request, 'book.html', data)
         elif blogobj.contentType == 'course':
             course = Course.objects.get(pk=blogobj.header)
-            return render(request, 'homepageCourses.html', {"home": False, "tagsCSV" :  blogobj.tagsCSV.split(','), 'course' : course ,'blogobj' : blogobj, "brandLogo" : globalSettings.BRAND_LOGO , "brandLogoInverted": globalSettings.BRAND_LOGO_INVERT})
+            data['tagsCSV'] = blogobj.tagsCSV.split(',')
+            data['course'] = course
+            data['blogobj'] = blogobj
+            if course.title:
+                data['seoDetails']['title'] = course.title
+            if course.description:
+                data['seoDetails']['description'] = course.description
+            if course.dp:
+                data['seoDetails']['image'] = course.dp.url
+                w, h = get_image_dimensions(course.dp.file)
+                print w,h
+                data['seoDetails']['width'] = w
+                data['seoDetails']['height'] = h
+            return render(request, 'homepageCourses.html', data)
 
     except:
         traceback.print_exc(file=sys.stdout)
@@ -145,9 +208,21 @@ def blogDetails(request, blogname):
                 noteObj = Note.objects.get(urlSuffix=blogname)
                 print noteObj
                 noteSection = NotesSection.objects.filter(note=noteObj.pk)
-                return render(request, 'homepagenotes.html', {"home": False,"noteObj":noteObj,"noteSection":noteSection, "brandLogo" : globalSettings.BRAND_LOGO , "brandLogoInverted": globalSettings.BRAND_LOGO_INVERT})
+                data['noteObj'] = noteObj
+                data['noteSection'] = noteSection
+                if noteObj.title:
+                    data['seoDetails']['title'] = noteObj.title
+                if noteObj.description:
+                    data['seoDetails']['description'] = noteObj.description
+                if noteObj.image:
+                    data['seoDetails']['image'] = noteObj.image.url
+                    w, h = get_image_dimensions(noteObj.image.file)
+                    print w,h
+                    data['seoDetails']['width'] = w
+                    data['seoDetails']['height'] = h
+                return render(request, 'homepagenotes.html', data)
             except:
-                return render(request, 'notFound404.html', {}, status=404)
+                return render(request, 'notFound404.html', data, status=404)
 
         # blogobj = blogPost.objects.get(header=sectionobj.book.pk)
         print 'boookkkkkk',sectionobj.book
@@ -173,8 +248,19 @@ def blogDetails(request, blogname):
                         nxt = True
                         prevobj = sec[a-1]
                         nxtvobj = sec[a+1]
+        data['sections'] = sec
+        data['sectionobj'] = sectionobj
+        data['book'] = sectionobj.book
+        data['questions'] = sectionobj.questions.all()
+        if sectionobj.seoTitle:
+            data['seoDetails']['title'] = sectionobj.seoTitle
+        else:
+            data['seoDetails']['title'] = sectionobj.title
+        if sectionobj.description:
+            data['seoDetails']['description'] = sectionobj.description
+        data['bot'] = {'prev':prev,'nxt':nxt,'prevobj':prevobj,'nxtvobj':nxtvobj}
 
-        return render(request, 'bookContent.html', { "sections" : sec , "home": False,'sectionobj':sectionobj, 'book' : sectionobj.book , "brandLogo" : globalSettings.BRAND_LOGO , "brandLogoInverted": globalSettings.BRAND_LOGO_INVERT,'questions':sectionobj.questions.all(),'bot':{'prev':prev,'nxt':nxt,'prevobj':prevobj,'nxtvobj':nxtvobj}})
+        return render(request, 'bookContent.html', data)
 
 
 def blog(request):
@@ -207,7 +293,7 @@ def blog(request):
         data.append({'user':us , 'header' : header , 'title' : title , 'date' : date , 'blogId' : blogId , 'url' : i.shortUrl })
     data = data[(page-1)*pagesize:(page*pagesize)]
 
-    return render(request,"blog.html" , {"home" : False ,'data' : data, 'dataLen' : len(data) ,'pages':pages , "brandLogo" : globalSettings.BRAND_LOGO , "brandLogoInverted": globalSettings.BRAND_LOGO_INVERT})
+    return render(request,"blog.html" , {"home" : False ,'data' : data, 'dataLen' : len(data) ,'pages':pages , "brandLogo" : globalSettings.BRAND_LOGO , "brandLogoInverted": globalSettings.BRAND_LOGO_INVERT,'seoDetails':{'title':globalSettings.SEO_TITLE,'description':globalSettings.SEO_DESCRIPTION,'image':globalSettings.SEO_IMG,'width':globalSettings.SEO_IMG_WIDTH,'height':globalSettings.SEO_IMG_HEIGHT}})
 
 def blogAnotherView(request):
     print
@@ -251,19 +337,19 @@ def team(request):
 
 def career(request):
     subobjs = Subject.objects.all().order_by('level')
-    return render(request,"career.html" , {"home" : False , "subobj":subobjs,"brandLogo" : globalSettings.BRAND_LOGO , "brandLogoInverted": globalSettings.BRAND_LOGO_INVERT})
+    return render(request,"career.html" , {"home" : False , "subobj":subobjs,"brandLogo" : globalSettings.BRAND_LOGO , "brandLogoInverted": globalSettings.BRAND_LOGO_INVERT,'seoDetails':{'title':globalSettings.SEO_TITLE,'description':globalSettings.SEO_DESCRIPTION,'image':globalSettings.SEO_IMG,'width':globalSettings.SEO_IMG_WIDTH,'height':globalSettings.SEO_IMG_HEIGHT}})
 
 def policy(request):
     subobjs = Subject.objects.all().order_by('level')
-    return render(request,"policy.html" , {"home" : False ,"subobj":subobjs, "brandName" : globalSettings.BRAND_NAME , "site" : globalSettings.SITE_ADDRESS , "brandLogo" : globalSettings.BRAND_LOGO , "brandLogoInverted": globalSettings.BRAND_LOGO_INVERT})
+    return render(request,"policy.html" , {"home" : False ,"subobj":subobjs, "brandName" : globalSettings.BRAND_NAME , "site" : globalSettings.SITE_ADDRESS , "brandLogo" : globalSettings.BRAND_LOGO , "brandLogoInverted": globalSettings.BRAND_LOGO_INVERT,'seoDetails':{'title':globalSettings.SEO_TITLE,'description':globalSettings.SEO_DESCRIPTION,'image':globalSettings.SEO_IMG,'width':globalSettings.SEO_IMG_WIDTH,'height':globalSettings.SEO_IMG_HEIGHT}})
 
 def terms(request):
     subobjs = Subject.objects.all().order_by('level')
-    return render(request,"terms.html" , {"home" : False , "subobj":subobjs,"brandName" : globalSettings.BRAND_NAME  , "brandLogo" : globalSettings.BRAND_LOGO , "brandLogoInverted": globalSettings.BRAND_LOGO_INVERT})
+    return render(request,"terms.html" , {"home" : False , "subobj":subobjs,"brandName" : globalSettings.BRAND_NAME  , "brandLogo" : globalSettings.BRAND_LOGO , "brandLogoInverted": globalSettings.BRAND_LOGO_INVERT,'seoDetails':{'title':globalSettings.SEO_TITLE,'description':globalSettings.SEO_DESCRIPTION,'image':globalSettings.SEO_IMG,'width':globalSettings.SEO_IMG_WIDTH,'height':globalSettings.SEO_IMG_HEIGHT}})
 
 def refund(request):
     subobjs = Subject.objects.all().order_by('level')
-    return render(request,"refund.html" , {"home" : False ,"subobj":subobjs, "brandName" : globalSettings.BRAND_NAME , "brandLogo" : globalSettings.BRAND_LOGO , "brandLogoInverted": globalSettings.BRAND_LOGO_INVERT})
+    return render(request,"refund.html" , {"home" : False ,"subobj":subobjs, "brandName" : globalSettings.BRAND_NAME , "brandLogo" : globalSettings.BRAND_LOGO , "brandLogoInverted": globalSettings.BRAND_LOGO_INVERT,'seoDetails':{'title':globalSettings.SEO_TITLE,'description':globalSettings.SEO_DESCRIPTION,'image':globalSettings.SEO_IMG,'width':globalSettings.SEO_IMG_WIDTH,'height':globalSettings.SEO_IMG_HEIGHT}})
 
 def contacts(request):
     subobjs = Subject.objects.all().order_by('level')
@@ -272,7 +358,7 @@ def contacts(request):
 
 def desclaimer(request):
     subobjs = Subject.objects.all().order_by('level')
-    return render(request,"desclaimer.html" , {"home" : False , "subobj":subobjs,"brandLogo" : globalSettings.BRAND_LOGO , "brandLogoInverted": globalSettings.BRAND_LOGO_INVERT})
+    return render(request,"desclaimer.html" , {"home" : False , "subobj":subobjs,"brandLogo" : globalSettings.BRAND_LOGO , "brandLogoInverted": globalSettings.BRAND_LOGO_INVERT,'seoDetails':{'title':globalSettings.SEO_TITLE,'description':globalSettings.SEO_DESCRIPTION,'image':globalSettings.SEO_IMG,'width':globalSettings.SEO_IMG_WIDTH,'height':globalSettings.SEO_IMG_HEIGHT}})
 
 
 def registration(request):

@@ -112,7 +112,7 @@ def testResultsView(request ):
 #     return render(request, 'courses.html', {"typ" : page,"courseobj":courseobj,"subobj":subobj,"notesobj":notesobj})
 
 def ncert(request):
-    return render(request, 'ncert.html', {})
+    return render(request, 'ncert.html', {'seoDetails':{'title':globalSettings.SEO_TITLE,'description':globalSettings.SEO_DESCRIPTION,'image':globalSettings.SEO_IMG,'width':globalSettings.SEO_IMG_WIDTH,'height':globalSettings.SEO_IMG_HEIGHT}})
 
 
 class MakePaytmPayment(APIView):
