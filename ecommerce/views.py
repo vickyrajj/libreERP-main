@@ -989,10 +989,10 @@ class PincodeViewSet(viewsets.ModelViewSet):
 def manifest(response,item,typ,packingSlip):
     print packingSlip ,'hhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh'
     settingsFields = application.objects.get(name = 'app.public.ecommerce').settings.all()
-    print settingsFields.get(name = 'companyAddress').value
+    # print settingsFields.get(name = 'companyAddress').value
 
     now = datetime.datetime.now()
-    print now.year,now.month,now.day
+    # print now.year,now.month,now.day
 
     styles = getSampleStyleSheet()
     doc = SimpleDocTemplate(response,pagesize=letter, topMargin=1*cm,leftMargin=0.2*cm,rightMargin=0.2*cm)
@@ -1051,7 +1051,7 @@ def manifest(response,item,typ,packingSlip):
     tableDataPackingSlip = [['SKU','Product','Qty']]
     tableData=[['Product','Price','Qty','Discount','Final Price']]
     for item in orderQtsObj:
-        print item,item.status,'rrrrrrrrrrrrrrrrrrrrrrrr'
+        # print item,item.status,'rrrrrrrrrrrrrrrrrrrrrrrr'
         if item.status == 'created':
             item.status = 'packed'
             item.save()
