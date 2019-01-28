@@ -7,27 +7,26 @@
       <h3 class="text-muted"><strong>{{note.title}}</strong> </h3>
     </div>
     <hr>
-    <a href="">
-      <h5> <span> <strong>Url :</strong> </span> {{note.urlSuffix}}</h5>
-    </a>
+
+      <h5> <span> <strong>Url :</strong> </span><a href=""> {{note.urlSuffix}}  </a></h5>
+
     <h5> <span> <strong>Description :</strong> </span> {{note.description}}</h5>
+    <hr>
+    <img src="{{note.image}}" width="100%" ng-if="note.image !=''">
   </div>
   <div class="col-md-9">
     <h2 class="text-center"> <strong>Note Section</strong> </h2>
-    <hr>
-    <div ng-if="nSection!=null">
-      <h3>Refrence Note</h3>
+    <div ng-if="nSection!=''">
       <hr>
       <div ng-repeat="sec in nSection">
         <span mathjax-bind="sec.txt"></span>
       </div>
     </div>
-    <div ng-if="nSection!==null">
-      <h3>Refrence Image</h3>
+    <div ng-if="nSection!==''" class="text-center">
       <hr>
-    <div ng-repeat="sec in nSection">
-      <img   ng-if="sec.image!=null" src="{{sec.image}}" width="200px" height="200px">
+      <div ng-repeat="sec in nSection">
+        <img ng-if="sec.image!= null" src="{{sec.image}}" width="200px" height="200px">
+      </div>
     </div>
-  </div>
   </div>
 </div>

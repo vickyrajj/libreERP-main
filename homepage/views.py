@@ -90,6 +90,7 @@ def blogDetails(request, blogname):
         refbookobjs = BookCourseMap.objects.filter(book__subject__pk=sub.pk)
         refbooklen = len(refbookobjs)
         r = lambda: random.randint(150,250)
+        color = ('#%02X%02X%02X' % (r(),r(),r()))
         for i in refbookobjs:
             color = ('#%02X%02X%02X' % (r(),r(),r()))
         books = []
@@ -135,7 +136,6 @@ def blogDetails(request, blogname):
             return render(request, 'homepageCourses.html', {"home": False, "tagsCSV" :  blogobj.tagsCSV.split(','), 'course' : course ,'blogobj' : blogobj, "brandLogo" : globalSettings.BRAND_LOGO , "brandLogoInverted": globalSettings.BRAND_LOGO_INVERT})
 
     except:
-
         traceback.print_exc(file=sys.stdout)
 
         try:
@@ -143,6 +143,9 @@ def blogDetails(request, blogname):
         except:
             try:
                 noteObj = Note.objects.get(urlSuffix=blogname)
+                print noteObj
+                noteSection = NotesSection.objects.filter(note=noteObj.pk)
+                return render(request, 'homepagenotes.html', {"home": False,"noteObj":noteObj,"noteSection":noteSection, "brandLogo" : globalSettings.BRAND_LOGO , "brandLogoInverted": globalSettings.BRAND_LOGO_INVERT})
             except:
                 return render(request, 'notFound404.html', {}, status=404)
 

@@ -397,23 +397,23 @@ app.controller("home.LMS.courses.explore", function($scope, $state, $users, $sta
   $scope.noteData = []
   $http({
     method: 'GET',
-    url: '/api/LMS/note/'
+    url: '/api/LMS/note/?course=' + $scope.course.pk
   }).then(function(response) {
     // $scope.noteData = response.data;
     $scope.noteData.push(response.data);
   })
-  console.log($scope.noteData,'---------------nnnnnndddddd');
+  console.log($scope.noteData, '---------------nnnnnndddddd');
   //---------adding notes
   $scope.addNotes = function(index) {
-
+    console.log(index, '---------indexx---from html');
     if (index == undefined) {
       $scope.form = {
         'title': '',
         'description': '',
-        'url': '',
+        'urlSuffix': '',
         'image': emptyFile,
       }
-    }else {
+    } else {
       $scope.form = $scope.noteData[0][index]
     }
 
@@ -430,15 +430,16 @@ app.controller("home.LMS.courses.explore", function($scope, $state, $users, $sta
           return $scope.course.topic.subject;
         },
         fData: function() {
-            return $scope.form;
+          return $scope.form;
         }
       },
-      controller: function($scope, $uibModalInstance, cData, sData,fData) {
+      controller: function($scope, $uibModalInstance, cData, sData, fData) {
         // console.log(cData.pk, '---------courseeeeeeesssssssssssssssss--------');
         // console.log(sData.pk, '---------ssuuuuuuuuubbbbbbbbbbb--------');
         console.log(fData);
         $scope.form = fData;
-        console.log($scope.form.pk,'-------fpk');
+        $scope.form.pk;
+        console.log($scope.form.pk, '-------fpk');
         $scope.saveNote = function() {
           var f = $scope.form;
           var url = '/api/LMS/note/';
@@ -449,10 +450,12 @@ app.controller("home.LMS.courses.explore", function($scope, $state, $users, $sta
             var method = 'POST';
           }
           var fd = new FormData();
+          if (f.image != emptyFile && typeof f.image != 'string') {
+            fd.append('image', f.image)
+          }
           fd.append('title', f.title);
           fd.append('description', f.description);
-          fd.append('urlSuffix', f.url);
-          fd.append('image', f.image);
+          fd.append('urlSuffix', f.urlSuffix);
           fd.append('course', cData.pk);
           fd.append('subject', sData.pk);
           $http({
@@ -474,13 +477,23 @@ app.controller("home.LMS.courses.explore", function($scope, $state, $users, $sta
     }).result.then(function(n) {
 
     }, function(n) {
-      // console.log(a,typeof a);
-      if (typeof n == 'object') {
-        $scope.noteData[0].push(n)
+      if ($scope.form.pk) {
+        console.log('patched it but did not push into array---------');
+      } else {
+        if (typeof n == 'object') {
+          console.log('pushing into array because post');
+          $scope.noteData[0].push(n)
+        }
       }
     });
   } //addnotesfunction ends
-
+  $scope.deleteNote = function(index,pk){
+    console.log('deleteing',index,'---------',pk);
+    $http({method : 'DELETE' , url : '/api/LMS/note/' + pk +'/'}).
+    then(function(response) {
+      $scope.noteData[0].splice(index , 1);
+    })
+  }
 
   //-----notesection
   $scope.noteSection = function(indx) {
@@ -491,7 +504,7 @@ app.controller("home.LMS.courses.explore", function($scope, $state, $users, $sta
       backdrop: true,
       resolve: {
         data: function() {
-          return $scope.noteData[indx];
+          return $scope.noteData[0][indx];
         }
       },
       controller: function($scope, $uibModalInstance, data) {
@@ -547,7 +560,7 @@ app.controller("home.LMS.courses.explore", function($scope, $state, $users, $sta
       backdrop: true,
       resolve: {
         data: function() {
-          return $scope.noteData[indx];
+          return $scope.noteData[0][indx];
         },
       },
       controller: function($scope, data) {
