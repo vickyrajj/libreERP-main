@@ -28,8 +28,6 @@ import random
 from django.core.files.images import get_image_dimensions
 
 
-
-
 def index(request):
     subobj = Subject.objects.all().order_by('level')
     return render(request, 'index.html', {"home": True , "subobj":subobj, "brandLogo" : globalSettings.BRAND_LOGO , "brandLogoInverted": globalSettings.BRAND_LOGO_INVERT,'seoDetails':{'title':globalSettings.SEO_TITLE,'description':globalSettings.SEO_DESCRIPTION,'image':globalSettings.SEO_IMG,'width':globalSettings.SEO_IMG_WIDTH,'height':globalSettings.SEO_IMG_HEIGHT}})
@@ -42,26 +40,7 @@ def contactUs(request):
     subobjs = Subject.objects.all().order_by('level')
     return render(request, 'contact.html', {"subobj":subobjs,'seoDetails':{'title':globalSettings.SEO_TITLE,'description':globalSettings.SEO_DESCRIPTION,'image':globalSettings.SEO_IMG,'width':globalSettings.SEO_IMG_WIDTH,'height':globalSettings.SEO_IMG_HEIGHT}})
 
-# def career(request):
-#     subobjs = Subject.objects.all().order_by('level')
-#     return render(request, 'career.html', {"subobj":subobjs})
-#
-# def desclaimer(request):
-#     subobjs = Subject.objects.all().order_by('level')
-#     return render(request, 'desclaimer.html', {"subobj":subobjs})
-#
-# def policy(request):
-#     subobjs = Subject.objects.all().order_by('level')
-#     return render(request, 'policy.html', {"subobj":subobjs})
-#
-# def terms(request):
-#     subobjs = Subject.objects.all().order_by('level')
-#     return render(request, 'terms.html', {"subobj":subobjs})
-#
-# def refund(request):
-#     subobjs = Subject.objects.all().order_by('level')
-#     return render(request, 'refund.html', {"subobj":subobjs})
-#
+
 def testimonials(request):
     subobjs = Subject.objects.all().order_by('level')
     return render(request, 'testimonials.html', {"subobj":subobjs,'seoDetails':{'title':globalSettings.SEO_TITLE,'description':globalSettings.SEO_DESCRIPTION,'image':globalSettings.SEO_IMG,'width':globalSettings.SEO_IMG_WIDTH,'height':globalSettings.SEO_IMG_HEIGHT}})

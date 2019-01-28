@@ -107,31 +107,6 @@ INSTALLED_APPS = (
     'LMS',# LMS
     'PIM', # personal information manager
 	'tutor',# canvas
-    # 'projectManagement',
-    # 'mail', # mail application
-    # 'social', # social networking client
-	# 'logistic',# logistics
-    # 'organization',# organization
-    # 'performance',# performance
-    # 'gitweb', # github.com local server with file browsing and diff viewer
-    # 'projects',
-    # 'workforceManagement',# canvas
-    # 'taskBoard',
-    # 'recruitment',# recruitment
-    # 'employees',# employees details
-    # 'businessManagement', # BM application
-    # 'support',# canvas
-    # 'tools',# general purpose tools like OCR, AI or big data related stuffs
-    # 'finance',# billing , invoicing , finance etc
-    # 'events',# to manage events like test, hackathon or something like that
-    # 'virtualWorkforce',
-	# 'assets',# assets
-    # 'clientRelationships',# CRM like sales force
-    # 'ecommerce', # ecommerce
-    # 'POS',# POS terminal like tally
-    # 'payroll',# payroll
-	# 'productsInventory',# inventory for POS products
-    # 'warehouse',# warehouse application
 )
 
 
