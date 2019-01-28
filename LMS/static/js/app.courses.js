@@ -487,11 +487,14 @@ app.controller("home.LMS.courses.explore", function($scope, $state, $users, $sta
       }
     });
   } //addnotesfunction ends
-  $scope.deleteNote = function(index,pk){
-    console.log('deleteing',index,'---------',pk);
-    $http({method : 'DELETE' , url : '/api/LMS/note/' + pk +'/'}).
+  $scope.deleteNote = function(index, pk) {
+    console.log('deleteing', index, '---------', pk);
+    $http({
+      method: 'DELETE',
+      url: '/api/LMS/note/' + pk + '/'
+    }).
     then(function(response) {
-      $scope.noteData[0].splice(index , 1);
+      $scope.noteData[0].splice(index, 1);
     })
   }
 
@@ -565,13 +568,56 @@ app.controller("home.LMS.courses.explore", function($scope, $state, $users, $sta
       },
       controller: function($scope, data) {
         $scope.note = data;
+        $scope.nsec = [];
         $http({
           method: 'GET',
           url: '/api/LMS/notesection/?note=' + data.pk
         }).then(function(response) {
           $scope.nSection = response.data;
+          $scope.nsec.push(response.data);
         })
-      }
+        // setTimeout(function () {
+        //   console.log('----------sec length -----',$scope.nsec[0].length,'------------',$scope.nsec);
+        // }, 1000);
+        // for (var i = 0; i < $scope.nsec.length; i++) {
+        // $scope.edit[i] = false;
+        // }
+        $scope.save = function(sec) {
+          // console.log(sec.mode,'-----mode');
+          // console.log(sec.txt,'-----txtx');
+          // console.log(sec.note.pk,'-----note pk');
+          // console.log(sec.image,'-----image');
+          var fd = new FormData();
+          if (sec.mode == 'text') {
+            fd.append('note', sec.note.pk);
+            fd.append('txt', sec.txt);
+            fd.append('mode', sec.mode);
+            if (sec.txt == '') {
+              return;
+            }
+          } else {
+            fd.append('note', sec.note.pk);
+            fd.append('image', sec.image);
+            fd.append('mode', sec.mode);
+          }
+          var method = 'PATCH';
+          var url = '/api/LMS/notesection/' + sec.pk + '/';
+          $http({
+            method: method,
+            url: url,
+            data: fd,
+            transformRequest: angular.identity,
+            headers: {
+              'Content-Type': undefined
+            }
+          }).
+          then(function(response) {
+            Flash.create('success', 'Updated Successfully')
+          })
+        }
+
+
+      },//controller ends
 
     })
 
