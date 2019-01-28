@@ -263,7 +263,7 @@ class ProductsUploadAPIView(APIView):
                         gst = 18
 
                     try:
-                        bar_code = ws['I' + str(i)].value
+                        bar_code = ws['J' + str(i)].value
 
                     except:
                         bar_code = None
