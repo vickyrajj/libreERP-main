@@ -461,7 +461,7 @@ a, u {
 }
 
 .course_contain_bg {
-  background-image: url('/static/images/24tut/tablet_stu.png');
+  background-image: url('/static/images/student_learning.jpg');
   background-repeat: no-repeat;
   background-size: contain;
   min-height: 70vh;
@@ -3208,7 +3208,7 @@ hr {
   .course_contain_bg {
     background-size: cover;
     min-height: 102vh;
-    background-image: linear-gradient(rgba(233, 233, 233, 0.6), rgba(233, 233, 233, 0.6)), url('/static/images/24tut/tablet_stu.png');
+    background-image: linear-gradient(rgba(233, 233, 233, 0.6), rgba(233, 233, 233, 0.6)), url('/static/images/student_learning.jpg');
   }
 
   .course_contain_gradient {
