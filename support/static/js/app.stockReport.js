@@ -138,10 +138,8 @@ app.controller("businessManagement.stockReport", function($scope, $state, $users
             if ($scope.products[i].product.pk == $scope.form.product.pk) {
               Flash.create('danger', 'Product already added, Edit for changes');
               if($scope.products[i].pk){
-                console.log("hhherrrrrrrrrr");
                 $scope.form.product = $scope.products[i].product
                 $scope.form.qty = $scope.products[i].qty
-                console.log($scope.form,'aaaaaaaa');
                 $http({
                   method: 'DELETE',
                   url: '/api/support/stockCheckItem/' + $scope.products[i].pk + '/'

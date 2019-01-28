@@ -262,6 +262,12 @@ class ProductsUploadAPIView(APIView):
                     except:
                         gst = 18
 
+                    try:
+                        bar_code = ws['I' + str(i)].value
+
+                    except:
+                        bar_code = None
+
 
                     Products.objects.get_or_create(part_no=part_no, description_1=description_1,description_2=description_2,replaced=replaced,parent=parent,weight=weight, price=price,customs_no=customs_no,custom=custom,gst=gst)
                     count+=1
@@ -2969,7 +2975,8 @@ def stockSheet(response, value, created, request):
     s41 =Paragraph("<para fontSize=8>Part No </para>",styles['Normal'])
     s42 =Paragraph("<para fontSize=8>Product Description </para>",styles['Normal'])
     s43 =Paragraph("<para fontSize=8>Qty </para>",styles['Normal'])
-    data5+=[[s41,s42,s43]]
+    s44 =Paragraph("<para fontSize=8>Qty in Inventory </para>",styles['Normal'])
+    data5+=[[s41,s42,s43,s44]]
     for q in ntMatchingStock:
         try:
             count = 0
@@ -2982,7 +2989,8 @@ def stockSheet(response, value, created, request):
             s51 =Paragraph("<para fontSize=8 alignment='left'> {0} </para>".format(smart_str(q.product.part_no)),styles['Normal'])
             s52 =Paragraph("<para fontSize=8 alignment='left'> {0} </para>".format(smart_str(q.product.description_1)),styles['Normal'])
             s53 =Paragraph("<para fontSize=8 alignment='center'> {0}</para>".format(tot),styles['Normal'])
-            data5.append([s51,s52,s53])
+            s54 =Paragraph("<para fontSize=8 alignment='center'> {0}</para>".format(count),styles['Normal'])
+            data5.append([s51,s52,s53,s54])
         except:
             pass
     for k in invobjList:
@@ -2998,8 +3006,9 @@ def stockSheet(response, value, created, request):
                 s51 =Paragraph("<para fontSize=8 alignment='left'> {0} </para>".format(smart_str(k['product__part_no'])),styles['Normal'])
                 s52 =Paragraph("<para fontSize=8 alignment='left'> {0} </para>".format(smart_str(k['product__description_1'])),styles['Normal'])
                 s53 =Paragraph("<para fontSize=8 alignment='center'> {0}</para>".format(count),styles['Normal'])
-                data5.append([s51,s52,s53])
-    t6=Table(data5,colWidths=(30*mm,80*mm,12*mm))
+                s54 =Paragraph("<para fontSize=8 alignment='center'> {0}</para>".format(count),styles['Normal'])
+                data5.append([s51,s52,s53,s54])
+    t6=Table(data5,colWidths=(30*mm,80*mm,12*mm,30*mm))
     t6.hAlign = 'LEFT'
     t6.setStyle(TableStyle([('TEXTFONT', (0, 0), (-1, -1), 'Times-Bold'),('TEXTCOLOR',(0,0),(-1,-1),black),('ALIGN',(0,0),(-1,-1),'RIGHT'),('VALIGN',(0,0),(-1,-1),'TOP'),('BOX',(0,0),(-1,-1),0.25,colors.black),('INNERGRID', (0,0), (-1,-1), 0.25, colors.black)]))
     elements.append(t6)

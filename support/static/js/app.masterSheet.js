@@ -225,7 +225,8 @@ app.controller('businessManagement.masterSheet.newProduct', function($scope, $ht
       price:0,
       customs_no:'',
       gst:18,
-      custom:7.5
+      custom:7.5,
+      bar_code:''
     }
   }
   $scope.reset()
