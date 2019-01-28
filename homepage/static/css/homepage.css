@@ -1,4 +1,7 @@
 /*properties for normal screen size starts here  */
+a, u {
+    text-decoration: none;
+}
 .fof h2{
 	  font-size: 50px;
 	  display: inline-block;
@@ -1066,6 +1069,7 @@ hr {
 }
 
 .nav_ele {
+	outline: none !important;
   color: #fff !important;
 }
 

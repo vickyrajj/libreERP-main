@@ -324,8 +324,8 @@ class Note(models.Model):
     description = models.TextField( null = False)
     urlSuffix = models.CharField(max_length = 100 , null = True)
     image =  models.FileField(upload_to = getNoteImagePath , null = True)
-    course = models.ForeignKey(Course , null = False , related_name="courseNote")
-    subject = models.ForeignKey(Subject , null = False , related_name='subject')
+    course = models.ForeignKey(Course , null = True , related_name="courseNote")
+    subject = models.ForeignKey(Subject , null = True , related_name='subject')
 
 
     def get_absolute_url(self):

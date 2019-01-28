@@ -43,6 +43,30 @@ app.directive('ngEnter', function() {
 
 app.controller('myCtrl1', function($scope, $rootScope, $timeout, $uibModal, $interval, $http, ngAudio) {
 
+  $scope.device = {
+    name:''
+  }
+  function lgDevice(x) {
+    if (x.matches) {
+      $scope.device.name = 'large'
+    }
+  }
+
+  function smDevice(x) {
+    if (x.matches) {
+      $scope.device.name = 'small'
+    }
+  }
+
+
+  var sm = window.matchMedia("(max-width: 600px)")
+  smDevice(sm) // Call listener function at run time
+  sm.addListener(smDevice) // Attach listener function on state changes
+
+  var lg = window.matchMedia("(min-width: 600px)")
+  lgDevice(lg)
+  lg.addListener(lgDevice)
+
   $scope.attachMessageFile = function() {
     $('#messageFile').click()
   }
@@ -51,6 +75,18 @@ app.controller('myCtrl1', function($scope, $rootScope, $timeout, $uibModal, $int
   $scope.sound.play();
 
   $scope.messageFile = emptyFile;
+
+  $scope.$watch('studentText', function(newValue, oldValue) {
+    if (newValue != undefined) {
+      if (newValue.length > 0) {
+        document.getElementById('paperPlane').style.color = "#6F6E6E"
+      } else {
+        document.getElementById('paperPlane').style.color = "#A0A0A0"
+      }
+    }
+  });
+
+
 
   $scope.$watch('messageFile', function(newValue, oldValue) {
     if (newValue != emptyFile) {
@@ -269,7 +305,7 @@ app.controller('myCtrl1', function($scope, $rootScope, $timeout, $uibModal, $int
     }).
     then(function(response) {
       var imgUrl = response.data.image;
-      var scaledImage = imgUrl;//  imgUrl.replace("."  + imgUrl.split('.').pop()  , '_scaled.' + imgUrl.split('.').pop());
+      var scaledImage = imgUrl; //  imgUrl.replace("."  + imgUrl.split('.').pop()  , '_scaled.' + imgUrl.split('.').pop());
       $scope.addImage(scaledImage);
 
     })
@@ -295,7 +331,7 @@ app.controller('myCtrl1', function($scope, $rootScope, $timeout, $uibModal, $int
     } else if (args[0] == 'online') {
       $scope.isOnline(args[1]);
     } else if (args[0] == 'sendAllData') {
-       $scope.sendAllData();
+      $scope.sendAllData();
     } else if (args[0] == 'allData') {
       $scope.gridType = args[1];
       $scope.addDataOnRefresh(args[2]);
@@ -316,13 +352,13 @@ app.controller('myCtrl1', function($scope, $rootScope, $timeout, $uibModal, $int
 
 
   $scope.connection = new autobahn.Connection({
-    url: 'wss://ws.cioc.in:443/ws',
+    url: 'wss://ws.syrow.com:443/ws',
     realm: 'default'
   });
 
   $scope.connection.onopen = function(session) {
     $scope.dataVariables.isConnected = true;
-    console.log("Connected")
+    // console.log("Connected")
 
     $scope.connection.session.subscribe($scope.roomID, $scope.handleRemoteContent).then(
       function(sub) {
@@ -481,11 +517,10 @@ app.controller('myCtrl1', function($scope, $rootScope, $timeout, $uibModal, $int
         $rootScope.$broadcast('tutorBackOnline', {});
         $scope.dataVariables.disconnectModalOpen = false;
       }
-
     } else {
       $scope.dataVariables.onlineStatus = false;
       // console.log($scope.onlineStatus);
-      $scope.openpopup();
+      // $scope.openpopup();
     }
   }, 10000);
 
@@ -564,92 +599,87 @@ app.controller('myCtrl1', function($scope, $rootScope, $timeout, $uibModal, $int
     $scope.dataForRefresh = $scope.dataToAdd;
 
     for (var i = 0; i < $scope.dataToAdd.length; i++) {
-      if ($scope.dataToAdd[i].type=='path') {
+      if ($scope.dataToAdd[i].type == 'path') {
 
         $scope.path1 = new fabric.Path('M 0 0 L 50 0 z', {
           left: 0,
           top: 0,
-          originX:$scope.dataToAdd[i].originX,
-          originY:$scope.dataToAdd[i].originY,
+          originX: $scope.dataToAdd[i].originX,
+          originY: $scope.dataToAdd[i].originY,
           stroke: $scope.dataToAdd[i].stroke,
           strokeWidth: $scope.dataToAdd[i].strokeWidth,
           fill: $scope.dataToAdd[i].fill,
           strokeLineCap: $scope.dataToAdd[i].strokeLineCap,
           selectable: false,
-          hasBorders:false,
-          hasControls:false,
-          lockMovementX:true,
-          lockMovementY:true,
+          hasBorders: false,
+          hasControls: false,
+          lockMovementX: true,
+          lockMovementY: true,
         });
 
         $scope.path1.path = $scope.dataToAdd[i].path;
         $scope.all.push($scope.path1);
 
-      }
-      else if ($scope.dataToAdd[i].type=='rect') {
-          $scope.rect2 = new fabric.Rect({
-            left: $scope.dataToAdd[i].left,
-            top: $scope.dataToAdd[i].top,
-            fill: $scope.dataToAdd[i].fill,
-            width: $scope.dataToAdd[i].width,
-            height: $scope.dataToAdd[i].height,
-            stroke: $scope.dataToAdd[i].stroke,
-            strokeWidth: $scope.dataToAdd[i].strokeWidth,
-            selectable: false,
-            hoverCursor: 'default'
-          });
-          // "add" rectangle onto canvas
-          $scope.all.push($scope.rect2);
-      }
-      else if ($scope.dataToAdd[i].type=='circle') {
-          $scope.cir2 = new fabric.Circle({
-            left: $scope.dataToAdd[i].left,
-            top: $scope.dataToAdd[i].top,
-            radius: $scope.dataToAdd[i].radius,
-            fill: $scope.dataToAdd[i].fill,
-            stroke: $scope.dataToAdd[i].stroke,
-            strokeWidth: $scope.dataToAdd[i].strokeWidth,
-            selectable: false,
-            hoverCursor: 'default'
-          });
+      } else if ($scope.dataToAdd[i].type == 'rect') {
+        $scope.rect2 = new fabric.Rect({
+          left: $scope.dataToAdd[i].left,
+          top: $scope.dataToAdd[i].top,
+          fill: $scope.dataToAdd[i].fill,
+          width: $scope.dataToAdd[i].width,
+          height: $scope.dataToAdd[i].height,
+          stroke: $scope.dataToAdd[i].stroke,
+          strokeWidth: $scope.dataToAdd[i].strokeWidth,
+          selectable: false,
+          hoverCursor: 'default'
+        });
+        // "add" rectangle onto canvas
+        $scope.all.push($scope.rect2);
+      } else if ($scope.dataToAdd[i].type == 'circle') {
+        $scope.cir2 = new fabric.Circle({
+          left: $scope.dataToAdd[i].left,
+          top: $scope.dataToAdd[i].top,
+          radius: $scope.dataToAdd[i].radius,
+          fill: $scope.dataToAdd[i].fill,
+          stroke: $scope.dataToAdd[i].stroke,
+          strokeWidth: $scope.dataToAdd[i].strokeWidth,
+          selectable: false,
+          hoverCursor: 'default'
+        });
 
-          $scope.all.push($scope.cir2);
-      }
-      else if ($scope.dataToAdd[i].type=='triangle') {
-          $scope.tri2 = new fabric.Triangle({
-            left: $scope.dataToAdd[i].left,
-            top: $scope.dataToAdd[i].top,
-            originX: $scope.dataToAdd[i].originX,
-            originY: $scope.dataToAdd[i].originY,
-            width: $scope.dataToAdd[i].width,
-            height: $scope.dataToAdd[i].height,
-            fill: $scope.dataToAdd[i].fill,
-            stroke: $scope.dataToAdd[i].stroke,
-            strokeWidth: $scope.dataToAdd[i].strokeWidth,
-            selectable: false,
-            hoverCursor: 'default'
-          });
+        $scope.all.push($scope.cir2);
+      } else if ($scope.dataToAdd[i].type == 'triangle') {
+        $scope.tri2 = new fabric.Triangle({
+          left: $scope.dataToAdd[i].left,
+          top: $scope.dataToAdd[i].top,
+          originX: $scope.dataToAdd[i].originX,
+          originY: $scope.dataToAdd[i].originY,
+          width: $scope.dataToAdd[i].width,
+          height: $scope.dataToAdd[i].height,
+          fill: $scope.dataToAdd[i].fill,
+          stroke: $scope.dataToAdd[i].stroke,
+          strokeWidth: $scope.dataToAdd[i].strokeWidth,
+          selectable: false,
+          hoverCursor: 'default'
+        });
 
-          $scope.all.push($scope.tri2);
-      }
-      else if ($scope.dataToAdd[i].type=='i-text') {
-          $scope.newText2 = new fabric.IText($scope.dataToAdd[i].text, {
-            fontWeight: $scope.dataToAdd[i].fontWeight,
-            fontFamily: $scope.dataToAdd[i].fontFamily,
-            fontSize: $scope.dataToAdd[i].fontSize,
-            top: $scope.dataToAdd[i].top,
-            left: $scope.dataToAdd[i].left,
-            selectable:false,
-            hasBorders:false,
-            hasControls:false,
-            lockMovementX:true,
-            lockMovementY:true,
-            timestamp: $scope.dataToAdd[i].timestamp
-          });
-          $scope.all.push($scope.newText2);
+        $scope.all.push($scope.tri2);
+      } else if ($scope.dataToAdd[i].type == 'i-text') {
+        $scope.newText2 = new fabric.IText($scope.dataToAdd[i].text, {
+          fontWeight: $scope.dataToAdd[i].fontWeight,
+          fontFamily: $scope.dataToAdd[i].fontFamily,
+          fontSize: $scope.dataToAdd[i].fontSize,
+          top: $scope.dataToAdd[i].top,
+          left: $scope.dataToAdd[i].left,
+          selectable: false,
+          hasBorders: false,
+          hasControls: false,
+          lockMovementX: true,
+          lockMovementY: true,
+          timestamp: $scope.dataToAdd[i].timestamp
+        });
+        $scope.all.push($scope.newText2);
 
-      }
-      else {
+      } else {
         var imgRefreshData = $scope.dataToAdd[i];
         fabric.Image.fromURL(imgRefreshData.src, function(imgObject) {
           imgObject.scaleToWidth(imgRefreshData.width);
@@ -895,7 +925,7 @@ app.controller('myCtrl1', function($scope, $rootScope, $timeout, $uibModal, $int
 
   $scope.sendAllData = function() {
     $scope.allDataInString = JSON.stringify($scope.dataForRefresh);
-    $scope.connection.session.publish($scope.roomID, ['allData',$scope.gridType , $scope.allDataInString], {}, {
+    $scope.connection.session.publish($scope.roomID, ['allData', $scope.gridType, $scope.allDataInString], {}, {
       acknowledge: true
     }).
     then(function(publication) {
@@ -938,354 +968,500 @@ app.controller('myCtrl1', function($scope, $rootScope, $timeout, $uibModal, $int
   }
 
 
+  $scope.canvasDrawing = function() {
 
-  $scope.canvas = new fabric.Canvas('tutorCanvas', {
-    selection: false
-  });
-
-
-  var canvash = document.getElementById("canvasContainer").clientHeight;
-  var canvasw = document.getElementById("canvasContainer").clientWidth;
-
-
-
-  $scope.canvas.setHeight(canvash);
-  $scope.canvas.setWidth(canvasw);
-
-
-  $scope.rectangles = [];
-  $scope.circles = [];
-  $scope.triangles = [];
-  $scope.images = [];
-  $scope.paths = [];
-  $scope.textData;
-
-  $scope.all = [];
-  $scope.dataToSend = [];
-
-  $scope.isEraser = false;
-  $scope.size = 1;
-  $scope.eraserSize = 1;
-  $scope.col = 'black';
-  $scope.mode = null;
-
-  $scope.startx;
-  $scope.starty;
-  $scope.endx;
-  $scope.endy;
-
-  fabric.Object.prototype.selectable = false;
-  $scope.canvas.isDrawingMode = true;
-
-  $scope.mathGrid = [];
-  $scope.englishGrid = [];
-  $scope.gridSapce = 70;
-
-
-  for (var i = 0; i < ($scope.canvas.width / $scope.gridSapce); i++) {
-    $scope.grid1 = new fabric.Line([i * $scope.gridSapce, 0, i * $scope.gridSapce, $scope.canvas.height], {
-      stroke: '#aca6a6',
-      selectable: false,
-      hasBorders: false,
-      hasControls: false
+    $scope.canvas = new fabric.Canvas('tutorCanvas', {
+      selection: false
     });
-    $scope.mathGrid.push($scope.grid1);
-  }
 
-  for (var i = 0; i < ($scope.canvas.height / $scope.gridSapce); i++) {
-    $scope.grid2 = new fabric.Line([0, i * $scope.gridSapce, $scope.canvas.width, i * $scope.gridSapce], {
-      stroke: '#aca6a6',
-      selectable: false,
-      hasBorders: false,
-      hasControls: false
-    });
-    $scope.mathGrid.push($scope.grid2);
-  }
 
-  for (var i = 0; i < ($scope.canvas.height / $scope.gridSapce); i++) {
-    $scope.gride = new fabric.Line([0, i * $scope.gridSapce, $scope.canvas.width, i * $scope.gridSapce], {
-      stroke: '#aca6a6',
-      selectable: false,
-      hasBorders: false,
-      hasControls: false
-    })
-    $scope.englishGrid.push($scope.gride);
-  }
+    var canvash = document.getElementById("canvasContainer").clientHeight;
+    var canvasw = document.getElementById("canvasContainer").clientWidth;
 
-  $scope.increaseCanvas = function() {
-    $scope.heightCount = $scope.canvas.height + 150;
-    $scope.canvas.setHeight($scope.heightCount);
-    if ($scope.dataVariables.sendHeight) {
-      $scope.sendDimensions();
-    }
-  }
 
-  $scope.setPen = function() {
+
+    $scope.canvas.setHeight(canvash);
+    $scope.canvas.setWidth(canvasw);
+
+
+    $scope.rectangles = [];
+    $scope.circles = [];
+    $scope.triangles = [];
+    $scope.images = [];
+    $scope.paths = [];
+    $scope.textData;
+
+    $scope.all = [];
+    $scope.dataToSend = [];
+
+    $scope.isEraser = false;
+    $scope.size = 2;
+    $scope.eraserSize = 30;
+    $scope.col = 'black';
+    $scope.mode = null;
+
+    $scope.startx;
+    $scope.starty;
+    $scope.endx;
+    $scope.endy;
+
+    fabric.Object.prototype.selectable = false;
     $scope.canvas.isDrawingMode = true;
-    $scope.canvas.freeDrawingBrush.color = $scope.col;
-    $scope.canvas.freeDrawingBrush.width = $scope.size;
-  }
+
+    $scope.mathGrid = [];
+    $scope.englishGrid = [];
+    $scope.gridSapce = 70;
 
 
-  $scope.setEraser = function() {
-    $scope.mode = 'eraser';
-    $scope.isShape = false;
-    $scope.canvas.isDrawingMode = true;
-    $scope.canvas.freeDrawingBrush.width = $scope.eraserSize;
-    $scope.canvas.freeDrawingBrush.color = '#ffffff';
-  }
-
-
-
-
-  $scope.canvas.on('path:created', function(options) {
-    if ($scope.mode != 'eraser') {
-      $scope.mode = 'path';
-    }
-
-    $scope.freePath = [];
-
-    // $scope.freePath[0] = options.path.path[0];
-    // for (var i = 1, j = 1; i < options.path.path.length; j++, i = i + 4) {
-    //   $scope.freePath[j] = options.path.path[i];
-    // }
-    //
-    // options.path.path = $scope.freePath;
-
-
-
-    options.path.lockMovementX = true;
-    options.path.lockMovementY = true;
-    options.path.hasControls = false;
-    options.path.hasBorders = false;
-    options.path.selectable = false;
-    options.path.hoverCursor = 'default';
-
-
-    $scope.all.push(options.path);
-    // $scope.paths.push(options.path);
-
-    $scope.temp = {
-      timestamp: new Date().getTime(),
-      type: options.path.type,
-      originX: options.path.originX,
-      originY: options.path.originY,
-      left: options.path.left,
-      top: options.path.top,
-      fill: options.path.fill,
-      strokeLineCap: 'round',
-      stroke: options.path.stroke,
-      strokeWidth: options.path.strokeWidth,
-      pathOffset: options.path.pathOffset,
-      path: options.path.path
-    };
-
-    $scope.dataToSend.push($scope.temp);
-    $scope.dataForRefresh.push($scope.temp);
-
-
-  });
-
-  $scope.addImage = function(url) {
-    fabric.Object.prototype.selectable = true;
-    $scope.mode = 'image';
-    $scope.dataVariables.sendImageData = false;
-    $scope.dataVariables.sendObjectsData = false;
-    $scope.dataVariables.isImageSet = false;
-
-
-    fabric.Image.fromURL(url, function(Img) {
-
-      // Img.scaleToWidth(200);
-      // Img.scaleToHeight(200);
-      Img.set({
-        timestamp: new Date().getTime()
+    for (var i = 0; i < ($scope.canvas.width / $scope.gridSapce); i++) {
+      $scope.grid1 = new fabric.Line([i * $scope.gridSapce, 0, i * $scope.gridSapce, $scope.canvas.height], {
+        stroke: '#aca6a6',
+        selectable: false,
+        hasBorders: false,
+        hasControls: false
       });
+      $scope.mathGrid.push($scope.grid1);
+    }
 
+    for (var i = 0; i < ($scope.canvas.height / $scope.gridSapce); i++) {
+      $scope.grid2 = new fabric.Line([0, i * $scope.gridSapce, $scope.canvas.width, i * $scope.gridSapce], {
+        stroke: '#aca6a6',
+        selectable: false,
+        hasBorders: false,
+        hasControls: false
+      });
+      $scope.mathGrid.push($scope.grid2);
+    }
+
+    for (var i = 0; i < ($scope.canvas.height / $scope.gridSapce); i++) {
+      $scope.gride = new fabric.Line([0, i * $scope.gridSapce, $scope.canvas.width, i * $scope.gridSapce], {
+        stroke: '#aca6a6',
+        selectable: false,
+        hasBorders: false,
+        hasControls: false
+      })
+      $scope.englishGrid.push($scope.gride);
+    }
+
+    $scope.increaseCanvas = function() {
+      $scope.heightCount = $scope.canvas.height + 150;
+      $scope.canvas.setHeight($scope.heightCount);
+      if ($scope.dataVariables.sendHeight) {
+        $scope.sendDimensions();
+      }
+    }
+
+    $scope.setPen = function() {
+      $scope.canvas.isDrawingMode = true;
+      $scope.canvas.freeDrawingBrush.color = $scope.col;
+      $scope.canvas.freeDrawingBrush.width = $scope.size;
+    }
+
+    $scope.setPen()
+
+
+    $scope.setEraser = function() {
+      $scope.mode = 'eraser';
+      $scope.isShape = false;
+      $scope.canvas.isDrawingMode = true;
+      $scope.canvas.freeDrawingBrush.width = $scope.eraserSize;
+      $scope.canvas.freeDrawingBrush.color = '#ffffff';
+    }
+
+    $scope.setColor = function(color) {
+      $scope.col = color;
+      $scope.canvas.freeDrawingBrush.width = $scope.size;
+      $scope.canvas.freeDrawingBrush.color = color
+    }
+
+
+
+
+    $scope.canvas.on('path:created', function(options) {
+      if ($scope.mode != 'eraser') {
+        $scope.mode = 'path';
+      }
+
+      $scope.freePath = [];
+
+      // $scope.freePath[0] = options.path.path[0];
+      // for (var i = 1, j = 1; i < options.path.path.length; j++, i = i + 4) {
+      //   $scope.freePath[j] = options.path.path[i];
+      // }
+      //
+      // options.path.path = $scope.freePath;
+
+
+
+      options.path.lockMovementX = true;
+      options.path.lockMovementY = true;
+      options.path.hasControls = false;
+      options.path.hasBorders = false;
+      options.path.selectable = false;
+      options.path.hoverCursor = 'default';
+
+
+      $scope.all.push(options.path);
+      // $scope.paths.push(options.path);
 
       $scope.temp = {
-        timestamp: Img.timestamp,
-        type: Img.type,
-        originX: Img.originX,
-        originY: Img.originY,
-        left: Img.left,
-        top: Img.top,
-        width: Img.width,
-        height: Img.height,
-        scaleX: Img.scaleX,
-        scaleY: Img.scaleY,
-        src: url
-      }
+        timestamp: new Date().getTime(),
+        type: options.path.type,
+        originX: options.path.originX,
+        originY: options.path.originY,
+        left: options.path.left,
+        top: options.path.top,
+        fill: options.path.fill,
+        strokeLineCap: 'round',
+        stroke: options.path.stroke,
+        strokeWidth: options.path.strokeWidth,
+        pathOffset: options.path.pathOffset,
+        path: options.path.path
+      };
 
       $scope.dataToSend.push($scope.temp);
       $scope.dataForRefresh.push($scope.temp);
 
 
-
-      $scope.all.push(Img);
-      $scope.redraw();
     });
-  }
 
-  window.addEventListener("paste", function(e) {
-    var clipboardData, url;
-    e.stopPropagation();
-    e.preventDefault();
-
-    var cbData = e.clipboardData;
-
-    for (var i = 0; i < cbData.items.length; i++) {
-      // get the clipboard item
-      var cbDataItem = cbData.items[i];
-      var type = cbDataItem.type;
-      // warning: most browsers don't support image data type
-      if (type.indexOf("image") != -1) {
-        // grab the imageData (as a blob)
-        $scope.mode = 'image';
-        var imageData = cbDataItem.getAsFile();
+    $scope.addImage = function(url) {
+      fabric.Object.prototype.selectable = true;
+      $scope.mode = 'image';
+      $scope.dataVariables.sendImageData = false;
+      $scope.dataVariables.sendObjectsData = false;
+      $scope.dataVariables.isImageSet = false;
 
 
-        var tosend = new FormData();
-        if (imageData != emptyFile && imageData != null) {
-          tosend.append('image', imageData)
+      fabric.Image.fromURL(url, function(Img) {
+
+        // Img.scaleToWidth(200);
+        // Img.scaleToHeight(200);
+        Img.set({
+          timestamp: new Date().getTime()
+        });
+
+
+        $scope.temp = {
+          timestamp: Img.timestamp,
+          type: Img.type,
+          originX: Img.originX,
+          originY: Img.originY,
+          left: Img.left,
+          top: Img.top,
+          width: Img.width,
+          height: Img.height,
+          scaleX: Img.scaleX,
+          scaleY: Img.scaleY,
+          src: url
         }
 
-        $http({
-          method: 'POST',
-          url: '/api/tutors/tutors24Image/',
-          data: tosend,
-          transformRequest: angular.identity,
-          headers: {
-            'Content-Type': undefined
+        $scope.dataToSend.push($scope.temp);
+        $scope.dataForRefresh.push($scope.temp);
+
+
+
+        $scope.all.push(Img);
+        $scope.redraw();
+      });
+    }
+
+    window.addEventListener("paste", function(e) {
+      var clipboardData, url;
+      e.stopPropagation();
+      e.preventDefault();
+
+      var cbData = e.clipboardData;
+
+      for (var i = 0; i < cbData.items.length; i++) {
+        // get the clipboard item
+        var cbDataItem = cbData.items[i];
+        var type = cbDataItem.type;
+        // warning: most browsers don't support image data type
+        if (type.indexOf("image") != -1) {
+          // grab the imageData (as a blob)
+          $scope.mode = 'image';
+          var imageData = cbDataItem.getAsFile();
+
+
+          var tosend = new FormData();
+          if (imageData != emptyFile && imageData != null) {
+            tosend.append('image', imageData)
           }
-        }).
-        then(function(response) {
 
-          var scaledImage = response.data.image;//.replace(".", '_scaled.');
-          $scope.addImage(scaledImage);
-        })
+          $http({
+            method: 'POST',
+            url: '/api/tutors/tutors24Image/',
+            data: tosend,
+            transformRequest: angular.identity,
+            headers: {
+              'Content-Type': undefined
+            }
+          }).
+          then(function(response) {
 
+            var scaledImage = response.data.image; //.replace(".", '_scaled.');
+            $scope.addImage(scaledImage);
+          })
+
+        }
+        // if (type.indexOf("text")!=-1)
+        //  {
+        //     clipboardData = e.clipboardData || window.clipboardData;
+        //     textData = clipboardData.getData('Text');
+        //     console.log(textData);
+        //     $scope.text = new fabric.Text(textData,
+        //        { left: 0,
+        //          top: 0,
+        //          fontWeight: 'normal',
+        //          fontFamily: 'Times New Roman',
+        //          fontSize: 20});
+        //          $scope.data['objects'].push($scope.text);
+        //          $scope.redraw();
+        //   }
       }
-      // if (type.indexOf("text")!=-1)
-      //  {
-      //     clipboardData = e.clipboardData || window.clipboardData;
-      //     textData = clipboardData.getData('Text');
-      //     console.log(textData);
-      //     $scope.text = new fabric.Text(textData,
-      //        { left: 0,
-      //          top: 0,
-      //          fontWeight: 'normal',
-      //          fontFamily: 'Times New Roman',
-      //          fontSize: 20});
-      //          $scope.data['objects'].push($scope.text);
-      //          $scope.redraw();
-      //   }
-    }
-    $scope.canvas.isDrawingMode = false;
-  });
+      $scope.canvas.isDrawingMode = false;
+    });
 
-  $scope.canvas.on('object:scaling', function(options) {
-    $scope.dataVariables.sendImageData = false;
-    for (var i = 0; i < $scope.dataToSend.length; i++) {
-      if ($scope.dataToSend[i].timestamp == options.target.timestamp) {
-        $scope.dataToSend[i].width = options.target.width * options.target.scaleX;
-        $scope.dataToSend[i].height = options.target.height * options.target.scaleY;
-        //  console.log(options.target.width*options.target.scaleX);
-        // console.log($scope.dataToSend[i].scaleX, $scope.dataToSend[i].scaleX);
-      }
-    }
-  })
-
-  $scope.canvas.on('object:moving', function(options) {
-    if (options.target.type == "image") {
+    $scope.canvas.on('object:scaling', function(options) {
       $scope.dataVariables.sendImageData = false;
       for (var i = 0; i < $scope.dataToSend.length; i++) {
         if ($scope.dataToSend[i].timestamp == options.target.timestamp) {
-          $scope.dataToSend[i].top = options.target.top;
-          $scope.dataToSend[i].left = options.target.left;
-          console.log(options.target.top);
+          $scope.dataToSend[i].width = options.target.width * options.target.scaleX;
+          $scope.dataToSend[i].height = options.target.height * options.target.scaleY;
+          //  console.log(options.target.width*options.target.scaleX);
+          // console.log($scope.dataToSend[i].scaleX, $scope.dataToSend[i].scaleX);
         }
       }
-    } else {
-      console.log("ffffffffffff");
-    }
-  })
+    })
 
-
-  $scope.canvas.on('mouse:down', function(options) {
-
-    $scope.pointer = $scope.canvas.getPointer(options.e);
-    $scope.startx = $scope.pointer.x;
-    $scope.starty = $scope.pointer.y;
-
-    if (($scope.canvas.height - $scope.starty) < 150) {
-      $scope.dataVariables.sendHeight = true;
-      $scope.increaseCanvas();
-    }
-
-    console.log($scope.mode);
-
-    if (!$scope.dataVariables.isImageSet) {
-      if (!options.target) {
-        $scope.dataVariables.sendImageData = true;
-        $scope.dataVariables.isImageSet = true;
-        //  $scope.canvas.off('object:moving');
-        for (var i = 0; i < $scope.all.length; i++) {
-          if ($scope.all[i].type == "image") {
-            $scope.all[i].selectable = false;
-            $scope.all[i].hoverCursor = 'default';
+    $scope.canvas.on('object:moving', function(options) {
+      if (options.target.type == "image") {
+        $scope.dataVariables.sendImageData = false;
+        for (var i = 0; i < $scope.dataToSend.length; i++) {
+          if ($scope.dataToSend[i].timestamp == options.target.timestamp) {
+            $scope.dataToSend[i].top = options.target.top;
+            $scope.dataToSend[i].left = options.target.left;
+            console.log(options.target.top);
           }
         }
+      } else {
+        console.log("ffffffffffff");
       }
-    } else {
-      $scope.dataVariables.sendObjectsData = true;
-    }
+    })
 
-    if ($scope.mode == "i-text") {
-      $scope.newText = new fabric.IText('', {
-        fontWeight: 'normal',
-        fontFamily: 'Times New Roman',
-        fontSize: 20,
-        objectCaching: false,
-        selectable: false,
-        hasBorders: false,
-        hasControls: false,
-        lockMovementX: true,
-        lockMovementY: true,
-        hoverCursor: 'default',
-        timestamp: new Date().getTime()
-      });
-      $scope.canvas.add($scope.newText);
-      $scope.canvas.centerObject($scope.newText);
-      $scope.newText.set({
-        left: $scope.startx,
-        top: $scope.starty
-      });
-      $scope.canvas.setActiveObject($scope.newText);
-      $scope.newText.enterEditing();
-      $scope.newText.selectAll();
-    }
 
-    $scope.canvas.on('mouse:move', function(options) {
+    $scope.canvas.on('mouse:down', function(options) {
+
       $scope.pointer = $scope.canvas.getPointer(options.e);
-      $scope.endx = $scope.pointer.x;
-      $scope.endy = $scope.pointer.y;
+      $scope.startx = $scope.pointer.x;
+      $scope.starty = $scope.pointer.y;
 
-      $scope.dataVariables.sendObjectsData = false;
+      if (($scope.canvas.height - $scope.starty) < 150) {
+        $scope.dataVariables.sendHeight = true;
+        $scope.increaseCanvas();
+      }
 
-      if ($scope.mode == "rect") {
+      console.log($scope.mode);
 
-        $scope.rect2 = new fabric.Rect({
+      if (!$scope.dataVariables.isImageSet) {
+        if (!options.target) {
+          $scope.dataVariables.sendImageData = true;
+          $scope.dataVariables.isImageSet = true;
+          //  $scope.canvas.off('object:moving');
+          for (var i = 0; i < $scope.all.length; i++) {
+            if ($scope.all[i].type == "image") {
+              $scope.all[i].selectable = false;
+              $scope.all[i].hoverCursor = 'default';
+            }
+          }
+        }
+      } else {
+        $scope.dataVariables.sendObjectsData = true;
+      }
+
+      if ($scope.mode == "i-text") {
+        $scope.newText = new fabric.IText('', {
+          fontWeight: 'normal',
+          fontFamily: 'Times New Roman',
+          fontSize: 20,
+          objectCaching: false,
+          selectable: false,
+          hasBorders: false,
+          hasControls: false,
+          lockMovementX: true,
+          lockMovementY: true,
+          hoverCursor: 'default',
+          timestamp: new Date().getTime()
+        });
+        $scope.canvas.add($scope.newText);
+        $scope.canvas.centerObject($scope.newText);
+        $scope.newText.set({
+          left: $scope.startx,
+          top: $scope.starty
+        });
+        $scope.canvas.setActiveObject($scope.newText);
+        $scope.newText.enterEditing();
+        $scope.newText.selectAll();
+      }
+
+      $scope.canvas.on('mouse:move', function(options) {
+        $scope.pointer = $scope.canvas.getPointer(options.e);
+        $scope.endx = $scope.pointer.x;
+        $scope.endy = $scope.pointer.y;
+
+        $scope.dataVariables.sendObjectsData = false;
+
+        if ($scope.mode == "rect") {
+
+          $scope.rect2 = new fabric.Rect({
+            left: $scope.startx,
+            top: $scope.starty,
+            fill: '',
+            width: $scope.endx - $scope.startx,
+            height: $scope.endy - $scope.starty,
+            stroke: $scope.col
+          });
+
+          $scope.redraw();
+          $scope.canvas.add($scope.rect2);
+        } else if ($scope.mode == "circle") {
+
+          $scope.cir = new fabric.Circle({
+            left: $scope.startx,
+            top: $scope.starty,
+            radius: ($scope.endx - $scope.startx) / 2,
+            fill: '',
+            stroke: $scope.col,
+            strokeWidth: 2
+          });
+
+          $scope.redraw();
+          $scope.canvas.add($scope.cir);
+
+        } else if ($scope.mode == "triangle") {
+
+          $scope.tri = new fabric.Triangle({
+            left: $scope.startx,
+            top: $scope.starty,
+            originX: 'left',
+            originY: 'top',
+            width: $scope.endx - $scope.startx,
+            height: $scope.endy - $scope.starty,
+            fill: '',
+            stroke: $scope.col,
+            strokeWidth: 2
+          });
+
+          $scope.redraw();
+          $scope.canvas.add($scope.tri);
+
+        }
+
+      });
+
+    });
+
+    $scope.canvas.on('mouse:up', function(options) {
+
+      $scope.canvas.off('mouse:move');
+      $scope.dataVariables.sendObjectsData = true;
+
+      if (options.e.button == 2) {
+        return;
+      }
+
+      if ($scope.endy - $scope.starty < 0) {
+        // if drag towards top
+        var tempy = $scope.starty;
+        $scope.starty = $scope.endy;
+        $scope.endy = tempy;
+      }
+
+      if ($scope.endx - $scope.startx < 0) {
+        //  if drag towards left
+        var tempx = $scope.startx;
+        $scope.startx = $scope.endx;
+        $scope.endx = tempx;
+      }
+
+      if ($scope.mode == "i-text") {
+        $scope.canvas.on('text:editing:exited', function(e) {
+          e.target.selectable = false;
+          $scope.temp = {
+            timestamp: $scope.newText.timestamp,
+            type: $scope.newText.type,
+            originX: $scope.newText.originX,
+            originY: $scope.newText.originY,
+            left: $scope.newText.left,
+            top: $scope.newText.top,
+            fill: $scope.newText.fill,
+            strokeWidth: $scope.newText.strokeWidth,
+            scaleX: $scope.newText.scaleX,
+            scaleY: $scope.newText.scaleY,
+            opacity: $scope.newText.opacity,
+            visible: $scope.newText.visible,
+            text: e.target.text,
+            fontSize: $scope.newText.fontSize,
+            fontWeight: $scope.newText.fontWeight,
+            fontFamily: $scope.newText.fontFamily,
+            fontStyle: $scope.newText.fontStyle,
+            lineHeight: $scope.newText.lineHeight,
+            textDecoration: $scope.newText.textDecoration,
+            textAlign: $scope.newText.textAlign
+          }
+
+          $scope.dataToSend.push($scope.temp);
+          $scope.dataForRefresh.push($scope.temp);
+
+
+          $scope.all.push(e.target);
+          //$scope.canvas.clear();
+          // $scope.data['objects'].push($scope.newText);
+          // $scope.data['objects'].push($scope.temp);
+          $scope.redraw();
+          $scope.canvas.off('text:editing:exited');
+        });
+
+        fabric.Object.prototype.selectable = true;
+        $scope.canvas.isDrawingMode = false;
+        $scope.canvas.selection = true;
+        return false;
+      } else if ($scope.mode == "rect") {
+
+        $scope.rect1 = new fabric.Rect({
           left: $scope.startx,
           top: $scope.starty,
           fill: '',
           width: $scope.endx - $scope.startx,
           height: $scope.endy - $scope.starty,
-          stroke: $scope.col
+          stroke: $scope.col,
+          strokeWidth: 2,
+          selectable: false,
+          hoverCursor: 'default',
+          objectCaching: false,
+          timestamp: new Date().getTime()
         });
+        // "add" rectangle onto canvas
+        $scope.all.push($scope.rect1);
+        // $scope.rectangles.push($scope.rect1);
+        // canvas.add($scope.rect1);
 
-        $scope.redraw();
-        $scope.canvas.add($scope.rect2);
+        $scope.temp = {
+          timestamp: $scope.rect1.timestamp,
+          type: $scope.rect1.type,
+          left: $scope.rect1.left,
+          top: $scope.rect1.top,
+          width: $scope.rect1.width,
+          height: $scope.rect1.height,
+          fill: '',
+          stroke: $scope.rect1.stroke,
+          strokeWidth: $scope.rect1.strokeWidth
+        };
+        $scope.dataToSend.push($scope.temp);
+        $scope.dataForRefresh.push($scope.temp);
+
+        // $scope.data['objects'].push($scope.temp);
       } else if ($scope.mode == "circle") {
 
         $scope.cir = new fabric.Circle({
@@ -1294,11 +1470,29 @@ app.controller('myCtrl1', function($scope, $rootScope, $timeout, $uibModal, $int
           radius: ($scope.endx - $scope.startx) / 2,
           fill: '',
           stroke: $scope.col,
-          strokeWidth: 2
+          strokeWidth: 2,
+          selectable: false,
+          hoverCursor: 'default',
+          objectCaching: false,
+          timestamp: new Date().getTime()
         });
 
-        $scope.redraw();
-        $scope.canvas.add($scope.cir);
+        $scope.all.push($scope.cir);
+        // $scope.circles.push($scope.cir);
+
+        $scope.temp = {
+          type: $scope.cir.type,
+          left: $scope.cir.left,
+          top: $scope.cir.top,
+          radius: $scope.cir.radius,
+          fill: '',
+          stroke: $scope.cir.stroke,
+          strokeWidth: $scope.cir.strokeWidth
+        };
+        $scope.dataToSend.push($scope.temp);
+        $scope.dataForRefresh.push($scope.temp);
+
+        // $scope.data['objects'].push($scope.temp);
 
       } else if ($scope.mode == "triangle") {
 
@@ -1311,240 +1505,98 @@ app.controller('myCtrl1', function($scope, $rootScope, $timeout, $uibModal, $int
           height: $scope.endy - $scope.starty,
           fill: '',
           stroke: $scope.col,
-          strokeWidth: 2
+          strokeWidth: 2,
+          selectable: false,
+          hoverCursor: 'default',
+          objectCaching: false,
+          timestamp: new Date().getTime()
         });
 
-        $scope.redraw();
-        $scope.canvas.add($scope.tri);
+        $scope.all.push($scope.tri);
 
-      }
-
-    });
-
-  });
-
-  $scope.canvas.on('mouse:up', function(options) {
-
-    $scope.canvas.off('mouse:move');
-    $scope.dataVariables.sendObjectsData = true;
-
-    if (options.e.button == 2) {
-      return;
-    }
-
-    if ($scope.endy - $scope.starty < 0) {
-      // if drag towards top
-      var tempy = $scope.starty;
-      $scope.starty = $scope.endy;
-      $scope.endy = tempy;
-    }
-
-    if ($scope.endx - $scope.startx < 0) {
-      //  if drag towards left
-      var tempx = $scope.startx;
-      $scope.startx = $scope.endx;
-      $scope.endx = tempx;
-    }
-
-    if ($scope.mode == "i-text") {
-      $scope.canvas.on('text:editing:exited', function(e) {
-        e.target.selectable = false;
+        // $scope.triangles.push($scope.tri);
         $scope.temp = {
-          timestamp: $scope.newText.timestamp,
-          type: $scope.newText.type,
-          originX: $scope.newText.originX,
-          originY: $scope.newText.originY,
-          left: $scope.newText.left,
-          top: $scope.newText.top,
-          fill: $scope.newText.fill,
-          strokeWidth: $scope.newText.strokeWidth,
-          scaleX: $scope.newText.scaleX,
-          scaleY: $scope.newText.scaleY,
-          opacity: $scope.newText.opacity,
-          visible: $scope.newText.visible,
-          text: e.target.text,
-          fontSize: $scope.newText.fontSize,
-          fontWeight: $scope.newText.fontWeight,
-          fontFamily: $scope.newText.fontFamily,
-          fontStyle: $scope.newText.fontStyle,
-          lineHeight: $scope.newText.lineHeight,
-          textDecoration: $scope.newText.textDecoration,
-          textAlign: $scope.newText.textAlign
-        }
-
+          type: $scope.tri.type,
+          left: $scope.tri.left,
+          top: $scope.tri.top,
+          originX: $scope.tri.originX,
+          originY: $scope.tri.originY,
+          width: $scope.tri.width,
+          height: $scope.tri.height,
+          fill: '',
+          stroke: $scope.tri.stroke,
+          strokeWidth: $scope.tri.strokeWidth
+        };
         $scope.dataToSend.push($scope.temp);
         $scope.dataForRefresh.push($scope.temp);
 
-
-        $scope.all.push(e.target);
-        //$scope.canvas.clear();
-        // $scope.data['objects'].push($scope.newText);
         // $scope.data['objects'].push($scope.temp);
-        $scope.redraw();
-        $scope.canvas.off('text:editing:exited');
-      });
-
-      fabric.Object.prototype.selectable = true;
-      $scope.canvas.isDrawingMode = false;
-      $scope.canvas.selection = true;
-      return false;
-    } else if ($scope.mode == "rect") {
-
-      $scope.rect1 = new fabric.Rect({
-        left: $scope.startx,
-        top: $scope.starty,
-        fill: '',
-        width: $scope.endx - $scope.startx,
-        height: $scope.endy - $scope.starty,
-        stroke: $scope.col,
-        strokeWidth: 2,
-        selectable: false,
-        hoverCursor: 'default',
-        objectCaching: false,
-        timestamp: new Date().getTime()
-      });
-      // "add" rectangle onto canvas
-      $scope.all.push($scope.rect1);
-      // $scope.rectangles.push($scope.rect1);
-      // canvas.add($scope.rect1);
-
-      $scope.temp = {
-        timestamp: $scope.rect1.timestamp,
-        type: $scope.rect1.type,
-        left: $scope.rect1.left,
-        top: $scope.rect1.top,
-        width: $scope.rect1.width,
-        height: $scope.rect1.height,
-        fill: '',
-        stroke: $scope.rect1.stroke,
-        strokeWidth: $scope.rect1.strokeWidth
-      };
-      $scope.dataToSend.push($scope.temp);
-      $scope.dataForRefresh.push($scope.temp);
-
-      // $scope.data['objects'].push($scope.temp);
-    } else if ($scope.mode == "circle") {
-
-      $scope.cir = new fabric.Circle({
-        left: $scope.startx,
-        top: $scope.starty,
-        radius: ($scope.endx - $scope.startx) / 2,
-        fill: '',
-        stroke: $scope.col,
-        strokeWidth: 2,
-        selectable: false,
-        hoverCursor: 'default',
-        objectCaching: false,
-        timestamp: new Date().getTime()
-      });
-
-      $scope.all.push($scope.cir);
-      // $scope.circles.push($scope.cir);
-
-      $scope.temp = {
-        type: $scope.cir.type,
-        left: $scope.cir.left,
-        top: $scope.cir.top,
-        radius: $scope.cir.radius,
-        fill: '',
-        stroke: $scope.cir.stroke,
-        strokeWidth: $scope.cir.strokeWidth
-      };
-      $scope.dataToSend.push($scope.temp);
-      $scope.dataForRefresh.push($scope.temp);
-
-      // $scope.data['objects'].push($scope.temp);
-
-    } else if ($scope.mode == "triangle") {
-
-      $scope.tri = new fabric.Triangle({
-        left: $scope.startx,
-        top: $scope.starty,
-        originX: 'left',
-        originY: 'top',
-        width: $scope.endx - $scope.startx,
-        height: $scope.endy - $scope.starty,
-        fill: '',
-        stroke: $scope.col,
-        strokeWidth: 2,
-        selectable: false,
-        hoverCursor: 'default',
-        objectCaching: false,
-        timestamp: new Date().getTime()
-      });
-
-      $scope.all.push($scope.tri);
-
-      // $scope.triangles.push($scope.tri);
-      $scope.temp = {
-        type: $scope.tri.type,
-        left: $scope.tri.left,
-        top: $scope.tri.top,
-        originX: $scope.tri.originX,
-        originY: $scope.tri.originY,
-        width: $scope.tri.width,
-        height: $scope.tri.height,
-        fill: '',
-        stroke: $scope.tri.stroke,
-        strokeWidth: $scope.tri.strokeWidth
-      };
-      $scope.dataToSend.push($scope.temp);
-      $scope.dataForRefresh.push($scope.temp);
-
-      // $scope.data['objects'].push($scope.temp);
-    }
-
-    if (!$scope.dataVariables.isImageSet) {
-      return;
-    }
-
-    $scope.redraw();
-
-  });
-
-  $scope.redraw = function() {
-    // $rootScope.dataString = JSON.stringify($scope.data);
-
-    $scope.canvas.clear();
-
-
-    //console.log("clear and load data");
-    // $scope.canvas.loadFromJSON($scope.dataString, $scope.canvas.renderAll.bind($scope.canvas));
-    if ($scope.gridType == 'plain') {
-
-    } else if ($scope.gridType == 'math') {
-      for (var i = 0; i < $scope.mathGrid.length; i++) {
-        $scope.canvas.add($scope.mathGrid[i]);
       }
-    } else if ($scope.gridType == 'english') {
-      for (var i = 0; i < $scope.englishGrid.length; i++) {
-        $scope.canvas.add($scope.englishGrid[i]);
+
+      if (!$scope.dataVariables.isImageSet) {
+        return;
       }
-    }
 
-    for (var i = 0; i < $scope.all.length; i++) {
-      $scope.canvas.add($scope.all[i]);
-      // $scope.canvas.renderAll();
-    }
+      $scope.redraw();
 
-    if ($scope.dataVariables.isConnected) {
+    });
 
-      if ($scope.mode == "image") {
-        if ($scope.dataVariables.sendImageData) {
-          $scope.sendData();
+    $scope.redraw = function() {
+      // $rootScope.dataString = JSON.stringify($scope.data);
+
+      $scope.canvas.clear();
+
+
+      //console.log("clear and load data");
+      // $scope.canvas.loadFromJSON($scope.dataString, $scope.canvas.renderAll.bind($scope.canvas));
+      if ($scope.gridType == 'plain') {
+
+      } else if ($scope.gridType == 'math') {
+        for (var i = 0; i < $scope.mathGrid.length; i++) {
+          $scope.canvas.add($scope.mathGrid[i]);
         }
-      } else {
-        if ($scope.dataVariables.sendObjectsData) {
-          console.log('will send objects data....');
-          $scope.sendData();
+      } else if ($scope.gridType == 'english') {
+        for (var i = 0; i < $scope.englishGrid.length; i++) {
+          $scope.canvas.add($scope.englishGrid[i]);
         }
       }
 
+      for (var i = 0; i < $scope.all.length; i++) {
+        $scope.canvas.add($scope.all[i]);
+        // $scope.canvas.renderAll();
+      }
 
+      if ($scope.dataVariables.isConnected) {
+
+        if ($scope.mode == "image") {
+          if ($scope.dataVariables.sendImageData) {
+            $scope.sendData();
+          }
+        } else {
+          if ($scope.dataVariables.sendObjectsData) {
+            console.log('will send objects data....');
+            $scope.sendData();
+          }
+        }
+
+
+
+      }
 
     }
 
   }
+
+
+  $timeout(function() {
+    $scope.canvasDrawing()
+  }, 1000);
+
+
+
+
+
+
 
 });
 
