@@ -1,0 +1,30 @@
+{% extends "tutorBook.html" %}
+
+
+{% block bookcontent %}
+
+<div class="container-fluid"style="padding-top:40px;">
+  <div class="col-md-12">
+    <div class="col-md-10">
+      <div class="row" style="margin-top:1em;">
+        <div class="col-md-6 col-xs-12">
+          <div style="display:inline-block;">
+            <h1 class="heading_medium">{{course.title}}</h1>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-12">
+          <h3>Description</h3>
+          <p>{{course.description}}</p>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-2 min_padd">
+      <div class="text-center">
+        <img src="{{course.dp.url}}"class="tb_image">
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

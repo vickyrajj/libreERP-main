@@ -1,0 +1,39 @@
+{% extends "tutorBook.html" %}
+
+
+{% block bookcontent %}
+
+<div class="container-fluid"style="padding-top:40px;">
+  <div class="col-md-12">
+    <div class="col-md-3" style="padding-top:20px;border-right:1px solid #d5d5d5;">
+      <div class="col-md-2">
+        <i class="fa fa-sticky-note-o fa-3x" aria-hidden="true"></i>
+      </div>
+      <div class="col-md-10">
+        <h3 class="text-muted"><strong>{{noteObj.title}}</strong> </h3>
+      </div>
+      <hr>
+
+        <h5> <span> <strong>Url :</strong> </span><a href=""> {{noteObj.urlSuffix}}  </a></h5>
+
+      <h5> <span> <strong>Description :</strong> </span> {{noteObj.description}}</h5>
+      <hr>
+
+    </div>
+    <div class="col-md-9">
+      {% if noteSection.count > 0 %}
+      <h2 class="text-center"> <strong>Note Section</strong> </h2>
+      {% for sec in noteSection %}
+      <hr>
+      {% if sec.image %}
+      <img src="{{sec.image.url}}" width="20%">
+      {% else %}
+      {{sec.txt}}
+      {% endif %}
+      {% endfor %}
+
+      {% endif %}
+    </div>
+  </div>
+</div>
+{% endblock %}

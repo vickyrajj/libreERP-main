@@ -199,6 +199,16 @@ class AnswerSerializer(serializers.ModelSerializer):
         model = Answer
         fields = ('pk' , 'created' , 'question', 'paper' , 'evaluated' , 'correct', 'marksObtained' , 'attachment', 'txt' , 'subject')
         read_only_fields = ('user', )
+    def create(self , validated_data):
+        m = Answer(**validated_data)
+        m.user = self.context['request'].user
+        if 'question' in self.context['request'].data:
+            m.question = self.context['request'].data['question']
+        if 'paper' in self.context['request'].data:
+            m.paper = self.context['request'].data['paper']
+        m.save()
+        return m
+
 
 class CommentSerializer(serializers.ModelSerializer):
     class Meta:
@@ -240,7 +250,7 @@ class CourseSerializer(serializers.ModelSerializer):
     topic = TopicSerializer(many = False , read_only = True)
     class Meta:
         model = Course
-        fields = ('pk' , 'created' , 'updated', 'topic', 'enrollmentStatus', 'instructor' , 'TAs' , 'user' , 'description' , 'title' , 'enrollments' , 'studyMaterials')
+        fields = ('pk' , 'created' , 'updated', 'topic', 'enrollmentStatus', 'instructor' , 'TAs' , 'user' , 'description' , 'title' , 'enrollments' ,'dp', 'studyMaterials')
         read_only_fields = ('user', 'TAs')
     def create(self , validated_data):
         c = Course(**validated_data)
@@ -253,7 +263,7 @@ class CourseSerializer(serializers.ModelSerializer):
         c.save()
         return c
     def update(self , instance , validated_data):
-        for key in ['enrollmentStatus', 'description' , 'title' , 'enrollments' , 'studyMaterials','user']:
+        for key in ['enrollmentStatus', 'description' , 'title' , 'enrollments' , 'studyMaterials','user','dp']:
             try:
                 setattr(instance , key , validated_data[key])
             except:

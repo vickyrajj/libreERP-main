@@ -104,7 +104,7 @@ app.controller("home.LMS.evaluation.form", function($scope, $state, $users, $sta
 
   if ($scope.tab == undefined || $scope.tab.data == undefined) {
     $scope.mode = 'new';
-    $scope.form.timelimit = $scope.time.setHours(01, 00);
+    $scope.form.timelimit = 60;
   }else {
     $scope.mode = 'edit';
     $scope.selectedquestions = $scope.tab.data.paper.questions;
@@ -207,7 +207,7 @@ console.log($scope.form.timelimit,'eeee');
     if ($scope.mode=='edit'){
       var method='PATCH';
       var url='/api/LMS/paper/'+$scope.tab.data.paper.pk+'/';
-      $http({method : method , url : url , data :  {questions :toSend,name:$scope.form.name}}).
+      $http({method : method , url : url , data :  {questions :toSend,name:$scope.form.name,timelimit:$scope.form.timelimit}}).
       then(function(response) {
           Flash.create('success', 'Question Paper Updated');
           console.log(response.data);
@@ -215,11 +215,13 @@ console.log($scope.form.timelimit,'eeee');
     }else {
       var method='POST';
 
-      $http({method : method , url : '/api/LMS/paper/' , data :  {questions :toSend,name:$scope.form.name}}).
+      $http({method : method , url : '/api/LMS/paper/' , data :  {questions :toSend,name:$scope.form.name,timelimit:$scope.form.timelimit}}).
       then(function(response) {
         Flash.create('success', 'Question Paper Created');
         resetForm();
-      })
+      },function(response){
+        Flash.create('warning', 'Add Question Paper Title ');
+      });
 
 
     }
@@ -227,23 +229,9 @@ console.log($scope.form.timelimit,'eeee');
   };
 
 
-  $scope.hstep = 1;
-  $scope.mstep = 15;
-
-  console.log($scope.time,'jjj');
-
-  function msToTime(duration) {
-    var minutes = parseInt((duration / (1000 * 60)) % 60)
-    var hours = parseInt((duration / (1000 * 60 * 60)) % 24);
-
-   hours = (hours < 10) ? "0" + hours : hours;
-   minutes = (minutes < 10) ? "0" + minutes : minutes;
 
 
-   return hours + ":" + minutes ;
- }
-msToTime(  $scope.form.timelimit);
-console.log(msToTime(  $scope.form.timelimit),'hhh');
+
 
 });
 
