@@ -136,8 +136,28 @@ app.controller("businessManagement.stockReport", function($scope, $state, $users
         $scope.addProduct = function() {
           for (var i = 0; i < $scope.products.length; i++) {
             if ($scope.products[i].product.pk == $scope.form.product.pk) {
-              Flash.create('danger', 'Product already added');
-              return
+              Flash.create('danger', 'Product already added, Edit for changes');
+              if($scope.products[i].pk){
+                console.log("hhherrrrrrrrrr");
+                $scope.form.product = $scope.products[i].product
+                $scope.form.qty = $scope.products[i].qty
+                console.log($scope.form,'aaaaaaaa');
+                $http({
+                  method: 'DELETE',
+                  url: '/api/support/stockCheckItem/' + $scope.products[i].pk + '/'
+                }).
+                then(function(response) {
+                  console.log($scope.products[i]);
+                  $scope.products.splice(i, 1)
+                })
+                return
+              }
+              else{
+                $scope.form.product = $scope.products[i].product
+                $scope.form.qty = $scope.products[i].qty
+                $scope.products.splice(i, 1)
+                return
+              }
             }
           }
           if($scope.form.product==''||typeof $scope.form.product!='object'){

@@ -3011,6 +3011,6 @@ class StockSheetAPIView(APIView):
         value = request.GET['value']
         created = request.GET['created']
         response = HttpResponse(content_type='application/pdf')
-        response['Content-Disposition'] = 'attachment;filename="Quotationdownload.pdf"'
+        response['Content-Disposition'] = 'attachment;filename="sheetdownload.pdf"'
         stockSheet(response, value, created, request)
         return response
