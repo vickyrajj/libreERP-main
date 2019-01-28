@@ -74,6 +74,12 @@ SERVICE_NAME = 'Online Tutoring anytime, anywhere'
 BRAND_LOGO = '/static/images/24_tutors_icon.svg'
 BRAND_LOGO_INVERT = '/static/images/24tut/icon_grad.svg'
 
+SEO_TITLE = 'Online live tutoring. Free 1-2-1 online classes. IIT JEE Preparation. School tutions online'
+SEO_DESCRIPTION = "India's only 24x7 student helpline. Connect with the best tutors from IITs and NITs provide teaching for CBSE & ICSE, Maths & Science and competitive exams like  JEE Mains, JEE Advanced, IIT Foundation, Olympiads, NTSE, PSA"
+SEO_IMG = '/static/images/seo_tutor_common.png'
+SEO_IMG_WIDTH = 1333
+SEO_IMG_HEIGHT = 745
+
 SMS_API_PREFIX = "http://sms.azmobia.com/http-api.php?username=CIOC&password=cioc567&senderid=CIOCPL&route=1&"
 
 INSTALLED_APPS = (

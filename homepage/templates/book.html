@@ -54,7 +54,9 @@
     </div>
     <div class="col-md-2 min_padd">
       <div class="text-center">
-        <img src="/static/images/24tut/hcv.jpg"class="tb_image">
+        {% if book.dp %}
+        <img src="{{book.dp.url}}"class="tb_image">
+        {% endif %}
       </div>
     </div>
   </div>
