@@ -223,16 +223,21 @@ app.controller('exam', function($scope, $state, $http, $timeout, $interval, $uib
   $scope.timelimit = {
     time: ''
   }
+  $scope.data = {
+    paperid:''
+  }
+
   $http({
     method: 'GET',
     url: '/api/LMS/paper/1/'
   }).then(function(response) {
     $scope.paperData = response.data
+    $scope.data.paperid = response.data.pk;
     $scope.timelimit.time = $scope.paperData.timelimit
     for (var i = 0; i < $scope.paperData.questions.length; i++) {
+
       var question = $scope.paperData.questions[i].ques.ques
       var option = $scope.paperData.questions[i].ques.optionsParts
-      $scope.paperData.questions[i].ques
       $scope.subname = $scope.paperData.questions[i].ques.topic.subject.title;
       if (!$scope.sublist.includes($scope.subname)) {
         $scope.sublist.push($scope.subname);
@@ -240,19 +245,22 @@ app.controller('exam', function($scope, $state, $http, $timeout, $interval, $uib
           subname: $scope.subname,
           ques: []
         })
-        console.log($scope.subquestions[i], 'aaaa');
         $scope.subquestions[i].ques.push({
           que: question,
           option: option,
           status: 'default',
+          pk:$scope.paperData.questions[i].ques.pk,
+          user:$scope.paperData.questions[i].ques.user
         })
       } else {
-        for (var i = 0; i < $scope.subquestions.length; i++) {
-          if ($scope.subquestions[i].subname == $scope.subname) {
-            $scope.subquestions[i].ques.push({
+        for (var j = 0; j < $scope.subquestions.length; j++) {
+          if ($scope.subquestions[j].subname == $scope.subname) {
+            $scope.subquestions[j].ques.push({
               que: question,
               option: option,
               status: 'default',
+              pk:$scope.paperData.questions[i].ques.pk,
+              user:$scope.paperData.questions[i].ques.user
             })
           }
         }
@@ -280,7 +288,7 @@ app.controller('exam', function($scope, $state, $http, $timeout, $interval, $uib
          $scope.subquestions[idx].ques[0].status = "notanswered";
        }
       for (var i = 0; i < $scope.subquestions.length; i++) {
-        if ($scope.sublist[i] == sub) {
+        if ($scope.subquestions[i].subname == sub) {
           if (idx == $scope.subcount) {
             $scope.count = $scope.count;
           } else {
@@ -307,6 +315,25 @@ app.controller('exam', function($scope, $state, $http, $timeout, $interval, $uib
 
     }
     $scope.save = function(subval, val) {
+      var dataToPost  = {
+        question:$scope.subquestions[subval].ques[val].pk,
+        user:$scope.subquestions[subval].ques[val].user,
+        paper:$scope.data.paperid,
+        evaluated:'False',
+        correct:'no',
+        marksObtained:0,
+      }
+      console.log($scope.subquestions[subval].ques[val],'lllll');
+      $http({
+        method: 'POST',
+        data: dataToPost,
+        url: '/api/LMS/answer/'
+      }).
+      then(function(response) {
+        console.log(response.data);
+      });
+
+      console.log($scope.subquestions[subval].ques[val].option[$scope.selections[subval].answers[val]].pk,'llllkk');
       if ($scope.subcount == subval) {
 
 
@@ -456,9 +483,7 @@ app.controller('exam', function($scope, $state, $http, $timeout, $interval, $uib
 
 app.controller('examresults', function($rootScope, $scope, $state, $http, $timeout, $interval, $uibModal, $stateParams, $sce, Flash, ) {
 
-  $scope.$on('data_shared', function() {
-    $scope.data = dataShare.getData();
-  });
+
   $scope.arr = [1, 2, 3, 4, 5, 6, 7, 8, 9, 0]
   $scope.testresult = {
     attempt: 2,
