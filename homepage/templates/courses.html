@@ -282,7 +282,7 @@
               <h4 style="font-size:17px;"> <b>{{n.title}}</b> </h4>
               <h6 style="font-size:17px;">{{n.description}}</h6>
             </div>
-            <button class="btn-style1" style="border-top-left-radius: 15px;padding: 0.5em 1em;margin-top: 0em;">View</button>
+            <a href="/{{n.urlSuffix}}/" class="btn-style1" style="border-top-left-radius: 15px;padding: 0.5em 1em;margin-top: 0em;text-decoration:none;">View</a>
           </div>
         </div>
         {% endfor %}
@@ -291,38 +291,10 @@
     {% endif %}
 
     {% verbatim %}
-    <div class="container-fluid" style="background-color: #fff;">
-      <div class="container" style=" margin-bottom: 2em;text-align: center;">
-        <h1 style="margin-top:2em;"><b>Related Courses</b></h1>
-        <span class="heading_small">COURSES YOU MIGHT BE INTERESTED IN</span>
-        <div class="row" style="margin-bottom:2em;">
-          <div ng-repeat="a in cardss">
-            <div class="anim-in-out anim-zoom-out">
-              <div style="margin-top: 2em;">
-                <div class="col-md-4">
-                  <div class="cardstype">
-                    <img src="{{a.img1}}" class="img-radiuss" alt="Avatar" style="width:100%">
-                    <div class="body1" style="background-color: #fff;border-bottom-left-radius: 10px;border-bottom-right-radius: 10px;">
-                      <h4 style="border-bottom:1px solid #C9C9C9;padding-bottom:1em;"><b>{{a.title}}</b></h4>
-                      <p style="padding-top:1em;">{{a.content}}</p>
-                      <table class="table-align">
-                        <td class="tablealign1"><span style="text-align: center"><img src="{{a.img2}}" class="img-responsive img-circle" style="height:50px;width:50px;"></span></td>
-                        <td class="tablealign2"><b>{{a.name}}</b></td>
-                        <td style="cursor:pointer;"><a href="/checkout" class="badge badge-pills">&#8377;{{a.price}}/hr</a></td>
-                      </table>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
 
     <div class="container-fluid" style="min-height:60vh;background-color:#F9F9F9;">
       <div class="col-md-12 min_padd text-center">
-        <h1 class="heading_big">eLearny's Testimonials</h1>
+        <h1 class="heading_big">24tutors's Testimonials</h1>
         <h5 class="heading_small">WHAT STUDENTS THINK OF US</h5>
       </div>
       <div class="col-md-8 col-md-offset-2">
