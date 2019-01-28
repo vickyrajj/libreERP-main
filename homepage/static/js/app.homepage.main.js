@@ -216,36 +216,227 @@ app.controller('main', function($scope, $http, $sce, $interval, $uibModal) {
 });
 
 
-app.controller('exam', function($scope, $state, $http, $timeout, $interval, $uibModal, $stateParams, $sce, Flash, $location,$rootScope) {
+app.controller('exam', function($scope, $state, $http, $timeout, $interval, $uibModal, $stateParams, $sce, Flash, $location, $rootScope) {
 
   $scope.sublist = []
   $scope.subquestions = []
-  $scope.timelimit = []
+  $scope.timelimit = {
+    time: ''
+  }
   $http({
     method: 'GET',
     url: '/api/LMS/paper/1/'
   }).then(function(response) {
     $scope.paperData = response.data
-    $scope.timelimit.push($scope.paperData.timelimit)
+    $scope.timelimit.time = $scope.paperData.timelimit
     for (var i = 0; i < $scope.paperData.questions.length; i++) {
+      var question = $scope.paperData.questions[i].ques.ques
+      var option = $scope.paperData.questions[i].ques.optionsParts
       $scope.paperData.questions[i].ques
-      $scope.sublist.push($scope.paperData.questions[i].ques.topic.subject.title);
       $scope.subname = $scope.paperData.questions[i].ques.topic.subject.title;
-      $scope.subquestions.push({
-        subname: $scope.sublist[i],
-        ques: []
-      })
-      $scope.subquestions[i].ques.push($scope.paperData.questions[i].ques.ques)
+      if (!$scope.sublist.includes($scope.subname)) {
+        $scope.sublist.push($scope.subname);
+        $scope.subquestions.push({
+          subname: $scope.subname,
+          ques: []
+        })
+        console.log($scope.subquestions[i], 'aaaa');
+        $scope.subquestions[i].ques.push({
+          que: question,
+          option: option,
+          status: 'default',
+        })
+      } else {
+        for (var i = 0; i < $scope.subquestions.length; i++) {
+          if ($scope.subquestions[i].subname == $scope.subname) {
+            $scope.subquestions[i].ques.push({
+              que: question,
+              option: option,
+              status: 'default',
+            })
+          }
+        }
+      }
     }
 
 
   })
 
-  $scope.theTime = $scope.timelimit[0]-1;
-  $scope.timeinsec = 60
+  setTimeout(function() {
+    $scope.theTime = Number($scope.timelimit.time) - 1;
+    $scope.timeinsec = 60
+    $scope.test = $scope.subquestions[0].ques;
+    $scope.len = $scope.test.length
+    $scope.options
+    $scope.count = 0
+    $scope.subcount = 0;
+    $scope.selections = []
+    console.log($scope.subquestions, 'pppp');
+    for (var i = 0; i < $scope.subquestions.length; i++) {
+      $scope.selections[i]
+    }
+    $scope.subjectSelect = function(sub, idx) {
+       if($scope.subquestions[idx].ques[0].status == "default"){
+         $scope.subquestions[idx].ques[0].status = "notanswered";
+       }
+      for (var i = 0; i < $scope.subquestions.length; i++) {
+        if ($scope.sublist[i] == sub) {
+          if (idx == $scope.subcount) {
+            $scope.count = $scope.count;
+          } else {
+            $scope.count = 0;
+          }
+
+          $scope.subcount = idx;
+          $scope.test = $scope.subquestions[i].ques;
+          $scope.len = $scope.test.length
+
+        }
+      }
+    }
+    for (var i = 0; i < $scope.subquestions.length; i++) {
+      $scope.selections.push({
+        answers: []
+      })
+    }
+    console.log($scope.selections[0]);
+    $scope.selection = function(subcount, questionno, answerno) {
+
+      $scope.selections[subcount].answers[questionno] = answerno;
+      $scope.test[questionno].savedIndex = answerno;
+
+    }
+    $scope.save = function(subval, val) {
+      if ($scope.subcount == subval) {
 
 
-  console.log($scope.sublist, 'pppp');
+        if ($scope.count == $scope.test.length - 1) {
+          $scope.count = $scope.count;
+          $scope.questionno = $scope.count;
+          console.log($scope.test.length, 'ssss');
+          if ($scope.test[val].savedIndex != null) {
+            $scope.test[val].status = 'answered';
+          }
+        } else {
+          if ($scope.test[val].savedIndex != null) {
+            $scope.count = $scope.count + 1;
+            $scope.questionno = $scope.count;
+            $scope.test[val].status = 'answered';
+            if ($scope.test[$scope.count].status != 'answered' && $scope.test[$scope.count].status != 'reviewed' && $scope.test[$scope.count].status != 'attemptreviewed') {
+              $scope.test[$scope.count].status = 'notanswered';
+            }
+
+          } else {
+            console.log($scope.test.length, 'xxx');
+            Flash.create('warning', 'Please Select One Option');
+            return
+          }
+        }
+      }
+
+
+    }
+    $scope.review = function(subval, val) {
+      if ($scope.subcount == subval) {
+
+        if ($scope.count == $scope.test.length - 1) {
+          $scope.count = $scope.count;
+          $scope.questionno = $scope.count;
+          if ($scope.test[val].savedIndex != null) {
+            $scope.test[val].status = 'attemptreviewed';
+          } else {
+            $scope.test[val].status = 'reviewed';
+          }
+        } else {
+          if ($scope.test[val].savedIndex != null) {
+            $scope.count = $scope.count + 1;
+            $scope.questionno = $scope.count;
+            $scope.test[val].status = 'attemptreviewed';
+            $scope.test[$scope.count].status = 'notanswered';
+          } else {
+
+            $scope.count = $scope.count + 1;
+            $scope.questionno = $scope.count;
+            $scope.test[val].status = 'reviewed';
+            $scope.test[$scope.count].status = 'notanswered';
+            Flash.create('warning', 'Please Select One Option');
+            return
+          }
+        }
+      }
+
+
+    }
+    $scope.clearselection = function(subval, val) {
+      if ($scope.subcount == subval) {
+
+        $scope.selections[subval].answers[val] = null;
+        $scope.test[val].status = 'notanswered';
+        $scope.test[val].savedIndex = null;
+      }
+    }
+    $scope.queclick = function(val) {
+
+      $scope.count = val;
+      $scope.questionno = $scope.count;
+      if ($scope.test[val].status != 'answered' && $scope.test[val].status != 'reviewed' && $scope.test[val].status != 'attemptreviewed') {
+        $scope.test[val].status = 'notanswered'
+      }
+    }
+
+    $scope.finish = function(answerlist, questions) {
+      console.log(answerlist,questions,'oooooo');
+      $uibModal.open({
+        templateUrl: '/static/ngTemplates/examsubmit.html',
+        size: 'md',
+        backdrop: true,
+        resolve: {
+          questions: function() {
+            return questions;
+          },
+          answerlist: function() {
+            return answerlist;
+          }
+        },
+
+        controller: function($scope, questions, $uibModalInstance, answerlist) {
+
+
+          $scope.questions = questions
+          $scope.attempted = 0;
+          $scope.notAnswered = 0;
+          $scope.reviewed = 0;
+          $scope.attemptedreview = 0;
+          $scope.notview = 0;
+          for (var i = 0; i < $scope.questions.length; i++) {
+            for (var j = 0; j < $scope.questions[i].ques.length; j++) {
+              if ($scope.questions[i].ques[j].status == "answered") {
+                $scope.attempted += 1;
+              } else if ($scope.questions[i].ques[j].status == "notanswered") {
+                $scope.notAnswered += 1;
+              } else if ($scope.questions[i].ques[j].status == "reviewed") {
+                $scope.reviewed += 1;
+              } else if ($scope.questions[i].ques[j].status == "attemptreviewed") {
+                $scope.attemptedreview += 1;
+              } else {
+                $scope.notview += 1;
+              }
+            }
+
+          }
+          $scope.arr = [1, 2, 3, 4, 5, 6, 7, 8, 9, 0]
+          $scope.submit = function() {
+            $uibModalInstance.close();
+
+          }
+          $scope.closeModal = function() {
+            $uibModalInstance.dismiss();
+          }
+
+        },
+      })
+    }
+  }, 1000);
 
   $interval(function() {
     if ($scope.theTime != 0) {
@@ -259,509 +450,8 @@ app.controller('exam', function($scope, $state, $http, $timeout, $interval, $uib
       $scope.timeinsec = 60;
     }
   }, 1000);
-  console.log($scope.data, 'vvv');
-  $scope.questionList = [{
-      subject: "Maths",
-      testquestions: [{
-
-          Question: "When $a \\neq 0$, there are two solutions to $ax^2 + bx + c = 0$ and they are $x = {-b \\pm \\sqrt{b^2-4ac} \\over 2a}.$",
-          Options: [
-            '$x = {-b \\pm \\sqrt{b^2-4ac} \\over 2a}.$',
-            '$ax^2 + bx + c = 0$',
-            '$x = {-b \\pm \\sqrt{b^2-4ac} \\over 2a}.$',
-            '$a \\neq 0$'
-          ],
-          savedIndex: null
-        },
-        {
-          Question: 'Limit $\\lim_{x\\to\\infty} f(x)$',
-          Options: [
-            '$\\lim_{x\to\\infty} f(x)$',
-            '$\\lim_{x\to\\infty} f(x)$',
-            '$\\lim_{x\to\\infty} f(x)$',
-            '$\\lim_{x\to\\infty} f(x)$'
-          ],
-          savedIndex: null
-        },
-        {
-          Question: 'Sum $\\sum_{n=1}^{\\infty} 2^{-n} = 1$',
-          Options: [
-            '$\\sum_{n=1}^{\\infty} 2^{-n} = 6$',
-            '$\\sum_{n=5}^{\\infty} 3^{-n} = 4$',
-            '$\\sum_{n=9}^{\\infty} 5^{-n} = 19$',
-            '$\\sum_{n=11}^{\\infty} 1^{-n} = 30$'
-          ],
-          savedIndex: null
-        },
-        {
-          Question: 'Find the Answer:$$ (a^n)^{r+s} = a^{nr+ns}  $$',
-          Options: [
-            'Integer',
-            'sodales',
-            'finibus',
-            'ultricies'
-          ],
-          savedIndex: null
-        },
-        {
-          Question: 'Integral $\\int_{a}^{b} x^2 dx$',
-          Options: [
-            'Suspendisse',
-            'hendrerit',
-            'volutpat',
-            'scelerisque'
-          ],
-          savedIndex: null
-        },
-        {
-          Question: 'Nullam non risus in nisi sollicitudin consequat.',
-          Options: [
-            'Quisque',
-            'porttitor',
-            'tempor',
-            'vulputate'
-          ],
-          savedIndex: null
-        },
-        {
-          Question: 'Etiam ultricies sem ac ipsum venenatis molestie.',
-          Options: [
-            'Etiam',
-            'blandit',
-            'porttitor',
-            'sollicitudin'
-          ],
-          savedIndex: null
-        },
-        {
-          Question: 'Proin vitae sem consequat, dapibus elit sit amet, malesuada odio.',
-          Options: [
-            'Pellentesque',
-            'scelerisque',
-            'elementum',
-            'Nullam'
-          ],
-          savedIndex: null
-        },
-        {
-          Question: 'Proin vitae sem consequat, dapibus elit sit amet, malesuada odio.',
-          Options: [
-            'Pellentesque',
-            'scelerisque',
-            'elementum',
-            'Nullam'
-          ],
-          savedIndex: null
-        },
-        {
-          Question: 'Proin vitae sem consequat, dapibus elit sit amet, malesuada odio.',
-          Options: [
-            'Pellentesque',
-            'scelerisque',
-            'elementum',
-            'Nullam'
-          ],
-          savedIndex: null
-        },
-        {
-          Question: 'Proin vitae sem consequat, dapibus elit sit amet, malesuada odio.',
-          Options: [
-            'Pellentesque',
-            'scelerisque',
-            'elementum',
-            'Nullam'
-          ],
-          savedIndex: null
-        },
-        {
-          Question: 'Proin vitae sem consequat, dapibus elit sit amet, malesuada odio.',
-          Options: [
-            'Pellentesque',
-            'scelerisque',
-            'elementum',
-            'Nullam'
-          ],
-          savedIndex: null
-        },
-        {
-          Question: 'Proin vitae sem consequat, dapibus elit sit amet, malesuada odio.',
-          Options: [
-            'Pellentesque',
-            'scelerisque',
-            'elementum',
-            'Nullam'
-          ],
-          savedIndex: null
-        },
-        {
-          Question: 'Proin vitae sem consequat, dapibus elit sit amet, malesuada odio.',
-          Options: [
-            'Pellentesque',
-            'scelerisque',
-            'elementum',
-            'Nullam'
-          ],
-          savedIndex: null
-        },
-        {
-          Question: 'Proin vitae sem consequat, dapibus elit sit amet, malesuada odio.',
-          Options: [
-            'Pellentesque',
-            'scelerisque',
-            'elementum',
-            'Nullam'
-          ],
-          savedIndex: null
-        },
-        {
-          Question: 'Proin vitae sem consequat, dapibus elit sit amet, malesuada odio.',
-          Options: [
-            'Pellentesque',
-            'scelerisque',
-            'elementum',
-            'Nullam'
-          ],
-          savedIndex: null
-        },
-        {
-          Question: 'Proin vitae sem consequat, dapibus elit sit amet, malesuada odio.',
-          Options: [
-            'Pellentesque',
-            'scelerisque',
-            'elementum',
-            'Nullam'
-          ],
-          savedIndex: null
-        },
-        {
-          Question: 'Proin vitae sem consequat, dapibus elit sit amet, malesuada odio.',
-          Options: [
-            'Pellentesque',
-            'scelerisque',
-            'elementum',
-            'Nullam'
-          ],
-          savedIndex: null
-        },
-        {
-          Question: 'Proin vitae sem consequat, dapibus elit sit amet, malesuada odio.',
-          Options: [
-            'Pellentesque',
-            'scelerisque',
-            'elementum',
-            'Nullam'
-          ],
-          savedIndex: null
-        },
-        {
-          Question: 'Proin vitae sem consequat, dapibus elit sit amet, malesuada odio.',
-          Options: [
-            'Pellentesque',
-            'scelerisque',
-            'elementum',
-            'Nullam'
-          ],
-          savedIndex: null
-        },
-        {
-          Question: 'Proin vitae sem consequat, dapibus elit sit amet, malesuada odio.',
-          Options: [
-            'Pellentesque',
-            'scelerisque',
-            'elementum',
-            'Nullam'
-          ],
-          savedIndex: null
-        },
-        {
-          Question: 'Proin vitae sem consequat, dapibus elit sit amet, malesuada odio.',
-          Options: [
-            'Pellentesque',
-            'scelerisque',
-            'elementum',
-            'Nullam'
-          ],
-          savedIndex: null
-        },
-        {
-          Question: 'Proin vitae sem consequat, dapibus elit sit amet, malesuada odio.',
-          Options: [
-            'Pellentesque',
-            'scelerisque',
-            'elementum',
-            'Nullam'
-          ],
-          savedIndex: null
-        },
-        {
-          Question: 'Etiam ultricies sem ac ipsum venenatis molestie.',
-          Options: [
-            'Etiam',
-            'blandit',
-            'porttitor',
-            'sollicitudin'
-          ],
-          savedIndex: null
-        },
-      ]
-    },
-    {
-      subject: "Physics",
-      testquestions: [{
-
-          Question: 'In physics, the mass-energy equivalence is stated by the equation $E=mc^2$, discovered in 1905 by who?',
-          Options: [
-            'Albert Einstein',
-            'Tesla',
-            'Newton',
-            'Joul'
-          ],
-          savedIndex: null
-        },
-        {
-          Question: 'Fusce euismod nisi vitae magna faucibus dignissim vitae in lectus.',
-          Options: [
-            'blap',
-            'bluri',
-            'bleep',
-            'blue'
-          ],
-          savedIndex: null
-        },
-      ]
-    },
-    {
-      subject: "Chemistry",
-      testquestions: [{
-
-          Question: 'Choose correct One:${2LiOH_{(s)} + CO_{2(g)} -> Li_{2}CO_{3(s)} + H_{2}O_{(g)}}$',
-          Options: [
-            '${2LiOH_{(s)} + CO_{2(g)} -> H_{2}O_{(g)}}$',
-            '${2LiOH_{(s)} + CO_{2(g)} -> H_{2}O_{(g)}}+Li_{2}CO_{3(s)}$',
-            '${2LiOH_{(s)} + CO_{2(g)} -> H_{2}O_{(g)}}+Li_{2}CO_{3(s)}$',
-            '${2LiOH_{(s)} + CO_{2(g)} -> H_{2}O_{(g)}}$'
-          ],
-          savedIndex: null
-        },
 
 
-      ]
-    },
-
-
-
-
-  ];
-  $scope.test = $scope.questionList[0].testquestions;
-  $scope.len = $scope.test.length
-  $scope.options
-  $scope.count = 0
-  $scope.subcount = 0;
-  $scope.selections = []
-  for (var i = 0; i < $scope.questionList.length; i++) {
-    $scope.selections[i]
-  }
-  $scope.subjectSelect = function(sub, idx) {
-    console.log($scope.selections, 'lll');
-    $scope.questionList[idx].testquestions[0].status = "notanswered";
-    for (var i = 0; i < $scope.questionList.length; i++) {
-      if ($scope.sublist[i] == sub) {
-        if (idx == $scope.subcount) {
-          $scope.count = $scope.count;
-        } else {
-          $scope.count = 0;
-        }
-
-        $scope.subcount = idx;
-        $scope.test = $scope.questionList[i].testquestions;
-        $scope.len = $scope.test.length
-
-      }
-    }
-  }
-
-
-
-
-
-
-  for (var i = 0; i < $scope.questionList.length; i++) {
-    $scope.selections.push({
-      answers: []
-    })
-    // for (var j = 0; j < $scope.questionList[i].testquestions.length; j++) {
-    //   $scope.selections[i].answer[j].push(null)
-    // }
-  }
-  console.log($scope.selections[0]);
-  $scope.selection = function(subcount, questionno, answerno) {
-
-    $scope.selections[subcount].answers[questionno] = answerno;
-    $scope.test[questionno].savedIndex = answerno;
-
-  }
-  $scope.save = function(subval, val) {
-
-    if ($scope.subcount == subval) {
-
-      if ($scope.count == $scope.test.length - 1) {
-        $scope.count = $scope.count;
-        $scope.questionno = $scope.count;
-        $scope.test[val].status = 'answered';
-      } else {
-        if ($scope.test[val].savedIndex != null) {
-          $scope.count = $scope.count + 1;
-          $scope.questionno = $scope.count;
-          $scope.test[val].status = 'answered';
-          if ($scope.test[$scope.count].status != 'answered' && $scope.test[$scope.count].status != 'reviewed' && $scope.test[$scope.count].status != 'attemptreviewed') {
-            $scope.test[$scope.count].status = 'notanswered';
-          }
-
-        } else {
-
-          // Flash.create('danger','Please Select One Option')
-          Flash.create('warning', 'Please Mention The Name');
-          return
-        }
-      }
-    }
-
-
-  }
-  $scope.review = function(subval, val) {
-    if ($scope.subcount == subval) {
-
-      if ($scope.count == $scope.test.length - 1) {
-        $scope.count = $scope.count;
-        $scope.questionno = $scope.count;
-        if ($scope.test[val].savedIndex != null) {
-          $scope.test[val].status = 'attemptreviewed';
-        } else {
-          $scope.test[val].status = 'reviewed';
-        }
-      } else {
-        if ($scope.test[val].savedIndex != null) {
-          $scope.count = $scope.count + 1;
-          $scope.questionno = $scope.count;
-          $scope.test[val].status = 'attemptreviewed';
-          $scope.test[$scope.count].status = 'notanswered';
-        } else {
-
-          $scope.count = $scope.count + 1;
-          $scope.questionno = $scope.count;
-          $scope.test[val].status = 'reviewed';
-          $scope.test[$scope.count].status = 'notanswered';
-          // Flash.create('danger','Please Select One Option')
-          Flash.create('warning', 'Please Select The option');
-          return
-        }
-      }
-    }
-
-
-  }
-  $scope.clearselection = function(subval, val) {
-    if ($scope.subcount == subval) {
-
-      $scope.selections[subval].answers[val] = null;
-      $scope.test[val].status = 'notanswered';
-      $scope.test[val].savedIndex = null;
-    }
-  }
-  $scope.queclick = function(val) {
-
-    $scope.count = val;
-    $scope.questionno = $scope.count;
-    if ($scope.test[val].status != 'answered' && $scope.test[val].status != 'reviewed' && $scope.test[val].status != 'attemptreviewed') {
-      $scope.test[val].status = 'notanswered'
-    }
-  }
-  $scope.finish = function(answerlist, questions) {
-    $uibModal.open({
-      templateUrl: '/static/ngTemplates/examsubmit.html',
-      size: 'md',
-      backdrop: true,
-      resolve: {
-        questions: function() {
-          return questions;
-        },
-        answerlist: function() {
-          return answerlist;
-        }
-      },
-
-      controller: function($scope, questions, $uibModalInstance, answerlist) {
-
-
-        $scope.questions = questions
-        $scope.attempted = 0;
-        $scope.notAnswered = 0;
-        $scope.reviewed = 0;
-        $scope.attemptedreview = 0;
-        $scope.notview = 0;
-        for (var i = 0; i < $scope.questions.length; i++) {
-          for (var j = 0; j < $scope.questions[i].testquestions.length; j++) {
-            if ($scope.questions[i].testquestions[j].status == "answered") {
-              $scope.attempted += 1;
-            } else if ($scope.questions[i].testquestions[j].status == "notanswered") {
-              $scope.notAnswered += 1;
-            } else if ($scope.questions[i].testquestions[j].status == "reviewed") {
-              $scope.reviewed += 1;
-            } else if ($scope.questions[i].testquestions[j].status == "attemptreviewed") {
-              $scope.attemptedreview += 1;
-            } else {
-              $scope.notview += 1;
-            }
-          }
-
-          // if ($scope.questions[i].status == 'answered') {
-          //   $scope.attempted += 1;
-          // } else if ($scope.questions[i].status == 'notanswered') {
-          //   $scope.notAnswered += 1;
-          // } else if ($scope.questions[i].status == 'reviewed') {
-          //   $scope.reviewed += 1;
-          // } else if ($scope.questions[i].status == 'attemptreviewed') {
-          //   $scope.attemptedreview += 1;
-          // } else {
-          //   $scope.notview += 1;
-          // }
-
-        }
-        $scope.arr = [1, 2, 3, 4, 5, 6, 7, 8, 9, 0]
-        $scope.submit = function() {
-          $uibModalInstance.close();
-          // $scope.params = {
-          //   'attempt': $scope.attempted + $scope.attemptedreview,
-          //   'notattempt': $scope.notAnswered,
-          //   'reviewed': $scope.reviewed,
-          //   'notview': $scope.notview,
-          //   'answerlist': $scope.questions
-          // }
-          //
-          // $state.go("testresults", $scope.params);
-          // var params = {
-          //   'attempt': $scope.attempted + $scope.attemptedreview,
-          //   'notattempt': $scope.notAnswered,
-          //   'reviewed': $scope.reviewed,
-          //   'notview': $scope.notview,
-          //   'answerlist': $scope.questions
-          // };
-          // $http({
-          //   method: 'POST',
-          //   data: params,
-          //   url: '/api/'
-          // }).then(function(response) {
-          //   dataShare.sendData(response);
-          //   $location.path('/testresult');
-          // });
-        }
-        $scope.closeModal = function() {
-          $uibModalInstance.dismiss();
-        }
-
-      },
-    })
-  }
 });
 
 app.controller('examresults', function($rootScope, $scope, $state, $http, $timeout, $interval, $uibModal, $stateParams, $sce, Flash, ) {
