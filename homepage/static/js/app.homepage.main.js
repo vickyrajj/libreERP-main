@@ -12,9 +12,15 @@ app.config(function($stateProvider, $urlRouterProvider, $httpProvider) {
 
 })
 
+app.run(['$rootScope', '$state', '$stateParams', '$permissions' , function($rootScope, $state, $stateParams, $permissions) {
+  $rootScope.$state = $state;
+  $rootScope.$stateParams = $stateParams;
+  $rootScope.$on("$stateChangeError", console.log.bind(console));
+}]);
 
-app.controller('main', function($scope, $http, $sce, $interval, $uibModal) {
-  console.log("main loded");
+
+app.controller('main', function($scope, $http, $sce, $interval, $uibModal, $users) {
+  $scope.me = $users.get('mySelf');
   $scope.crmBannerID = 1;
 
   $scope.mainBannerImages = []

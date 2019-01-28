@@ -1066,6 +1066,7 @@ hr {
 }
 
 .nav_ele {
+	outline: none !important;
   color: #fff !important;
 }
 

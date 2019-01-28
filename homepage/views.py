@@ -65,6 +65,17 @@ def testimonials(request):
     subobjs = Subject.objects.all().order_by('level')
     return render(request, 'testimonials.html', {"subobj":subobjs})
 
+def account(request):
+    try:
+        userObj = request.user
+        userProfile = request.user.profile
+    except:
+        userObj = None
+        userProfile = None
+
+    print userProfile , 'KKKKKKKKKK'
+    return render(request, 'account.html', {"userObj":userObj, "userProfile":userProfile})
+
 
 
 
@@ -125,7 +136,15 @@ def blogDetails(request, blogname):
                     us += ' , ' + j.first_name + ' ' + j.last_name
                 count += 1
             blogobj.created = blogobj.created.replace(microsecond=0)
-            return render(request, 'blogdetails.html', {"home": False, "tagsCSV" :  blogobj.tagsCSV.split(',') , 'user': us, 'blogobj' : blogobj , "brandLogo" : globalSettings.BRAND_LOGO , "brandLogoInverted": globalSettings.BRAND_LOGO_INVERT})
+
+            try:
+                tagsCSV = blogobj.tagsCSV.split(',')
+            except:
+                tagsCSV = []
+
+            recentBlogs = list(blogPost.objects.filter(contentType='article').order_by('-created').values())[0:5]
+
+            return render(request, 'blogdetails.html', {"home": False, "tagsCSV" : tagsCSV  , 'user': us, 'blogobj' : blogobj , "brandLogo" : globalSettings.BRAND_LOGO , "brandLogoInverted": globalSettings.BRAND_LOGO_INVERT, "recentBlogs":recentBlogs})
         elif blogobj.contentType == 'book':
             book = Book.objects.get(pk=blogobj.header)
             sectionobj = Section.objects.filter(book = book.pk)
@@ -218,8 +237,12 @@ def blogAnotherView(request):
     second_sec1 = []
     second_sec2 = []
     thirdSection = []
-
+    print len(allBlogs),'ddddddd'
+    recentBlogs = allBlogs[0:5]
     allBlogs = allBlogs[(page-1)*pagesize:(page*pagesize)]
+
+    print len(allBlogs),'ddddddd'
+
     for idx,val in enumerate(allBlogs):
         if idx < 4 :
             firstSection.append({'pk': val['id'] ,'title' : val['title'] , 'shortUrl' : val['shortUrl'], 'ogimage' : val['ogimage'] })
@@ -229,7 +252,12 @@ def blogAnotherView(request):
             second_sec2.append({'pk': val['id'] ,'title' : val['title'] , 'shortUrl' : val['shortUrl'], 'ogimage' : val['ogimage']})
         if idx >= 10 and idx < 14 :
             thirdSection.append({'pk': val['id'] ,'title' : val['title'] , 'shortUrl' : val['shortUrl'], 'ogimage' : val['ogimage']})
-    return render(request,"blog.html" , {"home" : False,'pages':pages, "firstSection":firstSection , "second_sec1":second_sec1 , "second_sec2":second_sec2 , "thirdSection":thirdSection })
+    print firstSection
+    print second_sec1
+    print second_sec2
+    print thirdSection ,'dddddddddddddddddddddddddddddddddddddddddd'
+
+    return render(request,"blog.html" , {"home" : False,'pages':pages, "firstSection":firstSection , "second_sec1":second_sec1 , "second_sec2":second_sec2 , "thirdSection":thirdSection,"recentBlogs":recentBlogs })
 
 def news(request):
     subobjs = Subject.objects.all().order_by('level')
