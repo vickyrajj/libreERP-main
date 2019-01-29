@@ -7,9 +7,17 @@
     <generic-Table data="data.tableData" config-Obj="{{config}}" callback-Fn="tableAction"></generic-Table>
   </div>
   <div class="col-md-6" style="border-left:solid 2px #eee;">
-    <div class="col-md-12 text-center">
-      <h3>CRM Invoices</h3>
+    <div class="row">
+      <div class="col-md-12 text-center">
+        <h3>CRM Invoices</h3>
+      </div>
+      <generic-Table data="data.crmData" config-Obj="{{crmConfig}}" callback-Fn="crmTableAction"></generic-Table>
     </div>
-    <generic-Table data="data.crmData" config-Obj="{{crmConfig}}" callback-Fn="crmTableAction"></generic-Table>
+    <div class="row">
+      <div class="col-md-12 text-center">
+        <h3>Invoicing Invoices</h3>
+      </div>
+      <generic-Table data="data.invoicingData" config-Obj="{{invoicingConfig}}" callback-Fn="invoicingTableAction"></generic-Table>
+    </div>
   </div>
 </div>

@@ -114,7 +114,8 @@
             </tr>
             <tr ng-repeat="v in products track by $index">
               <td>{{$index + 1}}</td>
-              <td><input type="text" class="form-control-pos text-center" ng-model="v.product"></td>
+              <!-- <td><input type="text" class="form-control-pos text-center" ng-model="v.product"></td> -->
+              <td><input type="text" class="form-control-pos text-center" ng-model="v.product" uib-typeahead="p as p.product for p in productSearch($viewValue)"></td>
               <td><input type="text" class="form-control-pos text-center" ng-model="v.price"></td>
               <td><input type="text" class="form-control-pos text-center" ng-model="v.qty"></td>
               <td><button type="button" class="btn btn-danger btn-sm" ng-click="deleteData(v.pk , $index)"> <i class="fa fa-trash"></i> </button></td>

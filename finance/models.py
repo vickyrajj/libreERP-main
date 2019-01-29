@@ -208,3 +208,15 @@ class OutBoundInvoiceQty(models.Model):
     hsn = models.ForeignKey(ProductMeta, related_name='outBoundQtyMeta' , null = True)
     tax = models.FloatField(null = True)
     total = models.FloatField(null = True)
+
+class Inventory(models.Model):
+    created = models.DateTimeField(auto_now_add=True)
+    name = models.CharField(max_length = 100 , null = True)
+    value = models.CharField(max_length = 100 , null = True)
+    rate = models.FloatField(default=1)
+
+class InventoryLog(models.Model):
+    created = models.DateTimeField(auto_now_add=True)
+    inventory =  models.ForeignKey(Inventory , related_name='inventorylog' , null = True)
+    user = models.ForeignKey(User , related_name='inventoryUser' , null = False)
+    value = models.CharField(max_length = 100 , null = True)

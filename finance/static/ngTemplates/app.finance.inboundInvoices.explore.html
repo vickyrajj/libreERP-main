@@ -4,92 +4,97 @@
     <div class="col-md-3">
       <div class="row">
         <div class="col-md-12">
-          <div class = "row"  style="padding-top:10px" >
+          <div class="row" style="padding-top:10px">
             <div class="col-md-6 text-right">
-                <strong> Name : </strong>
+              <strong> Name : </strong>
             </div>
             <div class="col-md-6">
-                <span>{{data.name}}</span>
+              <span>{{data.name}}</span>
             </div>
           </div>
-          <div class = "row" style="padding-top:10px" >
+          <div class="row" style="padding-top:10px">
             <div class="col-md-6 text-right">
-                <strong>  Person Name : </strong>
+              <strong> Person Name : </strong>
             </div>
             <div class="col-md-6">
-                <span>{{data.personName}}</span>
+              <span>{{data.personName}}</span>
             </div>
           </div>
-          <div class = "row"  style="padding-top:10px">
+          <div class="row" style="padding-top:10px">
             <div class="col-md-6 text-right">
-                <strong>  Email :  </strong>
+              <strong> Email : </strong>
             </div>
             <div class="col-md-6">
-                <span>{{data.email}}</span>
+              <span>{{data.email}}</span>
             </div>
           </div>
-          <div class = "row"  style="padding-top:10px">
+          <div class="row" style="padding-top:10px">
             <div class="col-md-6 text-right">
-                <strong>  Phone :  </strong>
+              <strong> Phone : </strong>
             </div>
             <div class="col-md-6">
-                <span>{{data.phone}}</span>
+              <span>{{data.phone}}</span>
             </div>
           </div>
-          <div class = "row"  style="padding-top:10px">
+          <div class="row" style="padding-top:10px">
             <div class="col-md-6 text-right">
-                <strong>  Address :  </strong>
+              <strong> Address : </strong>
             </div>
             <div class="col-md-6">
-                <span>{{data.address}}</span>
+              <span>{{data.address}}</span>
             </div>
           </div>
-          <div class = "row"  style="padding-top:10px">
+          <div class="row" style="padding-top:10px">
             <div class="col-md-6 text-right">
-                <strong> GSTIN : </strong>
+              <strong> GSTIN : </strong>
             </div>
             <div class="col-md-6">
-                <span>{{data.gstIn}}</span>
+              <span>{{data.gstIn}}</span>
             </div>
           </div>
-          <div class = "row"  style="padding-top:10px">
+          <!-- <div class = "row"  style="padding-top:10px">
             <div class="col-md-6 text-right">
                 <strong> PO Number :  </strong>
             </div>
             <div class="col-md-6">
                 <span>{{data.poNumber}}</span>
             </div>
-          </div>
-          <div class = "row"  style="padding-top:10px">
+          </div> -->
+          <div class="row" style="padding-top:10px">
             <div class="col-md-6 text-right">
-                <strong> Delivery Date : </strong>
+              <strong> Delivery Date : </strong>
             </div>
             <div class="col-md-6">
-                <span>{{data.deliveryDate}}</span>
+              <span>{{data.deliveryDate}}</span>
             </div>
           </div>
-          <div class = "row"  style="padding-top:10px">
+          <div class="row" style="padding-top:10px">
             <div class="col-md-6 text-right">
-                <strong> Payment Due Date : </strong>
+              <strong> Payment Due Date : </strong>
             </div>
             <div class="col-md-6">
-                <span>{{data.paymentDueDate}}</span>
+              <span>{{data.paymentDueDate}}</span>
             </div>
           </div>
-          <div class = "row"  style="padding-top:10px">
+          <div class="row" style="padding-top:10px">
             <div class="col-md-6 text-right">
-                <strong> Terms & Condition : </strong>
+              <strong> Bank Name : </strong>
             </div>
             <div class="col-md-6">
-                <span> {{data.invoiceTerms}}</span>
+              <span> {{data.invoiceTerms}}</span>
+            </div>
+          </div>
+          <div class="row" style="padding-top:10px">
+            <div class="col-md-6 text-right">
+              <strong> Terms & Condition : </strong>
+            </div>
+            <div class="col-md-6">
+              <span> {{data.invoiceTerms}}</span>
             </div>
           </div>
         </div>
       </div>
     </div>
-    <!-- </div>
-
-<div class="row" style="padding-top:20px"> -->
     <div class="col-md-9">
       <div class="row">
         <wizard steps="projectSteps.steps" editable="false" active="data.selectedStatus" error="false"></wizard>
@@ -117,6 +122,12 @@
             </tr>
           </tbody>
         </table>
+      </div>
+      <div class="row text-right" style="padding-top:10px">
+        <div class="col-md-12">
+          <button class="btn btn-success" ng-click="sentEmail()"> <i class="fa fa-paper-plane" ></i> Send Email </button>
+          <span ><a class="btn btn-primary" target="_blank" href="/api/finance/invoiceDownload?value={{data.pk}}&typ=inbond" style="min-width:50px"><i class="fa fa-download "></i> Download Invoice</a></span>
+        </div>
       </div>
     </div>
   </div>

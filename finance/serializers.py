@@ -346,9 +346,11 @@ class ExpenseHeadingSerializer(serializers.ModelSerializer):
 class OutBoundInvoiceSerializer(serializers.ModelSerializer):
     costcenter = CostCenterLiteSerializer(many = False , read_only = True)
     bussinessunit = UnitsLiteSerializer(many=False,read_only=True)
+    total = serializers.SerializerMethodField()
+    tax = serializers.SerializerMethodField()
     class Meta:
         model = OutBoundInvoice
-        fields=('pk','created','user','status','isInvoice','poNumber','name','personName','phone','email','address','pincode','state','city','country','pin_status','deliveryDate','payDueDate','gstIn','costcenter','bussinessunit')
+        fields=('pk','created','user','status','isInvoice','poNumber','name','personName','phone','email','address','pincode','state','city','country','pin_status','deliveryDate','payDueDate','gstIn','costcenter','bussinessunit','total','tax')
     def create(self , validated_data):
         obi = OutBoundInvoice(**validated_data)
         obi.user = self.context['request'].user
@@ -364,6 +366,19 @@ class OutBoundInvoiceSerializer(serializers.ModelSerializer):
             projObj.ourBoundInvoices.add(obi)
             projObj.save()
         return obi
+    def get_total(self , obj):
+        tot = 0
+        objData = OutBoundInvoiceQty.objects.filter(outBound=obj.pk)
+        tot = sum(i.total for i in objData)
+        return tot
+    def get_tax(self , obj):
+        taxTot = 0
+        objData = OutBoundInvoiceQty.objects.filter(outBound=obj.pk)
+        for i in objData:
+            tot = round((i.total*i.tax)/100)
+            taxTot+=tot
+        return taxTot
+
 
 class OutBoundInvoiceQtySerializer(serializers.ModelSerializer):
     hsn = ProductMetaSerializer(many = False , read_only = True)
@@ -391,3 +406,23 @@ class OutBoundInvoiceQtySerializer(serializers.ModelSerializer):
             instance.hsn = ProductMeta.objects.get(pk=int(self.context['request'].data['hsn']))
         instance.save()
         return instance
+
+class InventorySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Inventory
+        fields=('pk','created','name','value','rate')
+
+class InventoryLogSerializer(serializers.ModelSerializer):
+    inventory = InventorySerializer(many = False , read_only = True)
+    class Meta:
+        model = Inventory
+        fields=('pk','created','inventory','user','value')
+        read_only_fields = ('user', )
+    def create(self , validated_data):
+        u = self.context['request'].user
+        inv = PurchaseOrder(**validated_data)
+        inv.user = u
+        if 'inventory' in self.context['request'].data:
+            inv.inventory = Inventory.objects.get(pk=int(self.context['request'].data['inventory']))
+        inv.save()
+        return inv

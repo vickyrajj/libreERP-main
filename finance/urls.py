@@ -30,5 +30,7 @@ urlpatterns = [
     url(r'monthsExpensesData/$' , MonthsExpensesDataAPI.as_view()),
     url(r'downloadExpenseSummary/$' , DownloadExpenseSummaryAPI.as_view()),
     url(r'grnDownload/$' , GrnAPIView.as_view()),
+    url(r'invoiceDownload/$' , InvoiceAPIView.as_view()),
+    url(r'sendInvoice/$' , SendInvoiceAPIView.as_view()),
 
 ]

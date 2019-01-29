@@ -56,7 +56,8 @@ app.controller('businessManagement.finance.sales', function($scope, $http, $asid
 
   $scope.data = {
     tableData: [],
-    crmData:[]
+    crmData:[],
+    invoicingData: []
   };
 
   var multiselectOptions = [{
@@ -99,6 +100,25 @@ app.controller('businessManagement.finance.sales', function($scope, $http, $asid
     }],
   }
 
+
+  invoicingViews = [{
+      name: 'list',
+      icon: 'fa-th-large',
+      template: '/static/ngTemplates/genericTable/genericSearchList.html',
+      itemTemplate: '/static/ngTemplates/app.finance.inflow.invoicing.item.html',
+    }, ];
+
+    $scope.invoicingConfig = {
+      views: invoicingViews,
+      url: '/api/finance/outBoundInvoice/',
+      filterSearch: true,
+      searchField: 'value__gte',
+      itemsNumPerView: [12, 24, 48],
+      getParams: [{
+        "key": 'status__in',
+        "value": 'Received,created'
+      }],
+    }
 
   $scope.tableAction = function(target, action, mode) {
     console.log(target, action, mode);

@@ -80,11 +80,17 @@
           <td>{{v.product}}</td>
           <td>{{v.price}}</td>
           <td>{{v.qty}}</td>
-          <td>{{v.hsn.description}}</td>
+          <td>{{v.hsn.code}}</td>
           <td>{{v.tax}} %</td>
           <td>{{v.total | number}}</td>
         </tr>
       </tbody>
     </table>
+    <div class="row text-right" ng-if="data.status=='Received'||data.status=='NotReceivedAndArchived'" style="padding-top:10px">
+      <div class="col-md-12">
+        <button class="btn btn-success" ng-click="sentEmail()"> <i class="fa fa-paper-plane" ></i> Send Email </button>
+        <span ><a class="btn btn-primary" target="_blank" href="/api/finance/invoiceDownload?value={{data.pk}}&typ=outbond" style="min-width:50px"><i class="fa fa-download "></i> Download Invoice</a></span>
+      </div>
+    </div>
   </div>
 </div>

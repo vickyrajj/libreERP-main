@@ -266,6 +266,13 @@ app.controller('businessManagement.finance.purchaseOrder.form', function($scope,
     })
   };
 
+  $scope.productSearch = function(query) {
+    return $http.get('/api/finance/purchaseorderqty/?product__contains=' + query).
+    then(function(response) {
+      return response.data;
+    })
+  };
+
   $scope.pinSearch = function(query) {
     return $http.get('/api/ERP/genericPincode/?pincode__contains=' + query).
     then(function(response) {
@@ -286,6 +293,14 @@ app.controller('businessManagement.finance.purchaseOrder.form', function($scope,
       return response.data;
     })
   };
+
+  $scope.$watch('products', function(newValue, oldValue) {
+    for (var i = 0; i < newValue.length; i++) {
+      if(typeof newValue[i].product == 'object'){
+        $scope.products[i].product= newValue[i].product.product
+      }
+    }
+  }, true)
 
   $scope.save = function() {
     // .toJSON().split('T')[0])
@@ -623,7 +638,7 @@ app.controller('businessManagement.finance.purchaseOrder.explore', function($sco
     $uibModal.open({
       templateUrl: '/static/ngTemplates/app.finance.purchaseOrder.bankDetails.modal.html',
       size: 'lg',
-      backdrop: true,
+      backdrop: false,
       resolve: {
         data: function() {
           return $scope.data.pk;
@@ -808,6 +823,13 @@ app.controller('businessManagement.finance.inboundInvoices.form', function($scop
     })
   };
 
+  $scope.productSearch = function(query) {
+    return $http.get('/api/finance/purchaseorderqty/?product__contains=' + query).
+    then(function(response) {
+      return response.data;
+    })
+  };
+
   $scope.refresh = function() {
     $scope.resetForm()
   }
@@ -840,7 +862,7 @@ app.controller('businessManagement.finance.inboundInvoices.form', function($scop
   };
 
   $scope.poSearch = function(query) {
-    return $http.get('/api/finance/purchaseorder/?pk__contains=' + query+'&isInvoice=false').
+      return $http.get('/api/finance/purchaseorder/?pk__contains=' + query+'&isInvoice=false&status=Approved').
     then(function(response) {
       return response.data;
     })
@@ -903,6 +925,9 @@ app.controller('businessManagement.finance.inboundInvoices.form', function($scop
         $scope.form.products[i].total = ((newValue[i].receivedQty * newValue[i].price) +  (((newValue[i].receivedQty * newValue[i].price)*$scope.form.products[i].tax)/100) ).toFixed(2)
         $scope.form.products[i].productMeta = newValue[i].hsn
         $scope.form.products[i].hsn = newValue[i].productMeta.code
+      }
+      if(typeof newValue[i].product == 'object'){
+        $scope.form.products[i].product= newValue[i].product.product
       }
     }
   }, true)
@@ -1005,7 +1030,7 @@ app.controller('businessManagement.finance.inboundInvoices.form', function($scop
         data: dataToSend
       }).
       then(function(response) {
-        Flash.create('success', 'Saved');
+
         if ($scope.form.products.length > 0) {
           for (var i = 0; i < $scope.form.products.length; i++) {
             if (typeof $scope.form.products[i].hsn == 'object') {
@@ -1041,11 +1066,15 @@ app.controller('businessManagement.finance.inboundInvoices.form', function($scop
               data: toSend
             }).
             then(function(response) {
-              $scope.resetForm()
+              if($scope.form.poNumber!=undefined||$scope.form.poNumber!=null){
+                $scope.resetForm()
+              }
+              Flash.create('success', 'Saved');
             })
           }
         }
       })
+      // $scope.resetForm()
     } else {
       var dataToSend = {
         name: $scope.form.name,
@@ -1109,7 +1138,6 @@ app.controller('businessManagement.finance.inboundInvoices.form', function($scop
               $scope.form.products[i].tax = $scope.form.products[i].tax
               $scope.form.products[i].productMeta = $scope.form.products[i].productMeta
             }
-
             var toSend = {
               product: $scope.form.products[i].product,
               receivedQty: $scope.form.products[i].receivedQty,
@@ -1133,6 +1161,7 @@ app.controller('businessManagement.finance.inboundInvoices.form', function($scop
               data: toSend
             }).
             then(function(response) {
+              console.log("heeeeeeeeeeerrrrrrrrreeeeeeeeee");
               $scope.resetForm()
             })
           }
@@ -1161,7 +1190,7 @@ app.controller('businessManagement.finance.inboundInvoices.form', function($scop
 
 })
 
-app.controller('businessManagement.finance.inboundInvoices.explore', function($scope, $http, $aside, $state, Flash, $users, $filter, $permissions) {
+app.controller('businessManagement.finance.inboundInvoices.explore', function($scope, $http, $aside, $state, Flash, $users, $filter, $permissions,$uibModal) {
   $scope.data = $scope.data.invoiceData[$scope.tab.data.index]
   $scope.getAllData = function() {
     $http({
@@ -1176,47 +1205,46 @@ app.controller('businessManagement.finance.inboundInvoices.explore', function($s
 
   $scope.getAllData()
 
-  $scope.sendForApproval = function() {
-    dataToSend = {
-      status: 'Sent'
-    }
-    $http({
-      method: 'PATCH',
-      url: '/api/finance/purchaseorder/' + $scope.data.pk + '/',
-      data: dataToSend
-    }).then(function(response) {
-      $scope.data = response.data
-      Flash.create('success', 'Saved');
-    })
 
-  }
-  $scope.approve = function() {
-    dataToSend = {
-      status: 'Approved'
-    }
-    $http({
-      method: 'PATCH',
-      url: '/api/finance/purchaseorder/' + $scope.data.pk + '/',
-      data: dataToSend
-    }).then(function(response) {
-      $scope.data = response.data
-      Flash.create('success', 'Saved');
-    })
-  }
-  $scope.reject = function() {
-    dataToSend = {
-      status: 'created'
-    }
-    $http({
-      method: 'PATCH',
-      url: '/api/finance/purchaseorder/' + $scope.data.pk + '/',
-      data: dataToSend
-    }).then(function(response) {
-      $scope.data = response.data
-      Flash.create('success', 'Saved');
-    })
+  $scope.sentEmail=function(){
+    $uibModal.open({
+      templateUrl: '/static/ngTemplates/app.finance.sendEmail.modal.html',
+      size: 'lg',
+      backdrop: false,
+      resolve: {
+        data: function() {
+          return $scope.data;
+        }
+      },
+      controller: function($scope , data,$uibModalInstance,$rootScope){
+        $scope.close = function() {
+            $uibModalInstance.close();
+        }
+        $scope.email = data.email
 
-  }
+        $scope.send=function(){
+          var toSend = {
+            value: data.pk,
+            email: $scope.email,
+            typ:'inbond'
+          }
+          $http({
+            method: 'POST',
+            url: '/api/finance/sendInvoice/',
+            data: toSend
+          }).
+          then(function() {
+            Flash.create('success', 'Email sent successfully')
+          })
+        }
 
+
+      },
+    }).result.then(function() {
+
+    }, function() {
+
+    });
+  }
 
 })

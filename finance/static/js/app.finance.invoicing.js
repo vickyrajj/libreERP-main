@@ -112,6 +112,45 @@ app.controller('businessManagement.finance.invoicing.explore', function($scope, 
       $scope.data.isInvoice = response.data.isInvoice
     })
   }
+
+  $scope.sentEmail=function(){
+    $uibModal.open({
+      templateUrl: '/static/ngTemplates/app.finance.sendEmailInvoicing.modal.html',
+      size: 'lg',
+      backdrop: false,
+      resolve: {
+        data: function() {
+          return $scope.data;
+        }
+      },
+      controller: function($scope , data,$uibModalInstance,$rootScope){
+        $scope.close = function() {
+            $uibModalInstance.close();
+        }
+        $scope.email = data.email
+
+        $scope.send=function(){
+          var toSend = {
+            value: data.pk,
+            email: $scope.email,
+            typ:'outbond'
+          }
+          $http({
+            method: 'POST',
+            url: '/api/finance/sendInvoice/',
+            data: toSend
+          }).
+          then(function() {
+            Flash.create('success', 'Email sent successfully')
+          })
+        }
+      },
+    }).result.then(function() {
+
+    }, function() {
+
+    });
+  }
 })
 
 app.controller('businessManagement.finance.invoicing.form', function($scope, $http, $aside, $state, Flash, $users, $filter, $permissions, $uibModal, $timeout) {
@@ -397,5 +436,7 @@ app.controller('businessManagement.finance.invoicing.form', function($scope, $ht
       Flash.create('danger', response.status + ' : ' + response.statusText);
     })
   }
+
+
 
 })
