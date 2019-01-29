@@ -468,8 +468,11 @@ def purchaseOrder(response , project , purchaselist, multNumber,currencyTyp, req
         part_no = i.products.part_no
         desc = i.products.description_1
         hs = i.products.customs_no
+        if currencyTyp == 'INR':
+            price = i.landed_price
+        else:
+            price = i.price
 
-        price = i.landed_price
         qty = i.quantity1
         amnt = round((price * qty),2)
         grandTotal +=amnt
@@ -2829,11 +2832,11 @@ def invoice(response, pkVal  , request):
     t10.setStyle(TableStyle([('TEXTFONT', (0, 0), (-1, -1), 'Times-Bold'),('TEXTCOLOR',(0,0),(-1,-1),black),('ALIGN',(0,0),(-1,-1),'RIGHT'),('VALIGN',(0,0),(-1,-1),'TOP'),('BOX',(0,0),(-1,-1),0.25,colors.black),('INNERGRID', (0,0), (-1,-1), 0.25, colors.black)]))
     elements.append(t10)
     try:
-        billaddr = inv.invoiceTerms.replace('\n', '<br />')
+        invtrms = inv.invoiceTerms.replace('\n', '<br />')
     except:
-        billaddr = inv.invoiceTerms
+        invtrms = inv.invoiceTerms
     dataFooter = []
-    s51 =Paragraph("<para fontSize=8>Payment Terms : {0} </para>".format(billaddr),styles['Normal'])
+    s51 =Paragraph("<para fontSize=8>Payment Terms : {0} </para>".format(invtrms),styles['Normal'])
     s52 =Paragraph("<para fontSize=8> </para>",styles['Normal'])
     s53 =Paragraph("<para fontSize=6 alignment='center'> Certified that the particulars given above are true and correct <br/></para><para fontSize=10> For BRUDERER PRESSES INDIA PVT.LTD.</para>",styles['Normal'])
     dataFooter =[[s51,s52,s53]]
@@ -2885,7 +2888,6 @@ def stockSheet(response, value, created, request):
     ntMatchingStock = StockCheckItem.objects.filter(stockReport__id=int(value),matching = False)
     invobj = Inventory.objects.all()
     invobjList = list(invobj.values('product').distinct().values('product__pk','product__description_1','product__part_no','product__description_2','product__weight','product__price','product__bar_code'))
-    print invobjList
 
     header = Paragraph("""
     <para align='left'>
@@ -3016,7 +3018,6 @@ def stockSheet(response, value, created, request):
 
 class StockSheetAPIView(APIView):
     def get(self , request , format = None):
-        print request.GET,'aaaaaa'
         value = request.GET['value']
         created = request.GET['created']
         response = HttpResponse(content_type='application/pdf')
