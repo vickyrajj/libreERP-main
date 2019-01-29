@@ -37,7 +37,7 @@
           </ul>
         </li> -->
         <li class="header_element">
-          <a href="/blog" ng-mouseleave="show[1]=false" ng-mouseover="show[1]=true" class="nav_ele"> Blog</a>
+          <a href="/blog/" ng-mouseleave="show[1]=false" ng-mouseover="show[1]=true" class="nav_ele"> Blog</a>
         </li>
         <!-- <li class="header_element">
           <a href="" ng-mouseleave="show[3]=false" ng-mouseover="show[3]=true" style="color:#fff;">About Us</a>
@@ -50,7 +50,7 @@
         </li> -->
         <li class="header_element">
           <a ng-if="me.pk ==  undefined" ng-click="signin()" href="" ng-mouseleave="show[4]=false" ng-mouseover="show[4]=true" class="nav_ele"><i class="fa fa-key fa-fw" aria-hidden="true"></i> Sign in</a>
-          <a ng-if="me.pk" href="" ng-mouseleave="show[4]=false" ng-mouseover="show[4]=true" class="nav_ele">{{me.username}} </a>
+          <a href="/account/" ng-if="me.pk" href="" ng-mouseleave="show[4]=false" ng-mouseover="show[4]=true" class="nav_ele">{{me.username}} </a>
         </li>
 
       </ul>
