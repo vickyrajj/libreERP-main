@@ -526,8 +526,7 @@ $scope.count=0;
           method: 'PATCH',
           url: '/api/support/supportChat/' + response.data[i].pk + '/',
           data: {
-            user: $scope.me.pk,
-            delivered:true
+            user: $scope.me.pk
           }
         }).
         then(function(response) {

@@ -92,6 +92,8 @@ var hasAccesss=true;
       return
     }
 
+    console.log(args);
+
     function userExist() {
       for (var i = 0; i < scope.newUsers.length; i++) {
         if (scope.newUsers[i].uid == args[0]) {

@@ -324,335 +324,339 @@ app.directive('reviewInfo', function() {
       data: '=',
     },
     controller: function($scope, $state, $http, $permissions, $timeout, $uibModal) {
-    if($scope.data.chatThreadData!=null){
+      if ($scope.data.chatThreadData != null) {
 
-      $scope.msgData=[]
-      $scope.fullChatData=[]
-      console.log($scope.data);
-      $scope.msgData = $scope.data.chatThreadData
-      $scope.fullChatData=$scope.data.supportChatData
-      $scope.commentPerm = false;
+        $scope.msgData = []
+        $scope.fullChatData = []
+        console.log($scope.data);
+        $scope.msgData = $scope.data.chatThreadData
+        $scope.fullChatData = $scope.data.supportChatData
+        $scope.commentPerm = false;
 
-      $timeout(function () {
-        $scope.commentPerm =  $permissions.myPerms('module.reviews.comment')
-      }, 500);
+        $timeout(function() {
+          $scope.commentPerm = $permissions.myPerms('module.reviews.comment')
+        }, 500);
 
-      $http({
-        method: 'GET',
-        url: '/api/support/visitor/?uid=' + $scope.msgData.uid,
-      }).
-      then(function(response) {
-        console.log(response.data, typeof response.data, response.data.length);
-        $scope.visitorDetails=response.data[0]
-      });
+        $http({
+          method: 'GET',
+          url: '/api/support/visitor/?uid=' + $scope.msgData.uid,
+        }).
+        then(function(response) {
+          console.log(response.data, typeof response.data, response.data.length);
+          $scope.visitorDetails = response.data[0]
+        });
 
-      $scope.reviewForm = {message:''}
-
-      $scope.calculateTime = function(user, agent) {
-
-        if (user != undefined) {
-          var usertime = new Date(user);
-          var agenttime = new Date(agent);
-          var diff = Math.floor((agenttime - usertime) / 60000)
-          if (diff < 60) {
-            return diff + ' Mins';
-          } else if (diff >= 60 && diff < 60 * 24) {
-            return Math.floor(diff / 60) + ' Hrs';
-          } else if (diff >= 60 * 24) {
-            return Math.floor(diff / (60 * 24)) + ' Days';
-          }
-        } else {
-          return
+        $scope.reviewForm = {
+          message: ''
         }
-      }
 
-      $scope.imageClicked=function(val){
-        // alert(val)
-        $uibModal.open({
-          templateUrl: '/static/ngTemplates/app.support.chatBox.imageModal.html',
-          size: 'lg',
-          backdrop: true,
-          resolve: {
-            imageSrc: function() {
-              return val;
+        $scope.calculateTime = function(user, agent) {
+
+          if (user != undefined) {
+            var usertime = new Date(user);
+            var agenttime = new Date(agent);
+            var diff = Math.floor((agenttime - usertime) / 60000)
+            if (diff < 60) {
+              return diff + ' Mins';
+            } else if (diff >= 60 && diff < 60 * 24) {
+              return Math.floor(diff / 60) + ' Hrs';
+            } else if (diff >= 60 * 24) {
+              return Math.floor(diff / (60 * 24)) + ' Days';
             }
-          },
-          controller: function($scope, $users,imageSrc, $uibModalInstance) {
-            $scope.myImageSrc=imageSrc
-          },
+          } else {
+            return
+          }
+        }
+
+        $scope.imageClicked = function(val) {
+          // alert(val)
+          $uibModal.open({
+            templateUrl: '/static/ngTemplates/app.support.chatBox.imageModal.html',
+            size: 'lg',
+            backdrop: true,
+            resolve: {
+              imageSrc: function() {
+                return val;
+              }
+            },
+            controller: function($scope, $users, imageSrc, $uibModalInstance) {
+              $scope.myImageSrc = imageSrc
+            },
           }).result.then(function() {
 
           }, function(data) {
 
-          if (data != 'backdrop click' && data != '' && data != 'escape key press') {
-            console.log(data);
-            $scope.chatBox.messageToSend = $scope.chatBox.messageToSend + data
-          }
+            if (data != 'backdrop click' && data != '' && data != 'escape key press') {
+              console.log(data);
+              $scope.chatBox.messageToSend = $scope.chatBox.messageToSend + data
+            }
+          });
+        }
+
+        $scope.reviewCommentData = []
+        $http({
+          method: 'GET',
+          url: '/api/support/reviewComment/?user=' + $scope.msgData.user_id + '&uid=' + $scope.msgData.uid + '&chatedDate=' + $scope.msgData.created.split('T')[0],
+        }).
+        then(function(response) {
+          $scope.reviewCommentData = response.data
         });
-      }
 
-      $scope.reviewCommentData = []
-      $http({
-        method: 'GET',
-        url: '/api/support/reviewComment/?user='+$scope.msgData.user_id+'&uid='+$scope.msgData.uid+'&chatedDate='+$scope.msgData.created.split('T')[0],
-      }).
-      then(function(response) {
-        $scope.reviewCommentData =response.data
-      });
+        $http({
+          method: 'GET',
+          url: '/api/support/chatThread/?uid=' + $scope.msgData.uid
+        }).
+        then(function(response) {
+          console.log(response.data, 'dddddddddddd', typeof response.data);
+          $scope.myChatThreadData = response.data[0]
+        });
 
-      $http({
-        method: 'GET',
-        url: '/api/support/chatThread/?uid='+$scope.msgData.uid
-      }).
-      then(function(response) {
-        console.log(response.data,'dddddddddddd',typeof response.data);
-        $scope.myChatThreadData =response.data[0]
-      });
+        $scope.audio_chat = {
+          agent: null,
+          visitor: null
+        };
+        $scope.video_chat = {
+          agent: null,
+          visitor: null
+        };
 
-      $scope.audio_chat={
-        agent:null,
-        visitor:null
-      };
-      $scope.video_chat={
-        agent:null,
-        visitor:null
-      };
-
-      $scope.typ=$scope.msgData.typ
-      if($scope.msgData.typ=='audio'){
-        $scope.audio_chat={
-          agent:'/media/agent'+$scope.msgData.uid+'.mp3',
-          visitor:'/media/local'+$scope.msgData.uid+'.mp3'
+        $scope.typ = $scope.msgData.typ
+        if ($scope.msgData.typ == 'audio') {
+          $scope.audio_chat = {
+            agent: '/media/agent' + $scope.msgData.uid + '.mp3',
+            visitor: '/media/local' + $scope.msgData.uid + '.mp3'
+          }
+        } else if ($scope.msgData.typ == 'video') {
+          $scope.video_chat = {
+            agent: '/media/agent' + $scope.msgData.uid + '.webm',
+            visitor: '/media/local' + $scope.msgData.uid + '.webm'
+          }
+          $scope.screen_video = '/media/screen' + $scope.msgData.uid + '.webm'
         }
-      }
 
-      else if($scope.msgData.typ=='video'){
-        $scope.video_chat={
-          agent:'/media/agent'+$scope.msgData.uid+'.webm',
-          visitor:'/media/local'+$scope.msgData.uid+'.webm'
-        }
-        $scope.screen_video='/media/screen'+$scope.msgData.uid+'.webm'
-      }
+        var stream_agent, stream_visitor, canvas_agent, canvas_visitor, ctx_agent, ctx_visitor, unique_agent_video_id, unique_visitor_video_id;
 
-      var stream_agent,stream_visitor,canvas_agent,canvas_visitor,ctx_agent,ctx_visitor,unique_agent_video_id,unique_visitor_video_id;
+        setTimeout(function() {
 
-      setTimeout(function () {
+          if ($scope.video_chat || $scope.audio_chat) {
 
-        if($scope.video_chat||$scope.audio_chat){
-
-          if ($scope.video_chat.agent) {
-              unique_agent_video_id="vid_agent"+$scope.myChatThreadData.uid;
-              unique_visitor_video_id="vid_visitor"+$scope.myChatThreadData.uid;
-              stream_agent  = document.getElementById(unique_agent_video_id);
-              stream_visitor  = document.getElementById(unique_visitor_video_id);
+            if ($scope.video_chat.agent) {
+              unique_agent_video_id = "vid_agent" + $scope.myChatThreadData.uid;
+              unique_visitor_video_id = "vid_visitor" + $scope.myChatThreadData.uid;
+              stream_agent = document.getElementById(unique_agent_video_id);
+              stream_visitor = document.getElementById(unique_visitor_video_id);
               canvas_agent = document.getElementById('canvas_agent');
               canvas_visitor = document.getElementById('canvas_visitor');
               ctx_agent = canvas_agent.getContext('2d');
               ctx_visitor = canvas_visitor.getContext('2d');
-              w=200; h=200;
+              w = 200;
+              h = 200;
               canvas_agent.width = w;
               canvas_agent.height = h;
               canvas_visitor.width = w;
               canvas_visitor.height = h;
 
-          }
-          else if($scope.audio_chat.agent){
-              stream_agent  = document.getElementById("aud_agent");
-              stream_visitor  = document.getElementById("aud_visitor");
-          }
-        }
-      }, 900);
-      setTimeout(function () {
-      if(stream_agent!=undefined&&stream_visitor!=undefined ){
-        if(stream_agent.readyState>0&&stream_visitor.readyState>0){
-                $scope.slider = {
-                    value: 0,
-                    options: {
-                        floor: 0,
-                        ceil: stream_agent.duration,
-                        step: 0,
-                        rightToLeft: false
-                    }
-                };
-                $scope.vol_slider = {
-                  value: 10,
-                  options: {
-                    floor:0,
-                    ceil:10,
-                    showSelectionBar: true,
-                    getSelectionBarColor: function(value) {
-                     if (value <= 3)
-                         return 'red';
-                     if (value <= 6)
-                         return 'orange';
-                     if (value <= 9)
-                         return 'yellow';
-                     return '#2AE02A';
-                   }
-                 }
-               };
-                var StopSliderOnPause;
-                function handleSliderForVideo(){
-                  StopSliderOnPause=setInterval(function () {
-                    $scope.slider.options.ceil=stream_agent.duration;
-                    if($scope.slider.value+1>=stream_agent.duration){
-                      clearInterval(StopSliderOnPause);
-                      $scope.play_pause=false;
-                      $scope.slider.value=0;
-                      stream_agent.pause();
-                      stream_visitor.pause();
-                    }
-                    else{
-                      $scope.slider.value=stream_agent.currentTime;
-                    }
-                  },500);
-                }
-                $scope.$watch('vol_slider.value', function(newValue, oldValue) {
-                  stream_agent.volume=newValue/10;
-                  stream_visitor.volume=newValue/10;
-                });
-                $scope.$watch('slider.value', function(newValue, oldValue) {
-                  if(newValue-oldValue>1||oldValue-newValue>1){
-                    stream_agent.currentTime=newValue
-                    stream_visitor.currentTime=newValue
-                  }
-                });
-                $scope.play_video=function(){
-                  $scope.play_pause=true;
-                  stream_agent.play();
-                  stream_visitor.play();
-                  handleSliderForVideo();
-                }
-                $scope.pause_video=function(){
-                  $scope.play_pause=false;
-                  stream_agent.pause();
-                  stream_visitor.pause();
-                  clearInterval(StopSliderOnPause)
-                }
-        }
-      }
-    }, 1500);
-
-
-    $scope.showChart = function(){
-      console.log('modalllllllllllllllll');
-      $uibModal.open({
-        templateUrl: '/static/ngTemplates/app.support.review.fullChat.modal.html',
-        size: 'lg',
-        backdrop: true,
-        resolve: {
-          myChatThreadData: function() {
-            return $scope.myChatThreadData;
-          }
-        },
-        controller: function($scope, myChatThreadData , $users , $uibModalInstance, Flash) {
-
-          $scope.myChatThreadData = myChatThreadData
-          $scope.calculateTime = function (user , agent) {
-            if (user!=undefined) {
-              var usertime = new Date(user);
-              var agenttime = new Date(agent);
-              var diff = Math.floor((agenttime - usertime)/60000)
-              if (diff<60) {
-                return diff+' Mins';
-              }else if (diff>=60 && diff<60*24) {
-                return Math.floor(diff/60)+' Hrs';
-              }else if (diff>=60*24) {
-                return Math.floor(diff/(60*24))+' Days';
-              }
-            }else {
-              return
+            } else if ($scope.audio_chat.agent) {
+              stream_agent = document.getElementById("aud_agent");
+              stream_visitor = document.getElementById("aud_visitor");
             }
           }
-          $http({
-              method: 'GET',
-              url: '/api/support/supportChat/?uid='+myChatThreadData.uid,
-            }).
-            then(function(response) {
-              console.log(response.data,typeof response.data,response.data.length);
-              $scope.fullChatData = response.data
-            });
+        }, 900);
+        setTimeout(function() {
+          if (stream_agent != undefined && stream_visitor != undefined) {
+            if (stream_agent.readyState > 0 && stream_visitor.readyState > 0) {
+              $scope.slider = {
+                value: 0,
+                options: {
+                  floor: 0,
+                  ceil: stream_agent.duration,
+                  step: 0,
+                  rightToLeft: false
+                }
+              };
+              $scope.vol_slider = {
+                value: 10,
+                options: {
+                  floor: 0,
+                  ceil: 10,
+                  showSelectionBar: true,
+                  getSelectionBarColor: function(value) {
+                    if (value <= 3)
+                      return 'red';
+                    if (value <= 6)
+                      return 'orange';
+                    if (value <= 9)
+                      return 'yellow';
+                    return '#2AE02A';
+                  }
+                }
+              };
+              var StopSliderOnPause;
 
-
-          checkEmail = function(){
-            console.log($scope.form.email);
-            $http({
-                method: 'GET',
-                url: '/api/support/visitor/?email='+$scope.form.email+'&uid='+uid,
-              }).
-              then(function(response) {
-                console.log(response.data,typeof response.data,response.data.length);
-                if (response.data.length ==1 && response.data[0].email == $scope.form.email) {
-                  $scope.form = response.data[0]
+              function handleSliderForVideo() {
+                StopSliderOnPause = setInterval(function() {
+                  $scope.slider.options.ceil = stream_agent.duration;
+                  if ($scope.slider.value + 1 >= stream_agent.duration) {
+                    clearInterval(StopSliderOnPause);
+                    $scope.play_pause = false;
+                    $scope.slider.value = 0;
+                    stream_agent.pause();
+                    stream_visitor.pause();
+                  } else {
+                    $scope.slider.value = stream_agent.currentTime;
+                  }
+                }, 500);
+              }
+              $scope.$watch('vol_slider.value', function(newValue, oldValue) {
+                stream_agent.volume = newValue / 10;
+                stream_visitor.volume = newValue / 10;
+              });
+              $scope.$watch('slider.value', function(newValue, oldValue) {
+                if (newValue - oldValue > 1 || oldValue - newValue > 1) {
+                  stream_agent.currentTime = newValue
+                  stream_visitor.currentTime = newValue
                 }
               });
-          }
-          $scope.changeStatus = function(status){
-            $http({
-              method: 'PATCH',
-              url: '/api/support/chatThread/' + $scope.myChatThreadData.pk + '/',
-              data: {status:status}
-            }).
-            then(function(response) {
-              Flash.create('success', 'Updated')
-              $uibModalInstance.dismiss(response.data.status)
-            });
-          }
-
-        },
-      }).result.then(function () {
-
-      }, function (status) {
-        console.log(status);
-        console.log($scope.myChatThreadData);
-        if (status != 'backdrop click' && status != 'escape key press') {
-          $scope.myChatThreadData.status = status
-        }
-      });
-
-    }
-    $scope.snap=function() {
-        ctx_agent.fillRect(0, 0, w, h);
-        ctx_agent.drawImage(stream_agent, 0, 0, w, h);
-        ctx_visitor.fillRect(0, 0, w, h);
-        ctx_visitor.drawImage(stream_visitor, 0, 0, w, h);
-        $uibModal.open({
-          templateUrl: '/static/ngTemplates/app.qualityCheck.capture.modal.html',
-          size: 'md',
-          backdrop: true,
-          resolve: {
-            data: function(){
-              return $scope.msgData.uid
-            }
-          },
-          controller: function($scope, $users, $uibModalInstance,data, Flash) {
-            console.log("model opened");
-            $scope.uidd=data;
-            $scope.imgsrc_agent =canvas_agent.toDataURL();
-            $scope.imgsrc_visitor =canvas_visitor.toDataURL();
-            $scope.timeOfCapture=stream_agent.currentTime;
-
-            function dataURItoBlob(dataURI) {
-              var byteString = atob(dataURI.split(',')[1]);
-              var mimeString = dataURI.split(',')[0].split(':')[1].split(';')[0]
-              var ab = new ArrayBuffer(byteString.length);
-              var ia = new Uint8Array(ab);
-              for (var i = 0; i < byteString.length; i++) {
-                  ia[i] = byteString.charCodeAt(i);
+              $scope.play_video = function() {
+                $scope.play_pause = true;
+                stream_agent.play();
+                stream_visitor.play();
+                handleSliderForVideo();
               }
-              var blob = new Blob([ab], {type: mimeString});
-              return blob;
+              $scope.pause_video = function() {
+                $scope.play_pause = false;
+                stream_agent.pause();
+                stream_visitor.pause();
+                clearInterval(StopSliderOnPause)
+              }
             }
+          }
+        }, 1500);
 
-            $scope.blob_of_agent_image=dataURItoBlob($scope.imgsrc_agent);
-            $scope.blob_of_visitor_image=dataURItoBlob($scope.imgsrc_visitor);
 
-            $scope.onSend_Capture =function(){
-                if ($scope.reviewForm.message.length == 0) {
-                  Flash.create('warning','Please Write Some Comment')
+        $scope.showChart = function() {
+          console.log('modalllllllllllllllll');
+          $uibModal.open({
+            templateUrl: '/static/ngTemplates/app.support.review.fullChat.modal.html',
+            size: 'lg',
+            backdrop: true,
+            resolve: {
+              myChatThreadData: function() {
+                return $scope.myChatThreadData;
+              }
+            },
+            controller: function($scope, myChatThreadData, $users, $uibModalInstance, Flash) {
+
+              $scope.myChatThreadData = myChatThreadData
+              $scope.calculateTime = function(user, agent) {
+                if (user != undefined) {
+                  var usertime = new Date(user);
+                  var agenttime = new Date(agent);
+                  var diff = Math.floor((agenttime - usertime) / 60000)
+                  if (diff < 60) {
+                    return diff + ' Mins';
+                  } else if (diff >= 60 && diff < 60 * 24) {
+                    return Math.floor(diff / 60) + ' Hrs';
+                  } else if (diff >= 60 * 24) {
+                    return Math.floor(diff / (60 * 24)) + ' Days';
+                  }
+                } else {
                   return
                 }
-                $scope.timeOfGeneration=new Date().toISOString();
+              }
+              $http({
+                method: 'GET',
+                url: '/api/support/supportChat/?uid=' + myChatThreadData.uid,
+              }).
+              then(function(response) {
+                console.log(response.data, typeof response.data, response.data.length);
+                $scope.fullChatData = response.data
+              });
+
+
+              checkEmail = function() {
+                console.log($scope.form.email);
+                $http({
+                  method: 'GET',
+                  url: '/api/support/visitor/?email=' + $scope.form.email + '&uid=' + uid,
+                }).
+                then(function(response) {
+                  console.log(response.data, typeof response.data, response.data.length);
+                  if (response.data.length == 1 && response.data[0].email == $scope.form.email) {
+                    $scope.form = response.data[0]
+                  }
+                });
+              }
+              $scope.changeStatus = function(status) {
+                $http({
+                  method: 'PATCH',
+                  url: '/api/support/chatThread/' + $scope.myChatThreadData.pk + '/',
+                  data: {
+                    status: status
+                  }
+                }).
+                then(function(response) {
+                  Flash.create('success', 'Updated')
+                  $uibModalInstance.dismiss(response.data.status)
+                });
+              }
+
+            },
+          }).result.then(function() {
+
+          }, function(status) {
+            console.log(status);
+            console.log($scope.myChatThreadData);
+            if (status != 'backdrop click' && status != 'escape key press') {
+              $scope.myChatThreadData.status = status
+            }
+          });
+
+        }
+        $scope.snap = function() {
+          ctx_agent.fillRect(0, 0, w, h);
+          ctx_agent.drawImage(stream_agent, 0, 0, w, h);
+          ctx_visitor.fillRect(0, 0, w, h);
+          ctx_visitor.drawImage(stream_visitor, 0, 0, w, h);
+          $uibModal.open({
+            templateUrl: '/static/ngTemplates/app.qualityCheck.capture.modal.html',
+            size: 'md',
+            backdrop: true,
+            resolve: {
+              data: function() {
+                return $scope.msgData.uid
+              }
+            },
+            controller: function($scope, $users, $uibModalInstance, data, Flash) {
+              console.log("model opened");
+              $scope.uidd = data;
+              $scope.imgsrc_agent = canvas_agent.toDataURL();
+              $scope.imgsrc_visitor = canvas_visitor.toDataURL();
+              $scope.timeOfCapture = stream_agent.currentTime;
+
+              function dataURItoBlob(dataURI) {
+                var byteString = atob(dataURI.split(',')[1]);
+                var mimeString = dataURI.split(',')[0].split(':')[1].split(';')[0]
+                var ab = new ArrayBuffer(byteString.length);
+                var ia = new Uint8Array(ab);
+                for (var i = 0; i < byteString.length; i++) {
+                  ia[i] = byteString.charCodeAt(i);
+                }
+                var blob = new Blob([ab], {
+                  type: mimeString
+                });
+                return blob;
+              }
+
+              $scope.blob_of_agent_image = dataURItoBlob($scope.imgsrc_agent);
+              $scope.blob_of_visitor_image = dataURItoBlob($scope.imgsrc_visitor);
+
+              $scope.onSend_Capture = function() {
+                if ($scope.reviewForm.message.length == 0) {
+                  Flash.create('warning', 'Please Write Some Comment')
+                  return
+                }
+                $scope.timeOfGeneration = new Date().toISOString();
                 var fd = new FormData();
                 fd.append('message', $scope.reviewForm.message);
                 fd.append('uid', $scope.uidd);
@@ -664,75 +668,79 @@ app.directive('reviewInfo', function() {
                 SendingPostRequest(fd);
                 $uibModalInstance.dismiss()
               }
-          },
+            },
           }).result.then(function() {
 
-        }, function(data) {
-          console.log(data);
-        });
-    };
+          }, function(data) {
+            console.log(data);
+          });
+        };
 
-      function SendingPostRequest(toSend){
-        console.log("Posting....",toSend);
-        $http({
-          method: 'POST',
-          url: '/api/support/reviewComment/',
-          data : toSend,
-          transformRequest: angular.identity,
-          headers: {
-            'Content-Type': undefined
-          }
-        }).
-        then(function(response) {
-          console.log(response.data);
-          $scope.reviewCommentData.push(response.data)
-          $scope.reviewForm = {message:'',visitor_capture:'',visitor_capture:''}
-        }, function(err) {
-          console.log(err.data.detail);
-          Flash.create('danger', err.data.detail);
-        });
-      }
-      $scope.postComment = function(){
-        console.log($scope.msgData.created);
-        if ($scope.reviewForm.message.length == 0) {
-          Flash.create('warning','Please Write Some Comment')
-          return
+        function SendingPostRequest(toSend) {
+          console.log("Posting....", toSend);
+          $http({
+            method: 'POST',
+            url: '/api/support/reviewComment/',
+            data: toSend,
+            transformRequest: angular.identity,
+            headers: {
+              'Content-Type': undefined
+            }
+          }).
+          then(function(response) {
+            console.log(response.data);
+            $scope.reviewCommentData.push(response.data)
+            $scope.reviewForm = {
+              message: '',
+              visitor_capture: '',
+              visitor_capture: ''
+            }
+          }, function(err) {
+            console.log(err.data.detail);
+            Flash.create('danger', err.data.detail);
+          });
         }
-        var fd1 = new FormData();
-        fd1.append('message', $scope.reviewForm.message);
-        fd1.append('uid', $scope.msgData.uid);
-        fd1.append('chatedDate', $scope.msgData.created.split('T')[0]);
-        console.log(fd1);
-        SendingPostRequest(fd1);
+        $scope.postComment = function() {
+          console.log($scope.msgData.created);
+          if ($scope.reviewForm.message.length == 0) {
+            Flash.create('warning', 'Please Write Some Comment')
+            return
+          }
+          var fd1 = new FormData();
+          fd1.append('message', $scope.reviewForm.message);
+          fd1.append('uid', $scope.msgData.uid);
+          fd1.append('chatedDate', $scope.msgData.created.split('T')[0]);
+          console.log(fd1);
+          SendingPostRequest(fd1);
+        }
+
+
+
+
+
+        // $scope.postComment = function(){
+        //   console.log($scope.msgData.created);
+        //   if ($scope.reviewForm.message.length == 0) {
+        //     Flash.create('warning','Please Write Some Comment')
+        //     return
+        //   }
+        //   var toSend = {message:$scope.reviewForm.message,uid:$scope.msgData.uid,chatedDate:$scope.msgData.created.split('T')[0]}
+        //   $http({
+        //     method: 'POST',
+        //     url: '/api/support/reviewComment/',
+        //     data : toSend
+        //   }).
+        //   then(function(response) {
+        //     console.log(response.data,'dddddddddddd',typeof response.data);
+        //     console.log(response.data);
+        //     $scope.reviewCommentData.push(response.data)
+        //     $scope.reviewForm = {message:''}
+        //   }, function(err) {
+        //     console.log(err.data.detail);
+        //     Flash.create('danger', err.data.detail);
+        //   });
+        // }
       }
-
-
-
-
-
-      // $scope.postComment = function(){
-      //   console.log($scope.msgData.created);
-      //   if ($scope.reviewForm.message.length == 0) {
-      //     Flash.create('warning','Please Write Some Comment')
-      //     return
-      //   }
-      //   var toSend = {message:$scope.reviewForm.message,uid:$scope.msgData.uid,chatedDate:$scope.msgData.created.split('T')[0]}
-      //   $http({
-      //     method: 'POST',
-      //     url: '/api/support/reviewComment/',
-      //     data : toSend
-      //   }).
-      //   then(function(response) {
-      //     console.log(response.data,'dddddddddddd',typeof response.data);
-      //     console.log(response.data);
-      //     $scope.reviewCommentData.push(response.data)
-      //     $scope.reviewForm = {message:''}
-      //   }, function(err) {
-      //     console.log(err.data.detail);
-      //     Flash.create('danger', err.data.detail);
-      //   });
-      // }
-    }
 
     },
   };
@@ -750,119 +758,186 @@ app.directive('chatBox', function() {
       closeChat: '='
     },
     controller: function($scope, $users, $uibModal, $http, ngAudio, Flash, $sce, webNotification) {
-      $scope.IsVisitorOn=true;
-      $scope.isVisitorVideoShowing=true;
-      $scope.location={}
-      console.log($scope.data,"^^^^^^^^^^^^^^^^^^^^^");
+      $scope.IsVisitorOn = true;
+      $scope.isVisitorVideoShowing = true;
+      $scope.location = {}
+      console.log($scope.data, "^^^^^^^^^^^^^^^^^^^^^");
+
+      $scope.sendCustomMessage = function (message) {
+        if (message==undefined) {
+          message = "This is some hidden message"
+        }
+       var dataToSend = {
+          uid: $scope.data.uid,
+          message: message,
+          user: $scope.me.pk,
+          sentByAgent: true,
+          is_hidden:true
+        }
         $http({
-            method: 'GET',
-            url: '/api/support/getMyUser/?getCompanyDetails=' + $scope.data.companyPk,
-          }).then(function(response){
-            console.log(response.data);
-            $scope.companyName=response.data.cDetails[0]
-            $scope.compContactPersons=response.data.contactP
-          })
+          method: 'POST',
+          data: dataToSend,
+          url: '/api/support/supportChat/'
+        }).
+        then(function(response) {
+          $scope.data.messages.push(response.data)
+        })
+      }
 
-          $http({
-            method: 'GET',
-            url: '/api/support/chatThread/?uid='+$scope.data.uid
-          }).
-          then(function(response) {
-            console.log(response.data,'dddddddddddd',typeof response.data);
-            var myLocationData=JSON.parse(response.data[0].location)
-            if(myLocationData.city!=null){
-              if(myLocationData.hasOwnProperty('timezone')){
-                $scope.location={
-                  'city':myLocationData.city,
-                  'country_name':myLocationData.country,
-                  'region_name':myLocationData.regionName,
-                  'zip':myLocationData.zip,
-                  'ip':myLocationData.query,
-                  'flag':'/static/Flags/'+myLocationData.countryCode.toLowerCase()+'.png',
-                  'location':{
-                    'capital':null,
-                    'languages':null
-                  }
+      $scope.sendCustomHtml = function (htmlCode) {
 
-                }
-              }else{
-                $scope.location =Object.assign(JSON.parse(response.data[0].location))
-                $scope.location.flag='/static/Flags/'+myLocationData.country_code.toLowerCase()+'.png',
-                $scope.location.timezone=null
-              }
+        $uibModal.open({
+          templateUrl: '/static/ngTemplates/app.support.chatBox.customHtml.html',
+          size: 'md',
+          backdrop: true,
+          resolve: {
+
+          },
+          controller: function($scope, $users, $uibModalInstance) {
+            $scope.htmlCode = ''
+            $scope.send = function () {
+              $uibModalInstance.dismiss($scope.htmlCode)
             }
-          });
+          },
+        }).result.then(function() {
 
-      setTimeout(function () {
-        document.getElementById('chatBoxdiv'+$scope.index).focus()
+        }, function(data) {
+          if (data != 'backdrop click' && data != '' && data != 'escape key press') {
+            $scope.status = 'HTML';
+            $scope.htmlCode = '<div style="clear: both; background-color:#a6ccf6; padding:5px 10px;margin:8px; box-sizing:border-box; width:96%;">'+ data +'</div>'
+            connection.session.publish(wamp_prefix + 'service.support.chat.' + $scope.data.uid, [$scope.status, $scope.htmlCode, $scope.me, new Date()], {}, {
+              acknowledge: true
+            }).
+            then(function(publication) {
+              console.log("Published");
+            });
+          }
+        });
+
+
+
+      }
+
+      for (var i = 0; i < $scope.data.messages.length; i++) {
+        if (!$scope.data.messages[i].read) {
+          $http({
+            method: 'PATCH',
+            url: '/api/support/supportChat/' + $scope.data.messages[i].pk + '/',
+            data: {
+              read: true
+            }
+          }).then(function(response) {
+            $scope.data.messages[i].read = true
+          })
+        }
+      }
+
+      $http({
+        method: 'GET',
+        url: '/api/support/getMyUser/?getCompanyDetails=' + $scope.data.companyPk,
+      }).then(function(response) {
+        console.log(response.data);
+        $scope.companyName = response.data.cDetails[0]
+        $scope.compContactPersons = response.data.contactP
+      })
+
+      $http({
+        method: 'GET',
+        url: '/api/support/chatThread/?uid=' + $scope.data.uid
+      }).
+      then(function(response) {
+        console.log(response.data, 'dddddddddddd', typeof response.data);
+        var myLocationData = JSON.parse(response.data[0].location)
+        if (myLocationData.city != null) {
+          if (myLocationData.hasOwnProperty('timezone')) {
+            $scope.location = {
+              'city': myLocationData.city,
+              'country_name': myLocationData.country,
+              'region_name': myLocationData.regionName,
+              'zip': myLocationData.zip,
+              'ip': myLocationData.query,
+              'flag': '/static/Flags/' + myLocationData.countryCode.toLowerCase() + '.png',
+              'location': {
+                'capital': null,
+                'languages': null
+              }
+
+            }
+          } else {
+            $scope.location = Object.assign(JSON.parse(response.data[0].location))
+            $scope.location.flag = '/static/Flags/' + myLocationData.country_code.toLowerCase() + '.png',
+              $scope.location.timezone = null
+          }
+        }
+      });
+
+      setTimeout(function() {
+        document.getElementById('chatBoxdiv' + $scope.index).focus()
       }, 1000);
 
 
-      $scope.textAreaBehavior = function(e){
-        if (e.keyCode == 13 && !e.shiftKey)
-            {
-                // prevent default behavior
-                e.preventDefault();
-                console.log('both');
-                $scope.send();
-            }
-            if (e.keyCode == 13&&e.shiftKey)
-            {
-              console.log('here');
-            }
+      $scope.textAreaBehavior = function(e) {
+        if (e.keyCode == 13 && !e.shiftKey) {
+          // prevent default behavior
+          e.preventDefault();
+          console.log('both');
+          $scope.send();
+        }
+        if (e.keyCode == 13 && e.shiftKey) {
+          console.log('here');
+        }
       }
 
 
       setTimeout(function() {
         if (document.getElementById("iframeChat" + $scope.data.uid) != null)
-          $scope.getFrameContent = document.getElementById("iframeChat"+ $scope.data.uid).contentWindow;
+          $scope.getFrameContent = document.getElementById("iframeChat" + $scope.data.uid).contentWindow;
       }, 2000);
       $scope.captureImage = function() {
-        if ($scope.getFrameContent==undefined) {
-          $scope.getFrameContent = document.getElementById("iframeChat"+ $scope.data.uid).contentWindow;
+        if ($scope.getFrameContent == undefined) {
+          $scope.getFrameContent = document.getElementById("iframeChat" + $scope.data.uid).contentWindow;
         }
         $scope.getFrameContent.postMessage('captureImage', webRtcAddress);
       }
 
 
       $scope.hideVisitorScreen = function() {
-        $scope.IsVisitorOn=!$scope.IsVisitorOn;
-          if($scope.IsVisitorOn){
-            connection.session.publish(wamp_prefix+'service.support.chat.' + $scope.data.uid, ['ShowVisitorScreen'], {}, {
-              acknowledge: true
-            }).
-            then(function(publication) {
-              console.log("Published");
-            });
-          }
-          else{
-            connection.session.publish(wamp_prefix+'service.support.chat.' + $scope.data.uid, ['hideVisitorScreen'], {}, {
-              acknowledge: true
-            }).
-            then(function(publication) {
-              console.log("Published");
-            });
-          }
+        $scope.IsVisitorOn = !$scope.IsVisitorOn;
+        if ($scope.IsVisitorOn) {
+          connection.session.publish(wamp_prefix + 'service.support.chat.' + $scope.data.uid, ['ShowVisitorScreen'], {}, {
+            acknowledge: true
+          }).
+          then(function(publication) {
+            console.log("Published");
+          });
+        } else {
+          connection.session.publish(wamp_prefix + 'service.support.chat.' + $scope.data.uid, ['hideVisitorScreen'], {}, {
+            acknowledge: true
+          }).
+          then(function(publication) {
+            console.log("Published");
+          });
+        }
       }
 
-      $scope.$watch('data.closeIframe',function(newValue,oldValue){
-        console.log(newValue,'=********************************************');
+      $scope.$watch('data.closeIframe', function(newValue, oldValue) {
+        console.log(newValue, '=********************************************');
         //printed true ono cut
 
-        if(newValue){
-          document.getElementById("iframeChat"+ $scope.data.uid).src='';
+        if (newValue) {
+          document.getElementById("iframeChat" + $scope.data.uid).src = '';
           $scope.msgDivHeight = 71
         }
       })
 
 
-      $scope.setHeight = function () {
+      $scope.setHeight = function() {
         // console.log('Here');
         if ($scope.data.audio) {
           $scope.msgDivHeight = 66
-        }else if ($scope.data.video) {
+        } else if ($scope.data.video) {
           $scope.msgDivHeight = 51
-        }else {
+        } else {
           $scope.msgDivHeight = 71
         }
         console.log($scope.msgDivHeight);
@@ -873,30 +948,29 @@ app.directive('chatBox', function() {
       window.addEventListener("message", receiveMessage, false);
 
       function receiveMessage(event) {
-        if(event.data=='callFromAgentplease'){
+        if (event.data == 'callFromAgentplease') {
           alert('aaaaaaaaaaa gyaaaaaaaaaaa');
         }
-        if (event.origin == webRtcAddress&&event.data.indexOf("*")) {
+        if (event.origin == webRtcAddress && event.data.indexOf("*")) {
           console.log(event.data + ' ******************');
-          if(event.data=='calledToShowVisitorVideo'){
-            connection.session.publish(wamp_prefix+'service.support.chat.' + $scope.data.uid, ['calledToShowVisitorVideo'], {}, {
+          if (event.data == 'calledToShowVisitorVideo') {
+            connection.session.publish(wamp_prefix + 'service.support.chat.' + $scope.data.uid, ['calledToShowVisitorVideo'], {}, {
               acknowledge: true
             }).
             then(function(publication) {
               console.log("Published");
             });
-          }else if(event.data=='calledToHideVisitorVideo'){
-            connection.session.publish(wamp_prefix+'service.support.chat.' + $scope.data.uid, ['calledToHideVisitorVideo'], {}, {
+          } else if (event.data == 'calledToHideVisitorVideo') {
+            connection.session.publish(wamp_prefix + 'service.support.chat.' + $scope.data.uid, ['calledToHideVisitorVideo'], {}, {
               acknowledge: true
             }).
             then(function(publication) {
               console.log("Published");
             });
-          }
-          else{
+          } else {
             var uid = event.data.split('*')[0]
             var imageData = event.data.split('*')[1]
-            if (uid==$scope.data.uid) {
+            if (uid == $scope.data.uid) {
               $scope.takeSnapshot(imageData)
             }
           }
@@ -1128,7 +1202,7 @@ app.directive('chatBox', function() {
         });
       }
 
-      if($scope.data.email!=undefined){
+      if ($scope.data.email != undefined) {
         if ($scope.data.email.length > 0) {
           $http({
             method: 'GET',
@@ -1152,12 +1226,12 @@ app.directive('chatBox', function() {
         console.log(response.data, typeof response.data, response.data.length);
         if (response.data.length > 0) {
           $scope.visitorForm = response.data[0]
-          console.log($scope.visitorForm , "Visitor Data");
+          console.log($scope.visitorForm, "Visitor Data");
         }
       });
 
 
-      function sendMail(mailId,uid){
+      function sendMail(mailId, uid) {
         $http({
           method: 'POST',
           url: '/api/support/emailChat/',
@@ -1166,15 +1240,15 @@ app.directive('chatBox', function() {
             uid: uid
           }
         }).then(function(response) {
-          console.log('mail sent to '+mailId);
+          console.log('mail sent to ' + mailId);
         });
       }
 
 
-      function sendMailToContactPersons(){
+      function sendMailToContactPersons() {
         for (var i = 0; i < $scope.compContactPersons.length; i++) {
-          var profile=$users.get($scope.compContactPersons[i])
-          sendMail(profile.email,$scope.data.uid)
+          var profile = $users.get($scope.compContactPersons[i])
+          sendMail(profile.email, $scope.data.uid)
         }
       }
 
@@ -1217,9 +1291,9 @@ app.directive('chatBox', function() {
           fd.append('uid', $scope.data.uid)
           fd.append('sentByAgent', true)
 
-          if (mediaType=='instructionImage') {
-            fd.append('attachmentType',mediaType)
-          }else {
+          if (mediaType == 'instructionImage') {
+            fd.append('attachmentType', mediaType)
+          } else {
             fd.append('attachmentType', $scope.chatBox.fileToSend.type.split('/')[0])
           }
 
@@ -1245,7 +1319,7 @@ app.directive('chatBox', function() {
 
 
             $scope.status = 'MF';
-            connection.session.publish(wamp_prefix+'service.support.chat.' + $scope.data.uid, [$scope.status, $scope.fileData, $scope.me, new Date()], {}, {
+            connection.session.publish(wamp_prefix + 'service.support.chat.' + $scope.data.uid, [$scope.status, $scope.fileData, $scope.me, new Date()], {}, {
               acknowledge: true
             }).
             then(function(publication) {
@@ -1254,9 +1328,9 @@ app.directive('chatBox', function() {
 
             $scope.chatBox.fileToSend = emptyFile;
 
-            if (mediaType=='instructionImage') {
+            if (mediaType == 'instructionImage') {
               $scope.scroll(1500)
-            }else {
+            } else {
               $scope.scroll()
             }
 
@@ -1311,17 +1385,17 @@ app.directive('chatBox', function() {
 
             console.log('publishing here... message', $scope.status, response.data, $scope.me.username);
 
-            if(connection.session){
-              connection.session.publish(wamp_prefix+'service.support.chat.' + $scope.data.uid, [$scope.status, response.data, $scope.me, new Date()], {}, {
+            if (connection.session) {
+              connection.session.publish(wamp_prefix + 'service.support.chat.' + $scope.data.uid, [$scope.status, response.data, $scope.me, new Date()], {}, {
                 acknowledge: true
               }).
               then(function(publication) {
                 console.log("Published", $scope.data.uid);
                 // alert('deleiverd')
-              },function(){
+              }, function() {
                 alert('not deleivered')
               });
-            }else{
+            } else {
               alert('you are not connected to internet')
             }
             $scope.scroll()
@@ -1329,7 +1403,7 @@ app.directive('chatBox', function() {
         }
       };
 
-      $scope.imageClicked=function(val){
+      $scope.imageClicked = function(val) {
         // alert(val)
         $uibModal.open({
           templateUrl: '/static/ngTemplates/app.support.chatBox.imageModal.html',
@@ -1340,12 +1414,12 @@ app.directive('chatBox', function() {
               return val;
             }
           },
-          controller: function($scope, $users,imageSrc, $uibModalInstance) {
-            $scope.myImageSrc=imageSrc
+          controller: function($scope, $users, imageSrc, $uibModalInstance) {
+            $scope.myImageSrc = imageSrc
           },
-          }).result.then(function() {
+        }).result.then(function() {
 
-          }, function(data) {
+        }, function(data) {
 
           if (data != 'backdrop click' && data != '' && data != 'escape key press') {
             console.log(data);
@@ -1357,26 +1431,26 @@ app.directive('chatBox', function() {
       $scope.$watch('chatBox.messageToSend', function(newValue, oldValue) {
         $scope.status = "T";
         if (newValue != "") {
-          if(connection.session){
-            connection.session.publish(wamp_prefix+'service.support.chat.' + $scope.data.uid, [$scope.status], {}, {
+          if (connection.session) {
+            connection.session.publish(wamp_prefix + 'service.support.chat.' + $scope.data.uid, [$scope.status], {}, {
               acknowledge: true
             }).
             then(function(publication) {
               console.log("Published");
             });
-          }else{
+          } else {
             alert('you are not connected to internet')
           }
         }
       });
 
-      $scope.$watch('data.disableInput',function(newValue,oldValue){
-        if(newValue){
+      $scope.$watch('data.disableInput', function(newValue, oldValue) {
+        if (newValue) {
           console.log("Sending mail to all contact persons");
           sendMailToContactPersons();
-          if($scope.data.email){
-            console.log('sending mail to '+$scope.data.email);
-            sendMail($scope.data.email,$scope.data.uid)
+          if ($scope.data.email) {
+            console.log('sending mail to ' + $scope.data.email);
+            sendMail($scope.data.email, $scope.data.uid)
           }
         }
       })
@@ -1384,7 +1458,7 @@ app.directive('chatBox', function() {
 
       $scope.chatClose = function(indx, uid, chatThreadPk) {
         $scope.status = "F";
-        connection.session.publish(wamp_prefix+'service.support.chat.' + $scope.data.uid, [$scope.status, uid], {}, {
+        connection.session.publish(wamp_prefix + 'service.support.chat.' + $scope.data.uid, [$scope.status, uid], {}, {
           acknowledge: true
         }).
         then(function(publication) {
@@ -1392,7 +1466,7 @@ app.directive('chatBox', function() {
         });
 
         if ($scope.data.email) {
-          sendMail($scope.data.email,$scope.data.uid)
+          sendMail($scope.data.email, $scope.data.uid)
         }
 
         $http({
@@ -1420,7 +1494,7 @@ app.directive('chatBox', function() {
 
       $scope.scroll = function(delay) {
 
-        if (delay==undefined || delay == null) {
+        if (delay == undefined || delay == null) {
           var delay = 300
         }
 
@@ -1645,7 +1719,7 @@ app.directive('chatBox', function() {
         then(function(response) {
           $scope.allAgents = response.data.allAgents
           for (var i = 0; i < $scope.allAgents.length; i++) {
-            connection.session.call(wamp_prefix+'service.support.hhhhh.' + $scope.allAgents[i], []).
+            connection.session.call(wamp_prefix + 'service.support.hhhhh.' + $scope.allAgents[i], []).
             then((function(i) {
               return function(res) {
                 // console.log('online', i);
@@ -1693,7 +1767,7 @@ app.directive('chatBox', function() {
 
             $scope.transferChat = function() {
 
-              connection.session.call(wamp_prefix+'service.support.heartbeat.' + $scope.agentForm.pk, ['popup', $scope.me.username, userData]).then(
+              connection.session.call(wamp_prefix + 'service.support.heartbeat.' + $scope.agentForm.pk, ['popup', $scope.me.username, userData]).then(
                 function(res) {
                   $http({
                     method: 'PATCH',
@@ -1754,7 +1828,7 @@ app.directive('chatBox', function() {
             }
           },
           controller: function($scope, locationData, $users, $uibModalInstance, Flash) {
-            $scope.locationInfo=locationData
+            $scope.locationInfo = locationData
           },
         }).result.then(function() {
 
@@ -1764,11 +1838,6 @@ app.directive('chatBox', function() {
           }
         });
       }
-
-
-
-
-
 
 
 
@@ -1856,7 +1925,7 @@ app.directive('chatBox', function() {
               then(function(response) {
                 Flash.create('success', 'User details saved')
                 $uibModalInstance.dismiss(response.data)
-                connection.session.publish(wamp_prefix+'service.support.createDetailCookie.' + response.data.uid, [response.data]).then(
+                connection.session.publish(wamp_prefix + 'service.support.createDetailCookie.' + response.data.uid, [response.data]).then(
                   function(res) {},
                   function(err) {
 
@@ -2124,7 +2193,7 @@ app.directive('chatWindow', function($users) {
           then(function(response) {
             $scope.ims.push(response.data)
             $scope.senderIsMe.push(true);
-            connection.session.publish(wamp_prefix+'service.chat.' + $scope.friend.username, [$scope.status, response.data.message, $scope.me, response.data.pk], {}, {
+            connection.session.publish(wamp_prefix + 'service.chat.' + $scope.friend.username, [$scope.status, response.data.message, $scope.me, response.data.pk], {}, {
               acknowledge: true
             }).
             then(function(publication) {
@@ -2166,7 +2235,7 @@ app.directive('chatWindow', function($users) {
             }
             $scope.ims.push(response.data)
             $scope.senderIsMe.push(true);
-            connection.session.publish(wamp_prefix+'service.chat.' + $scope.friend.username, [$scope.status, response.data.attachment, $scope.me, response.data.pk], {}, {
+            connection.session.publish(wamp_prefix + 'service.chat.' + $scope.friend.username, [$scope.status, response.data.attachment, $scope.me, response.data.pk], {}, {
               acknowledge: true
             }).
             then(function(publication) {});
@@ -2189,8 +2258,7 @@ app.directive('chatWindow', function($users) {
         $scope.chatForm.fileToSend = emptyFile;
       }
 
-      $scope.expandImage = function(imgUrl) {
-      }
+      $scope.expandImage = function(imgUrl) {}
 
       $scope.addMessage = function(msg, url) {
         $scope.sound.play();
@@ -2259,7 +2327,7 @@ app.directive('chatWindow', function($users) {
       scope.$watch('chatForm.messageToSend', function(newValue, oldValue) {
         scope.status = "T"; // the sender is typing a message
         if (newValue != "") {
-          connection.session.publish(wamp_prefix+'service.chat.' + scope.friend.username, [scope.status, scope.chatForm.messageToSend, scope.me.username]);
+          connection.session.publish(wamp_prefix + 'service.chat.' + scope.friend.username, [scope.status, scope.chatForm.messageToSend, scope.me.username]);
         }
         scope.status = "N";
       });

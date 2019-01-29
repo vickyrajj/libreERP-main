@@ -40,6 +40,7 @@ class CustomerProfile(models.Model):
     firstMessage = models.CharField(max_length = 20000 , null = True ,blank=True)
     chatIconPosition = models.CharField(max_length = 20000 , null = True ,blank=True)
     chatIconType = models.CharField(max_length = 20000 , null = True ,blank=True)
+    is_blink = models.BooleanField(default = False)
 
 
 class SupportChat(models.Model):
@@ -54,6 +55,7 @@ class SupportChat(models.Model):
     logs = models.CharField(max_length = 500 , null = True ,blank = True)
     delivered = models.BooleanField(default = False)
     read = models.BooleanField(default = False)
+    is_hidden = models.BooleanField(default = False)
 
 class Visitor(models.Model):
     created = models.DateTimeField(auto_now_add = True)

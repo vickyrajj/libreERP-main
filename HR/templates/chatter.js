@@ -425,7 +425,7 @@ function fetchMessages(uid) {
         }
       }
   };
-  xhttp.open('GET', '{{serverAddress}}/api/support/supportChat/?uid=' + uid , true);
+  xhttp.open('GET', '{{serverAddress}}/api/support/supportChat/?visitorReq=1&uid=' + uid , true);
   xhttp.send();
 }
 
@@ -463,6 +463,14 @@ var threadResponse
 var chatThreadPk
 var streamType=''
 
+
+function addHtmlNode() {
+
+}
+
+function addCustomMessage() {
+
+}
 
 
 function setVisitorDetails(name , phoneNumber , email) {
@@ -726,6 +734,13 @@ document.addEventListener("DOMContentLoaded", function(event) {
         // console.log('F');
         console.log('open feedback');
         openFeedback(args[1])
+        return
+      }else if (args[0]=='HTML') {
+        var div = document.createElement("div");
+        div.innerHTML = args[1]
+        messageBox.appendChild(div);
+        scroll();
+
         return
       }
 
@@ -1610,6 +1625,8 @@ function createChatDiv() {
           }\
               .first_animation {\
               animation: first_animation 1s;\
+              animation: blink 3s infinite;\
+              border-radius:50%;\
           }\
               .left-center {\
                     left: -55px;\
@@ -1684,6 +1701,17 @@ function createChatDiv() {
             100%{\
               	opacity:1;\
           	}\
+          }\
+          @keyframes blink{\
+          0%{\
+              box-shadow:0px 0px 0px #5B8DE8;\
+            }\
+            50%{\
+              box-shadow:2px 0px 30px #5B8DE8\
+            }\
+            100%{\
+              box-shadow:0px 0px 0px #5B8DE8\
+            }\
           }\
           @keyframes chatSuggestionBar{\
         	0%{\

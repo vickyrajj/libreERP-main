@@ -69,6 +69,11 @@ class SupportChatViewSet(viewsets.ModelViewSet):
     exclude_fields = ['id']
     def get_queryset(self):
         supChatObj = SupportChat.objects.all()
+        u = self.request.user
+        if u.is_anonymous():
+            supChatObj = supChatObj.filter(is_hidden = False)
+        if 'visitorReq' in self.request.GET:
+            supChatObj = supChatObj.filter(is_hidden = False)
         if 'user__isnull' in self.request.GET:
             return SupportChat.objects.filter(user__isnull=True)
         if 'uid' in self.request.GET:
@@ -78,6 +83,7 @@ class SupportChatViewSet(viewsets.ModelViewSet):
             return supChatObj.filter(created__startswith = date)
         else:
             return SupportChat.objects.all()
+        return SupportChat.objects.all()
 
 
 class GetMyUser(APIView):

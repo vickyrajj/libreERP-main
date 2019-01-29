@@ -23,7 +23,7 @@ regex = re.compile('^HTTP_')
 class CustomerProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = CustomerProfile
-        fields = ( 'pk' , 'created' , 'service', 'chat' , 'call' , 'email', 'video' ,'audio', 'vr' ,'fontColor', 'windowColor' , 'callBack' , 'ticket','dp' ,'name' , 'supportBubbleColor','userApiKey','firstMessage','iconColor','chatIconPosition','chatIconType')
+        fields = ( 'pk' , 'created' , 'service', 'chat' , 'call' , 'email', 'video' ,'audio', 'vr' ,'fontColor', 'windowColor' , 'callBack' , 'ticket','dp' ,'name' , 'supportBubbleColor','userApiKey','firstMessage','iconColor','chatIconPosition','chatIconType','is_blink')
     def create(self ,  validated_data):
         c = CustomerProfile(**validated_data)
         c.service = service.objects.get(pk=self.context['request'].data['service'])
@@ -42,7 +42,7 @@ class CustomerProfileSerializer(serializers.ModelSerializer):
 class SupportChatSerializer(serializers.ModelSerializer):
     class Meta:
         model = SupportChat
-        fields = ( 'pk' , 'created' , 'uid', 'attachment' ,'user' ,'message' ,'attachmentType','sentByAgent','responseTime','logs','delivered' ,'read' )
+        fields = ( 'pk' , 'created' , 'uid', 'attachment' ,'user' ,'message' ,'attachmentType','sentByAgent','responseTime','logs','delivered' ,'read','is_hidden')
     def create(self ,  validated_data):
         s = SupportChat(**validated_data)
         print s.uid ,'uiddddddd'

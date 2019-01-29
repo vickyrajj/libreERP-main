@@ -30,7 +30,7 @@
       <div class="row" style="padding:5px; position:relative;">
         <div class="col-md-9" style="padding-right:0px;">
           <i class="fa fa-circle" aria-hidden="true" style="color:{{data.isOnline ? '#37a508':'#ff0022'}}"></i>
-           <span style="font-size:15px; cursor:default;" ng-mouseover="showCompanyName = true" ng-mouseleave="showCompanyName = false">{{data.uid}}</span>
+           <span style="font-size:15px; cursor:default;" ng-click="sendCustomHtml()" ng-mouseover="showCompanyName = true" ng-mouseleave="showCompanyName = false">{{data.uid}}</span>
            <span class="custom_tool_tip" ng-if="showCompanyName"> {{companyName}} </span>
           <div style="margin:5px 10px">
             <span ng-if="data.name" class="text-muted" style="font-size:15px;">{{data.name}} </span>
