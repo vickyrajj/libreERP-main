@@ -145,6 +145,8 @@ class QPart(models.Model):
     txt = models.CharField(max_length = 2000 , null = True)
     image = models.FileField(upload_to = getQAttachmentPath , null = True)
     sequence = models.PositiveIntegerField(null = True)
+    class Meta:
+        ordering = ['sequence']
 
 
 class Question(models.Model):
@@ -324,8 +326,8 @@ class Note(models.Model):
     description = models.TextField( null = False)
     urlSuffix = models.CharField(max_length = 100 , null = True)
     image =  models.FileField(upload_to = getNoteImagePath , null = True)
-    course = models.ForeignKey(Course , null = False , related_name="courseNote")
-    subject = models.ForeignKey(Subject , null = False , related_name='subject')
+    course = models.ForeignKey(Course , null = True , related_name="courseNote")
+    subject = models.ForeignKey(Subject , null = True , related_name='subject')
 
 
     def get_absolute_url(self):
@@ -338,6 +340,8 @@ class NotesSection(models.Model):
     image = models.FileField(upload_to = getNoteSectionPath , null = True)
     mode = models.CharField(choices = PART_TYPE_CHOICES , default = 'text' , null = False, max_length = 10)
     sequence = models.PositiveIntegerField(null = True)
+    class Meta:
+        ordering = ['sequence']
 
 NOTIFICATION_TYPE = (
     ('sms' , 'sms'),

@@ -402,7 +402,6 @@ app.controller("home.LMS.courses.explore", function($scope, $state, $users, $sta
     // $scope.noteData = response.data;
     $scope.noteData.push(response.data);
   })
-  console.log($scope.noteData, '---------------nnnnnndddddd');
   //---------adding notes
   $scope.addNotes = function(index) {
     console.log(index, '---------indexx---from html');
@@ -434,8 +433,6 @@ app.controller("home.LMS.courses.explore", function($scope, $state, $users, $sta
         }
       },
       controller: function($scope, $uibModalInstance, cData, sData, fData) {
-        // console.log(cData.pk, '---------courseeeeeeesssssssssssssssss--------');
-        // console.log(sData.pk, '---------ssuuuuuuuuubbbbbbbbbbb--------');
         console.log(fData);
         $scope.form = fData;
         $scope.form.pk;
@@ -498,7 +495,8 @@ app.controller("home.LMS.courses.explore", function($scope, $state, $users, $sta
     })
   }
 
-  //-----notesection
+  //-----notesection================================
+
   $scope.noteSection = function(indx) {
     // console.log(pk);
     $uibModal.open({
@@ -575,25 +573,53 @@ app.controller("home.LMS.courses.explore", function($scope, $state, $users, $sta
         }).then(function(response) {
           $scope.nSection = response.data;
           $scope.nsec.push(response.data);
+          $scope.nSection = $scope.nSection.sort(function(a, b) {
+            return a.sequence - b.sequence
+          });
+          console.log($scope.nSection.sort(function(a, b) {
+            return a.sequence - b.sequence
+          }));
         })
-        // setTimeout(function () {
-        //   console.log('----------sec length -----',$scope.nsec[0].length,'------------',$scope.nsec);
-        // }, 1000);
-        // for (var i = 0; i < $scope.nsec.length; i++) {
-        // $scope.edit[i] = false;
-        // }
-        $scope.save = function(sec,idx) {
-          console.log(sec.pk,idx,'---------------savinggggggggg');
-          // console.log(sec.mode,'-----mode');
-          // console.log(sec.txt,'-----txtx');
-          // console.log(sec.note.pk,'-----note pk');
-          // console.log(sec.image,'-----image');
+
+        $scope.noteSecMove = function(index, position) {
+          console.log('clickkkkkkk-----notesecmove', index, position);
+          if ($scope.nSection.length > 1) {
+            var a = $scope.nSection[index]
+            if (position == 'up') {
+              if (index > 0) {
+                $scope.nSection.splice(index, 1)
+                $scope.nSection.splice(index - 1, 0, a)
+              }
+            } else {
+              if (index < $scope.nSection.length - 1) {
+                $scope.nSection.splice(index, 1)
+                $scope.nSection.splice(index + 1, 0, a)
+              }
+            }
+          }
+        }
+        $scope.noteSecSave = function() {
+          // console.log(data.pk,$scope.nSection.length,'pk and length-------------');
+          for (var i = 0; i < $scope.nSection.length; i++) {
+            $http({
+              method: 'PATCH',
+              url: '/api/LMS/notesection/' + $scope.nSection[i].pk + '/',
+              data: {
+                sequence: i
+              }
+            }).
+            then(function(response) {
+              Flash.create('success', 'Saved Sequence');
+            })
+          }
+        }
+        $scope.save = function(sec, idx) {
           var fd = new FormData();
           if (sec.mode == 'text') {
             fd.append('note', sec.note.pk);
             fd.append('txt', sec.txt);
             fd.append('mode', sec.mode);
-            fd.append('sequence',idx);
+            fd.append('sequence', idx);
             if (sec.txt == '') {
               return;
             }
@@ -601,7 +627,7 @@ app.controller("home.LMS.courses.explore", function($scope, $state, $users, $sta
             fd.append('note', sec.note.pk);
             fd.append('image', sec.image);
             fd.append('mode', sec.mode);
-            fd.append('sequence',idx);
+            fd.append('sequence', idx);
           }
           var method = 'PATCH';
           var url = '/api/LMS/notesection/' + sec.pk + '/';
@@ -620,7 +646,7 @@ app.controller("home.LMS.courses.explore", function($scope, $state, $users, $sta
         }
 
 
-      },//controller ends
+      }, //controller ends
 
     })
 
@@ -633,6 +659,17 @@ app.controller("home.LMS.courses.explore", function($scope, $state, $users, $sta
     $scope.announcements = response.data;
     // console.log($scope.announcements, '----------repspspsppspspsps');
   })
+
+  $scope.deleteAnnouncement = function(index, pk) {
+    console.log('deleteing', index, '---------', pk);
+    $http({
+      method: 'DELETE',
+      url: '/api/LMS/announcement/' + pk + '/'
+    }).
+    then(function(response) {
+      $scope.announcements.splice(index, 1);
+    })
+  }
   $rootScope.paperSearch = function(query) {
     //search for the paper
     return $http.get('/api/LMS/paper/?name__contains=' + query).

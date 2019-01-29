@@ -43,11 +43,47 @@ app.directive('ngEnter', function() {
 
 app.controller('myCtrl1', function($scope, $rootScope, $timeout, $interval, $uibModal, $http) {
 
+
+  $scope.device = {
+    name:''
+  }
+  function lgDevice(x) {
+    if (x.matches) {
+      $scope.device.name = 'large'
+    }
+  }
+
+  function smDevice(x) {
+    if (x.matches) {
+      $scope.device.name = 'small'
+    }
+  }
+
+  var sm = window.matchMedia("(max-width: 600px)")
+  smDevice(sm) // Call listener function at run time
+  sm.addListener(smDevice) // Attach listener function on state changes
+
+  var lg = window.matchMedia("(min-width: 600px)")
+  lgDevice(lg)
+  lg.addListener(lgDevice)
+
+
   $scope.attachMessageFile = function() {
     $('#messageFile').click()
   }
 
   $scope.messageFile = emptyFile;
+
+
+  $scope.$watch('tutorText', function(newValue, oldValue) {
+    if (newValue != undefined) {
+      if (newValue.length > 0) {
+        document.getElementById('paperPlane').style.color = "#6F6E6E"
+      } else {
+        document.getElementById('paperPlane').style.color = "#A0A0A0"
+      }
+    }
+  });
 
   $scope.$watch('messageFile', function(newValue, oldValue) {
     console.log(newValue);
@@ -237,14 +273,14 @@ app.controller('myCtrl1', function($scope, $rootScope, $timeout, $interval, $uib
 
 
   $scope.connection = new autobahn.Connection({
-    url: 'wss://ws.cioc.in:443/ws',
+    url: 'wss://ws.syrow.com:443/ws',
     realm: 'default'
   });
 
   $scope.connection.onopen = function(session) {
     $scope.dataVariables.isConnected = true;
 
-    console.log("Connected")
+    // console.log("Connected")
 
     $scope.connection.session.subscribe($scope.roomID, $scope.handleRemoteContent).then(
       function(sub) {
@@ -859,7 +895,7 @@ app.controller('myCtrl1', function($scope, $rootScope, $timeout, $interval, $uib
   }
 
 
-
+$scope.canvasDrawing = function() {
   $scope.canvas = new fabric.Canvas('tutorCanvas', {
     selection: false
   });
@@ -885,8 +921,8 @@ app.controller('myCtrl1', function($scope, $rootScope, $timeout, $interval, $uib
 
 
   $scope.isEraser = false;
-  $scope.size = 1;
-  $scope.eraserSize = 1;
+  $scope.size = 2;
+  $scope.eraserSize = 30;
   $scope.col = 'black';
   $scope.mode = null;
 
@@ -953,6 +989,12 @@ app.controller('myCtrl1', function($scope, $rootScope, $timeout, $interval, $uib
     $scope.canvas.isDrawingMode = true;
     $scope.canvas.freeDrawingBrush.width = $scope.eraserSize;
     $scope.canvas.freeDrawingBrush.color = '#ffffff';
+  }
+
+  $scope.setColor = function(color) {
+    $scope.col = color;
+    $scope.canvas.freeDrawingBrush.width = $scope.size;
+    $scope.canvas.freeDrawingBrush.color = color
   }
 
   // $scope.Move = function()
@@ -1542,6 +1584,11 @@ app.controller('myCtrl1', function($scope, $rootScope, $timeout, $interval, $uib
 
 
   }
+}
+
+$timeout(function() {
+  $scope.canvasDrawing()
+}, 1000);
 
 });
 

@@ -1,4 +1,7 @@
 /*properties for normal screen size starts here  */
+a, u {
+    text-decoration: none;
+}
 .fof h2{
 	  font-size: 50px;
 	  display: inline-block;
@@ -458,7 +461,7 @@
 }
 
 .course_contain_bg {
-  background-image: url('/static/images/24tut/tablet_stu.png');
+  background-image: url('/static/images/student_learning.jpg');
   background-repeat: no-repeat;
   background-size: contain;
   min-height: 70vh;
@@ -718,10 +721,6 @@
   color: #fff;
 }
 
-.social_links:hover {
-  background-color: #fff;
-  color: #000;
-}
 
 .cent_div {
   min-height: 60vh;
@@ -1066,6 +1065,7 @@ hr {
 }
 
 .nav_ele {
+	outline: none !important;
   color: #fff !important;
 }
 
@@ -3233,7 +3233,7 @@ hr {
   .course_contain_bg {
     background-size: cover;
     min-height: 102vh;
-    background-image: linear-gradient(rgba(233, 233, 233, 0.6), rgba(233, 233, 233, 0.6)), url('/static/images/24tut/tablet_stu.png');
+    background-image: linear-gradient(rgba(233, 233, 233, 0.6), rgba(233, 233, 233, 0.6)), url('/static/images/student_learning.jpg');
   }
 
   .course_contain_gradient {

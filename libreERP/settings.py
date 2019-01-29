@@ -36,13 +36,14 @@ ECOMMERCE_APP = {
     'offtime':[23, 9],
 }
 
-LOGIN_PAGE_IMAGE = '/static/images/foodfLogin.png'
+LOGIN_PAGE_IMAGE = '/static/images/techAbs.jpg'
 
 
 LOGIN_URL = 'login' # this can be 'login' or 'account_login'
 REGISTER_URL = 'register' # this can be 'register' or 'account_signup'
 
-LOGIN_TEMPLATE = 'loginCenter.html'
+LOGIN_TEMPLATE = 'login.html'
+# LOGIN_TEMPLATE = 'loginCenter.html'
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.8/howto/deployment/checklist/
@@ -73,6 +74,12 @@ SERVICE_NAME = 'Online Tutoring anytime, anywhere'
 BRAND_LOGO = '/static/images/24_tutors_icon.svg'
 BRAND_LOGO_INVERT = '/static/images/24tut/icon_grad.svg'
 
+SEO_TITLE = 'Online live tutoring. Free 1-2-1 online classes. IIT JEE Preparation. School tutions online'
+SEO_DESCRIPTION = "India's only 24x7 student helpline. Connect with the best tutors from IITs and NITs provide teaching for CBSE & ICSE, Maths & Science and competitive exams like  JEE Mains, JEE Advanced, IIT Foundation, Olympiads, NTSE, PSA"
+SEO_IMG = '/static/images/seo_tutor_common.png'
+SEO_IMG_WIDTH = 1333
+SEO_IMG_HEIGHT = 745
+
 SMS_API_PREFIX = "http://sms.azmobia.com/http-api.php?username=CIOC&password=cioc567&senderid=CIOCPL&route=1&"
 
 INSTALLED_APPS = (
@@ -100,31 +107,6 @@ INSTALLED_APPS = (
     'LMS',# LMS
     'PIM', # personal information manager
 	'tutor',# canvas
-    # 'projectManagement',
-    # 'mail', # mail application
-    # 'social', # social networking client
-	# 'logistic',# logistics
-    # 'organization',# organization
-    # 'performance',# performance
-    # 'gitweb', # github.com local server with file browsing and diff viewer
-    # 'projects',
-    # 'workforceManagement',# canvas
-    # 'taskBoard',
-    # 'recruitment',# recruitment
-    # 'employees',# employees details
-    # 'businessManagement', # BM application
-    # 'support',# canvas
-    # 'tools',# general purpose tools like OCR, AI or big data related stuffs
-    # 'finance',# billing , invoicing , finance etc
-    # 'events',# to manage events like test, hackathon or something like that
-    # 'virtualWorkforce',
-	# 'assets',# assets
-    # 'clientRelationships',# CRM like sales force
-    # 'ecommerce', # ecommerce
-    # 'POS',# POS terminal like tally
-    # 'payroll',# payroll
-	# 'productsInventory',# inventory for POS products
-    # 'warehouse',# warehouse application
 )
 
 

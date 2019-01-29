@@ -199,6 +199,16 @@ class AnswerSerializer(serializers.ModelSerializer):
         model = Answer
         fields = ('pk' , 'created' , 'question', 'paper' , 'evaluated' , 'correct', 'marksObtained' , 'attachment', 'txt' , 'subject')
         read_only_fields = ('user', )
+    def create(self , validated_data):
+        m = Answer(**validated_data)
+        m.user = self.context['request'].user
+        if 'question' in self.context['request'].data:
+            m.question = self.context['request'].data['question']
+        if 'paper' in self.context['request'].data:
+            m.paper = self.context['request'].data['paper']
+        m.save()
+        return m
+
 
 class CommentSerializer(serializers.ModelSerializer):
     class Meta:

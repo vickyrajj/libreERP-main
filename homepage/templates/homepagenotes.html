@@ -12,13 +12,8 @@
       <div class="col-md-10">
         <h3 class="text-muted"><strong>{{noteObj.title}}</strong> </h3>
       </div>
-      <hr>
-
-        <h5> <span> <strong>Url :</strong> </span><a href=""> {{noteObj.urlSuffix}}  </a></h5>
-
-      <h5> <span> <strong>Description :</strong> </span> {{noteObj.description}}</h5>
-      <hr>
-
+      <strong>Url :</strong> <a href=""> {{noteObj.urlSuffix}}</a><br>
+      <strong>Description :</strong> {{noteObj.description}}
     </div>
     <div class="col-md-9">
       {% if noteSection.count > 0 %}
