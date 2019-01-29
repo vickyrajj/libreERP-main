@@ -22,7 +22,7 @@
           <button type="button" class="btn btn-primary" ng-click="sec.editing = true;" ng-if="!sec.editing">
             Edit
           </button>
-          <button type="button" class="btn btn-primary" ng-click="save(sec);sec.editing = false;"  ng-if="sec.editing">
+          <button type="button" class="btn btn-primary" ng-click="save(sec,$index);sec.editing = false;"  ng-if="sec.editing">
             Save
           </button>
           <button type="button" class="btn btn-default">

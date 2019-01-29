@@ -338,7 +338,7 @@ class NotesSectionSerializer(serializers.ModelSerializer):
     note = NoteLiteSerializer(many = False , read_only = True)
     class Meta:
         model = NotesSection
-        fields = ('pk' , 'note' , 'txt', 'image', 'mode' )
+        fields = ('pk' , 'note' , 'txt', 'image', 'mode','sequence' )
     def create(self , validated_data):
         n = NotesSection(**validated_data)
         note = Note.objects.get(pk = self.context['request'].data['note'])

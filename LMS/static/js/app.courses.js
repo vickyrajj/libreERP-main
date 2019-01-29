@@ -582,7 +582,8 @@ app.controller("home.LMS.courses.explore", function($scope, $state, $users, $sta
         // for (var i = 0; i < $scope.nsec.length; i++) {
         // $scope.edit[i] = false;
         // }
-        $scope.save = function(sec) {
+        $scope.save = function(sec,idx) {
+          console.log(sec.pk,idx,'---------------savinggggggggg');
           // console.log(sec.mode,'-----mode');
           // console.log(sec.txt,'-----txtx');
           // console.log(sec.note.pk,'-----note pk');
@@ -592,6 +593,7 @@ app.controller("home.LMS.courses.explore", function($scope, $state, $users, $sta
             fd.append('note', sec.note.pk);
             fd.append('txt', sec.txt);
             fd.append('mode', sec.mode);
+            fd.append('sequence',idx);
             if (sec.txt == '') {
               return;
             }
@@ -599,6 +601,7 @@ app.controller("home.LMS.courses.explore", function($scope, $state, $users, $sta
             fd.append('note', sec.note.pk);
             fd.append('image', sec.image);
             fd.append('mode', sec.mode);
+            fd.append('sequence',idx);
           }
           var method = 'PATCH';
           var url = '/api/LMS/notesection/' + sec.pk + '/';

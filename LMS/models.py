@@ -337,6 +337,7 @@ class NotesSection(models.Model):
     txt = models.TextField( null = True)
     image = models.FileField(upload_to = getNoteSectionPath , null = True)
     mode = models.CharField(choices = PART_TYPE_CHOICES , default = 'text' , null = False, max_length = 10)
+    sequence = models.PositiveIntegerField(null = True)
 
 NOTIFICATION_TYPE = (
     ('sms' , 'sms'),
