@@ -11,7 +11,7 @@
       </div>
     </div>
     <div class="collapse navbar-collapse" id="myNavbar" uib-collapse="!toggleNavbar">
-      <ul class="nav navbar-nav header_nav {{device.smallDevice?'pull-left':'pull-right'}}">
+      <ul class="nav navbar-nav header_nav {{device.name=='small'?'pull-left':'pull-right'}}">
         <li class="header_element">
           <a href="" ng-mouseleave="show[0]=false" ng-mouseover="show[0]=true" class="nav_ele"> Courses</a>
           <ul ng-mouseleave="keepshow[0]=false" ng-click="keepshow[0] = false; toggleNavbar = false;" ng-mouseover="keepshow[0]=true" ng-show="show[0]||keepshow[0]" class="container_box">
@@ -37,7 +37,7 @@
           </ul>
         </li> -->
         <li class="header_element">
-          <a href="/blog" ng-mouseleave="show[1]=false" ng-mouseover="show[1]=true" class="nav_ele"> Blog</a>
+          <a href="/blog/" ng-mouseleave="show[1]=false" ng-mouseover="show[1]=true" class="nav_ele"> Blog</a>
         </li>
         <!-- <li class="header_element">
           <a href="" ng-mouseleave="show[3]=false" ng-mouseover="show[3]=true" style="color:#fff;">About Us</a>
@@ -50,7 +50,7 @@
         </li> -->
         <li class="header_element">
           <a ng-if="me.pk ==  undefined" ng-click="signin()" href="" ng-mouseleave="show[4]=false" ng-mouseover="show[4]=true" class="nav_ele"><i class="fa fa-key fa-fw" aria-hidden="true"></i> Sign in</a>
-          <a ng-if="me.pk" href="" ng-mouseleave="show[4]=false" ng-mouseover="show[4]=true" class="nav_ele">{{me.username}} </a>
+          <a href="/account/" ng-if="me.pk" href="" ng-mouseleave="show[4]=false" ng-mouseover="show[4]=true" class="nav_ele">{{me.username}} </a>
         </li>
 
       </ul>

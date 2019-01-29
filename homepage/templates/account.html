@@ -1,39 +1,123 @@
-{% extends "tutorBase.html" %}
-
-{% block tutorcontent %}
-<div class="container-fluid" style="margin-top:50px; width:100%;  background-color:#F1F3FA" >
+{% extends "tutorBase.html" %} {% block tutorcontent %}
+<div class="container-fluid" style="margin-top:50px; width:100%;  background-color:#F1F3FA">
   <div class="row">
-    <div class="col-md-4">
-      <div class="row container-fluid" style="margin:8px 20px; background-color:#fff; border-radius:5px;">
+    {% verbatim %}
+    <div class="{{device.name=='extralarge'?'col-md-3':'col-md-4'}}" style="padding-right:0px">
+    {% endverbatim %}
+      <div class="row container-fluid" style="margin:8px 10px; background-color:#fff; border-radius:5px;">
 
         <div class="row text-center">
           <div style="padding-top:50px">
-            <img src="/media/{{userProfile.displayPicture}}" alt="" style="height:150px">
+            <img src="/media/{{userProf.displayPicture}}" alt="" style="height:150px; border-radius:50%;">
           </div>
         </div>
-        
+
         <div class="row text-center">
-          <p style="font-size:20px; font-weight:700; color: #414142; margin:10px 0px;">Vikas Motla </p>
+          <p style="font-size:20px; font-weight:700; color: #414142; margin:10px 0px;">{{userObj.first_name}} {{userObj.last_name}}</p>
         </div>
 
         <div class="row">
-          <p style="font-size:16px; font-weight:400; color: #414142;">Class 12th</p>
-          <p style="font-size:16px; font-weight:400; color: #414142;">K.V. Hebbal</p>
+          <div class="col-md-12">
+            <p style="font-size:15px; font-weight:400; color: #414142;"> <b>Standard :</b> class {{userProfile.standard}}</p>
+            <p style="font-size:15px; font-weight:400; color: #414142;"> <b>School :</b> {{userProfile.schoolName}} </p>
+            <p style="font-size:15px; font-weight:400; color: #414142;"> <b>Email :</b> {{userProfile.parentEmail}}</p>
+            <p style="font-size:15px; font-weight:400; color: #414142;"> <b>Phone :</b> {{userProfile.parentMobile}} </p>
+            <p style="font-size:15px; font-weight:400; color: #414142;"> <b>Address :</b> {{userProfile.city}}, {{userProfile.state}}, {{userProfile.country}} {{userProfile.pinCode}} </p>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+    {% verbatim %}
+    <div class="{{device.name=='extralarge'?'col-md-9':'col-md-8'}}" style="padding-left:0px">
+    {% endverbatim %}
+      <div class="row container-fluid" style="margin:8px 10px; background-color:#fff; border-radius:5px; padding-bottom:15px;">
+        <div class="row text-center" style="border-bottom:1px solid #e0e0e0">
+          <h3 style="font-weight:700; color:#414142">Balance</h3>
+        </div>
+
+        <div class="row text-center" style="padding-top:5px;">
+          <div class="col-xs-5 col-md-offset-1">
+            <div class="row text-center text-muted">
+              HOURS
+            </div>
+            <div class="row" style="margin-top:30px;">
+              <div class="col-xs-6" style="padding-left:30px;padding-right:30px;">
+                <div class="card container-fluid text-muted" style="border-radius:10px;">
+                  <span style="font-size:60px;">{{balanceForm.hours1}}</span>
+                </div>
+              </div>
+              <div class="col-xs-6" style="padding-left:30px;padding-right:30px;">
+                <div class="card container-fluid text-muted" style="border-radius:10px;">
+                  <span style="font-size:60px;">{{balanceForm.hours2}}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-xs-1">
+            <div class="container-fluid" style="padding-top:50px;">
+
+              <span style="font-size:60px;">:</span>
+            </div>
+          </div>
+          <div class="col-xs-5">
+            <div class="row text-center text-muted">
+              MINUTES
+            </div>
+
+            <div class="row" style="margin-top:30px;">
+              <div class="col-xs-6" style="padding-left:30px;padding-right:30px;">
+                <div class="card container-fluid text-muted" style="border-radius:10px;">
+                  <span style="font-size:60px;">{{balanceForm.minutes1}}</span>
+                </div>
+              </div>
+              <div class="col-xs-6" style="padding-left:30px;padding-right:30px;">
+                <div class="card container-fluid text-muted" style="border-radius:10px;">
+                  <span style="font-size:60px;">{{balanceForm.minutes2}}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="row text-center" style="border-bottom:1px solid #e0e0e0; padding-top:30px;">
+          <h3 style="font-weight:700; color:#414142">Sessions</h3>
+        </div>
+
+        <div class="row" style="padding:10px 0px; margin:15px 5px; border-radius: 5px; background-color:#3e5884; color:#fff;" ng-repeat="i in [1,2,3]">
+            <div class="col-md-3">
+              <p><b>Session 1</b> </p>
+            </div>
+            <div class="col-md-3">
+              <p> <b> Duration :</b> 30 min</p>
+            </div>
+            <div class="col-md-3">
+              <p> <b> Topic :</b> Trignometry </p>
+            </div>
+            <div class="col-md-3">
+              <p> <b> tutor :</b> Balram Verma </p>
+            </div>
+        </div>
+
+        <div class="row text-center" style="padding-top:30px;">
+          <div class="col-md-6">
+            <button type="button" class="btn btn-default" style="padding: 13px 20px;border: 2px solid #223657;border-radius: 5px !important;color: #223657;">
+              START A SESSION
+            </button>
+          </div>
+
+          <div class="col-md-6">
+              <button type="button" class="btn btn-default" style="padding: 13px 20px;border: 2px solid #223657;border-radius: 5px !important;color: #223657;">
+              ADD MORE TIME
+            </button>
+          </div>
         </div>
 
 
       </div>
-
     </div>
-
-    <div class="col-md-7">
-      <div class="row" style="margin:8px 20px; background-color:#fff; border-radius:5px;">
-
-      </div>
-    </div>
-    {% if userObj == None %}
-      logged out
-    {% endif %}
+    {% if userObj == None %} logged out {% endif %}
   </div>
 
 
