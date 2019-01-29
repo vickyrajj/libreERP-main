@@ -32,7 +32,7 @@
           <table>
             <tr>
               <td style="width:35%;"><img src="/static/images/BooksStack.png" class="img-responsive img-circle" style="height:70px;width:70px;" /></td>
-              <td><span style="font-size:20px;"><b>{{title}}</b></span><br /><span style="color: #9E9E9E">Adden On 29 sep'18</span></td>
+              <td><span style="font-size:20px;"><b>{{title}}</b></span><br /><span style="color: #9E9E9E">Adden On {{created|date:"Y-M-d"}}</span></td>
             </tr>
           </table>
         </div>
@@ -52,12 +52,12 @@
                 <i class="fa fa-star " style="color:#f4c810" aria-hidden="true"></i>
                 <i class="fa fa-star " style="color:#f4c810" aria-hidden="true"></i>
                 <i class="fa fa-star " style="color:#f4c810" aria-hidden="true"></i></td>
-              <td><span style="font-size:15px;"><b class="text-muted">(11 Reviews)</b></span></td>
+              <td><span style="font-size:15px;"><b class="text-muted">({{level | add:level}} Reviews)</b></span></td>
             </tr>
           </table>
         </div>
       </div>
-      <div class="row" style="margin-top:2em;">
+      <!-- <div class="row" style="margin-top:2em;">
         <div class="col-md-6">
           <table class="alignintable">
             <tr>
@@ -72,7 +72,7 @@
           </table>
         </div>
 
-      </div>
+      </div> -->
     </div>
 
     <div class="container-fluid" style="background-color:#FCC300;min-height:10vh;  position:relative;padding-bottom: 2em;">
@@ -126,12 +126,29 @@
     {% endif %}
 
     {% if subPart == 'books' %}
-    <div class="container">
+    <div class="container" style="padding-bottom:15px;">
       <div class="col-md-8 col-md-offset-2">
         {% for b in bookobjs %}
         <div class="headblock">
-          <span class="titlesize"><b>{{b.title}}<span style="font-size:15px;margin-left:0.5em;"> (6 Lessons)</span></b></span>
-          <span class="titleicon"><i class="fa fa-angle-up" style="font-size:30px;"></i></span>
+          <span class="titlesize"><b>{{b.title}}<span style="font-size:15px;margin-left:0.5em;"></span></b></span>
+          <span class="titleicon"><i class="fa fa-angle-down" style="font-size:30px;"></i></span>
+        </div>
+        <div class="container-fluid" style="margin-top:15px;">
+          <div class="col-md-8">
+            <p>{{b.description}}</p>
+          </div>
+          <div class="col-md-4">
+            <div class="container-fluid">
+              <img src="/media/{{b.dp}}" width="120px" height="170px">
+            </div>
+          </div>
+          <div class="container-fluid" style="margin-top:20px;">
+            {% for bs in b.sections.all %}
+            <div class="col-md-8">
+              <li> <a href="/{{bs.shortUrl}}/">{{bs.title}}</a> </li>
+            </div>
+            {% endfor %}
+          </div>
         </div>
         {% endfor %}
       </div>
@@ -240,33 +257,42 @@
     <div class="container no_padding">
       <div class="row min_padd text-center" style="">
         {% for r in refbookobjs %}
-        <a href="/" class="col-md-6" style="position: relative;text-decoration:none;">
-          <div class="movie-card">
+        <div class="col-md-6" style="position: relative;text-decoration:none;">
+          <div class="movie-card" style="border-bottom-left-radius:0px;border-bottom-right-radius:0px;">
+            <div class="colorcircle" style="background-color:{{color}}"></div>
             <div class="col-md-5 studentcard" style="min-height:300px;">
-              <img src="/media/{{r.book.dp}}" class="imgstyle">
-            </div>
-            <div class="colorcircle" style="background-color:{{color}}">
+              <img src="/media/{{r.book.dp}}" class="imgstyle" style="border-bottom-left-radius:0px;border-bottom-right-radius:0px;">
             </div>
             <div class="col-md-7 text-left">
               <div style="margin-top:1em;">
                 <span style="font-size:18px;color:#5B5B5B;"> <strong>{{r.book.title}}</strong> </span><br>
                 <span style="color:#5B5B5B;"> <b>Volume - </b> {{r.book.volume}}</span><br>
               </div>
-              <div class="container-fluid"style="height:63px;overflow-y:hidden;">
+              <div class="container-fluid" style="height:63px;overflow-y:hidden;">
                 <h6>{{r.book.description}}</h6>
               </div>
-              <div class=""style="padding-top:20px;">
+              <div class="" style="padding-top:20px;">
                 <span style="font-size:18px;color:#5B5B5B;"><b>By - {{r.book.author}}</b></span><br>
                 <h5> <b>Subject - </b> {{r.book.subject.title}}</h5>
                 <h5> <b>Version - </b> {{r.book.version}}</h5>
                 <h5> <b>License - </b> {{r.book.license}}</h5>
               </div>
-              <div class=""style="padding-top:10px;">
+              <div class="" style="padding-top:10px;">
                 <span style="color:#5B5B5B;"> <b>ISSN - </b> {{r.book.ISSN}}</span>
               </div>
             </div>
+            <div class="col-md-12" style="background:#f9f9f9;">
+              <div class="container-fluid text-left">
+                {% for bs in r.book.sections.all %}
+                <ul class="list-unstyled">
+                  <li> <a href="/{{bs.shortUrl}}/">{{bs.title}}</a></li>
+                </ul>
+                {% endfor %}
+              </div>
+            </div>
           </div>
-        </a>
+        </div>
+
         {% endfor %}
       </div>
     </div>

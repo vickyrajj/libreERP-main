@@ -90,7 +90,7 @@ def blogDetails(request, blogname):
         print level,title,"------------hhhhh"
         courseobjs = Course.objects.filter(topic__subject__pk=sub.pk)
         booklen = len(Book.objects.filter(subject__pk=sub.pk))
-        bookobjs = Book.objects.all()
+        bookobjs = Book.objects.filter(subject__pk=sub.pk)
         subobjs = Subject.objects.all().order_by('level')
         noteobj = Note.objects.filter(subject__pk=sub.pk)
         refbookobjs = BookCourseMap.objects.filter(book__subject__pk=sub.pk)
@@ -115,7 +115,6 @@ def blogDetails(request, blogname):
             pass
         if subPart == 'notes':
             pass
-        # print "sub part" , subPart
         data['courseobj'] = courseobjs
         data['subobj'] = subobjs
         data['level'] = level
@@ -128,6 +127,7 @@ def blogDetails(request, blogname):
         data['refbooklen'] = refbooklen
         data['color'] = color
         data['noteslen'] = noteslen
+        data['created'] = sub.created
         if sub.title:
             data['seoDetails']['title'] = sub.title
         if sub.description:

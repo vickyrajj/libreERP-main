@@ -803,6 +803,18 @@ app.controller("home.LMS.courses.explore", function($scope, $state, $users, $sta
   }).then(function(response) {
     $scope.homwrkData = response.data;
   })
+
+  //-------------delete homework------------
+  $scope.deleteHomework = function(index, pk) {
+    console.log('deleteing', index, '---------', pk);
+    $http({
+      method: 'DELETE',
+      url: '/api/LMS/homework/' + pk + '/'
+    }).
+    then(function(response) {
+      $scope.homwrkData.splice(index, 1);
+    })
+  }
   //-----------adding homewoks
   $scope.homework = function() {
     $uibModal.open({
@@ -818,10 +830,12 @@ app.controller("home.LMS.courses.explore", function($scope, $state, $users, $sta
         $scope.saveHomework = function() {
           console.log('ccccccclllll----in-----homeeeeee save', data.pk, '-----------', $scope.form.paper.pk);
           var fd = new FormData();
+          if ($scope.form.pdf != emptyFile && typeof $scope.form.pdf != 'string' && $scope.form.pdf != null) {
+            fd.append('pdf', $scope.form.pdf);
+          }
           fd.append('course', data.pk);
           fd.append('paper', $scope.form.paper.pk);
           fd.append('comment', $scope.form.comment);
-          fd.append('pdf', $scope.form.pdf);
           var method = 'POST'
           var url = '/api/LMS/homework/'
           $http({
@@ -853,7 +867,7 @@ app.controller("home.LMS.courses.explore", function($scope, $state, $users, $sta
 
 });
 
-app.controller("home.LMS.courses.form", function($scope, $state, $users, $stateParams, $http, Flash) {
+app.controller("home.LMS.courses.form", function($scope, $state, $users, $stateParams, $http, Flash, $uibModal) {
 
 
   $scope.resetForm = function() {
@@ -877,12 +891,109 @@ app.controller("home.LMS.courses.form", function($scope, $state, $users, $stateP
     console.log($scope.form);
   }
 
+  $scope.showCreateTopicBtn = false;
+  $scope.topicExist = false;
+
+
   $scope.topicSearch = function(query) {
     return $http.get('/api/LMS/topic/?limit=15&title__contains=' + query).
     then(function(response) {
       return response.data.results;
     })
   };
+
+
+
+  $scope.$watch('form.topic', function(newValue, oldValue) {
+    // console.log(newValue);
+    if (typeof newValue == "string" && newValue.length > 0) {
+      $scope.showCreateTopicBtn = true;
+      $scope.topicExist = false;
+      $scope.showTopicForm = false;
+    } else if (typeof newValue == "object") {
+      $scope.topicExist = true;
+    } else {
+      $scope.showCreateTopicBtn = false;
+      $scope.showTopicForm = false;
+    }
+
+    if (newValue == '') {
+      $scope.showCreateTopicBtn = false;
+      $scope.showTopicForm = false;
+      $scope.topicExist = false;
+    }
+
+  });
+
+
+  $scope.openCreateTopic = function() {
+    console.log('-----------------editing topic');
+    $uibModal.open({
+      templateUrl: '/static/ngTemplates/app.LMS.topic.modal.html',
+      size: 'md',
+      backdrop: true,
+      resolve: {
+        data: function() {
+          return $scope.form.topic;
+        }
+      },
+      controller: function($scope, $uibModalInstance, data) {
+        $scope.subjectSearch = function(query) {
+          return $http.get('/api/LMS/subject/?title__contains=' + query).
+          then(function(response) {
+            return response.data;
+          })
+        };
+        $scope.form = {
+          subject: '',
+          topic: '',
+          seoTitle: '',
+          description: '',
+        }
+        if (typeof data == 'object') {
+          $scope.form.subject = data.subject
+          $scope.form.topic = data.title
+          $scope.form.seoTitle = data.seoTitle
+          $scope.form.description = data.description
+        } else {
+          $scope.form.topic = data
+        }
+        $scope.createTopic = function() {
+          console.log('--------------saving topic');
+          if (typeof data == 'object') {
+            var method = 'PATCH';
+            var url = '/api/LMS/topic/' + data.pk + '/';
+            // console.log('patcccccccccchhhhhhhing');
+          } else {
+            var method = 'POST';
+            var url = '/api/LMS/topic/';
+            // console.log('posssssssssssttttttttting');
+          }
+          var dataToSend = {
+            subject: $scope.form.subject.pk,
+            title: $scope.form.topic,
+            seoTitle: $scope.form.seoTitle,
+            description: $scope.form.description,
+          }
+          $http({
+            method: method,
+            url: url,
+            data: dataToSend,
+          }).
+          then(function(response) {
+            Flash.create('success', 'Saved Successfully');
+            $uibModalInstance.dismiss(response.data);
+          })
+        }
+      }, //---------controller ends
+    }).result.then(function(t) {
+
+    }, function(t) {
+      if (typeof t == 'object') {
+        $scope.form.topic = t
+      }
+    })
+  }
 
   $scope.getName = function(topic) {
     if (typeof topic != 'object') {
@@ -922,11 +1033,13 @@ app.controller("home.LMS.courses.form", function($scope, $state, $users, $stateP
     //   TAs += $scope.form.TAs[i] +','
     // }
     var fd = new FormData();
+    if ($scope.form.dp != emptyFile && typeof $scope.form.dp != 'string' && $scope.form.dp != null) {
+      fd.append('dp', $scope.form.dp);
+    }
     fd.append('title', $scope.form.title);
     fd.append('topic', $scope.form.topic.pk);
     fd.append('enrollmentStatus', $scope.form.enrollmentStatus);
     fd.append('description', $scope.form.description);
-    fd.append('dp', $scope.form.dp);
     fd.append('TAs', $scope.form.TAs);
     fd.append('instructor', $scope.form.instructor.pk);
     $http({

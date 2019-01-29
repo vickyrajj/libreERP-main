@@ -539,6 +539,7 @@ app.controller("home.LMS.configure.form", function($scope, $state, $users, $stat
     }
     toSend.append('title', $scope.form.title)
     toSend.append('description', $scope.form.description)
+    toSend.append('seoTitle',$scope.form.seoTitle)
 
 
     if ($scope.mode == 'subject') {
@@ -610,7 +611,6 @@ app.controller("home.LMS.configure.form", function($scope, $state, $users, $stat
     })
 
   }
-
 
 
 });

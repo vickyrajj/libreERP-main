@@ -37,7 +37,7 @@
       <div class="col-md-8">
         <div class="row">
           <div class="col-md-4">
-            <img ng-src="{{course.instructor }}" style="height:55px;width:55px;" class="img img-rounded">
+            <img ng-src="{{course.instructor}}" style="height:55px;width:55px;" class="img img-rounded">
           </div>
           <div class="col-md-8">
             {{course.instructor | getName}}
@@ -121,7 +121,7 @@
       <div class="container-fluid">
         <button type="button" name="button" class="btn btn-primary" ng-click="blogPopup()">{{linkType=='new'?'Create Link To Blog':'Update Link To Blog'}}</button>
       </div>
-      <div class="container-fluid"style="padding-top:15px;">
+      <div class="container-fluid" style="padding-top:15px;">
         <div class="col-md-8">
           <label>Title : </label> {{linkData.title}} <br>
           <label>URL suffix : </label> {{linkData.shortUrl}} <br>
@@ -178,7 +178,7 @@
         <center><button type="button" class="btn btn-primary btn-md" ng-click="addNotes()">Add Notes <i class="fa fa-plus"></i></button></center>
       </div>
     </div>
-    <div class="container-fluid">
+    <div class="container-fluid" style="margin-top:15px;">
       <div class="col-md-3" ng-repeat="h in homwrkData" style="margin-bottom:10px;">
         <div class="container-fluid card" style="padding-left:0px;padding-right:0px">
           <div class="col-md-5">
@@ -193,8 +193,10 @@
           <div class="col-md-7">
             <h5>{{h.comment}}</h5>
           </div>
-          <div class="text-right" style="padding-right:10px;">
+          <div style="padding-left:15px;">
             <a href="{{h.pdf}}"><i class="fa fa-file fa-fw" aria-hidden="true"></i> View file</a>
+            <i class="fa fa-trash pull-right" mwl-confirm title="Confirm" message="Are you sure you want to delete this?" confirm-text="Yes <i class='fa fa-check'></i>" cancel-text="No" on-confirm="deleteHomework($index,h.pk)" confirm-button-type="danger"
+              cancel-button-type="default" aria-hidden="true" style="cursor:pointer;padding-right:15px;"></i>
           </div>
 
         </div>
@@ -215,14 +217,8 @@
               <h5>{{n.urlSuffix}}</h5>
             </a>
             <i class="fa fa-pencil" ng-click="addNotes($index)" aria-hidden="true" style="cursor:pointer;"></i>
-            <i class="fa fa-trash" mwl-confirm
-            title="Confirm"
-            message="Are you sure you want to delete this?"
-            confirm-text="Yes <i class='fa fa-check'></i>"
-            cancel-text="No"
-            on-confirm="deleteNote($index,n.pk)"
-            confirm-button-type="danger"
-            cancel-button-type="default" aria-hidden="true" style="cursor:pointer;padding-left:15px;"></i>
+            <i class="fa fa-trash" mwl-confirm title="Confirm" message="Are you sure you want to delete this?" confirm-text="Yes <i class='fa fa-check'></i>" cancel-text="No" on-confirm="deleteNote($index,n.pk)" confirm-button-type="danger"
+              cancel-button-type="default" aria-hidden="true" style="cursor:pointer;padding-left:15px;"></i>
             <i class="fa fa-plus-square pull-right" ng-click="noteSection($index)" aria-hidden="true" style="cursor:pointer;"></i>
           </div>
         </div>
@@ -237,33 +233,29 @@
             <span style="text-transform: uppercase;color:#1d5fcf"> <strong>{{a.typ}}</strong> </span>
           </div>
           <hr>
-          <div>
-            <span><strong>Announcer : </strong> </span> <span> {{a.announcer | getName}}</span>
+          <div class=""style="min-height:80px;">
+            <div>
+              <span><strong>Announcer : </strong> </span> <span> {{a.announcer | getName}}</span>
+            </div>
+            <div>
+              <span><strong>Notification Type : </strong> </span> <span style="text-transform: capitalize;"> {{a.notification}}</span>
+            </div>
+            <div ng-if="a.typ != 'general'">
+              <span><strong>Date : </strong> </span> <span> {{a.date | date}}</span> &nbsp;| &nbsp;
+              <span><strong>Time : </strong> </span> <span> {{a.time | date : "h.mm a"}}</span>
+            </div>
+            <div ng-if="a.venue!= null">
+              <span><strong>Venue : </strong> </span> <span style="text-transform: capitalize;"> {{a.venue}}</span>
+            </div>
+            <div ng-if="a.paper!= null">
+              <span><strong>Paper : </strong> </span> <span> {{a.paper.name}}</span>
+            </div>
+            <div ng-if="a.meetingId!= null">
+              <span><strong>Meeting ID : </strong> </span> <span> {{a.meetingId}}</span>
+            </div>
           </div>
-          <div>
-            <span><strong>Notification Type : </strong> </span> <span style="text-transform: capitalize;"> {{a.notification}}</span>
-          </div>
-          <div ng-if="a.typ != 'general'">
-            <span><strong>Date : </strong> </span> <span> {{a.date | date}}</span> &nbsp;| &nbsp;
-            <span><strong>Time : </strong> </span> <span> {{a.time | date : "h.mm a"}}</span>
-          </div>
-          <div ng-if="a.venue!= null">
-            <span><strong>Venue : </strong> </span> <span style="text-transform: capitalize;"> {{a.venue}}</span>
-          </div>
-          <div ng-if="a.paper!= null">
-            <span><strong>Paper : </strong> </span> <span> {{a.paper.name}}</span>
-          </div>
-          <div ng-if="a.meetingId!= null">
-            <span><strong>Meeting ID : </strong> </span> <span> {{a.meetingId}}</span>
-          </div>
-          <i class="fa fa-trash pull-right" mwl-confirm
-          title="Confirm"
-          message="Are you sure you want to delete this?"
-          confirm-text="Yes <i class='fa fa-check'></i>"
-          cancel-text="No"
-          on-confirm="deleteAnnouncement($index,a.pk)"
-          confirm-button-type="danger"
-          cancel-button-type="default" aria-hidden="true" style="cursor:pointer;"></i>
+          <i class="fa fa-trash pull-right" mwl-confirm title="Confirm" message="Are you sure you want to delete this?" confirm-text="Yes <i class='fa fa-check'></i>" cancel-text="No" on-confirm="deleteAnnouncement($index,a.pk)" confirm-button-type="danger"
+            cancel-button-type="default" aria-hidden="true" style="cursor:pointer;"></i>
         </div>
       </div>
     </div>
