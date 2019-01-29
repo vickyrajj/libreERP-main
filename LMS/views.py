@@ -140,10 +140,18 @@ class PaperGroupViewSet(viewsets.ModelViewSet):
     filter_backends = [DjangoFilterBackend]
     filter_fields = ['title','subject']
 
+class PaperattemptHistory(viewsets.ModelViewSet):
+    permission_classes = (permissions.IsAuthenticated,)
+    serializer_class = PaperattemptHistorySerializer
+    queryset = PaperattemptHistory.objects.all()
+    
+
 class AnswerViewSet(viewsets.ModelViewSet):
     permission_classes = (permissions.IsAuthenticated, isAdmin, )
     serializer_class = AnswerSerializer
     queryset = Answer.objects.all()
+    filter_backends = [DjangoFilterBackend]
+    filter_fields = ['user','paper']
 
 class CourseViewSet(viewsets.ModelViewSet):
     permission_classes = (permissions.IsAuthenticated, isAdmin, )

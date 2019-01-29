@@ -229,16 +229,19 @@ class PaperSerializer(serializers.ModelSerializer):
             instance.group = PaperGroup.objects.get(pk=int(self.context['request'].data['group']))
         if 'timelimit' in self.context['request'].data:
             instance.timelimit = self.context['request'].data['timelimit']
+        if 'description' in self.context['request'].data:
+            instance.description = self.context['request'].data['description']
+        if 'level' in self.context['request'].data:
+            instance.level = self.context['request'].data['level']
         instance.save()
         return instance
 
 
 class PaperattemptHistorySerializer(serializers.ModelSerializer):
-    question = QuestionSerializer(many = False , read_only = True)
     paper = PaperSerializer(many = False , read_only = True)
     class Meta:
-        model = Answer
-        fields = ('pk' , 'created' , 'paper' , 'mark' ,  )
+        model = PaperattemptHistory
+        fields = ('pk' , 'created' , 'paper','mark'  )
         read_only_fields = ('user', )
 
 class AnswerSerializer(serializers.ModelSerializer):

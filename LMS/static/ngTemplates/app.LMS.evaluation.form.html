@@ -1,4 +1,5 @@
 <div class="container-fluid" ng-controller="home.LMS.evaluation.form">
+
   <div class="col-md-6">
     <h4 ng-if="mode=='new'">Create Question Paper</h4>
     <h4 ng-if="mode=='edit'">Update Question Paper</h4>
@@ -7,16 +8,18 @@
         <div class="form-group">
           <label>Group Name</label>
           <div class="{{(form.group.length>0||form.group.pk) ? 'input-group':''}}">
-              <input uib-typeahead="pg as pg.title for pg in paperGroupSearch($viewValue)" ng-model="form.group" type="text" class="form-control" placeholder="Search Using Tilte">
-              <span ng-click="openPaperGroup()" ng-if="(form.group.length>0||form.group.pk)" class="input-group-addon btn btn-primary" ><i class="fa fa-{{form.group.pk ? 'pencil':'plus'}}"></i> {{form.group.pk ? 'Update':'New'}}</span>
+            <input uib-typeahead="pg as pg.title for pg in paperGroupSearch($viewValue)" ng-model="form.group" type="text" class="form-control" placeholder="Search Using Tilte">
+            <span ng-click="openPaperGroup()" ng-if="(form.group.length>0||form.group.pk)" class="input-group-addon btn btn-primary"><i class="fa fa-{{form.group.pk ? 'pencil':'plus'}}"></i> {{form.group.pk ? 'Update':'New'}}</span>
           </div>
         </div>
       </div>
+    </div>
+    <div class="row">
       <div class="col-md-6">
         <div class="form-group">
           <label style="margin-top:20px;">QuestionPaper Title</label>
           <div class="row" style="margin-top:10px;">
-            <div class="col-md-12 text-center" >
+            <div class="col-md-12 text-center">
               <input type="text" class="form-control" ng-model="form.name">
             </div>
           </div>
@@ -27,44 +30,73 @@
           <label style="margin-top:20px;">Set Time( In mins )</label>
           <div class="row" style="margin-top:10px;">
             <div class="col-md-12 text-center">
-               <input type="number" class="form-control" ng-model="form.timelimit">
+              <input type="number" class="form-control" ng-model="form.timelimit">
             </div>
           </div>
         </div>
       </div>
-      <div class="form-group">
-        <label style="margin-top:20px;margin-left:20px">Select The Type</label>
-        <br><br>
+    </div>
+    <div class="row">
+      <div class="col-md-4">
+        <label style="margin-top:20px;">QuestionPaper Description</label>
+        <div class="row" style="margin-top:10px;">
+          <div class="col-md-12 text-center">
+            <input type="text" class="form-control" ng-model="form.description">
+          </div>
+        </div>
+      </div>
+      <div class="col-md-8">
         <div class="row">
           <div class="col-md-4 text-center">
-            <img src="/static/images/BooksStack.png" style="height:50px;height:50px;" class="img img-circle">
-            <br>
-            Book
-            <br>
-            <input ng-model="form.typ" name="type{{form.pk}}" type="radio" ng-value="'book'">
+            <img src="/static/images/lms_easy.png" style="width:80px;height:80px;" class="img img-circle"> <br> <span>Easy</span> <br>
+            <input type="radio" name="level" value="easy" ng-model="form.level" ng-selected>
           </div>
           <div class="col-md-4 text-center">
-            <img src="/static/images/questionbanks.png" style="height:50px;height:50px;" class="img img-circle">
-            <br>
-            Question Bank
-            <br>
-            <input ng-model="form.typ" name="type{{form.pk}}" type="radio" ng-value="'bank'">
+            <img src="/static/images/lms_moderate.png" style="width:80px;height:80px;" class="img img-circle"> <br><span>Moderate</span> <br>
+            <input type="radio" name="level" value="moderate" ng-model="form.level">
+          </div>
+          <div class="col-md-4 text-center">
+            <img src="/static/images/lms_difficult.png" style="width:80px;height:80px;" class="img img-circle"> <br><span>Difficult</span> <br>
+            <input type="radio" name="level" value="difficult" ng-model="form.level">
           </div>
         </div>
       </div>
     </div>
+    <div class="form-group">
+      <label style="margin-top:20px;margin-left:20px">Select The Type</label>
+      <br><br>
+      <div class="row">
+        <div class="col-md-4 text-center">
+          <img src="/static/images/BooksStack.png" style="height:50px;height:50px;" class="img img-circle">
+          <br>
+          Book
+          <br>
+          <input ng-model="form.typ" name="type{{form.pk}}" type="radio" ng-value="'book'">
+        </div>
+        <div class="col-md-4 text-center">
+          <img src="/static/images/questionbanks.png" style="height:50px;height:50px;" class="img img-circle">
+          <br>
+          Question Bank
+          <br>
+          <input ng-model="form.typ" name="type{{form.pk}}" type="radio" ng-value="'bank'">
+        </div>
+      </div>
+    </div>
+
 
     <div class="row" ng-if="form.typ == 'book'">
       <div class="col-md-6">
-        <div class="form-group">
-          <label>Book</label>
-          <input type="text" class="form-control" ng-model="form.book" uib-typeahead="book as book.title for book in bookSearch($viewValue)">
+        <div class="col-md-6">
+          <div class="form-group">
+            <label>Book</label>
+            <input type="text" class="form-control" ng-model="form.book" uib-typeahead="book as book.title for book in bookSearch($viewValue)">
+          </div>
         </div>
-      </div>
-      <div class="col-md-6">
-        <div class="form-group">
-          <label>Section</label>
-          <input type="text" class="form-control" ng-model="form.section" uib-typeahead="section as section.title for section in sectionSearch($viewValue)">
+        <div class="col-md-6">
+          <div class="form-group">
+            <label>Section</label>
+            <input type="text" class="form-control" ng-model="form.section" uib-typeahead="section as section.title for section in sectionSearch($viewValue)">
+          </div>
         </div>
       </div>
     </div>
@@ -102,6 +134,7 @@
       </div>
     </div>
     <button class="btn btn-primary" ng-click="add()" ng-show="questions.length">Add To QuestionPaper</button>
+
   </div>
   <div class="col-md-6" ng-show="selectedquestions.length">
     <label class="text-muted">

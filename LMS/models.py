@@ -203,7 +203,7 @@ class PaperattemptHistory(models.Model):
     created = models.DateTimeField(auto_now_add = True)
     paper = models.ForeignKey(Paper , null = False , related_name='paperAttempted')
     user = models.ForeignKey(User , null = False , related_name='attemptedUser')
-    mark = models.FloatField(null=False)
+    mark = models.FloatField(default=0)
 
 
 CORRECTION_CHOICES = (

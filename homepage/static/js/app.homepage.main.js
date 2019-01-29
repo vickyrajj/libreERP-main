@@ -8,7 +8,7 @@ app.config(function($stateProvider, $urlRouterProvider, $httpProvider) {
   $httpProvider.defaults.withCredentials = true;
 })
 
-app.run(['$rootScope', '$state', '$stateParams' , function($rootScope, $state, $stateParams) {
+app.run(['$rootScope', '$state', '$stateParams', function($rootScope, $state, $stateParams) {
   $rootScope.$state = $state;
   $rootScope.$stateParams = $stateParams;
   $rootScope.$on("$stateChangeError", console.log.bind(console));
@@ -22,8 +22,9 @@ app.controller('main', function($scope, $http, $sce, $interval, $uibModal) {
 
 
   $scope.device = {
-    name:''
+    name: ''
   }
+
   function lgDevice(x) {
     if (x.matches) {
       $scope.device.name = 'large'
@@ -257,11 +258,16 @@ app.controller('main', function($scope, $http, $sce, $interval, $uibModal) {
 
 app.controller('exam', function($scope, $state, $http, $timeout, $interval, $uibModal, $stateParams, $sce, Flash, $location, $rootScope) {
   console.log('exam controllerrrrrrrrrrrrr');
-  console.log(QUESID,'quesidddddddddddddddddd');
-  if (QUESID!=undefined) {
+  console.log(USERID, 'quesidddddddddddddddddd');
+  if (QUESID != undefined) {
     $scope.quesId = QUESID
-  }else {
+  } else {
     $scope.quesId = 1
+  }
+  if (USERID != undefined) {
+    $scope.userId = USERID
+  } else {
+    return
   }
   $scope.sublist = []
   $scope.subquestions = []
@@ -274,19 +280,19 @@ app.controller('exam', function($scope, $state, $http, $timeout, $interval, $uib
 
   $http({
     method: 'GET',
-    url: '/api/LMS/paper/'+$scope.quesId+'/'
+    url: '/api/LMS/paper/' + $scope.quesId + '/'
   }).then(function(response) {
     $scope.paperData = response.data
     $scope.data.paperid = response.data.pk;
     $scope.timelimit.time = $scope.paperData.timelimit
     for (var i = 0; i < $scope.paperData.questions.length; i++) {
-console.log( $scope.paperData.questions[i].ques.solutionParts.txt,'ttttttttttt');
+      console.log($scope.paperData.questions[i].ques.solutionParts.txt, 'ttttttttttt');
       var question = $scope.paperData.questions[i].ques.ques
       var option = $scope.paperData.questions[i].ques.optionsParts
       $scope.subname = $scope.paperData.questions[i].ques.topic.subject.title;
-      if($scope.paperData.questions[i].ques.solutionParts[0] == undefined){
+      if ($scope.paperData.questions[i].ques.solutionParts[0] == undefined) {
         $scope.solution = 'null'
-      }else{
+      } else {
         $scope.solution = $scope.paperData.questions[i].ques.solutionParts[0].txt
       }
       if (!$scope.sublist.includes($scope.subname)) {
@@ -335,7 +341,7 @@ console.log( $scope.paperData.questions[i].ques.solutionParts.txt,'ttttttttttt')
     $scope.count = 0
     $scope.subcount = 0;
     $scope.selections = []
-    $scope.pkforpatch=[]
+    $scope.pkforpatch = []
     console.log($scope.subquestions, 'pppp');
     for (var i = 0; i < $scope.subquestions.length; i++) {
       $scope.selections[i]
@@ -372,19 +378,23 @@ console.log( $scope.paperData.questions[i].ques.solutionParts.txt,'ttttttttttt')
 
     }
     $scope.save = function(subval, val) {
-      var selectedpk = $scope.subquestions[subval].ques[val].option[$scope.selections[subval].answers[val]].txt;
+      if($scope.subquestions[subval].ques[val].option[$scope.selections[subval].answers[val]]!=undefined){
+        $scope.selectedpk = $scope.subquestions[subval].ques[val].option[$scope.selections[subval].answers[val]].txt;
+      }else{
+        return
+      }
       var answerpk = $scope.subquestions[subval].ques[val].solution
-      console.log(selectedpk,answerpk,'asdf');
-      if (selectedpk == answerpk) {
+      console.log($scope.selectedpk, answerpk, 'asdf');
+      if ($scope.selectedpk == answerpk) {
         $scope.marks = $scope.subquestions[subval].ques[val].mark;
         $scope.correct = 'yes';
       } else {
         $scope.marks = $scope.subquestions[subval].ques[val].negativemark;
         $scope.correct = 'no';
       }
-      if ($scope.test[val].savedIndex == null){
-         $scope.evaluate = 'False'
-      }else{
+      if ($scope.test[val].savedIndex == null) {
+        $scope.evaluate = 'False'
+      } else {
         $scope.evaluate = 'True'
         var dataToPost = {
           question: $scope.subquestions[subval].ques[val].pk,
@@ -394,35 +404,23 @@ console.log( $scope.paperData.questions[i].ques.solutionParts.txt,'ttttttttttt')
           correct: $scope.correct,
           marksObtained: $scope.marks,
         }
-        // if($scope.subquestions[subval].ques[val].method == 'posted'){
-        //   $http({
-        //     method: 'PATCH',
-        //     data: dataToPost,
-        //     url: '/api/LMS/answer/'+$scope.subquestions[subval].ques[val].patchpk+'/',
-        //   }).
-        //   then(function(response) {
-        //     console.log(response.data);
-        //
-        //   });
-        // }else{
+        $http({
+          method: 'POST',
+          data: dataToPost,
+          url: '/api/LMS/answer/'
+        }).
+        then(function(response) {
+          console.log(response.data);
+          $scope.pkforpatch.push(response.data.pk);
+          $scope.subquestions[subval].ques[val].method = 'posted'
+          $scope.subquestions[subval].ques[val].patchpk = response.data.pk
+          console.log($scope.subquestions[subval].ques[val], 'kjhg');
+        });
 
-          $http({
-            method: 'POST',
-            data: dataToPost,
-            url: '/api/LMS/answer/'
-          }).
-          then(function(response) {
-            console.log(response.data);
-            $scope.pkforpatch.push(response.data.pk);
-            $scope.subquestions[subval].ques[val].method='posted'
-            $scope.subquestions[subval].ques[val].patchpk=response.data.pk
-            console.log($scope.subquestions[subval].ques[val],'kjhg');
-          });
-        // }
 
       }
 
-      console.log($scope.subquestions[subval].ques[val].option[$scope.selections[subval].answers[val]].pk, 'llllkk');
+
       if ($scope.subcount == subval) {
 
 
@@ -501,7 +499,18 @@ console.log( $scope.paperData.questions[i].ques.solutionParts.txt,'ttttttttttt')
     }
 
     $scope.finish = function(answerlist, questions) {
-      console.log(answerlist, questions, 'oooooo');
+      $http({
+        method: 'GET',
+        url: '/api/LMS/answer/?user=' + $scope.userId + '&paper=' + $scope.quesId + '/'
+      }).then(function(response) {
+        if (!response.data.length ) {
+
+        }else{
+
+
+        }
+      });
+
       $uibModal.open({
         templateUrl: '/static/ngTemplates/examsubmit.html',
         size: 'md',

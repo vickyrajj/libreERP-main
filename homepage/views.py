@@ -184,7 +184,9 @@ def blogDetails(request, blogname):
                 quesobj = Paper.objects.get(name__iexact=quesTitle)
                 print quesobj,quesobj.pk
                 data['id'] = quesobj.pk
-                return render(request, 'exam.html', {'id':quesobj.pk})
+                data['user'] = quesobj.user.pk
+                print data['user'] ,'userrrrr'
+                return render(request, 'exam.html', {'id':quesobj.pk,'user':quesobj.user.pk})
 
             if blogobj and htmlName:
                 if blogobj.title:

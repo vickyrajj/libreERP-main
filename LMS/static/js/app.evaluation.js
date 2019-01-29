@@ -107,6 +107,8 @@ app.controller("home.LMS.evaluation.form", function($scope, $state, $users, $sta
       name: '',
       timelimit: '',
       group: '',
+      description: '',
+      level: '',
     }
   }
   $scope.resetForm();
@@ -115,10 +117,13 @@ app.controller("home.LMS.evaluation.form", function($scope, $state, $users, $sta
   if ($scope.tab == undefined || $scope.tab.data == undefined) {
     $scope.mode = 'new';
     $scope.form.timelimit = 60;
+    $scope.form.level = 'easy'
   } else {
     $scope.mode = 'edit';
     $scope.selectedquestions = $scope.tab.data.paper.questions;
     $scope.form.name = $scope.tab.data.paper.name
+    $scope.form.description = $scope.tab.data.paper.description
+    $scope.form.level = $scope.tab.data.paper.level
     console.log($scope.selectedquestions);
     console.log($scope.tab.data.paper.timelimit, 'ddddd');
     $scope.form.timelimit = $scope.tab.data.paper.timelimit;
@@ -349,7 +354,7 @@ app.controller("home.LMS.evaluation.form", function($scope, $state, $users, $sta
     $scope.selectedquestions.splice(indx, 1)
   }
 
-  console.log($scope.form.timelimit, 'eeee');
+  console.log($scope.form.description, 'eeee');
   $scope.save = function() {
 
     if ($scope.form.group.pk==undefined) {
@@ -357,6 +362,16 @@ app.controller("home.LMS.evaluation.form", function($scope, $state, $users, $sta
       return
     }
 
+    if (!$scope.form.name.length) {
+      Flash.create('danger', 'Add Question Paper Title')
+      return
+    }
+
+    if (!$scope.form.description) {
+      Flash.create('danger', 'Add Question Paper description')
+      return
+    }
+    
     var toSend = []
     for (var i = 0; i < $scope.selectedquestions.length; i++) {
       console.log($scope.selectedquestions[i])
@@ -378,7 +393,9 @@ app.controller("home.LMS.evaluation.form", function($scope, $state, $users, $sta
           questions: toSend,
           name: $scope.form.name,
           timelimit: $scope.form.timelimit,
-          group:$scope.form.group.pk
+          group:$scope.form.group.pk,
+          description:$scope.form.description,
+          level:$scope.form.level
         }
       }).
       then(function(response) {
@@ -395,7 +412,9 @@ app.controller("home.LMS.evaluation.form", function($scope, $state, $users, $sta
           questions: toSend,
           name: $scope.form.name,
           timelimit: $scope.form.timelimit,
-          group:$scope.form.group.pk
+          group:$scope.form.group.pk,
+          description:$scope.form.description,
+          level:$scope.form.level
         }
       }).
       then(function(response) {
