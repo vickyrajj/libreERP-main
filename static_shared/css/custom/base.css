@@ -37,6 +37,16 @@ body {
    margin: 0;
 }
 
+.custom_tool_tip{
+  background-color: var(--themeMain);
+  color:#fff;
+  padding:5px 8px;
+  border-radius:4px;
+  font-size:12px;
+  position:absolute;
+  top:0px;
+  left:150px;
+}
 
 .bal_switch{
   position: relative;

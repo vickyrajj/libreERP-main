@@ -262,16 +262,6 @@ p,k){p.exports={name:"autobahn",version:"0.9.6",description:"An implementation o
 
 
 
-
-function setCookie(cname, cvalue, exdays) {
-  console.log('set cookie');
-  var d = new Date();
-  d.setTime(d.getTime() + (exdays*24*60*60*1000));
-  var expires = "expires="+ d.toUTCString();
-  document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
-}
-
-
 function getCookie(cname) {
   var name = cname + "=";
   var decodedCookie = decodeURIComponent(document.cookie);
@@ -288,6 +278,13 @@ function getCookie(cname) {
   return "";
 }
 
+function setCookie(cname, cvalue, exdays) {
+  console.log('set cookie');
+  var d = new Date();
+  d.setTime(d.getTime() + (exdays*24*60*60*1000));
+  var expires = "expires="+ d.toUTCString();
+  document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
+}
 
 var connection = new autobahn.Connection({url: '{{wampServer}}', realm: 'default'});
 
@@ -297,6 +294,7 @@ var msgCount=0;
 var custID = {{pk}};
 var custName='{{name}}'
 console.log('customer id....', custID);
+
 
 var windowColor = '{{windowColor}}'
 var custName = '{{custName}}'
@@ -466,25 +464,6 @@ var chatThreadPk
 var streamType=''
 
 
-function checkCookie() {
-  uid = getCookie("uid");
-  if (uid != "") {
-      fetchThread(uid);
-
-  } else {
-      // uid = custID +'$'+custName+'$'+broswer.charAt(0)
-      uid = new Date().getTime()
-      // console.log(uid);
-      if (uid != "" && uid != null) {
-          setCookie("uid", uid, 365);
-      }
-  }
-}
-
-checkCookie();
-
-
-
 
 function setVisitorDetails(name , phoneNumber , email) {
   // console.log('coming in chatter', name , phoneNumber , email);
@@ -526,6 +505,11 @@ function setVisitorDetails(name , phoneNumber , email) {
   }
   setCookie("uidDetails", JSON.stringify({email:email , name:name , phoneNumber:phoneNumber}), 365);
 }
+
+function setColors(bubbleColor , windowColor , fontColor) {
+  var windowColor = "#000"
+}
+
 
 
 function unsetVisitorDetails() {
@@ -1172,12 +1156,42 @@ function createChatDiv() {
   singleService.style.display = "none";
 
 
+  function checkCookie() {
+    uid = getCookie("uid");
+    if (uid != "") {
+        fetchThread(uid);
+    } else {
+        // uid = custID +'$'+custName+'$'+broswer.charAt(0)
+        uid = new Date().getTime()
+        // console.log(uid);
+        if (uid != "" && uid != null) {
+            setCookie("uid", uid, 365);
+        }
+    }
+  }
+
+  checkCookie();
+
   document.getElementById('sy-main-icon').style.display = "none";
   setTimeout(function(){
+    isChatOpened = getCookie("chatOpenCookie");
+    if (isChatOpened != "") {
+        if (isChatOpened==='true') {
+          document.getElementById("sy-main-icon").classList.remove('first_animation');
+          singleService.classList.remove('first_animation');
+          openChat()
+        }
+    }
     document.getElementById('sy-main-icon').style.display = "";
-
-
   }, 2000);
+
+
+  // document.getElementById("sy-main-icon").classList.remove('first_animation');
+  // singleService.classList.remove('first_animation');
+
+
+
+
 
   var unreadMsgCount = 0;
 
@@ -3358,6 +3372,10 @@ setInterval(function () {
   chatSuggestionBar1.style.display="none"
 
   function openChat() {
+
+    document.getElementById("sy-main-icon").classList.remove('first_animation');
+    singleService.classList.remove('first_animation');
+
     chathasOpenedOnce=true;
     chatSuggestionBar.style.display="none"
     chatSuggestionBar1.style.display="none"

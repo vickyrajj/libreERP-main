@@ -88,9 +88,10 @@ class GetMyUser(APIView):
             custP = CustomerProfile.objects.filter(pk=request.GET['getCompanyDetails'])
             objjj=list(CustomerProfile.objects.filter(pk=request.GET['getCompanyDetails']).values_list('name',flat=True))
             serviceObj=list(service.objects.filter(pk = custP[0].service.pk).values_list('contactPerson',flat=True))
+            serviceName=list(service.objects.filter(pk = custP[0].service.pk).values_list('name',flat=True))
 
 
-            return Response({'cDetails':objjj,'contactP':serviceObj}, status=status.HTTP_200_OK)
+            return Response({'cDetails':serviceName,'contactP':serviceObj}, status=status.HTTP_200_OK)
         if 'allAgents' in request.GET:
             print '%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%'
             allAgents = list(User.objects.exclude(pk=self.request.user.pk).values_list('pk',flat=True))
@@ -536,7 +537,7 @@ def getChatterScript(request , fileName):
     print fileName,'*****************'
     fileName = fileName.replace('.js' , '').replace("chatter-" , '')
     pk = decrypt(fileName , "cioc")
-    print pk
+    print pk , 'HERRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR'
     obj = CustomerProfile.objects.get(pk = pk)
     serviceWebsite = obj.service.web
     browserHeader =  dict((regex.sub('', header), value) for (header, value) in request.META.items() if header.startswith('HTTP_'))

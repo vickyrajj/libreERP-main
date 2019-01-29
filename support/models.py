@@ -52,6 +52,8 @@ class SupportChat(models.Model):
     sentByAgent = models.BooleanField(default = False)
     responseTime = models.FloatField(null=True, blank=True)
     logs = models.CharField(max_length = 500 , null = True ,blank = True)
+    delivered = models.BooleanField(default = False)
+    read = models.BooleanField(default = False)
 
 class Visitor(models.Model):
     created = models.DateTimeField(auto_now_add = True)
