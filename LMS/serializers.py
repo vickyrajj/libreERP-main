@@ -187,7 +187,7 @@ class PaperSerializer(serializers.ModelSerializer):
     group = PaperGroupSerializer(many = False , read_only = True)
     class Meta:
         model = Paper
-        fields = ('pk' , 'created' , 'updated', 'questions', 'active' , 'user','name','timelimit','group')
+        fields = ('pk' , 'created' , 'updated', 'questions', 'active' , 'user','name','timelimit','group','description','level')
         read_only_fields = ('user', 'questions')
     def create(self , validated_data):
         m = Paper(**validated_data)
@@ -198,6 +198,10 @@ class PaperSerializer(serializers.ModelSerializer):
             m.group = PaperGroup.objects.get(pk=int(self.context['request'].data['group']))
         if 'timelimit' in self.context['request'].data:
             m.timelimit = self.context['request'].data['timelimit']
+        if 'description' in self.context['request'].data:
+            m.description = self.context['request'].data['description']
+        if 'level' in self.context['request'].data:
+            m.level = self.context['request'].data['level']
         m.save()
         print self.context['request'].data['questions']
         for i in self.context['request'].data['questions']:
@@ -227,6 +231,15 @@ class PaperSerializer(serializers.ModelSerializer):
             instance.timelimit = self.context['request'].data['timelimit']
         instance.save()
         return instance
+
+
+class PaperattemptHistorySerializer(serializers.ModelSerializer):
+    question = QuestionSerializer(many = False , read_only = True)
+    paper = PaperSerializer(many = False , read_only = True)
+    class Meta:
+        model = Answer
+        fields = ('pk' , 'created' , 'paper' , 'mark' ,  )
+        read_only_fields = ('user', )
 
 class AnswerSerializer(serializers.ModelSerializer):
     # subject = SubjectSerializer(many = False , read_only = True)
@@ -398,7 +411,7 @@ class NotesSectionSerializer(serializers.ModelSerializer):
     note = NoteLiteSerializer(many = False , read_only = True)
     class Meta:
         model = NotesSection
-        fields = ('pk' , 'note' , 'txt', 'image', 'mode' )
+        fields = ('pk' , 'note' , 'txt', 'image', 'mode','sequence' )
     def create(self , validated_data):
         n = NotesSection(**validated_data)
         note = Note.objects.get(pk = self.context['request'].data['note'])

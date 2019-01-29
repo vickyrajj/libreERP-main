@@ -3,19 +3,58 @@ var app = angular.module('app', ['ui.router', 'ui.bootstrap', 'angular-owl-carou
 
 
 app.config(function($stateProvider, $urlRouterProvider, $httpProvider) {
-
-
-  $urlRouterProvider.otherwise('/');
   $httpProvider.defaults.xsrfCookieName = 'csrftoken';
   $httpProvider.defaults.xsrfHeaderName = 'X-CSRFToken';
   $httpProvider.defaults.withCredentials = true;
-
 })
+
+app.run(['$rootScope', '$state', '$stateParams' , function($rootScope, $state, $stateParams) {
+  $rootScope.$state = $state;
+  $rootScope.$stateParams = $stateParams;
+  $rootScope.$on("$stateChangeError", console.log.bind(console));
+}]);
 
 
 app.controller('main', function($scope, $http, $sce, $interval, $uibModal) {
-  console.log("main loded");
+  // $scope.me = $users.get('mySelf');
   $scope.crmBannerID = 1;
+
+
+
+  $scope.device = {
+    name:''
+  }
+  function lgDevice(x) {
+    if (x.matches) {
+      $scope.device.name = 'large'
+    }
+  }
+
+  function smDevice(x) {
+    if (x.matches) {
+      $scope.device.name = 'small'
+    }
+  }
+
+  function elgDevice(x) {
+    if (x.matches) {
+      $scope.device.name = 'extralarge'
+    }
+  }
+
+
+  var sm = window.matchMedia("(max-width: 600px)")
+  smDevice(sm) // Call listener function at run time
+  sm.addListener(smDevice) // Attach listener function on state changes
+
+  var lg = window.matchMedia("(min-width: 601px) and (max-width: 1400px) ")
+  lgDevice(lg)
+  lg.addListener(lgDevice)
+
+  var elg = window.matchMedia("(min-width: 1401px)")
+  elgDevice(elg)
+  elg.addListener(elgDevice)
+
 
   $scope.mainBannerImages = []
   $scope.bannerID = 0;
@@ -217,7 +256,13 @@ app.controller('main', function($scope, $http, $sce, $interval, $uibModal) {
 
 
 app.controller('exam', function($scope, $state, $http, $timeout, $interval, $uibModal, $stateParams, $sce, Flash, $location, $rootScope) {
-
+  console.log('exam controllerrrrrrrrrrrrr');
+  console.log(QUESID,'quesidddddddddddddddddd');
+  if (QUESID!=undefined) {
+    $scope.quesId = QUESID
+  }else {
+    $scope.quesId = 1
+  }
   $scope.sublist = []
   $scope.subquestions = []
   $scope.timelimit = {
@@ -229,7 +274,7 @@ app.controller('exam', function($scope, $state, $http, $timeout, $interval, $uib
 
   $http({
     method: 'GET',
-    url: '/api/LMS/paper/1/'
+    url: '/api/LMS/paper/'+$scope.quesId+'/'
   }).then(function(response) {
     $scope.paperData = response.data
     $scope.data.paperid = response.data.pk;

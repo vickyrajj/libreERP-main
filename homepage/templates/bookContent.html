@@ -140,7 +140,13 @@
           <h5 class="text-primary" style="padding-top: 10px;padding-bottom: 10px;padding-left:15px"><strong>Solution :</strong> </h5>
           <div class="col-md-10" style="padding-left:30px;width:90%; word-wrap: break-word; ">
             {% for sp in q.solutionParts.all %}
-            <p class="qes">{{sp.pk}} {{sp.txt | safe}}</p>
+            {% if sp.txt != None %}
+            <p class="qes">{{sp.txt | safe}}</p>
+            {% endif %}
+            {% if sp.image != null %}
+            <img src="/media/{{sp.image}}" alt="">
+            {% endif %}
+
             {% endfor %}
           </div>
         </div>

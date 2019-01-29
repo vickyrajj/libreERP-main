@@ -37,6 +37,7 @@ def renderedStatic(request , filename):
 
 
 def dynamicTemplates(request , filename):
+    print 'hhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh'
     print 'filename', filename
     try:
         blogobj = blogPost.objects.get(shortUrl=filename)
@@ -112,7 +113,7 @@ def testResultsView(request ):
 #     return render(request, 'courses.html', {"typ" : page,"courseobj":courseobj,"subobj":subobj,"notesobj":notesobj})
 
 def ncert(request):
-    return render(request, 'ncert.html', {})
+    return render(request, 'ncert.html', {'seoDetails':{'title':globalSettings.SEO_TITLE,'description':globalSettings.SEO_DESCRIPTION,'image':globalSettings.SEO_IMG,'width':globalSettings.SEO_IMG_WIDTH,'height':globalSettings.SEO_IMG_HEIGHT}})
 
 
 class MakePaytmPayment(APIView):
@@ -360,9 +361,6 @@ class profileViewSet(viewsets.ModelViewSet):
 
 class AccountAdapter(DefaultAccountAdapter):
     def get_login_redirect_url(self, request):
-        for a in globalSettings.DEFAULT_APPS_ON_REGISTER:
-            app = application.objects.get(name = a)
-            p = permission.objects.create(app =  app, user = request.user , givenBy = User.objects.get(pk=1))
         return globalSettings.ON_REGISTRATION_SUCCESS_REDIRECT
 
 def getModules(user , includeAll=False):

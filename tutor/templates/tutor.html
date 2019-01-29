@@ -6,6 +6,7 @@
 
   <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}" charset="utf-8">
   <link rel="stylesheet" href="{% static 'css/font-awesome.min.css' %}" charset="utf-8">
+  <link rel="stylesheet" href="{% static 'css/custom/base.css' %}" charset="utf-8">
 
   <script src="{% static 'js/jquery-2.1.4.min.js' %}"></script>
   <script src="{% static 'js/bootstrap.min.js' %}"></script>
@@ -18,14 +19,111 @@
 </head>
 
 <body ng-controller="myCtrl1">
-  <nav class="navbar navbar-inverse" style="border: none;border-radius: 0px;margin-bottom:0px;height:6vh;">
+  <nav class="navbar navbar-inverse hidden-xs hidden-sm" style="border: none;border-radius: 0px;margin-bottom:0px;height:6vh;">
     <div class="container-fluid">
       <div class="navbar-header">
-        <a class="navbar-brand" href=""><img src="{{brandLogoInverted}}" style="margin-top:-20px; max-width:400px;height:40px;margin-top:-10px;" height="60"></img></a>
+          <img src="{{brandLogoInverted}}" style="margin-top:10px; max-width:400px;height:30px; "></img>
       </div>
       {% verbatim %}
+      <div class="collapse navbar-collapse">
+        <ul class="nav navbar-nav" style="color:#fff;">
+          <li style="padding: 0px 5px;">
+            <a ng-click="setPen(); mode='line'; canvas.freeDrawingBrush.width = 2;" style="color:#fff; outline:none" href="#"><i title="Pencil" class="fa fa-pencil" aria-hidden="true" ></i>
+          </a>
+            <!-- <ul class="dropdown-menu">
+            <input type="range" min="1" max="20" ng-model="size" ng-change="canvas.freeDrawingBrush.width = size;">
+          </ul> -->
+          </li>
 
-      <ul class="nav navbar-nav" style="padding-top:10px;margin-left:500px;">
+          <li style="padding: 0px 5px;">
+            <a ng-click="setPen(); mode='line'; eraserSize =30; setEraser();" style="color:#fff; outline:none" href="#"><i title="Eraser" class="fa fa fa-eraser " aria-hidden="true" ></i>
+          </a>
+
+            <!-- <ul class="dropdown-menu">
+            <li><a ng-click="eraserSize =10; setEraser();"><i class="fa fa-eraser" aria-hidden="true" style="font-size:5px;" ></i></a></li>
+            <li><a ng-click="eraserSize=20; setEraser();"><i class="fa fa-eraser" aria-hidden="true" style="font-size:10px;" ></i></a></li>
+            <li><a ng-click="eraserSize =30; setEraser();"><i class="fa fa-eraser" aria-hidden="true" style="font-size:15px;" ></i></a></li>
+          </ul> -->
+
+          </li>
+
+          <li style="padding: 0px 5px;">
+            <a ng-click="mode= 'i-text'; canvas.isDrawingMode = false;" style="color:#fff; outline:none" href="#"><i title="Text" class="fa fa-font " aria-hidden="true" ></i>
+          </a>
+
+          </li>
+
+          <li style="padding: 0px 5px;">
+            <a ng-click="addFile()" style="color:#fff; outline:none" href="#">
+          <input type="file" id="filePicker" style="display:none;" file-model="form.image">
+          <i title="Image" class="fa fa-file-image-o " aria-hidden="true" >
+          </i>
+        </a>
+          </li>
+
+          <li class="dropdown" style="padding: 0px 5px;">
+            <a ng-click="fabric.Object.prototype.selectable = false; canvas.isDrawingMode = false; canvas.selection = false;" class="dropdown-toggle" data-toggle="dropdown" style="color:#fff; outline:none" href="#">
+            <i title="Shapes" class="fa fa-clone " aria-hidden="true" ></i>
+            <i style="font-size:9px;" class="fa fa-caret-down" aria-hidden="true"></i>
+          </a>
+            <ul class="dropdown-menu">
+              <li style="font-size:1.5vh;cursor:pointer;"><a ng-click="mode = 'rect'; canvas.isDrawingMode = false; ">Rectangle</a></li>
+              <li style="font-size:1.5vh;cursor:pointer;"><a ng-click="mode = 'circle'; canvas.isDrawingMode = false;">Circle</a></li>
+              <li style="font-size:1.5vh;cursor:pointer;"><a ng-click="mode = 'triangle'; canvas.isDrawingMode = false;">Triangle</a></li>
+            </ul>
+          </li>
+
+          <li style="padding: 0px 5px;"><a ng-click="changeGrid();" style="color:#fff;" href="#"><i title="Grid" class="fa fa-th " aria-hidden="true" ></i></a></li>
+
+
+          <li style="padding: 0px 5px;">
+            <a ng-click="setColor('red');" style="color:red;outline:none" href="#">
+          <i style=" background-color:red; border: 1px solid #b0b0b0" class="fa fa-th " aria-hidden="true" ></i>
+        </a>
+          </li>
+          <li style="padding: 0px 5px;">
+            <a ng-click="setColor('blue');" style="color:blue;outline:none" href="#">
+           <i style=" background-color:blue; border: 1px solid #b0b0b0" class="fa fa-th " aria-hidden="true" ></i>
+         </a>
+          </li>
+          <li style="padding: 0px 5px;">
+            <a ng-click="setColor('green');" style="color:green;outline:none" href="#">
+              <i style=" background-color:green; border: 1px solid #b0b0b0" class="fa fa-th " aria-hidden="true" ></i>
+          </a>
+          </li>
+          <li style="padding: 0px 5px;">
+            <a ng-click="setColor('yellow');" style="color:yellow;outline:none" href="#">
+              <i style=" background-color:yellow; border: 1px solid #b0b0b0" class="fa fa-th " aria-hidden="true" ></i>
+          </a>
+          </li>
+          <li style="padding: 0px 5px;">
+            <a ng-click="setColor('black');" style="color:black;outline:none" href="#">
+              <i style=" background-color:black; border: 1px solid #b0b0b0" class="fa fa-th " aria-hidden="true" ></i>
+           </a>
+          </li>
+
+          <li style="padding: 0px 15px;">
+            <a style="color:#fff;outline:none" href="#">
+            <span style="font-size:16px;"> {{timeMins}} : {{timeSecs}}</span>
+          </a>
+          </li>
+        </ul>
+
+        <ul class="nav navbar-nav navbar-right ">
+          <li><a ng-click="showFeedbackForm();" style="cursor:pointer;"><i class="fa fa-sign-out " aria-hidden="true" style="font-size:16px;color:white;"></i></a></li>
+        </ul>
+        <ul class="nav navbar-nav navbar-right ">
+          <li>
+            <span style="font-size:16px;color:white;margin-top:10px;">{{name}}</span>
+            <img ng-src="{{dp}}" style="margin-top:5px; max-width:400px;height:40px;" height="60"></img>
+          </li>
+        </ul>
+      </div>
+
+
+
+
+      <!-- <ul class="nav navbar-nav" style="padding-top:10px;margin-left:500px;">
         <li style="color:white;">{{timeMins}} : {{timeSecs}}</li>
       </ul>
 
@@ -37,15 +135,69 @@
           <span style="font-size:20px;color:white;margin-top:10px;">{{name}}</span>
           <img ng-src="{{dp}}" style="margin-top:5px; max-width:400px;height:40px;" height="60"></img>
         </li>
-      </ul>
+      </ul> -->
     </div>
   </nav>
 
+
+    <nav class="hidden-md hidden-lg" style="position:fixed; top:0px; left:0px; width:100%; min-height:6vh; background-color:#222222; color:#fff;">
+      <div class="container-fluid">
+        <div class="row" style="padding:10px 0px;">
+          <div class="col-xs-4" style="padding:0px;">
+            {% endverbatim %}
+            <img src="{{brandLogoInverted}}" style="max-width:400px;height:25px; "></img>
+            {% verbatim %}
+          </div>
+          <div class="col-xs-1" ng-click="setPen(); mode='line'; canvas.freeDrawingBrush.width = 2;" style="cursor:pointer;">
+            <i title="Pencil" class="fa fa-pencil" aria-hidden="true"></i>
+          </div>
+          <div class="col-xs-1" ng-click="setPen(); mode='line'; eraserSize =30; setEraser();" style="cursor:pointer;">
+            <i title="Eraser" class="fa fa fa-eraser " aria-hidden="true"></i>
+          </div>
+          <div class="col-xs-1" ng-click="setColor('red');" style="cursor:pointer;">
+            <i style=" background-color:red; border: 1px solid #b0b0b0; color:red;" class="fa fa-th" aria-hidden="true"></i>
+          </div>
+          <div class="col-xs-1" ng-click="setColor('black');" style="cursor:pointer;">
+            <i style=" background-color:black; border: 1px solid #b0b0b0; color:black;" class="fa fa-th" aria-hidden="true"></i>
+          </div>
+          <div class="col-xs-3" style="cursor:pointer;">
+            <span style="font-size:16px;"> {{timeMins}} : {{timeSecs}}</span>
+          </div>
+          <div class="col-xs-1" style="padding:0px;cursor:pointer;" ng-click="showFeedbackForm();">
+            <i class="fa fa-sign-out " aria-hidden="true" style="font-size:16px;color:white;"></i>
+          </div>
+        </div>
+      </div>
+    </nav>
+
   <div class="container-fluid">
     <div class="row">
-      <div class="col-md-9">
+
+      <div class="col-md-9 hidden-xs hidden-sm" ng-if="device.name=='large'" >
+        <div class="row">
+          <div class="col-md-12" style="padding:0px;">
+            <div id="canvasContainer" style="overflow-y: auto; overflow-x:hidden; height:87vh; width:100%;">
+              <canvas id="tutorCanvas"></canvas>
+            </div>
+          </div>
+          <button ng-click="dataVariables.sendHeight = true; increaseCanvas();" class="btn btn-primary btn-sm " style="position:fixed;bottom:0px;left:0px; background-color:#222222; border:0px;">+</button>
+        </div>
+      </div>
+
+      <div class="hidden-md hidden-lg col-sm-12 col-xs-12 " style="margin-top: 50px" ng-if="device.name=='small'" >
+        <div class="row" >
+          <div class="col-md-12" style="padding:0px;">
+            <div id="canvasContainer" style="overflow-y: auto; overflow-x:hidden; height:87vh; width:100%;">
+              <canvas id="tutorCanvas"></canvas>
+            </div>
+          </div>
+          <button ng-click="dataVariables.sendHeight = true; increaseCanvas();" class="btn btn-primary btn-sm " style="position:fixed;bottom:0px;left:0px; background-color:#222222; border:0px;">+</button>
+        </div>
+      </div>
 
 
+
+      <!-- <div class="col-md-9">
         <div class="row">
           <div class="col-md-7" style="padding:0px;">
 
@@ -148,10 +300,10 @@
             </div>
           </div>
         </div>
-      </div>
+      </div> -->
 
-      <div class="col-md-3" style="border-left:1px solid #b8b8b8;height:93vh;">
-        <div class="row">
+      <div class="col-md-3 hidden-xs hidden-sm" style="border-left:1px solid #b8b8b8;height:92vh;">
+        <!-- <div class="row">
           <div class="col-md-3" style="padding-top:20px;">
             <img ng-src="{{student.profile.displayPicture}}" class="img-circle" alt="User Image" style="width:60px; height:60px;">
           </div>
@@ -166,28 +318,40 @@
                 <h5>Id:{{student.pk}}</h5>
               </div>
             </div>
-            <!-- <div class="row">
-              <div class="col-md-12">
-                <h5>Average Rating:{{AverageRating}}</h5>
-              </div>
-            </div> -->
+
           </div>
           <div class="col-md-3 text-left" style="padding:30px;">
-            <!-- <span style="color:red;padding-top:22px;" ><i class="fa fa-microphone fa-2x"></i></span> -->
+
+          </div>
+        </div> -->
+
+        <div class="row" style="padding:10px 0px;">
+          <div class="col-md-2">
+            <img ng-src="{{student.profile.displayPicture}}" class="img-circle" alt="User img" style="width:30px; height:30px;">
+          </div>
+          <div class="col-md-6">
+            <p style="font-size:14px; margin:0px">{{student.first_name}} {{student.last_name}}</p>
+            <p style="font-size:13px; margin:0px">
+              <span style="height: 10px; width: 10px; background-color: {{dataVariables.onlineStatus?'green':'red'}}; border-radius: 50%; display: inline-block;s"></span> {{dataVariables.onlineStatus?'Online':'Offline'}}
+            </p>
+          </div>
+          <div class="col-md-4">
+            <p style="font-size:13px; margin:0px">Id:{{teacher.pk}}</p>
+              <!-- <span style="color:red;padding-top:22px;" ><i class="fa fa-microphone fa-2x"></i></span>
+            <h5>Average Rating:{{AverageRating}}</h5> -->
           </div>
         </div>
 
-        <div class="row" style="border-top:solid 2px #eeeeee;">
+        <div class="row" style="border-top:solid 1px #e0e0e0;">
           <div class="col-md-12">
-            <div id="scrollbar" class="panel-body" style="overflow-y: auto; overflow-x:hidden; height:66vh;">
-
+            <div id="scrollbar" class="panel-body" style="overflow-y: auto; overflow-x:hidden; height:66vh; font-size:13px;">
               <div class="row" ng-repeat="m in messages">
-                <div class="container-fluid {{m.sendByMe? 'pull-right': 'pull-left'}}" >
-                  <div class="container-fluid text-right" style="border:solid 1px #eeeeee;padding:10px;">
+                <div class="container-fluid {{m.sendByMe? 'pull-right': 'pull-left'}}">
+                  <div class="container-fluid text-right" style="border:solid 1px {{m.sendByMe? '#eeeeee':'#5f5ff6'}}; border-radius:3px; padding:10px; {{m.sendByMe? '': 'background-color:#5f5ff6; color:#fff;'}} ">
                     <span ng-if="m.message.indexOf('http') == -1">{{m.message}}</span>
                     <a target="_blank" ng-if="m.message.indexOf('http') != -1" href="{{m.message}}">{{m.message}}</a>
                   </div>
-                  <div class="container-fluid text-right" style="color:#c7c7c7;font-size:10px;">
+                  <div class="container-fluid text-right" style="color:#c7c7c7;font-size:9px;">
                     {{m.created |date:'hh:mm a'}}
                   </div>
                 </div>
@@ -196,13 +360,24 @@
           </div>
         </div>
 
-        <div class="row" style="position:absolute;bottom:0px;padding:10px;width:100%;">
-          <input type="file" file-model="messageFile" style="display:none;" id="messageFile">
+
+
+
+        <div class="row chatBox_footer" style="position:absolute;bottom:0px;padding:0px;width:100%; border-top:1px solid #e0e0e0">
+          <!-- <input type="file" file-model="messageFile" style="display:none;" id="messageFile">
           <div class="input-group">
             <span class="input-group-btn"><button class="btn btn-primary" ng-click="attachMessageFile()"> <i class="fa fa-paperclip"></i> </button></span>
             <input class="form-control" type="text" ng-enter="enterTutorMsg()"  ng-model="tutorText" placeholder="Type your message here..." />
             <span class="input-group-btn"><button ng-click="enterTutorMsg()" class="btn btn-primary">Submit</button></span>
+          </div> -->
+
+          <div id="messageComposer" class="flex_container">
+            <textarea id="inputText" ng-model="tutorText" ng-enter="enterTutorMsg()" placeholder="Type your message here..." name="name" rows="1" style="background-color:#fff;outline:none;font-size:14px"></textarea>
+            <input type="file" file-model="messageFile" style="display:none;" id="messageFile">
+            <i id="paperClip" ng-click="attachMessageFile()" class="paperClip fa fa-paperclip" aria-hidden="true"></i>
+            <i id="paperPlane" ng-click="enterTutorMsg()" class="paperClip fa fa-paper-plane" aria-hidden="true"></i>
           </div>
+
         </div>
 
       </div>

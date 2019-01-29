@@ -18,22 +18,22 @@
     <h2 class="text-center"> <strong>Note Section</strong> </h2>
     <div ng-if="nSection!=''">
       <div ng-repeat="sec in nSection" ng-init="sec.editing = false;">
-        <div class="pull-right btn-group"  style="padding:10px;">
+        <div class="pull-right btn-group" style="padding:10px;">
           <button type="button" class="btn btn-primary" ng-click="sec.editing = true;" ng-if="!sec.editing">
             Edit
           </button>
-          <button type="button" class="btn btn-primary" ng-click="save(sec);sec.editing = false;"  ng-if="sec.editing">
+          <button type="button" class="btn btn-primary" ng-click="save(sec,$index);sec.editing = false;" ng-if="sec.editing">
             Save
           </button>
-          <button type="button" class="btn btn-default">
+          <button type="button" class="btn btn-default" ng-click="noteSecMove($index,'up')">
             <i class="fa fa-arrow-up"></i>
           </button>
-          <button type="button" class="btn btn-default">
+          <button type="button" class="btn btn-default" ng-click="noteSecMove($index,'down')">
             <i class="fa fa-arrow-down"></i>
           </button>
         </div>
         <div mathjax-bind="sec.txt"></div>
-        <div class="text-center"style="margin-top:15px;margin-bottom:15px;">
+        <div class="text-center" style="margin-top:15px;margin-bottom:15px;">
           <img ng-if="sec.image!= null" src="{{sec.image}}" width="200px" height="200px">
         </div>
         <div class="container-fluid" style="margin-top:15px;margin-bottom:15px;" ng-if="sec.editing">
@@ -42,3 +42,10 @@
         </div>
       </div>
     </div>
+  </div>
+  <div class="container-fluid pull-right"style="margin-top:10px;">
+    <button type="button" class="btn btn-success"  ng-click="noteSecSave()">
+      Save
+    </button>
+  </div>
+</div>

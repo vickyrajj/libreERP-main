@@ -145,6 +145,8 @@ class QPart(models.Model):
     txt = models.CharField(max_length = 2000 , null = True)
     image = models.FileField(upload_to = getQAttachmentPath , null = True)
     sequence = models.PositiveIntegerField(null = True)
+    class Meta:
+        ordering = ['sequence']
 
 
 class Question(models.Model):
@@ -192,14 +194,25 @@ class Paper(models.Model):
     active = models.BooleanField(default = False)
     user = models.ForeignKey(User , null = False , related_name='papersAuthored')
     name = models.CharField(null = True , max_length = 100)
+    level = models.CharField(null=True , choices= QUESTION_LEVEL_CHOICES , max_length = 15)
+    description = models.TextField(null = True)
     timelimit = models.PositiveIntegerField(default= 0)
     group = models.ForeignKey(PaperGroup , null = True , related_name='papergroup')
+
+class PaperattemptHistory(models.Model):
+    created = models.DateTimeField(auto_now_add = True)
+    paper = models.ForeignKey(Paper , null = False , related_name='paperAttempted')
+    user = models.ForeignKey(User , null = False , related_name='attemptedUser')
+    mark = models.FloatField(null=False)
+
 
 CORRECTION_CHOICES = (
     ('yes' , 'yes'),
     ('no' , 'no'),
     ('partial' , 'partial'),
 )
+
+
 
 class Answer(models.Model):
     created = models.DateTimeField(auto_now_add = True)
@@ -333,8 +346,8 @@ class Note(models.Model):
     description = models.TextField( null = False)
     urlSuffix = models.CharField(max_length = 100 , null = True)
     image =  models.FileField(upload_to = getNoteImagePath , null = True)
-    course = models.ForeignKey(Course , null = False , related_name="courseNote")
-    subject = models.ForeignKey(Subject , null = False , related_name='subject')
+    course = models.ForeignKey(Course , null = True , related_name="courseNote")
+    subject = models.ForeignKey(Subject , null = True , related_name='subject')
 
 
     def get_absolute_url(self):
@@ -346,6 +359,9 @@ class NotesSection(models.Model):
     txt = models.TextField( null = True)
     image = models.FileField(upload_to = getNoteSectionPath , null = True)
     mode = models.CharField(choices = PART_TYPE_CHOICES , default = 'text' , null = False, max_length = 10)
+    sequence = models.PositiveIntegerField(null = True)
+    class Meta:
+        ordering = ['sequence']
 
 NOTIFICATION_TYPE = (
     ('sms' , 'sms'),

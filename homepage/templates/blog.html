@@ -7,18 +7,20 @@
   {% if firstSection|length > 0 %}
   <div class="blog_container">
     <div class="flex_50Perc" >
-      <a href="/{{firstSection.0.shortUrl}}/"><img class="blog_image" ng-src="/media/{{firstSection.0.ogimage}}" alt=""></a>
-      <p class="blog_text">{{firstSection.0.title}}</p>
+      <a href="/{{firstSection.0.shortUrl}}/"><img class="blog_image" ng-src="/media/{{firstSection.0.ogimage}}" alt="">
+      <p class="blog_text">{{firstSection.0.title}}</p></a>
     </div>
     <div class="sec1Right">
+      {% if firstSection.1 %}
       <div class="sec1RightBox1" >
-        <a href="/{{firstSection.1.shortUrl}}/"><img class="blog_image" ng-src="/media/{{firstSection.1.ogimage}}" alt=""></a>
-        <p class="blog_text">{{firstSection.1.title}}</p>
+        <a href="/{{firstSection.1.shortUrl}}/"><img class="blog_image" ng-src="/media/{{firstSection.1.ogimage}}" alt="">
+        <p class="blog_text">{{firstSection.1.title}}</p></a>
       </div>
+      {% endif %}
       {% for blog in firstSection|slice:"2:4" %}
       <div class="sec1RightBox2">
-        <a href="/{{blog.shortUrl}}/"><img class="blog_image" src="/media/{{blog.ogimage}}" alt=""></a>
-        <p class="blog_text">{{blog.title}}</p>
+        <a href="/{{blog.shortUrl}}/"><img class="blog_image" src="/media/{{blog.ogimage}}" alt="">
+        <p class="blog_text">{{blog.title}}</p></a>
       </div>
       {% endfor %}
 
@@ -32,37 +34,37 @@
     <div class="sec2Left">
       {% for blog in second_sec1 %}
       <div class="flex_33Perc">
-        <a href="/{{blog.shortUrl}}/"><img class="blog_image" src="/media/{{blog.ogimage}}" alt=""></a>
-        <p class="blog_text">{{blog.title}}</p>
+        <a href="/{{blog.shortUrl}}/"><img class="blog_image" src="/media/{{blog.ogimage}}" alt="">
+        <p class="blog_text">{{blog.title}}</p></a>
       </div>
       {% endfor %}
 
       {% for blog in second_sec2 %}
       <div class="flex_33Perc" >
-        <a href="/{{blog.shortUrl}}/"><img class="blog_image" src="/media/{{blog.ogimage}}" alt=""></a>
-        <p class="blog_text">{{blog.title}}</p>
+        <a href="/{{blog.shortUrl}}/"><img class="blog_image" src="/media/{{blog.ogimage}}" alt="">
+        <p class="blog_text">{{blog.title}}</p></a>
       </div>
       {% endfor %}
 
       <div class="sec1Right">
         {% if thirdSection.0 %}
         <div class="sec1RightBox1" >
-          <a href="/{{thirdSection.0.shortUrl}}/"><img class="blog_image" src="/media/{{thirdSection.0.ogimage}}" alt=""></a>
-          <p class="blog_text">{{thirdSection.0.title}}</p>
+          <a href="/{{thirdSection.0.shortUrl}}/"><img class="blog_image" src="/media/{{thirdSection.0.ogimage}}" alt="">
+          <p class="blog_text">{{thirdSection.0.title}}</p></a>
         </div>
         {% endif %}
 
         {% for blog in thirdSection|slice:"2:4" %}
         <div  class="sec1RightBox2" >
-          <a href="/{{blog.shortUrl}}/"><img class="blog_image" src="/media/{{blog.ogimage}}" alt=""></a>
-          <p class="blog_text">{{blog.title}}</p>
+          <a href="/{{blog.shortUrl}}/"><img class="blog_image" src="/media/{{blog.ogimage}}" alt="">
+          <p class="blog_text">{{blog.title}}</p></a>
         </div>
         {% endfor %}
       </div>
       {% if thirdSection.1 %}
       <div  class="flex_50Perc" >
-        <a href="/{{thirdSection.1.shortUrl}}/"><img class="blog_image" src="/media/{{thirdSection.1.ogimage}}" alt=""></a>
-        <p class="blog_text">{{thirdSection.1.title}}</p>
+        <a href="/{{thirdSection.1.shortUrl}}/"><img class="blog_image" src="/media/{{thirdSection.1.ogimage}}" alt="">
+        <p class="blog_text">{{thirdSection.1.title}}</p></a>
       </div>
       {% endif %}
     </div>
@@ -86,14 +88,19 @@
         <div class="textHeading">
           <h4>Most Recent Posts</h4>
         </div>
+        {% endverbatim %}
         <div style="padding:0 30px;">
-          <div style="border-bottom:1px solid #e0e0e0;" ng-repeat="p in recentPosts" >
-            <h4 ng-click="openBlog(p.shortUrl,p.pk)" style="font-size:14px; font-weight:bold; cursor:pointer;"> <span>{{$index + 1}}. </span> <span> {{p.title}} </span>  </h4>
+            {% for blog in recentBlogs %}
+          <div style="border-bottom:1px solid #e0e0e0;">
+            <a href="/{{blog.shortUrl}}" style="text-decoration:none;" >
+              <p style="font-size:13px; font-weight:bold; cursor:pointer;"><span> {{blog.title}} </span>  </p>
+            </a>
           </div>
+          {% endfor %}
         </div>
       </div>
     </div>
-    {% endverbatim %}
+
 
   </div>
 
@@ -101,13 +108,26 @@
   <div class="prevNextBtn">
 
     {% if pages.currentpage != pages.first %}
-      <a href="/blog/">
-        <button class="btn_gradient">First</button><a>
-      <a href="/blog/?page={{ pages.prev }}"><button class="btn_gradient">Prev</button><a>
+    <div class="row">
+      <div class="col-sm-12 col-md-6">
+        <a style="text-decoration: none;" href="/blog/">
+          <button class="btn_gradient">First</button><a>
+      </div>
+      <div class="col-sm-12 col-md-6">
+        <a style="text-decoration: none;" href="/blog/?page={{ pages.prev }}"><button class="btn_gradient">Prev</button><a>
+      </div>
+    </div>
     {% endif %}
     {% if pages.currentpage != pages.last and pages.last > pages.first %}
-      <a href="/blog/?page={{ pages.next }}"><button class="btn_gradient">Next</button><a>
-      <a href="/blog/?page={{ pages.last }}"><button class="btn_gradient">Last</button><a>
+
+    <div class="row">
+      <div class="col-sm-12 col-md-6">
+        <a style="text-decoration: none;" href="/blog/?page={{ pages.next }}"><button class="btn_gradient">Next</button><a>
+      </div>
+      <div class="col-sm-12 col-md-6">
+        <a style="text-decoration: none;" href="/blog/?page={{ pages.last }}"><button class="btn_gradient">Last</button><a>
+      </div>
+    </div>
     {% endif %}
 
 
