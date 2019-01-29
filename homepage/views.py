@@ -112,6 +112,29 @@ def blogDetails(request, blogname):
 
         return render(request, 'courses.html', {"courseobj":courseobjs,"subobj":subobjs,"level":level,"title":title , "subPart" : subPart, "booklen":booklen , "noteobj":noteobj, "bookobjs":bookobjs,"refbookobjs":refbookobjs,"refbooklen":refbooklen, "color":color} )
     try:
+        try:
+            prts = []
+            if '/' in blogname:
+                prts = blogname.split('/')
+
+            print prts,'partsssssssssssssssss'
+            if len(prts) == 0:
+                blogname = blogname
+                blogObj = blogPost.objects.get(shortUrl=blogname)
+                papersList = Paper.objects.filter(group=int(blogObj.header))
+                # return render(request, 'blogdetails.html', {"home": False, "tagsCSV" :  blogobj.tagsCSV.split(',') , 'user': us, 'blogobj' : blogobj , "brandLogo" : globalSettings.BRAND_LOGO , "brandLogoInverted": globalSettings.BRAND_LOGO_INVERT})
+            elif len(prts) == 2:
+                blogname = prts[0]
+                quesTitle = prts[1]
+                blogObj = blogPost.objects.get(shortUrl=blogname)
+            elif len(prts) == 3:
+                blogname = prts[0]
+                quesTitle = prts[1]
+                blogObj = blogPost.objects.get(shortUrl=blogname)
+
+
+        except:
+            pass
         blogobj = blogPost.objects.get(shortUrl=blogname)
         print "got blog post"  , blogobj
 

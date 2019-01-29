@@ -42,6 +42,8 @@
           <div ng-repeat="a in subquestions" ng-show='$index === subcount' ng-init="subindex=$index">
             <div ng-repeat="b in a.ques ">
               <h3 style="margin-left:1em;" ng-show="$index === count" >{{b.que}}</h3>
+              <!-- <h3 style="margin-left:1em;" ng-show="$index === count" ><span mathjax-bind="b.que"></span></h3> -->
+
 
               <ol style="margin-left:2em;font-size:20px;color:#6C6464;" type='A' class="answers" ng-show="$index === count">
                 <li ng-repeat="c in b.option track by $index" class="optionhover" style="padding:0.5em;position:relative;" ng-click="selection(subindex,$parent.$index,$index)" ng-class="{'selected' : selections[subindex].answers[$parent.$index] == $index}">{{c.txt}}</li>

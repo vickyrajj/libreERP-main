@@ -177,6 +177,14 @@ class PaperQues(models.Model):
     optional=models.BooleanField(default=False)
     negativeMarks=models.FloatField(null=False)
 
+class PaperGroup(models.Model):
+    created = models.DateTimeField(auto_now_add = True)
+    updated = models.DateField(auto_now=True)
+    user = models.ForeignKey(User , null = True , related_name='paperGroupUser')
+    title = models.CharField(null = True , max_length = 100)
+    description = models.TextField(null = True)
+    subject = models.ForeignKey(Subject , null = False , related_name='paperGroupSubject')
+
 class Paper(models.Model):
     created = models.DateTimeField(auto_now_add = True)
     updated = models.DateField(auto_now=True)
@@ -185,6 +193,7 @@ class Paper(models.Model):
     user = models.ForeignKey(User , null = False , related_name='papersAuthored')
     name = models.CharField(null = True , max_length = 100)
     timelimit = models.PositiveIntegerField(default= 0)
+    group = models.ForeignKey(PaperGroup , null = True , related_name='papergroup')
 
 CORRECTION_CHOICES = (
     ('yes' , 'yes'),

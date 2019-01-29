@@ -133,6 +133,13 @@ class PaperViewSet(viewsets.ModelViewSet):
     filter_backends = [DjangoFilterBackend]
     filter_fields = ['name']
 
+class PaperGroupViewSet(viewsets.ModelViewSet):
+    permission_classes = (permissions.IsAuthenticated,)
+    serializer_class = PaperGroupSerializer
+    queryset = PaperGroup.objects.all()
+    filter_backends = [DjangoFilterBackend]
+    filter_fields = ['title','subject']
+
 class AnswerViewSet(viewsets.ModelViewSet):
     permission_classes = (permissions.IsAuthenticated, isAdmin, )
     serializer_class = AnswerSerializer

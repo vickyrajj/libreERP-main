@@ -140,8 +140,9 @@ class blogSerializer(serializers.ModelSerializer):
         b.save()
         print "Saved"
         b.users.add(self.context['request'].user)
-        for tag in self.context['request'].data['tags']:
-            b.tags.add(blogCategory.objects.get(pk = tag))
+        if 'tags' in self.context['request'].data:
+            for tag in self.context['request'].data['tags']:
+                b.tags.add(blogCategory.objects.get(pk = tag))
         b.save()
         return b
 
