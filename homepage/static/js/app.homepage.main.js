@@ -19,6 +19,43 @@ app.controller('main', function($scope, $http, $sce, $interval, $uibModal, $user
   $scope.me = $users.get('mySelf');
   $scope.crmBannerID = 1;
 
+
+
+  $scope.device = {
+    name:''
+  }
+  function lgDevice(x) {
+    if (x.matches) {
+      $scope.device.name = 'large'
+    }
+  }
+
+  function smDevice(x) {
+    if (x.matches) {
+      $scope.device.name = 'small'
+    }
+  }
+
+  function elgDevice(x) {
+    if (x.matches) {
+      $scope.device.name = 'extralarge'
+    }
+  }
+
+
+  var sm = window.matchMedia("(max-width: 600px)")
+  smDevice(sm) // Call listener function at run time
+  sm.addListener(smDevice) // Attach listener function on state changes
+
+  var lg = window.matchMedia("(min-width: 601px) and (max-width: 1400px) ")
+  lgDevice(lg)
+  lg.addListener(lgDevice)
+
+  var elg = window.matchMedia("(min-width: 1401px)")
+  elgDevice(elg)
+  elg.addListener(elgDevice)
+
+
   $scope.mainBannerImages = []
   $scope.bannerID = 0;
   $scope.typings = ["Online tutoring", "24x7 online help", "CBSE Preparation", "IIT JEE Preparation", "AIPMT Preparation"]

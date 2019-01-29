@@ -48,13 +48,27 @@ def testimonials(request):
 def account(request):
     try:
         userObj = request.user
-        userProfile = request.user.profile
+        userProfile = userObj.tutors24Profile
+        userProf = userObj.profile
+
+        balanceForm = {"minutes1" : 0 , "minutes2" : 0 , "hours1" : 0, "hours2" : 0}
+
+        minutes = userProfile.balance % 60
+        hours = int(userProfile.balance/60)
+
+        balanceForm['minutes1'] = int(minutes/10)
+        balanceForm['minutes2'] = minutes % 10
+
+        balanceForm['hours1'] = int(hours/10)
+        balanceForm['hours2'] = hours % 10
+
     except:
         userObj = None
         userProfile = None
+        userProf = None
+        balanceForm = {"minutes1" : 0 , "minutes2" : 0 , "hours1" : 0, "hours2" : 0}
 
-    print userProfile , 'KKKKKKKKKK'
-    return render(request, 'account.html', {"userObj":userObj, "userProfile":userProfile})
+    return render(request, 'account.html', {"userObj":userObj, "userProfile":userProfile, "userProf":userProf,"balanceForm":balanceForm})
 
 
 

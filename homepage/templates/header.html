@@ -11,7 +11,7 @@
       </div>
     </div>
     <div class="collapse navbar-collapse" id="myNavbar" uib-collapse="!toggleNavbar">
-      <ul class="nav navbar-nav header_nav {{device.smallDevice?'pull-left':'pull-right'}}">
+      <ul class="nav navbar-nav header_nav {{device.name=='small'?'pull-left':'pull-right'}}">
         <li class="header_element">
           <a href="" ng-mouseleave="show[0]=false" ng-mouseover="show[0]=true" class="nav_ele"> Courses</a>
           <ul ng-mouseleave="keepshow[0]=false" ng-click="keepshow[0] = false; toggleNavbar = false;" ng-mouseover="keepshow[0]=true" ng-show="show[0]||keepshow[0]" class="container_box">
