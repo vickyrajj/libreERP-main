@@ -134,20 +134,30 @@ def blogDetails(request, blogname):
             data['seoDetails']['description'] = sub.description
         if sub.dp:
             data['seoDetails']['image'] = sub.dp.url
-            try:
-                w, h = get_image_dimensions(sub.dp.file)
-            except:
-                w = globalSettings.SEO_IMG_WIDTH
-                h = globalSettings.SEO_IMG_HEIGHT
-                data['seoDetails']['image'] = globalSettings.SEO_IMG
-
+            w, h = get_image_dimensions(sub.dp.file)
+            print w,h
             data['seoDetails']['width'] = w
             data['seoDetails']['height'] = h
-
         return render(request, 'courses.html', data )
     try:
         blogobj = blogPost.objects.get(shortUrl=blogname)
         print "got blog post"  , blogobj
+        if blogobj.title:
+            data['seoDetails']['title'] = blogobj.title
+        if blogobj.description:
+            data['seoDetails']['description'] = blogobj.description
+        if blogobj.ogimage:
+            data['seoDetails']['image'] = blogobj.ogimage.url
+            w, h = get_image_dimensions(blogobj.ogimage.file)
+            print w,h
+            data['seoDetails']['width'] = w
+            data['seoDetails']['height'] = h
+        try:
+            tagsCSV = blogobj.tagsCSV.split(',')
+        except:
+            tagsCSV = []
+        data['tagsCSV'] = tagsCSV
+        data['blogobj'] = blogobj
 
         if blogobj.contentType == 'article':
             us = ''
@@ -160,65 +170,23 @@ def blogDetails(request, blogname):
                     us += ' , ' + j.first_name + ' ' + j.last_name
                 count += 1
             blogobj.created = blogobj.created.replace(microsecond=0)
-            try:
-                tagsCSV = blogobj.tagsCSV.split(',')
-            except:
-                tagsCSV = []
-
             recentBlogs = list(blogPost.objects.filter(contentType='article').order_by('-created').values())[0:5]
-            data['tagsCSV'] = tagsCSV
             data['user'] = us
-            data['blogobj'] = blogobj
             data['recentBlogs'] = recentBlogs
-            if blogobj.title:
-                data['seoDetails']['title'] = blogobj.title
-            if blogobj.description:
-                data['seoDetails']['description'] = blogobj.description
-            if blogobj.ogimage:
-                data['seoDetails']['image'] = blogobj.ogimage.url
-                w, h = get_image_dimensions(blogobj.ogimage.file)
-                print w,h
-                data['seoDetails']['width'] = w
-                data['seoDetails']['height'] = h
             return render(request, 'blogdetails.html', data)
         elif blogobj.contentType == 'book':
             book = Book.objects.get(pk=blogobj.header)
             sectionobj = Section.objects.filter(book = book.pk)
-            data['tagsCSV'] = blogobj.tagsCSV.split(',')
             data['book'] = book
             data['sectionobj'] = sectionobj
-            data['blogobj'] = blogobj
-            if book.title:
-                data['seoDetails']['title'] = book.title
-            if book.description:
-                data['seoDetails']['description'] = book.description
-            if book.dp:
-                data['seoDetails']['image'] = book.dp.url
-                w, h = get_image_dimensions(book.dp.file)
-                print w,h
-                data['seoDetails']['width'] = w
-                data['seoDetails']['height'] = h
             return render(request, 'book.html', data)
         elif blogobj.contentType == 'course':
             course = Course.objects.get(pk=blogobj.header)
-            data['tagsCSV'] = blogobj.tagsCSV.split(',')
             data['course'] = course
-            data['blogobj'] = blogobj
-            if course.title:
-                data['seoDetails']['title'] = course.title
-            if course.description:
-                data['seoDetails']['description'] = course.description
-            if course.dp:
-                data['seoDetails']['image'] = course.dp.url
-                w, h = get_image_dimensions(course.dp.file)
-                print w,h
-                data['seoDetails']['width'] = w
-                data['seoDetails']['height'] = h
             return render(request, 'homepageCourses.html', data)
 
     except:
         traceback.print_exc(file=sys.stdout)
-
         try:
             sectionobj = Section.objects.get(shortUrl=blogname)
         except:
@@ -242,7 +210,6 @@ def blogDetails(request, blogname):
             except:
                 return render(request, 'notFound404.html', data, status=404)
 
-        # blogobj = blogPost.objects.get(header=sectionobj.book.pk)
         print 'boookkkkkk',sectionobj.book
         sec = sectionobj.book.sections.order_by('sequence')
         prev = False
@@ -270,12 +237,7 @@ def blogDetails(request, blogname):
         data['sectionobj'] = sectionobj
         data['book'] = sectionobj.book
         data['questions'] = sectionobj.questions.all()
-        # for i in data['questions']:
-        #     print i.solutionParts ,'dddddddddddddddddddddddddddddddddddddddddddddd'
-        #     try:
-        #         i.solutionParts.sequence , 'sequencesequencesequencesequencesequencesequence'
-        #     except :
-        #         i.solutionParts , 'dffffffff'
+
         if sectionobj.seoTitle:
             data['seoDetails']['title'] = sectionobj.seoTitle
         else:
