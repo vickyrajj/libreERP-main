@@ -114,10 +114,15 @@
       <div class="col-md-8 col-md-offset-2">
         {% for c in courseobj %}
         <div class="col-md-3" style="display:inline-block;padding-bottom: 20px;">
-          <img src="{{c.dp}}" class="courseobj_img">
+          {% if c.topic.subject.title == 'Mathematics' %}<img src="/static/images/24tut/pi.png" class="courseobj_img">{% endif %}
+          {% if c.topic.subject.title == 'Physics' %}<img src="/static/images/24tut/phy.png" class="courseobj_img">{% endif %}
+          {% if c.topic.subject.title == 'Chemistry' %}<img src="/static/images/24tut/che.png" class="courseobj_img">{% endif %}
+          {% if c.topic.subject.title == 'Biology' %}<img src="/static/images/24tut/bio.png" class="courseobj_img">{% endif %}
           <div class="container-fluid courseobj_container">
             <h5> <b>{{c.title}}</b> </h5>
-            <span>{{c.description}}</span>
+            <div class=""style="height:120px;overflow-y:hidden;">
+              <span>{{c.description}}</span>
+            </div>
           </div>
         </div>
         {% endfor %}
