@@ -175,6 +175,14 @@ class PaperQues(models.Model):
     optional=models.BooleanField(default=False)
     negativeMarks=models.FloatField(null=False)
 
+class PaperGroup(models.Model):
+    created = models.DateTimeField(auto_now_add = True)
+    updated = models.DateField(auto_now=True)
+    user = models.ForeignKey(User , null = True , related_name='paperGroupUser')
+    title = models.CharField(null = True , max_length = 100)
+    description = models.TextField(null = True)
+    subject = models.ForeignKey(Subject , null = False , related_name='paperGroupSubject')
+
 class Paper(models.Model):
     created = models.DateTimeField(auto_now_add = True)
     updated = models.DateField(auto_now=True)
@@ -182,13 +190,25 @@ class Paper(models.Model):
     active = models.BooleanField(default = False)
     user = models.ForeignKey(User , null = False , related_name='papersAuthored')
     name = models.CharField(null = True , max_length = 100)
+    level = models.CharField(null=True , choices= QUESTION_LEVEL_CHOICES , max_length = 15)
+    description = models.TextField(null = True)
     timelimit = models.PositiveIntegerField(default= 0)
+    group = models.ForeignKey(PaperGroup , null = True , related_name='papergroup')
+
+class PaperattemptHistory(models.Model):
+    created = models.DateTimeField(auto_now_add = True)
+    paper = models.ForeignKey(Paper , null = False , related_name='paperAttempted')
+    user = models.ForeignKey(User , null = False , related_name='attemptedUser')
+    mark = models.FloatField(default=0)
+
 
 CORRECTION_CHOICES = (
     ('yes' , 'yes'),
     ('no' , 'no'),
     ('partial' , 'partial'),
 )
+
+
 
 class Answer(models.Model):
     created = models.DateTimeField(auto_now_add = True)
@@ -198,7 +218,7 @@ class Answer(models.Model):
     user = models.ForeignKey(User , null = False , related_name='answersSubmssions')
     evaluated = models.BooleanField(default = False)
     correct = models.CharField(choices = CORRECTION_CHOICES , default = 'no' , max_length = 10)
-    marksObtained = models.PositiveIntegerField(default= 0)
+    marksObtained = models.FloatField(default=0)
     attachment = models.FileField(upload_to = getAnswerAttachmentPath , null = True)
     txt = models.TextField(max_length=10000 , null = True)
 
@@ -239,6 +259,16 @@ class Enrollment(models.Model):
     accepted = models.BooleanField(default = True)
     user = models.ForeignKey(User , null = False)
     active = models.BooleanField(default = True)
+
+# class subjectEnrollment(models.Model):
+#     created = models.DateTimeField(auto_now_add = True)
+#     updated = models.DateField(auto_now=True)
+#     subject = models.ForeignKey(Subject , null = False , related_name='enrollments')
+#     addedBy = models.ForeignKey(User , related_name='lmsUsersAdded')
+#     accepted = models.BooleanField(default = True)
+#     user = models.ForeignKey(User , null = False)
+#     active = models.BooleanField(default = True)
+
 
 
 class StudyMaterial(models.Model):

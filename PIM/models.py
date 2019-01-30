@@ -133,6 +133,7 @@ class blogPost(models.Model):
         ('book' , 'book'),
         ('question' , 'question'),
         ('course' , 'course'),
+        ('paperGroup' , 'paperGroup'),
     )
     public = models.BooleanField(default = False)
     title = models.CharField(max_length = 500 , null=True)

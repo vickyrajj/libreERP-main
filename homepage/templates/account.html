@@ -1,5 +1,5 @@
 {% extends "tutorBase.html" %} {% block tutorcontent %}
-<div class="container-fluid" style="margin-top:50px; width:100%;  background-color:#F1F3FA">
+<div class="container-fluid" style="margin-top:50px; width:100%;  background-color:#F1F3FA" ng-controller="accountController">
   <div class="row">
     {% verbatim %}
     <div class="{{device.name=='extralarge'?'col-md-3':'col-md-4'}}" style="padding-right:0px">
@@ -25,7 +25,11 @@
             <p style="font-size:15px; font-weight:400; color: #414142;"> <b>Address :</b> {{userProfile.city}}, {{userProfile.state}}, {{userProfile.country}} {{userProfile.pinCode}} </p>
           </div>
         </div>
-
+        <div class="row">
+          <div class="col-md-12 text-right" style="padding-right:5px;padding-bottom:5px">
+            <span class="btn btn-primary btn-sm" ng-click="editProfile()">Edit</span>
+          </div>
+        </div>
       </div>
 
     </div>
