@@ -167,6 +167,14 @@ class InventorySerializer(serializers.ModelSerializer):
             b.project = Projects.objects.get(pk=int(self.context['request'].data['project']))
         b.save()
         return b
+    def update (self, instance, validated_data):
+        for key in ['pk','created','product','qty','rate','project','addedqty']:
+            try:
+                setattr(instance , key , validated_data[key])
+            except:
+                pass
+        instance.save()
+        return instance
 
 class MaterialIssueSerializer(serializers.ModelSerializer):
     product = ProductsSerializer(many = False , read_only = True)
@@ -179,6 +187,7 @@ class MaterialIssueSerializer(serializers.ModelSerializer):
             b.product = Products.objects.get(pk=int(self.context['request'].data['product']))
         b.save()
         return b
+
 
 class MaterialIssueMainSerializer(serializers.ModelSerializer):
     materialIssue = MaterialIssueSerializer(many = True , read_only = True)

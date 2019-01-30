@@ -3024,3 +3024,30 @@ class StockSheetAPIView(APIView):
         response['Content-Disposition'] = 'attachment;filename="sheetdownload.pdf"'
         stockSheet(response, value, created, request)
         return response
+
+class AddInventoryAPIView(APIView):
+    permission_classes = (permissions.IsAuthenticated ,)
+    def post(self , request , format = None):
+        try:
+            invObj = Inventory.objects.get(project__id=request.data['project'],product__id=request.data['product'])
+            if invObj.qty>0:
+                if invObj.qty==invObj.addedqty:
+                    invObj.qty = request.data['qty']
+                    invObj.addedqty = request.data['qty']
+                    invObj.save()
+                    bomObj = BoM.objects.get(project__id=request.data['project'],products__id=request.data['product'])
+                    bomObj.quantity2 = request.data['qty']
+                    bomObj.save()
+                    msg = "Saved"
+                    typ = "success"
+                else:
+                    msg = "Product Already Used from Inventory"
+                    typ = "err"
+            else:
+                msg = "Product Already Used from Inventory"
+                typ = "err"
+        except:
+            msg = "Product Not Found in PO"
+            typ = "err"
+        toreturn ={"msg":msg,"typ":typ}
+        return Response(toreturn,status=status.HTTP_200_OK)

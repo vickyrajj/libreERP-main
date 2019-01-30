@@ -386,29 +386,49 @@ $scope.createDC= function(pkVal){
             return response.data;
           })
         };
+
+        $scope.projectSearch = function(query) {
+          return $http.get('/api/support/projects/?title__contains=' + query+ '&status=ongoing').
+          then(function(response) {
+            return response.data;
+          })
+        };
         $scope.reset = function() {
           $scope.form = {
             product: '',
             qty: 1,
             rate: 0,
+            project:''
           }
         }
         $scope.reset()
         $scope.saveProduct = function() {
+          if(typeof $scope.form.project!='object'){
+            Flash.create('warning','Select Project')
+            return
+          }
           var dataToSend = {
             product: $scope.form.product.pk,
             qty: $scope.form.qty,
-            rate: $scope.form.rate
+            project : $scope.form.project.pk,
           }
           $http({
             method: 'POST',
-            url: '/api/support/inventory/',
+            url: '/api/support/addInventory/',
             data: dataToSend,
           }).
           then(function(response) {
-            Flash.create('success', 'Saved');
-            $scope.reset()
+            console.log(response.data.typ);
+            if(response.data.typ==='success'){
+              Flash.create('success', response.data.msg);
+              $scope.reset()
+            }
+            else{
+                Flash.create('warning', response.data.msg);
+            }
+            // $scope.reset()
           });
+
 
         }
 

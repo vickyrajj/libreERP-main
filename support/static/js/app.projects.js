@@ -19,7 +19,10 @@ var projectsStepsData = [{
     display: 'OnGoing'
   },
 ];
-app.controller("businessManagement.projects", function($scope, $state, $users, $stateParams, $http, Flash, $uibModal, $rootScope, $permissions, $timeout, ) {
+app.controller("businessManagement.projects", function($scope, $state, $users, $stateParams, $http, Flash, $uibModal, $rootScope, $permissions, $timeout,$permissions ) {
+
+
+
 
   $scope.cmnrList = []
   $rootScope.tabIdx = null
@@ -516,7 +519,9 @@ app.controller("businessManagement.projects.service.item", function($scope, $sta
 
 })
 
-app.controller("businessManagement.projects.service.view", function($scope, $state, $users, $stateParams, $http, Flash, $rootScope, $uibModal) {
+app.controller("businessManagement.projects.service.view", function($scope, $state, $users, $stateParams, $http, Flash, $rootScope, $uibModal,$permissions) {
+  var as = $permissions.myPerms('app.canChangeStatus');
+  $scope.permission = as
 
   $scope.projectSteps = {
     steps: projectsStepsData
