@@ -1,19 +1,24 @@
 /*properties for normal screen size starts here  */
 a, u {
-    text-decoration: none;
-}
-.fof h2{
-	  font-size: 50px;
-	  display: inline-block;
-	  padding-right: 12px;
-	  animation: type .5s alternate infinite;
+  text-decoration: none;
 }
 
-@keyframes type{
-	  from{box-shadow: inset -3px 0px 0px #000;}
-	  to{box-shadow: inset -3px 0px 0px transparent;}
+.fof h2 {
+  font-size: 50px;
+  display: inline-block;
+  padding-right: 12px;
+  animation: type .5s alternate infinite;
 }
 
+@keyframes type {
+  from {
+    box-shadow: inset -3px 0px 0px #000;
+  }
+
+  to {
+    box-shadow: inset -3px 0px 0px transparent;
+  }
+}
 
 .navbar-toggle:hover {
   background-color: #3b3a3a !important;
@@ -721,7 +726,6 @@ a, u {
   color: #fff;
 }
 
-
 .cent_div {
   min-height: 60vh;
   background-size: cover;
@@ -1065,7 +1069,7 @@ hr {
 }
 
 .nav_ele {
-	outline: none !important;
+  outline: none !important;
   color: #fff !important;
 }
 
@@ -1739,7 +1743,6 @@ hr {
   border-radius: 10px;
   position: relative;
 } */
-
 .contentblock {
   margin: 1em 1em;
 }
@@ -1801,8 +1804,8 @@ hr {
   border-radius: 5px;
   background-color: #fff;
   border-top-left-radius: 50px;
-  cursor:pointer;
-  padding:20px 15px 15px 15px;
+  cursor: pointer;
+  padding: 20px 15px 15px 15px;
   margin-bottom: 15px;
 }
 
@@ -1820,7 +1823,6 @@ hr {
   transform: scale(1.1);
   transition: 0.2s;
 } */
-
 .rightborder {
   border-right: 1px solid #9E9E9E;
 }
@@ -2261,6 +2263,7 @@ hr {
   background-color: #17EEAB;
   color: #fff;
 }
+
 .tips:before {
   content: "";
   border-left: 20px solid transparent;
@@ -2270,36 +2273,39 @@ hr {
   bottom: -33px;
   left: 45%;
 }
+
 .courseobj_container {
   box-shadow: 1px 1px 8px 0 rgba(70, 70, 70, 0.25);
   height: 230px;
   padding: 15px;
   overflow-y: hidden;
-	border-radius: 8px;
+  border-radius: 8px;
 }
-.courseobj_container h5{
+
+.courseobj_container h5 {
   margin-bottom: 20px;
 }
-.courseobj_img{
+
+.courseobj_img {
   position: absolute;
   top: 8px;
   right: 18px;
   z-index: 20;
-  width:13%;
+  width: 13%;
 }
-.courseobj_container::before{
+
+.courseobj_container::before {
   content: '';
   background-color: #223657;
-  width:70px;
+  width: 70px;
   height: 70px;
   position: absolute;
   top: 0;
   right: 13px;
   border-bottom-left-radius: 100%;
   z-index: 10;
-	border-top-right-radius:8px;
+  border-top-right-radius: 8px;
 }
-
 
 /* exams css properties */
 /* for normal screens ends here.... */
@@ -2553,7 +2559,7 @@ hr {
   width: 219.683px;
   height: 300px;
   margin-left: -15px;
-	border-radius: 10px 0 0 10px;
+  border-radius: 10px 0 0 10px;
 }
 
 .genericHeading {
@@ -2761,6 +2767,26 @@ hr {
 
   /* mobile display size starts here.... */
   /* courses */
+  .arrow:before {
+    content: "";
+    /* border-top: 20px solid transparent;
+    border-bottom: 20px solid #fff;
+    border-right: 25px solid transparent;*/
+    position: absolute;
+    bottom: -6px;
+    right: -30px;
+    width: 0;
+    height: 0;
+    border-style: solid;
+    border-width: 20px 20px 20px 0;
+    border-color: transparent #fff transparent
+  }
+  .imgstyle{
+    width:125px;
+    height: 140px;
+    border-radius: 0px;
+  }
+
   .heartsym {
     display: none;
   }

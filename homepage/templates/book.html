@@ -17,7 +17,7 @@
         <div class="col-md-2 col-xs-12 rightborder">
           <table>
             <tr>
-              <td><span style="color: #9E9E9E">Adden On 29 sep'18</span></td>
+              <td><span style="color: #9E9E9E">Adden On {{book.created | date:'Y-M-d'}}</span></td>
             </tr>
           </table>
         </div>
@@ -29,11 +29,11 @@
                 <i class="fa fa-star " style="color:#f4c810" aria-hidden="true"></i>
                 <i class="fa fa-star " style="color:#f4c810" aria-hidden="true"></i>
                 <i class="fa fa-star " style="color:#f4c810" aria-hidden="true"></i></td>
-              <td><span style="font-size:15px;"><b class="text-muted">(11 Reviews)</b></span></td>
+              <td><span style="font-size:15px;"><b class="text-muted">({{book.subject.level | add:book.subject.level}} Reviews)</b></span></td>
             </tr>
           </table>
         </div>
-        <div class="col-md-4 col-sm-12 col-xs-12 smdevice">
+        <!-- <div class="col-md-4 col-sm-12 col-xs-12 smdevice">
           <table class="alignintable">
             <tr>
               <td class="tablehead"><span> Share this course:</span></td>
@@ -43,7 +43,7 @@
               <td style="width:8%;"><i class="fa fa-youtube" aria-hidden="true"></i></td>
             </tr>
           </table>
-        </div>
+        </div> -->
       </div>
       <div class="row">
         <div class="col-md-12">

@@ -1,4 +1,4 @@
-var app = angular.module('app', ['ui.router', 'ui.bootstrap', 'angular-owl-carousel-2', 'ui.bootstrap.datetimepicker', 'flash', 'ngAside','chart.js']);
+var app = angular.module('app', ['ui.router', 'ui.bootstrap', 'angular-owl-carousel-2', 'ui.bootstrap.datetimepicker', 'flash', 'ngAside','uiSwitch','chart.js',]);
 // $scope, $state, $users, $stateParams, $http, $timeout, $uibModal , $sce,$rootScope
 
 
@@ -874,6 +874,66 @@ app.controller('testimonials', function($scope, $state, $http, $timeout, $interv
   }
   $scope.myObjcolor = {
     "background-color": "#E5E7FC",
+  }
+
+});
+
+app.controller('accountController', function($scope, $state, $http, $timeout, $interval, $uibModal, $stateParams, $sce) {
+
+  console.log('account Controller');
+  $http({
+    method: 'GET',
+    url: '/api/HR/users/?mode=mySelf&format=json'
+  }).
+  then(function(response) {
+    if (response.data.length==1) {
+      console.log('res', response.data[0]);
+      $scope.me = response.data[0]
+      $http({
+        method: 'GET',
+        url: '/api/tutors/tutors24Profile/'+$scope.me.pk+'/'
+      }).
+      then(function(response) {
+        console.log(response.data);
+        $scope.profileData = response.data
+      })
+    }else {
+      $scope.me = {}
+      $scope.profileData = {}
+    }
+  })
+  $scope.editProfile = function(){
+    console.log('edittttttt');
+    $uibModal.open({
+      templateUrl: '/static/ngTemplates/app.homepage.account.form.html',
+      size: 'lg',
+      backdrop: true,
+      resolve: {
+        profileData: function() {
+          return $scope.profileData;
+        },
+      },
+      controller: function($scope, $uibModalInstance,profileData) {
+        console.log(profileData);
+        $scope.profileform = profileData
+        if ($scope.profileform.school=='S') {
+          $scope.profileform.collegeMode = false
+        }else {
+          $scope.profileform.collegeMode = true
+        }
+        $scope.cancel = function() {
+          $uibModalInstance.dismiss('cancel');
+        }
+        $scope.save = function(){
+          console.log($scope.profileform);
+        }
+      },
+    }).result.then(function() {
+
+    }, function(reason) {
+      console.log(reason);
+      window.location.reload();
+    });
   }
 
 });
