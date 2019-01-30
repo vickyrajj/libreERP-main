@@ -2772,6 +2772,9 @@ app.controller('controller.ecommerce.checkout', function($scope, $rootScope, $st
   $scope.isCod = false
   $scope.isCod = settings_isCOD;
 
+  $scope.isPromocode = true
+
+
   // if ($scope.dataToSend.modeOfPayment == 'COD') {
   //   if ($scope.totalLimit = true) {
   //     if ($scope.totalAfterPromo > 5000 || $scope.totalAfterDiscount > 5000) {
@@ -2823,6 +2826,14 @@ app.controller('controller.ecommerce.checkout', function($scope, $rootScope, $st
 
 
   var url = new URL(window.location.href)
+  console.log(url.href,'aaaaaaaaaa');
+  if (url.href.includes('bni')){
+      $scope.isPromocode = false
+  }
+  else{
+    $scope.isPromocode = true
+  }
+
   var action = url.searchParams.get("action")
   if (action == 'retry') {
     $scope.data.stage = 'payment';

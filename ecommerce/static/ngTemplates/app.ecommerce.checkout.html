@@ -309,7 +309,7 @@
 
           <hr>
 
-          <div class="row" style="margin-top:30px;padding:10px;" ng-if="item || cartItems.length>0 ">
+          <div class="row" style="margin-top:30px;padding:10px;" ng-if="item || cartItems.length>0&&isPromocode">
             <div class="col-md-4">
               <div class="input-group">
                 <input type="text" class="form-control" ng-model="data.promoCode" placeholder="Apply Promo Code..." />
@@ -347,7 +347,7 @@
                 <span style="font-size:14px;">Total </span>
                 <br>
                 <i class="fa {{currency}}"></i> <span ng-if="total!=totalAfterDiscount" style="font-size:14px;"> <strike> {{total.toFixed(2)}}  </strike> </span>
-                <span style="font-size:14px;"> {{totalAfterDiscount.toFixed(2)}} </span>
+                <span style="font-size:14px;"> {{totalAfterDiscount.toFixed(2)}} </span><span class="text-muted" ng-if="!isStoreGlobal">(GST Included)</span>
               </div>
             </div>
             <div class="col-xs-6" >
