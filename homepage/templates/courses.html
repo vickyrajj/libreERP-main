@@ -77,10 +77,10 @@
 
     <div class="container-fluid" style="background-color:#FCC300;min-height:10vh;  position:relative;padding-bottom: 2em;">
       <div class="container">
-        <div class="col-md-4 clickchange">
+        <div class="col-md-4 clickchange {% if subPart == 'books' %}  arrow  {% endif %}">
           <a href="/class-{{level}}-{{title}}/books/"><b>Books</b></a>
           {% if subPart == 'books' %}
-          <div class="tips"></div>
+          <div class="tips hidden-xs hidden-sm"></div>
           {% endif %}
         </div>
         <!-- <div class="col-md-2 clickchange">
@@ -95,16 +95,16 @@
           <a href="/class-{{level}}-{{title}}/forum/"><b>Forum</b></a>
           <div ng-class="class4"></div>
         </div> -->
-        <div class="col-md-4 clickchange">
+        <div class="col-md-4 clickchange {% if subPart == 'referenceBook' %}  arrow  {% endif %}">
           <a href="/class-{{level}}-{{title}}/referenceBook/"><b>Refernce Books ({{refbooklen}})</b></a>
           {% if subPart == 'referenceBook' %}
-          <div class="tips"></div>
+          <div class="tips hidden-xs hidden-sm"></div>
           {% endif %}
         </div>
-        <div class="col-md-4 clickchange">
+        <div class="col-md-4 clickchange {% if subPart == 'notes' %}  arrow  {% endif %}">
           <a href="/class-{{level}}-{{title}}/notes/"><b>Notes ({{noteslen}})</b></a>
           {% if subPart == 'notes' %}
-          <div class="tips"></div>
+          <div class="tips hidden-xs hidden-sm"></div>
           {% endif %}
         </div>
       </div>
@@ -257,13 +257,13 @@
     <div class="container no_padding">
       <div class="row min_padd text-center" style="">
         {% for r in refbookobjs %}
-        <div class="col-md-6" style="position: relative;text-decoration:none;">
+        <div class="col-md-6 col-xs-12" style="position: relative;text-decoration:none;">
           <div class="movie-card" style="border-bottom-left-radius:0px;border-bottom-right-radius:0px;">
             <div class="colorcircle" style="background-color:{{color}}"></div>
-            <div class="col-md-5 studentcard" style="min-height:300px;">
+            <div class="col-md-5 studentcard col-xs-5" style="min-height:300px;">
               <img src="/media/{{r.book.dp}}" class="imgstyle" style="border-bottom-left-radius:0px;border-bottom-right-radius:0px;">
             </div>
-            <div class="col-md-7 text-left">
+            <div class="col-md-7 text-left col-xs-7">
               <div style="margin-top:1em;">
                 <span style="font-size:18px;color:#5B5B5B;"> <strong>{{r.book.title}}</strong> </span><br>
                 <span style="color:#5B5B5B;"> <b>Volume - </b> {{r.book.volume}}</span><br>
@@ -281,7 +281,7 @@
                 <span style="color:#5B5B5B;"> <b>ISSN - </b> {{r.book.ISSN}}</span>
               </div>
             </div>
-            <div class="col-md-12" style="background:#f9f9f9;">
+            <div class="col-md-12 col-xs-12" style="background:#f9f9f9;">
               <div class="container-fluid text-left">
                 {% for bs in r.book.sections.all %}
                 <ul class="list-unstyled">

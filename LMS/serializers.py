@@ -3,8 +3,10 @@ from django.contrib.auth import authenticate
 from rest_framework import serializers
 from rest_framework.exceptions import *
 from .models import *
+from PIM.models import blogPost
 import random, string
 from HR.serializers import userSearchSerializer
+from PIM.serializers import blogSerializer
 
 # class TopicLiteSerializer(serializers.ModelSerializer):
 #     class Meta:
@@ -152,19 +154,54 @@ class PaperQuesSerializer(serializers.ModelSerializer):
         fields = ('pk' , 'created' , 'updated', 'user', 'ques', 'marks','optional','negativeMarks' )
         read_only_fields = ('user', )
 
+class PaperGroupSerializer(serializers.ModelSerializer):
+    subject = SubjectSerializer(many = False , read_only = True)
+    blogData = serializers.SerializerMethodField()
+    class Meta:
+        model = PaperGroup
+        fields = ('pk' , 'created' , 'updated', 'user', 'title', 'description' , 'subject','blogData')
+        read_only_fields = ('user','blogData')
+    def create(self , validated_data):
+        print 'postDataaaaaaaaa',validated_data,self.context['request'].data
+        pg = PaperGroup(**validated_data)
+        pg.user = self.context['request'].user
+        if 'subject' in self.context['request'].data:
+            pg.subject = Subject.objects.get(pk=int(self.context['request'].data['subject']))
+        pg.save()
+        return pg
+    def get_blogData(self, obj):
+        try:
+            blogObj = blogPost.objects.get(contentType='paperGroup',header=obj.pk)
+            print blogObj,'blogDataaaaaaaaaaaaaa'
+            blogData = blogSerializer(blogObj)
+            blogData = blogData.data
+            print blogData
+            return blogData
+        except:
+            print 'errorrrrrrrrrrrr'
+            return
+
+
 class PaperSerializer(serializers.ModelSerializer):
     questions = PaperQuesSerializer(many = True , read_only = True)
+    group = PaperGroupSerializer(many = False , read_only = True)
     class Meta:
         model = Paper
-        fields = ('pk' , 'created' , 'updated', 'questions', 'active' , 'user','name','timelimit')
+        fields = ('pk' , 'created' , 'updated', 'questions', 'active' , 'user','name','timelimit','group','description','level')
         read_only_fields = ('user', 'questions')
     def create(self , validated_data):
         m = Paper(**validated_data)
         m.user = self.context['request'].user
         if 'name' in self.context['request'].data:
             m.name = self.context['request'].data['name']
+        if 'group' in self.context['request'].data:
+            m.group = PaperGroup.objects.get(pk=int(self.context['request'].data['group']))
         if 'timelimit' in self.context['request'].data:
             m.timelimit = self.context['request'].data['timelimit']
+        if 'description' in self.context['request'].data:
+            m.description = self.context['request'].data['description']
+        if 'level' in self.context['request'].data:
+            m.level = self.context['request'].data['level']
         m.save()
         print self.context['request'].data['questions']
         for i in self.context['request'].data['questions']:
@@ -188,24 +225,53 @@ class PaperSerializer(serializers.ModelSerializer):
             instance.questions.add(pq)
         if 'name' in self.context['request'].data:
             instance.name = self.context['request'].data['name']
+        if 'group' in self.context['request'].data:
+            instance.group = PaperGroup.objects.get(pk=int(self.context['request'].data['group']))
         if 'timelimit' in self.context['request'].data:
             instance.timelimit = self.context['request'].data['timelimit']
+        if 'description' in self.context['request'].data:
+            instance.description = self.context['request'].data['description']
+        if 'level' in self.context['request'].data:
+            instance.level = self.context['request'].data['level']
         instance.save()
         return instance
 
+
+class PaperattemptHistorySerializer(serializers.ModelSerializer):
+    paper = PaperSerializer(many = False , read_only = True)
+    class Meta:
+        model = PaperattemptHistory
+        fields = ('pk' , 'created' , 'paper','mark'  )
+        read_only_fields = ('user', )
+
 class AnswerSerializer(serializers.ModelSerializer):
-    subject = SubjectSerializer(many = False , read_only = True)
+    # subject = SubjectSerializer(many = False , read_only = True)
+    question = QuestionSerializer(many = False , read_only = True)
+    paper = PaperSerializer(many = False , read_only = True)
     class Meta:
         model = Answer
-        fields = ('pk' , 'created' , 'question', 'paper' , 'evaluated' , 'correct', 'marksObtained' , 'attachment', 'txt' , 'subject')
+        fields = ('pk' , 'created' , 'question', 'paper' , 'evaluated' , 'correct', 'marksObtained' , 'attachment', 'txt' )
         read_only_fields = ('user', )
     def create(self , validated_data):
-        m = Answer(**validated_data)
-        m.user = self.context['request'].user
-        if 'question' in self.context['request'].data:
-            m.question = self.context['request'].data['question']
-        if 'paper' in self.context['request'].data:
-            m.paper = self.context['request'].data['paper']
+        question = Question.objects.get(pk = self.context['request'].data['question'])
+        paper = Paper.objects.get(pk = self.context['request'].data['paper'])
+        try:
+            m = Answer.objects.get(user=self.context['request'].user,question=question,paper=paper)
+            if 'correct' in self.context['request'].data:
+                m.correct = self.context['request'].data['correct']
+            if 'marksObtained' in self.context['request'].data:
+                m.marksObtained = self.context['request'].data['marksObtained']
+        except:
+            m = Answer(**validated_data)
+            m.user = self.context['request'].user
+            if 'question' in self.context['request'].data:
+                m.question = question
+            if 'paper' in self.context['request'].data:
+                m.paper = paper
+            if 'correct' in self.context['request'].data:
+                m.correct = self.context['request'].data['correct']
+            if 'marksObtained' in self.context['request'].data:
+                m.marksObtained = self.context['request'].data['marksObtained']
         m.save()
         return m
 

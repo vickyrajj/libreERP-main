@@ -140,7 +140,9 @@ def blogDetails(request, blogname):
             data['seoDetails']['height'] = h
         return render(request, 'courses.html', data )
     try:
+        # this section is for books pages
         blogobj = blogPost.objects.get(shortUrl=blogname)
+        subobjs = Subject.objects.all().order_by('level')
         print "got blog post"  , blogobj
         if blogobj.title:
             data['seoDetails']['title'] = blogobj.title
@@ -179,6 +181,21 @@ def blogDetails(request, blogname):
             sectionobj = Section.objects.filter(book = book.pk)
             data['book'] = book
             data['sectionobj'] = sectionobj
+<<<<<<< HEAD
+=======
+            data['blogobj'] = blogobj
+            data['subobj'] = subobjs
+            if book.title:
+                data['seoDetails']['title'] = book.title
+            if book.description:
+                data['seoDetails']['description'] = book.description
+            if book.dp:
+                data['seoDetails']['image'] = book.dp.url
+                w, h = get_image_dimensions(book.dp.file)
+                print w,h
+                data['seoDetails']['width'] = w
+                data['seoDetails']['height'] = h
+>>>>>>> 28c2bbbc8f60cd602227233aad4be7f17d01c1da
             return render(request, 'book.html', data)
         elif blogobj.contentType == 'course':
             course = Course.objects.get(pk=blogobj.header)
@@ -250,7 +267,6 @@ def blogDetails(request, blogname):
 
 
 def blog(request):
-
     blogObj = blogPost.objects.filter(contentType='article').order_by('-created')
     pagesize = 6
     try:
@@ -279,10 +295,12 @@ def blog(request):
         data.append({'user':us , 'header' : header , 'title' : title , 'date' : date , 'blogId' : blogId , 'url' : i.shortUrl })
     data = data[(page-1)*pagesize:(page*pagesize)]
 
-    return render(request,"blog.html" , {"home" : False ,'data' : data, 'dataLen' : len(data) ,'pages':pages , "brandLogo" : globalSettings.BRAND_LOGO , "brandLogoInverted": globalSettings.BRAND_LOGO_INVERT,'seoDetails':{'title':globalSettings.SEO_TITLE,'description':globalSettings.SEO_DESCRIPTION,'image':globalSettings.SEO_IMG,'width':globalSettings.SEO_IMG_WIDTH,'height':globalSettings.SEO_IMG_HEIGHT}})
-
+    return render(request,"blog.html" , {"home" : False  ,'data' : data, 'dataLen' : len(data) ,'pages':pages , "brandLogo" : globalSettings.BRAND_LOGO , "brandLogoInverted": globalSettings.BRAND_LOGO_INVERT,'seoDetails':{'title':globalSettings.SEO_TITLE,'description':globalSettings.SEO_DESCRIPTION,'image':globalSettings.SEO_IMG,'width':globalSettings.SEO_IMG_WIDTH,'height':globalSettings.SEO_IMG_HEIGHT}})
+# this is blog page
 def blogAnotherView(request):
-    print
+    print 'ininnnnnnnnnnnnnnnnnnn bloggssss main'
+    subobjs = Subject.objects.all().order_by('level')
+    print subobjs,'----------------got objectss ssss'
     allBlogs = list(blogPost.objects.filter(contentType='article').order_by('-created').values())
     pagesize = 13
     try:
@@ -318,9 +336,9 @@ def blogAnotherView(request):
     print firstSection
     print second_sec1
     print second_sec2
-    print thirdSection ,'dddddddddddddddddddddddddddddddddddddddddd'
+    print thirdSection ,'ddddthus is in blogsssss dddddddddddd'
 
-    return render(request,"blog.html" , {"home" : False,'pages':pages, "firstSection":firstSection , "second_sec1":second_sec1 , "second_sec2":second_sec2 , "thirdSection":thirdSection,"recentBlogs":recentBlogs })
+    return render(request,"blog.html" , {"home" : False,'pages':pages ,"subobj":subobjs,"firstSection":firstSection , "second_sec1":second_sec1 , "second_sec2":second_sec2 , "thirdSection":thirdSection,"recentBlogs":recentBlogs })
 
 def news(request):
     subobjs = Subject.objects.all().order_by('level')
