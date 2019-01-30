@@ -1,4 +1,4 @@
-<div class="container-fluid" ng-controller="home.LMS.courses.form">
+<div class="container-fluid" ng-controller="home.LMS.courses.form"style="padding-bottom:15px;">
   <div class="col-md-6">
     <h2 ng-if="mode == 'new'">Create a course</h2>
     <h2 ng-if="mode == 'edit'">Edit this course</h2>
@@ -7,13 +7,16 @@
       <label>Title</label>
       <input type="text" class="form-control" ng-model="form.title">
     </div>
-    <div class="row">
-      <div class="col-md-6">
-        <div class="form-group">
-          <label>Topic</label>
-          <input type="text" class="form-control" uib-typeahead="topic as getName(topic) for topic in topicSearch($viewValue)" ng-model="form.topic">
-        </div>
+
+    <div class="form-group">
+      <label>Topic</label>
+      <div class="{{(showCreateTopicBtn || topicExist) && !showTopicForm ? 'input-group':''}}">
+        <input uib-typeahead="topic as getName(topic) for topic in topicSearch($viewValue)" ng-model="form.topic" type="text" class="form-control" placeholder="Search for a Topic or create a new Topic">
+        <span ng-click="openCreateTopic()" ng-if="(showCreateTopicBtn || topicExist) && !showTopicForm" class="input-group-addon btn btn-primary"><i class="fa fa-{{!topicExist ? 'plus':'pencil'}}"></i> {{ !topicExist?  'New':'Update'}}</span>
       </div>
+      <p ng-if="showCreateTopicBtn && !topicExist" class="help-block">No Topic with this name exist!. Click <span class="badge">new</span> to create.</p>
+    </div>
+    <div class="row">
       <div class="col-md-6">
         <div class="form-group">
           <label>Enrollment Type</label>

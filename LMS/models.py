@@ -85,7 +85,6 @@ class Topic(models.Model):
     def get_absolute_url(self):
         return '/class-' + str(self.subject.level) +'-' + self.subject.title + '-' + self.seoTitle +'-online-course/'
 
-
 class Book(models.Model):
     created = models.DateTimeField(auto_now_add = True)
     updated = models.DateField(auto_now=True)
@@ -98,9 +97,6 @@ class Book(models.Model):
     volume = models.CharField(max_length = 100 , null = True)
     version = models.CharField(max_length = 100 , null = True)
     license = models.CharField(max_length = 100 , null = True)
-
-
-
 
 class Section(models.Model):
     created = models.DateTimeField(auto_now_add = True)
