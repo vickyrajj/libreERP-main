@@ -50,18 +50,13 @@ def account(request):
         userObj = request.user
         userProfile = userObj.tutors24Profile
         userProf = userObj.profile
-
         balanceForm = {"minutes1" : 0 , "minutes2" : 0 , "hours1" : 0, "hours2" : 0}
-
         minutes = userProfile.balance % 60
         hours = int(userProfile.balance/60)
-
         balanceForm['minutes1'] = int(minutes/10)
         balanceForm['minutes2'] = minutes % 10
-
         balanceForm['hours1'] = int(hours/10)
         balanceForm['hours2'] = hours % 10
-
     except:
         userObj = None
         userProfile = None
@@ -246,6 +241,8 @@ def blogDetails(request, blogname):
             data['seoDetails']['title'] = sectionobj.title
         if sectionobj.description:
             data['seoDetails']['description'] = sectionobj.description
+        else:
+            data['seoDetails']['description'] = sectionobj.book.description
         data['bot'] = {'prev':prev,'nxt':nxt,'prevobj':prevobj,'nxtvobj':nxtvobj}
 
         return render(request, 'bookContent.html', data)

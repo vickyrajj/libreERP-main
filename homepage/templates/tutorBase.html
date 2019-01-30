@@ -27,6 +27,7 @@
 
 {% endblock %} {% block specific_css %}
 <link href="{% static 'css/homepage.css' %}" rel="stylesheet">
+<link rel="stylesheet" href="{% static 'css/custom/base.css' %}" charset="utf-8">
 <link rel="stylesheet" href="{% static 'css/angular-ui-switch.min.css' %}" charset="utf-8">
 <!-- <link rel="stylesheet" href="{% static 'css/custom/base.css' %}" charset="utf-8"> -->
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/animatecss/3.5.1/animate.min.css" charset="utf-8">
@@ -40,6 +41,7 @@
   {% block tutorcontent %}{% endblock %}
 
   <div class="container-fluid"style="padding:0px;">
+    <div flash-message="4000" style="position:fixed;top:70px;right:10px;z-index:9999;min-width:300px;"></div>
     {% endblock %} {% block footer %}
     {% include "footer.html" %}
   </div>
