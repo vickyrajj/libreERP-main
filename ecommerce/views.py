@@ -614,6 +614,13 @@ class CreateOrderAPI(APIView):
                     currencyVal = 'INR'
             except:
                 currencyVal = ''
+            try:
+                print appSettingsField.objects.filter(name='promoCode')[0].flag,'jjjjjjjjjjjjjkkkkkk'
+                promoCode = appSettingsField.objects.filter(name='promoCode')[0].flag
+            except:
+                promoCode = True
+            print promoCode,'jjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjj'
+
             if orderObj.user.email and orderObj.paymentMode == 'COD':
                 ctx = {
                     'heading' : "Invoice Details",
@@ -634,7 +641,8 @@ class CreateOrderAPI(APIView):
                     'companyAddress':companyAddress,
                     'gstValue':gstValue,
                     'currencyVal':currencyVal,
-                    'shippingCharges':shippingCharges
+                    'shippingCharges':shippingCharges,
+                    'promoCode' : promoCode
                 }
                 print ctx , 'ctxxxxxxxxxxxx'
                 email_body = get_template('app.ecommerce.emailDetail.html').render(ctx)
@@ -1477,6 +1485,11 @@ class SendDeliveredStatus(APIView):
             gstValue = appSettingsField.objects.filter(name='cstNo')[0].value
         except:
             gstValue = ''
+        try:
+            print appSettingsField.objects.filter(name='promoCode')[0].flag
+            promoCode = appSettingsField.objects.filter(name='promoCode')[0].flag
+        except:
+            promoCode = True
         ctx = {
             'heading' : "Invoice Details",
             'linkUrl': globalSettings.BRAND_NAME,
@@ -1492,7 +1505,8 @@ class SendDeliveredStatus(APIView):
             'fbUrl' : fbLink,
             'twitterUrl' : twtLink,
             'companyAddress':companyAddress,
-            'gstValue':gstValue
+            'gstValue':gstValue,
+            'promoCode':promoCode
         }
         email_body = get_template('app.ecommerce.deliveryDetailEmail.html').render(ctx)
         email_subject = "Delivered"
@@ -2920,7 +2934,12 @@ def updateAndProcessOrder(orderID , amnt, referenceId=None):
         gstValue = appSettingsField.objects.filter(name='cstNo')[0].value
     except:
         gstValue = ''
-
+    try:
+        print appSettingsField.objects.filter(name='promoCode')[0].flag,'kkkkkkkkkkkkkk'
+        promoCode = appSettingsField.objects.filter(name='promoCode')[0].flag
+    except:
+        promoCode = True
+    print promoCode,'jjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjj'
     if orderObj.user.email:
         ctx = {
             'heading' : "Invoice Details",
@@ -2941,7 +2960,8 @@ def updateAndProcessOrder(orderID , amnt, referenceId=None):
             'companyAddress':companyAddress,
             'gstValue':gstValue,
             'currencyVal':currencyVal,
-            'shippingCharges':shippingCharges
+            'shippingCharges':shippingCharges,
+            'promoCode' : promoCode
         }
         email_body = get_template('app.ecommerce.emailDetail.html').render(ctx)
         email_subject = 'Order Placed'

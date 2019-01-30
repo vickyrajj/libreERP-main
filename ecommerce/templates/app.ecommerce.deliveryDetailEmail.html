@@ -309,12 +309,14 @@
             </tr> -->
         </table>
         <table cellpadding="2" cellspacing="0" border="0" align="left" width="600" class="container" style="margin-top:20px">
+          {% if promoCode == True %}
           <tr height="50">
             <td align="left">
               Promocode Applied: {{order.promoCode}} - {{promoAmount}}%
               <hr>
             </td>
           </tr>
+          {% endif %}
           <!-- <tr height="50">
             <td align="left">
               <uib-rating ng-model="form.rating" max="5" readonly="!form.ratable" style="font-size:30px;color:#e2a900;" on-leave="sendReview('rating')"></uib-rating> <br>

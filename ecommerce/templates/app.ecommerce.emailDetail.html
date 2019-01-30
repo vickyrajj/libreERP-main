@@ -313,10 +313,13 @@
               </td>
             </tr>
           </table>
-
+          {% if promoCode == True %}
           <table width="700" style="margin-top:20px" >
             <tr><td width="100" style="border:1px solid #9cc0ff;border-left:16px solid #9cc0ff;color:rgb(0,0,0);font-family:sans-serif;font-size:16px;line-height:20px;padding:16px 16px;" valign="top"> Coupon Applied :  {{data.promoCode}} {{promoAmount}}% <br></td></tr>
           </table>
+          {% endif %}
+
+
 
           <table width="700" style="margin-top:15px">
             <tr><td width="100" style="border:1px solid #9cc0ff;border-left:16px solid #9cc0ff;color:rgb(0,0,0);font-family:sans-serif;font-size:16px;line-height:20px;padding:16px 16px;" valign="top"> Shipping Charges: {{currencyVal}} {{shippingCharges}}</span> <br></td></tr>
