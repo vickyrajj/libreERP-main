@@ -369,7 +369,7 @@ window.onresize = function() {
 
 if (is_blink=='True') {
   is_blink = true
-  var blinkCss = "animation: blink 3s infinite;border-radius:50%;"
+  var blinkCss = ", blink 3s infinite"
 }else {
   var blinkCss = ""
   is_blink = true
@@ -803,10 +803,9 @@ document.addEventListener("DOMContentLoaded", function(event) {
     }
 
     function handleParentFunc(args) {
-      console.log(args);
-      var message = args
-      var targetOrigin = ''
-      window.postMessage(message, targetOrigin);
+      var message = {event_name : args[0], event_fun : args[1]};
+      var targetOrigin = '';
+      window.postMessage(message, "*");
     }
 
     session.subscribe(wamp_prefix+'service.support.createDetailCookie.'+uid, createCookieDetail).then(
@@ -1233,11 +1232,6 @@ function createChatDiv() {
   }, 2000);
 
 
-  // document.getElementById("sy-main-icon").classList.remove('first_animation');
-  // singleService.classList.remove('first_animation');
-
-
-
 
 
   var unreadMsgCount = 0;
@@ -1656,8 +1650,7 @@ function createChatDiv() {
               font-weight: bold;\
           }\
               .first_animation {\
-              animation: first_animation 1s;\
-              "+blinkCss+"\
+              animation: first_animation 1s "+blinkCss+";\
           }\
               .left-center {\
                     left: -55px;\

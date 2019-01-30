@@ -913,6 +913,20 @@ class CannedResponsesViewSet(viewsets.ModelViewSet):
     filter_backends = [DjangoFilterBackend]
     filter_fields = ['text','service']
 
+class DynamicFormViewSet(viewsets.ModelViewSet):
+    permission_classes = (permissions.AllowAny,)
+    serializer_class = DynamicFormSerializer
+    # queryset = DynamicForm.objects.all()
+    def get_queryset(self):
+        if 'companyPk' in  self.request.GET:
+            return DynamicForm.objects.filter(company = self.request.GET['companyPk'])
+        return DynamicForm.objects.all()
+
+class DynamicFieldViewSet(viewsets.ModelViewSet):
+    permission_classes = (permissions.AllowAny,)
+    serializer_class = DynamicFieldSerializer
+    queryset = DynamicField.objects.all()
+
 
 class HeartbeatApi(APIView):
     permission_classes = (permissions.AllowAny,)

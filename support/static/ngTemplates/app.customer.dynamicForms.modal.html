@@ -1,0 +1,58 @@
+<div class="modal-header">
+  <h3 class="text-center">Dynamic Forms</h3>
+</div>
+<div class="modal-body">
+  <div class="row">
+    <div class="col-md-3">
+      <h5 class="text-muted" ng-if="dynamicFrom.length==0"> No Dynamic form available. </h5>
+      <div class="row" ng-repeat="d in dynamicFrom" style="cursor:pointer;">
+        <div style="background-color:#e0e0e0; padding:15px; color:#000; font-weight:400; margin:5px 15px; border-radius:5px; position:relative;">
+          <p style="font-weight:400;" >{{d.form_name}}</p>
+          <span style="position:absolute; top:5px; right:5px; color:#5c5c5c" ng-click="setForm($index)"><i class="fa fa-pencil"></i> </span>
+          <span style="position:absolute; bottom:5px; right:5px; color:#5c5c5c" ng-click="deleteForm($index)"><i class="fa fa-trash"></i> </span>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-8" style="border-left:1px solid #e0e0e0;">
+      <h4 ng-if="form.pk" class="text-center"> Edit Form </h4>
+      <h4 ng-if="!form.pk" class="text-center"> New Form </h4>
+      <div class="row">
+        <div class="form-group">
+          <label for="">Form Name:</label>
+          <input type="text" class="form-control" maxlength="25" ng-model="form.form_name" id="Form Name" placeholder="Form Name">
+        </div>
+        <div class="form-group">
+          <label for="">Function Name:</label>
+          <input type="text" class="form-control" ng-model="form.function_name" id="Function Name" placeholder="Function Name">
+        </div>
+        <div class="form-group">
+          <label for="">Form Description:</label>
+          <input type="text" class="form-control" ng-model="form.form_description" id="" placeholder="Description">
+        </div>
+      </div>
+
+
+      <div class="row" ng-if="form.pk">
+        <!-- <div class="form-group">
+          <label for=""></label>
+          <input type="text" class="form-control" ng-model="fieldForm.field_typ" id="" placeholder="">
+        </div> -->
+      </div>
+
+      <div class="row text-center">
+        <div class="form-group">
+          <button ng-if="!form.pk" ng-click="saveForm()" type="button" class="btn btn-primary">
+            Create
+          </button>
+          <button ng-if="form.pk" ng-click="editForm(form.pk)" type="button" class="btn btn-primary">
+            Save
+          </button>
+          <button ng-click="resetForm()" type="button" class="btn btn-primary">
+            Reset
+          </button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>

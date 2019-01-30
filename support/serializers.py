@@ -254,3 +254,13 @@ class CannedResponsesSerializer(serializers.ModelSerializer):
             return c
         else:
             raise PermissionDenied()
+
+class DynamicFormSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = DynamicForm
+        fields = ( 'pk' , 'created' , 'user' ,'company', 'form_name', 'function_name' , 'form_description')
+
+class DynamicFieldSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = DynamicField
+        fields = ( 'pk' , 'created' , 'form' ,'field_typ', 'parameters', 'field_name')

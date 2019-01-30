@@ -354,9 +354,102 @@ app.controller("businessManagement.customers.form", function($scope, $state, $us
       }
     });
   }
-  $scope.openChartPopoup = function(pk) {
+
+  $scope.dynamicFormModal = function() {
+    console.log($scope.compDetails);
+
     $uibModal.open({
-      templateUrl: '/static/ngTemplates/app.customer.chat.modal.html',
+      templateUrl: '/static/ngTemplates/app.customer.dynamicForms.modal.html',
+      size: 'lg',
+      backdrop: true,
+      resolve: {
+        cPk:function () {
+          return $scope.compDetails.pk
+        },
+        myPk:function () {
+          return $scope.me.pk
+        }
+      },
+      controller: function($scope, $users, $timeout,cPk,myPk, $uibModalInstance,Flash) {
+        $scope.cPk = cPk
+
+        $scope.resetForm = function () {
+          $scope.form = {
+            user:myPk,
+            form_name:'',
+            function_name:'',
+            form_description:'',
+            company:cPk
+          }
+        }
+
+        $scope.resetForm();
+
+
+        $scope.getForms = function () {
+          $http({
+            method:'GET',
+            url:'/api/support/dynamicForms/?companyPk='+$scope.cPk
+          }).then(function (response) {
+            console.log(response.data);
+            $scope.dynamicFrom = response.data
+          })
+        }
+        $scope.getForms();
+
+        $scope.setForm = function (indx) {
+          $scope.form = $scope.dynamicFrom[indx]
+          $scope.setIndex = indx
+        }
+
+        $scope.saveForm = function () {
+
+          if ($scope.form.form_name=='') {
+            Flash.create('warning', 'please fill form name')
+            return ;
+          }
+
+
+          $http({
+            method:'POST',
+            url:'/api/support/dynamicForms/',
+            data:$scope.form
+          }).then(function (response) {
+            $scope.dynamicFrom.push(response.data);
+            $scope.resetForm();
+          })
+        }
+
+        $scope.editForm = function (pk) {
+          $http({
+            method:'PATCH',
+            url:'/api/support/dynamicForms/'+ pk + '/',
+            data:$scope.form
+          }).then(function (response) {
+            $scope.dynamicFrom[$scope.setIndex] = response.data;
+            $scope.resetForm();
+          })
+        }
+
+        $scope.deleteForm = function (indx) {
+          var formToDelete = $scope.dynamicFrom[indx];
+          $http({
+            method:'DELETE',
+            url:'/api/support/dynamicForms/'+ formToDelete.pk + '/',
+            data:$scope.form
+          }).then(function (response) {
+            $scope.dynamicFrom.splice(indx,1)
+          })
+        }
+
+      },
+    })
+
+  }
+
+  $scope.generateScriptModal = function(pk) {
+    $uibModal.open({
+      templateUrl: '/static/ngTemplates/app.customer.generateScript.modal.html',
       size: 'md',
       backdrop: true,
       resolve: {

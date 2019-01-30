@@ -786,15 +786,18 @@ app.directive('chatBox', function() {
       }
 
       $scope.callToChatter = function () {
-        connection.session.call(wamp_prefix + 'service.support.handleParentFunc.' + $scope.data.uid, ['nameoffun','someargs']).then(
+        connection.session.call(wamp_prefix + 'service.support.handleParentFunc.' + $scope.data.uid, ['call_function','signin']).then(
           function(res) {
-            console.log('call');
+            console.log('called');
           },
           function(err) {
             console.log(err);
           }
         );
       }
+
+
+
 
       // $scope.sendCustomHtml = function (htmlCode) {
       //

@@ -156,3 +156,26 @@ class CannedResponses(models.Model):
     created = models.DateTimeField(auto_now_add = True)
     text = models.CharField(max_length = 200 , null = True , blank=True )
     service = models.ForeignKey(service , related_name = 'cannedResponses' , null = True)
+
+
+class DynamicForm(models.Model):
+    created = models.DateTimeField(auto_now_add = True)
+    updated = models.DateTimeField(auto_now=True)
+    user = models.ForeignKey(User , related_name = 'dynamicFormUser' , null = False)
+    company = models.ForeignKey(service , related_name = 'dynamicFormCompany' , null = False)
+    form_name = models.CharField(max_length = 50 , null = True)
+    function_name = models.CharField(max_length = 50 , null = True)
+    form_description = models.CharField(max_length = 500 , null = True)
+
+FIELD_TYP_CHOICES = (
+    ('typeahead' , 'typeahead'),
+    ('text' , 'text'),
+    ('dropdown' , 'dropdown')
+)
+
+class DynamicField(models.Model):
+    created = models.DateTimeField(auto_now_add = True)
+    form = models.ForeignKey(DynamicForm , related_name = 'dynamicField' , null = False)
+    field_typ = models.CharField(choices = FIELD_TYP_CHOICES , max_length = 15 , default = 'typeahead')
+    parameters = models.CharField(max_length = 100 , null = True)
+    field_name = models.CharField(max_length = 50 , null = True)

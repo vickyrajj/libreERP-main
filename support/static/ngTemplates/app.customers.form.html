@@ -2,12 +2,16 @@
   <div class="col-md-6">
     <div class="row">
 
-      <div class="col-md-6" style="padding-left:25px;padding-bottom:10px;">
+      <div class="col-md-4" style="padding-left:25px;">
         <h3>{{mode=='new'?'Create':'Edit'}} Client</h3>
       </div>
-      <div class="col-sm-4" ng-if="form.pk" style="padding: 15px;margin: 10px;float: right;">
-        <span class="btn btn-primary pull-right" ng-if="custDetails.chat" ng-click="openChartPopoup(compDetails)">Generate Script</span>
+      <div class="col-sm-4" ng-if="form.pk" style="padding: 15px;">
+        <span class="btn btn-primary pull-right"  ng-click="dynamicFormModal()">Dynamic Forms</span>
       </div>
+      <div class="col-sm-4" ng-if="form.pk" style="padding: 15px;">
+        <span class="btn btn-primary pull-right" ng-if="custDetails.chat" ng-click="generateScriptModal(compDetails)">Generate Script</span>
+      </div>
+
 
     </div>
     <div class="" ng-if="form.pk">

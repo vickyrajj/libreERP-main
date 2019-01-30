@@ -16,8 +16,8 @@ router.register(r'getOfflineMessages' , GetOfflineMessagesViewSet , base_name = 
 router.register(r'documentVersion' , DocumentVersionViewSet , base_name = 'documentVersion')
 router.register(r'companyProcess' , CompanyProcessViewSet , base_name = 'companyProcess')
 router.register(r'cannedResponses' , CannedResponsesViewSet , base_name = 'cannedResponses')
-
-
+router.register(r'dynamicForms' , DynamicFormViewSet , base_name = 'dynamicForms')
+router.register(r'dynamicFields' , DynamicFieldViewSet , base_name = 'dynamicFields')
 
 
 urlpatterns = [
