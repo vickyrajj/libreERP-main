@@ -240,6 +240,16 @@ class Enrollment(models.Model):
     user = models.ForeignKey(User , null = False)
     active = models.BooleanField(default = True)
 
+# class subjectEnrollment(models.Model):
+#     created = models.DateTimeField(auto_now_add = True)
+#     updated = models.DateField(auto_now=True)
+#     subject = models.ForeignKey(Subject , null = False , related_name='enrollments')
+#     addedBy = models.ForeignKey(User , related_name='lmsUsersAdded')
+#     accepted = models.BooleanField(default = True)
+#     user = models.ForeignKey(User , null = False)
+#     active = models.BooleanField(default = True)
+
+
 
 class StudyMaterial(models.Model):
     created = models.DateTimeField(auto_now_add = True)
