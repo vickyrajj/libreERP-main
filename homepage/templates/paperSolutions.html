@@ -34,14 +34,24 @@
           <div>
             <span style="font-size:20px;">{{ques.ques.ques}}</span>
           </div>
-          <div style="padding-top:1em;">
-            <span style="font-size:17px;font-style: italic;">Solution:</span>
+          <ol type="A" style="margin-left:2em;font-size:20px;padding-top:1em;">
+            {% for opt in ques.ques.optionsParts.all %}
+            <li style="padding:1em;display:inline-block;">
+              <span style="font-size:20px;">{{ forloop.counter }}. {{opt.txt}}</span>
+            </li>
+            {% endfor %}
+          </ol>
+
+          <div style="padding-top:0.5em;">
+            {% for sol in ques.ques.solutionParts.all %}
+            <span style="font-size:17px;font-style: italic;">Solution: {{sol.txt}}</span>
+            {% endfor %}
           </div>
-          <div class="col-md-offset-1 col-md-10">
+          <!-- <div class="col-md-offset-1 col-md-10">
             {% for sol in ques.ques.solutionParts.all %}
             <span style="font-size:20px;">{{sol.txt}}</span>
             {% endfor %}
-          </div>
+          </div> -->
         </div>
       </div>
       {% endfor %}
