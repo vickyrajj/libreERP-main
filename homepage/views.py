@@ -181,21 +181,6 @@ def blogDetails(request, blogname):
             sectionobj = Section.objects.filter(book = book.pk)
             data['book'] = book
             data['sectionobj'] = sectionobj
-<<<<<<< HEAD
-=======
-            data['blogobj'] = blogobj
-            data['subobj'] = subobjs
-            if book.title:
-                data['seoDetails']['title'] = book.title
-            if book.description:
-                data['seoDetails']['description'] = book.description
-            if book.dp:
-                data['seoDetails']['image'] = book.dp.url
-                w, h = get_image_dimensions(book.dp.file)
-                print w,h
-                data['seoDetails']['width'] = w
-                data['seoDetails']['height'] = h
->>>>>>> 28c2bbbc8f60cd602227233aad4be7f17d01c1da
             return render(request, 'book.html', data)
         elif blogobj.contentType == 'course':
             course = Course.objects.get(pk=blogobj.header)
