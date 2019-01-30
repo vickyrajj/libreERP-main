@@ -241,7 +241,7 @@ class PaperattemptHistorySerializer(serializers.ModelSerializer):
     paper = PaperSerializer(many = False , read_only = True)
     class Meta:
         model = PaperattemptHistory
-        fields = ('pk' , 'created' , 'paper','mark','correctanswers','incorrectanswers','attempted','notattempted','reviewed','notview'  )
+        fields = ('pk' , 'created' , 'paper','mark','attempted','notattempted','reviewed','notview'  )
         read_only_fields = ('user', )
     def create(self , validated_data):
         ph = PaperattemptHistory(**validated_data)

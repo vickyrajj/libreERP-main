@@ -1,4 +1,4 @@
-var app = angular.module('app', ['ui.router', 'ui.bootstrap', 'angular-owl-carousel-2', 'ui.bootstrap.datetimepicker', 'flash', 'ngAside']);
+var app = angular.module('app', ['ui.router', 'ui.bootstrap', 'angular-owl-carousel-2', 'ui.bootstrap.datetimepicker', 'flash', 'ngAside','chart.js']);
 // $scope, $state, $users, $stateParams, $http, $timeout, $uibModal , $sce,$rootScope
 
 
@@ -557,10 +557,12 @@ app.controller('exam', function($scope, $state, $http, $timeout, $interval, $uib
           }
         }
         $scope.total = 0;
-        console.log($scope.subtitle,'marksssssssss');
         for (var i = 0; i < $scope.subtitle.length; i++) {
             $scope.total += $scope.subtitle[i].mark
+            $scope.totalcorrect +=  $scope.subtitle[i].correct
+            $scope.totalincorrect +=  $scope.subtitle[i].incorrect
         }
+        console.log($scope.subtitle,'marksssssssss');
         $uibModal.open({
           templateUrl: '/static/ngTemplates/examsubmit.html',
           size: 'md',
@@ -581,6 +583,8 @@ app.controller('exam', function($scope, $state, $http, $timeout, $interval, $uib
             total:function() {
               return $scope.total;
             },
+
+
           },
 
           controller: function($scope, questions, $uibModalInstance, answerlist,userId,paperId,total) {
@@ -622,8 +626,6 @@ app.controller('exam', function($scope, $state, $http, $timeout, $interval, $uib
                   notattempted:$scope.notAnswered,
                   reviewed:$scope.reviewed,
                   notview:$scope.notview,
-                  correctanswers:$scope.correctanswers,
-                  incorrectanswers:$scope.incorrectanswers,
 
                 }
               }).then(function(response) {
@@ -658,7 +660,7 @@ app.controller('exam', function($scope, $state, $http, $timeout, $interval, $uib
 
 });
 
-app.controller('examresults', function($rootScope, $scope, $state, $http, $timeout, $interval, $uibModal, $stateParams, $sce, Flash, ) {
+app.controller('examresults',function($rootScope, $scope, $state, $http, $timeout, $interval, $uibModal, $stateParams, $sce, Flash, ) {
   if (QUESID != undefined) {
     $scope.quesId = QUESID
   } else {
@@ -669,14 +671,19 @@ app.controller('examresults', function($rootScope, $scope, $state, $http, $timeo
   } else {
     return
   }
-  // $http({
-  //   method: 'GET',
-  //   url: '/api/LMS/paperhistory/?user=' + $scope.userId + '&paper=' + $scope.quesId
-  // }).then(function(response) {
-  //   console.log(response.data,'dataaaaaaaa');
-  //     $scope.marks = response.data[length-1].mark
-  //
-  // });
+  $http({
+    method: 'GET',
+    url: '/api/LMS/paperhistory/?user=' + $scope.userId + '&paper=' + $scope.quesId
+  }).then(function(response) {
+    console.log(response.data,'dataaaaaaaa');
+      $scope.marks = response.data[length-1].mark
+      $scope.attemptresult = response.data[length-1].attempted
+      $scope.notattemptresult = response.data[length-1].notattempted
+      $scope.reviewresult = response.data[length-1].reviewed
+      $scope.notviewresult = response.data[length-1].notview
+      $scope.totalques =   $scope.attemptresult+  $scope.notattemptresult+  $scope.reviewresult+  $scope.notviewresult
+
+  });
   $scope.sublist = []
 
 
@@ -850,9 +857,9 @@ app.controller('examresults', function($rootScope, $scope, $state, $http, $timeo
 
   $scope.labels = ["Attempted", "Not Attempted", "Reviewed", "Not Visited"];
   $scope.data = [$scope.summary.attempt, $scope.summary.notattempt, $scope.summary.reviewed, $scope.summary.notview];
-  $scope.colors = ["#29B999", "#ED6060", "#D2D2D2", "#565FB8"]
+  $scope.colors = ["#29B999", "#ED6060"]
 
-  $scope.labels1 = ['Attempted', 'Not Attempted', 'Not Visited', 'Reviewed'];
+  $scope.labels1 = ['Correct', 'In Correct'];
 
 
   $scope.data1 = [
