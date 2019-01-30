@@ -1788,7 +1788,7 @@ class EmailApi(APIView):
             'message' : 'Please click on the below link to change the status'
 
         }
-        email.append('ankita.k@cioc.in')
+        email.append('Gopinath.Anandan@bruderer.com')
         email_subject = 'Approval'
         email_body = get_template('app.approval.email.html').render(ctx)
         msg = EmailMessage(email_subject, email_body, to= email , from_email= 'ankita.k@cioc.in' )
