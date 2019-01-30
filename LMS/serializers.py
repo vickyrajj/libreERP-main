@@ -241,8 +241,14 @@ class PaperattemptHistorySerializer(serializers.ModelSerializer):
     paper = PaperSerializer(many = False , read_only = True)
     class Meta:
         model = PaperattemptHistory
-        fields = ('pk' , 'created' , 'paper','mark'  )
+        fields = ('pk' , 'created' , 'paper','mark','correctanswers','incorrectanswers','attempted','notattempted','reviewed','notview'  )
         read_only_fields = ('user', )
+    def create(self , validated_data):
+        ph = PaperattemptHistory(**validated_data)
+        ph.user = self.context['request'].user
+        ph.paper = Paper.objects.get(pk = self.context['request'].data['paper'])
+        ph.save()
+        return ph
 
 class AnswerSerializer(serializers.ModelSerializer):
     # subject = SubjectSerializer(many = False , read_only = True)

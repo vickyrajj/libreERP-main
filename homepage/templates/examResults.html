@@ -2,13 +2,18 @@
 
 {% block examcontent %}
 
-{% verbatim %}
+<script type="text/javascript">
+  var QUESID = '{{id}}';
+  var USERID = '{{user}}';
+</script>
 
+{% verbatim %}
 <div class="container-fluid" ng-controller="examresults">
+  {{marks}}
   <h2 class="text-center"  ><b>Exam Summary</b></h2>
   <div class="row" style="padding-top: 2em;">
     <div class="col-md-offset-1 col-md-3" style="margin-top:2em;">
-      <span style="font-size:18px;"><b>Total No of Questions:</b></span><span style="font-size:18px;"><b>&nbsp;{{summary.attempt+summary.notattempt+summary.reviewed+summary.notview}}</b></span>
+      <span style="font-size:18px;"><b>Total No of Questions:</b></span><span style="font-size:18px;"><b>&nbsp;{{total}}</b></span>
     </div>
     <div class=" col-md-2">
       <table>
@@ -54,14 +59,14 @@
   <div class="container text-center">
     <div class="row">
       <div style="margin-top:2em;text-align:center;">
-        <div ng-repeat="a in scorecard" style="display:inline-block;box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);border-radius: 10px;" class="adjustwidth">
+        <div ng-repeat="a in subtitle" style="display:inline-block;box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);border-radius: 10px;" class="adjustwidth">
           <div style="padding: 0.3em 0em;background-color:#25B5E9;border-top-left-radius: 10px;border-top-right-radius: 10px;color:#fff; text-align:left;">
             <div class="row">
               <div class="col-md-9">
-                <span style="font-size:20px;padding:0.4em;text-align:left;" class="leftalign"><b>{{a.subject}}</b></span>
+                <span style="font-size:20px;padding:0.4em;text-align:left;" class="leftalign"><b>{{a.title}}</b></span>
               </div>
               <div class="col-md-3">
-                <span style="font-size:20px;padding:0.4em;text-align:right;margin-right: 1em;"><b>1/{{a.testquestions.length}}</b></span>
+                <span style="font-size:20px;padding:0.4em;text-align:right;margin-right: 1em;"><b>{{a.correct}}/{{a.ques.length}}</b></span>
               </div>
             </div>
           </div>
@@ -69,7 +74,7 @@
             <table style="width:100%">
               <tr style="font-size:17px;">
                 <td style="text-align: left;">Total No Questions</td>
-                <td>{{a.testquestions.length}}</td>
+                <td>{{a.ques.length}}</td>
               </tr>
               <tr style="font-size:17px;margin-top:1em;">
                 <td style="text-align: left;">Attempted</td>
