@@ -330,6 +330,7 @@ app.controller("businessManagement.customers.form", function($scope, $state, $us
     fontColor: '#ffffff',
     callBack: false,
     ticket: false,
+    is_blink: false,
     dp: emptyFile,
     name: '',
     supportBubbleColor: '#286EFA',
@@ -699,6 +700,7 @@ app.controller("businessManagement.customers.form", function($scope, $state, $us
     fd.append('audio', cpF.audio);
     fd.append('video', cpF.video);
     fd.append('ticket', cpF.ticket);
+    fd.append('is_blink', cpF.is_blink);
     fd.append('vr', cpF.vr);
     fd.append('service', cpF.service);
 

@@ -765,7 +765,7 @@ app.directive('chatBox', function() {
 
       $scope.sendCustomMessage = function (message) {
         if (message==undefined) {
-          message = "This is some hidden message"
+          message = "hidden message"
         }
        var dataToSend = {
           uid: $scope.data.uid,
@@ -781,42 +781,54 @@ app.directive('chatBox', function() {
         }).
         then(function(response) {
           $scope.data.messages.push(response.data)
+          $scope.chatBox.messageToSend = ''
         })
       }
 
-      $scope.sendCustomHtml = function (htmlCode) {
-
-        $uibModal.open({
-          templateUrl: '/static/ngTemplates/app.support.chatBox.customHtml.html',
-          size: 'md',
-          backdrop: true,
-          resolve: {
-
+      $scope.callToChatter = function () {
+        connection.session.call(wamp_prefix + 'service.support.handleParentFunc.' + $scope.data.uid, ['nameoffun','someargs']).then(
+          function(res) {
+            console.log('call');
           },
-          controller: function($scope, $users, $uibModalInstance) {
-            $scope.htmlCode = ''
-            $scope.send = function () {
-              $uibModalInstance.dismiss($scope.htmlCode)
-            }
-          },
-        }).result.then(function() {
-
-        }, function(data) {
-          if (data != 'backdrop click' && data != '' && data != 'escape key press') {
-            $scope.status = 'HTML';
-            $scope.htmlCode = '<div style="clear: both; background-color:#a6ccf6; padding:5px 10px;margin:8px; box-sizing:border-box; width:96%;">'+ data +'</div>'
-            connection.session.publish(wamp_prefix + 'service.support.chat.' + $scope.data.uid, [$scope.status, $scope.htmlCode, $scope.me, new Date()], {}, {
-              acknowledge: true
-            }).
-            then(function(publication) {
-              console.log("Published");
-            });
+          function(err) {
+            console.log(err);
           }
-        });
-
-
-
+        );
       }
+
+      // $scope.sendCustomHtml = function (htmlCode) {
+      //
+      //   $uibModal.open({
+      //     templateUrl: '/static/ngTemplates/app.support.chatBox.customHtml.html',
+      //     size: 'md',
+      //     backdrop: true,
+      //     resolve: {
+      //
+      //     },
+      //     controller: function($scope, $users, $uibModalInstance) {
+      //       $scope.htmlCode = ''
+      //       $scope.send = function () {
+      //         $uibModalInstance.dismiss($scope.htmlCode)
+      //       }
+      //     },
+      //   }).result.then(function() {
+      //
+      //   }, function(data) {
+      //     if (data != 'backdrop click' && data != '' && data != 'escape key press') {
+      //       $scope.status = 'HTML';
+      //       $scope.htmlCode = '<div style="clear: both; background-color:#a6ccf6; padding:5px 10px;margin:8px; box-sizing:border-box; width:96%;">'+ data +'</div>'
+      //       connection.session.publish(wamp_prefix + 'service.support.chat.' + $scope.data.uid, [$scope.status, $scope.htmlCode, $scope.me, new Date()], {}, {
+      //         acknowledge: true
+      //       }).
+      //       then(function(publication) {
+      //         console.log("Published");
+      //       });
+      //     }
+      //   });
+      //
+      //
+      //
+      // }
 
       for (var i = 0; i < $scope.data.messages.length; i++) {
         if (!$scope.data.messages[i].read) {
@@ -886,6 +898,12 @@ app.directive('chatBox', function() {
         if (e.keyCode == 13 && e.shiftKey) {
           console.log('here');
         }
+
+        if(e.shiftKey && e.keyCode == 72) {
+          console.log("Hey! shift+H event captured!");
+          $scope.sendCustomMessage($scope.chatBox.messageToSend)
+        }
+
       }
 
 

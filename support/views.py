@@ -555,7 +555,7 @@ def getChatterScript(request , fileName):
     print request.get_host()
     print request.META.get('REMOTE_ADDR')
     dataToSend = {"pk" : obj.pk ,'supportBubbleColor':obj.supportBubbleColor ,'iconColor':obj.iconColor, "windowColor" : obj.windowColor ,"fontColor":obj.fontColor,
-        "custName" : obj.service.name , "chat":obj.chat , "callBack":obj.callBack , "video":obj.video ,
+        "custName" : obj.service.name , "chat":obj.chat , "callBack":obj.callBack , "video":obj.video ,"is_blink":obj.is_blink  ,
         "audio":obj.audio , "ticket":obj.ticket , "serverAddress" : globalSettings.SITE_ADDRESS ,
         "wampServer" : globalSettings.WAMP_SERVER ,"webrtcAddress": globalSettings.WEBRTC_ADDRESS,"wamp_prefix":globalSettings.WAMP_PREFIX,
         "chatIconPosition":obj.chatIconPosition,'chatIconType':obj.chatIconType}

@@ -311,6 +311,7 @@ var iconColor = '{{iconColor}}'
 var fontAndIconColor='{{fontColor}}'
 var position_of_chat="{{chatIconPosition}}";
 var type_of_icon='{{chatIconType}}'
+var is_blink = '{{is_blink}}'
 
 var sy_circle_class="sy-circle-"+position_of_chat.split('-')[0] //sy-circle-right , sy-circle-left
 var sy_text_class=" sy-text-"+position_of_chat.split('-')[0] // sy-text-right , sy-text-left
@@ -365,6 +366,15 @@ viewport_set();
 window.onresize = function() {
 	viewport_set();
 }
+
+if (is_blink=='True') {
+  is_blink = true
+  var blinkCss = "animation: blink 3s infinite;border-radius:50%;"
+}else {
+  var blinkCss = ""
+  is_blink = true
+}
+
 
 
 if (dpSupport=='') {
@@ -519,7 +529,6 @@ function setColors(bubbleColor , windowColor , fontColor) {
 }
 
 
-
 function unsetVisitorDetails() {
   detail = getCookie("uidDetails");
   if (detail != "") {
@@ -564,6 +573,13 @@ function setIframeToNormal(){
 // var subs;
 // var connectionIsOff=true
 document.addEventListener("DOMContentLoaded", function(event) {
+
+
+   window.CUSTOM_MESSAGE = {
+    sendCustomMessage:function (msg) {
+      sendMessage(msg,true)
+    }
+  }
 
 
   window.onbeforeunload=function(){
@@ -786,6 +802,13 @@ document.addEventListener("DOMContentLoaded", function(event) {
         setCookie("uidDetails", JSON.stringify({email:args[0].email , name:args[0].name , phoneNumber:args[0].phoneNumber}), 365);
     }
 
+    function handleParentFunc(args) {
+      console.log(args);
+      var message = args
+      var targetOrigin = ''
+      window.postMessage(message, targetOrigin);
+    }
+
     session.subscribe(wamp_prefix+'service.support.createDetailCookie.'+uid, createCookieDetail).then(
       function (res) {
         console.log("subscribed to service.support.createDetailCookie'");
@@ -809,6 +832,15 @@ document.addEventListener("DOMContentLoaded", function(event) {
         //     console.log("failed to register: service.support.heartbeat" + err);
         //   }
         // );
+      }
+    );
+
+    session.register(wamp_prefix+'service.support.handleParentFunc.'+uid, handleParentFunc).then(
+      function (res) {
+        console.log("registered to service.support.handleParentFunc'");
+      },
+      function (err) {
+        console.log("failed to register: service.support.handleParentFunc" + err);
       }
     );
 
@@ -934,14 +966,14 @@ function createChatDiv() {
           '</div>'+
 
 
-        '<div id="myModal" class="modal">'+
-          '<div id="modalContent" class="modal-content">'+
+        '<div id="myModal" class="syrow_modal">'+
+          '<div id="modalContent" class="syrow_modal_content">'+
           '</div>'+
         '</div>'
 
 
-        '<div id="myModal" class="modal">'+
-          '<div id="modalContent" class="modal-content">'+
+        '<div id="myModal" class="syrow_modal">'+
+          '<div id="modalContent" class="syrow_modal_content">'+
           '</div>'+
         '</div>'
 
@@ -1595,7 +1627,7 @@ function createChatDiv() {
                     opacity:1;\
                 	}\
                 }\
-                .modal {\
+                .syrow_modal {\
                 display: none;\
                 position: fixed;\
                 z-index: 999999999;\
@@ -1608,7 +1640,7 @@ function createChatDiv() {
                 background-color: rgb(0,0,0);\
                 background-color: rgba(0,0,0,0.4);\
             }\
-            .modal-content {\
+            .syrow_modal_content {\
                 background-color: #fefefe;\
                 margin: auto;\
                 padding: 20px;\
@@ -1625,8 +1657,7 @@ function createChatDiv() {
           }\
               .first_animation {\
               animation: first_animation 1s;\
-              animation: blink 3s infinite;\
-              border-radius:50%;\
+              "+blinkCss+"\
           }\
               .left-center {\
                     left: -55px;\
@@ -3019,13 +3050,21 @@ setInterval(function () {
   }
 
 
-  function sendMessage(inptText) {
+  function sendMessage(inptText,is_hidden) {
+      if (is_hidden==undefined) {
+        var is_hidden = false
+      }else {
+        var is_hidden = is_hidden
+      }
+
       if (inptText.length<=0) {
         return;
       }
+
       if (uid!=getCookie("uid")) {
         uid = getCookie("uid");
       }
+
       var youtubeLink = inptText.includes("yout");
       if (youtubeLink) {
         status = "ML";
@@ -3041,7 +3080,7 @@ setInterval(function () {
           }
         }
         var message = dataToSend
-        dataToSend = JSON.stringify(dataToSend)
+        // dataToSend = JSON.stringify(dataToSend)
       }else {
         status = "M";
         var dataToSend = {uid: uid , message: inptText , sentByAgent:false , created: new Date() };
@@ -3057,16 +3096,23 @@ setInterval(function () {
           }
         }
         var message = dataToSend
+      }
+      // alert(is_hidden)
+      if (is_hidden) {
+        dataToSend.is_hidden = true
         dataToSend = JSON.stringify(dataToSend)
+      }else {
+        dataToSend = JSON.stringify(dataToSend)
+        var div = document.createElement("div");
+        div.className = "messageOpacity"
+        div.innerHTML = messageDiv(message)
+        messageBox.appendChild(div);
+        scroll();
+        chat.messages.push(message);
+        inputText.value ='';
       }
 
-      var div = document.createElement("div");
-      div.className = "messageOpacity"
-      div.innerHTML = messageDiv(message)
-      messageBox.appendChild(div);
-      scroll();
-      chat.messages.push(message);
-      inputText.value ='';
+
       setTimeout(function() {
         // console.log(isAgentOnline, ' is agent online..........');
 
