@@ -66,7 +66,7 @@ app.controller("businessManagement.masterSheet", function($scope, $state, $users
     views: views,
     url: '/api/support/products/',
     searchField: 'part_no',
-    fields: ['part_no', 'weight', 'price', 'description_2', 'description_1', 'gst','customs_no','custom','replaced'],
+    fields: ['part_no', 'weight', 'price', 'description_2', 'description_1', 'gst','customs_no','custom','replaced','bar_code'],
     checkbox: false,
     deletable:true,
     canCreate : true,

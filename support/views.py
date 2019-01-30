@@ -269,7 +269,7 @@ class ProductsUploadAPIView(APIView):
                         bar_code = None
 
 
-                    Products.objects.get_or_create(part_no=part_no, description_1=description_1,description_2=description_2,replaced=replaced,parent=parent,weight=weight, price=price,customs_no=customs_no,custom=custom,gst=gst)
+                    Products.objects.get_or_create(part_no=part_no, description_1=description_1,description_2=description_2,replaced=replaced,parent=parent,weight=weight, price=price,customs_no=customs_no,custom=custom,gst=gst,bar_code=bar_code)
                     count+=1
                 except:
                     unSaved.append(part_no)
