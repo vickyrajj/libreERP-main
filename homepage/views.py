@@ -98,8 +98,8 @@ def blogDetails(request, blogname):
         noteslen = len(noteobj)
         r = lambda: random.randint(150,250)
         color = ('#%02X%02X%02X' % (r(),r(),r()))
-        for i in refbookobjs:
-            color = ('#%02X%02X%02X' % (r(),r(),r()))
+        # for i in refbookobjs:
+        #     color = ('#%02X%02X%02X' % (r(),r(),r()))
         books = []
         videoCourse = []
         forum = []

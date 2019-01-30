@@ -4,16 +4,15 @@
 {% block bookcontent %}
 
 <div class="container-fluid" style="padding-top:40px;margin-bottom:20px;">
-  <div class="col-md-12">
+  <div class="col-md-8 col-md-offset-2">
     <div class="container-fluid" style="padding-top:20px;">
       <div class="row">
         <div class="col-md-1">
-        <img src="/static/images/24tut/note.svg" width="100%" class="hidden-xs hiden-sm" >
+          <img src="/static/images/24tut/note.svg" width="100%" class="hidden-xs hiden-sm">
         </div>
         <div class="col-md-11" style="margin-bottom:20px;">
-          <h3 class="text-muted"><strong>{{noteObj.title}}</strong> </h3>
-          <strong>Url :</strong> <a href=""> {{noteObj.urlSuffix}}</a><br>
-          <strong>Description :</strong> {{noteObj.description}}
+          <h1 class="text-muted"><strong>{{noteObj.title}}</strong> </h1>
+          <p>{{noteObj.description}}</p>
         </div>
       </div>
       {% if noteSection.count > 0 %}
@@ -21,7 +20,7 @@
       <hr>
       {% if sec.image %}
       <div class="text-center">
-        <img src="{{sec.image.url}}"  class="noteImage">
+        <img src="{{sec.image.url}}" class="noteImage">
       </div>
       {% else %}
       {{sec.txt}}
