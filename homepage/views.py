@@ -320,7 +320,7 @@ def blog(request):
     data = data[(page-1)*pagesize:(page*pagesize)]
 
     return render(request,"blog.html" , {"home" : False  ,'data' : data, 'dataLen' : len(data) ,'pages':pages , "brandLogo" : globalSettings.BRAND_LOGO , "brandLogoInverted": globalSettings.BRAND_LOGO_INVERT,'seoDetails':{'title':globalSettings.SEO_TITLE,'description':globalSettings.SEO_DESCRIPTION,'image':globalSettings.SEO_IMG,'width':globalSettings.SEO_IMG_WIDTH,'height':globalSettings.SEO_IMG_HEIGHT}})
-# this is blog main page
+# this is blog page
 def blogAnotherView(request):
     print 'ininnnnnnnnnnnnnnnnnnn bloggssss main'
     subobjs = Subject.objects.all().order_by('level')

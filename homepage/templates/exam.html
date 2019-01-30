@@ -2,29 +2,19 @@
 
 {% block examcontent %}
 
-
+<script type="text/javascript">
+  var QUESID = '{{id}}';
+  var USERID = '{{user}}';
+</script>
 {% verbatim %}
 <div class="container-fluid " ng-controller="exam">
-
-
-
-
-  <!-- <div class="row ">
-    <div class="headsection">
-      <div class="navbar-toggle " data-toggle="collapse" data-target="#questionlist" ng-click="toggleNavbar = !toggleNavbar" style="border:none;">
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-      </div>
-    </div>
-  </div> -->
 
   <div class="row">
 
     <div class="col-md-9" style="min-height:100vh;padding:0;">
       <div class="text-right">
-          <span style="padding-right: 1em;"><b>Time Left: {{theTime}}:{{timeinsec}}</b></span>
-        </div>
+        <span style="padding-right: 1em;"><b>Time Left: {{theTime}}:{{timeinsec}}</b></span>
+      </div>
       <div class="maindiv">
         <div class="text-center">
           <div ng-repeat="a in sublist" style="display:inline-block;" ng-hide="sublist.length==1">
@@ -41,7 +31,9 @@
         <div class="queanswer">
           <div ng-repeat="a in subquestions" ng-show='$index === subcount' ng-init="subindex=$index">
             <div ng-repeat="b in a.ques ">
-              <h3 style="margin-left:1em;" ng-show="$index === count" >{{b.que}}</h3>
+              <h3 style="margin-left:1em;" ng-show="$index === count">{{b.que}}</h3>
+              <!-- <h3 style="margin-left:1em;" ng-show="$index === count" ><span mathjax-bind="b.que"></span></h3> -->
+
 
               <ol style="margin-left:2em;font-size:20px;color:#6C6464;" type='A' class="answers" ng-show="$index === count">
                 <li ng-repeat="c in b.option track by $index" class="optionhover" style="padding:0.5em;position:relative;" ng-click="selection(subindex,$parent.$index,$index)" ng-class="{'selected' : selections[subindex].answers[$parent.$index] == $index}">{{c.txt}}</li>

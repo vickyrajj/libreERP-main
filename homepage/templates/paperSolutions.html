@@ -1,0 +1,29 @@
+{% extends "tutorBook.html" %}
+
+
+{% block bookcontent %}
+
+<div class="container-fluid" style="padding-top:40px;">
+  <div class="col-md-12" style="margin-top:1em;">
+    <a href="/{{blogobj.shortUrl}}/{{quesobj.name.split|join:'-'}}/practise/"><span class="btn btn-primary">Start Exam</span></a>
+  </div>
+  <div class="col-md-12">
+    <div class="row">
+      <div class="col-md-6 col-xs-12">
+        <div style="display:inline-block;">
+          <h1 class="heading_medium">{{quesobj.name}}</h1>
+        </div>
+      </div>
+    </div>
+  </div>
+  <hr>
+  {% for ques in quesobj.questions.all %}
+    <ul>
+      <b>{{ forloop.counter }}</b> {{ques.ques.ques}}
+      {% for sol in ques.ques.solutionParts.all %}
+      <li>{{sol.txt}}<br></li>
+      {% endfor %}
+    </ul>
+  {% endfor %}
+</div>
+{% endblock %}
