@@ -521,10 +521,16 @@ app.controller('exam', function($scope, $state, $http, $timeout, $interval, $uib
           },
           answerlist: function() {
             return answerlist;
-          }
+          },
+          userId:function() {
+            return $scope.userId;
+          },
+          quesId:function() {
+            return $scope.quesId;
+          },
         },
 
-        controller: function($scope, questions, $uibModalInstance, answerlist) {
+        controller: function($scope, questions, $uibModalInstance, answerlist,userId,quesId) {
 
 
           $scope.questions = questions
@@ -551,6 +557,21 @@ app.controller('exam', function($scope, $state, $http, $timeout, $interval, $uib
           }
           $scope.arr = [1, 2, 3, 4, 5, 6, 7, 8, 9, 0]
           $scope.submit = function() {
+            $http({
+              method: 'POST',
+              url: '/api/LMS/paperhistory/',
+              data:{
+                user:userId,
+                paper:paperId,
+              }
+            }).then(function(response) {
+              if (!response.data.length ) {
+
+              }else{
+
+
+              }
+            });
             $uibModalInstance.close();
 
           }

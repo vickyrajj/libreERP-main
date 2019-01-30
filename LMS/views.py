@@ -144,7 +144,9 @@ class PaperattemptHistory(viewsets.ModelViewSet):
     permission_classes = (permissions.IsAuthenticated,)
     serializer_class = PaperattemptHistorySerializer
     queryset = PaperattemptHistory.objects.all()
-    
+    filter_backends = [DjangoFilterBackend]
+    filter_fields = ['user','paper']
+
 
 class AnswerViewSet(viewsets.ModelViewSet):
     permission_classes = (permissions.IsAuthenticated, isAdmin, )
