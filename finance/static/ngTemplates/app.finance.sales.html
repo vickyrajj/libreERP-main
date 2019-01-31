@@ -4,8 +4,8 @@
     <div class="col-md-12">
       <div class="row">
         <div class="col-md-2">
-      <h3>Total : {{totalData.overallTotal}}</h3>
-      <h3>GST : {{totalData.overallGst}}</h3>
+      <h3>Total : <i class="fa fa-inr"></i>  {{totalData.overallTotal}}</h3>
+      <h3>GST : <i class="fa fa-inr"></i>  {{totalData.overallGst}}</h3>
     </div>
     <div class="col-md-2">
       <canvas id="pie" class="chart chart-pie" chart-data="[totalData.overallTotal,totalData.overallGst]" chart-labels="['Total','GST']"  chart-options="{legend: { display: true }}" chart-colors="['#90EE90', '#FF6600']" ></canvas>
@@ -19,8 +19,8 @@
     <!-- <div class="col-md-12 text-center"> -->
       <div class="row">
         <div class="col-md-3" style="padding-left:10px">
-          <h4>Total : {{totalData.inboundtotal}}</h4>
-          <h4>GST : {{totalData.inboundgst}}</h4>
+          <h4>Total : <i class="fa fa-inr"></i>  {{totalData.inboundtotal}}</h4>
+          <h4>GST : <i class="fa fa-inr"></i>  {{totalData.inboundgst}}</h4>
         </div>
         <div class="col-md-3">
           <canvas id="pie" class="chart chart-pie" chart-data="[totalData.inboundtotal,totalData.inboundgst]" chart-labels="['Total','GST']" chart-options="{legend: { display: true }}" chart-colors="['#90EE90', '#FF6600']" ></canvas>
@@ -35,8 +35,8 @@
   <div class="col-md-6" style="border-left:solid 2px #eee;">
       <div class="row">
         <div class="col-md-3" style="padding-left:30px">
-          <h4>Total : {{totalData.crmtotal}}</h4>
-          <h4>GST : {{totalData.crmgst}}</h4>
+          <h4>Total : <i class="fa fa-inr"></i> {{totalData.crmtotal}}</h4>
+          <h4>GST : <i class="fa fa-inr"></i>  {{totalData.crmgst}}</h4>
         </div>
         <div class="col-md-3">
           <canvas id="pie" class="chart chart-pie" chart-data="[totalData.crmtotal,totalData.crmgst]" chart-labels="['Total','GST']" chart-options="{legend: { display: true }}" chart-colors="['#90EE90', '#FF6600']" ></canvas>
@@ -51,8 +51,8 @@
       <hr/>
     <div class="row">
       <div class="col-md-3" style="padding-left:30px">
-        <h4>Total : {{totalData.invtotal}}</h4>
-        <h4>GST : {{totalData.invgst}}</h4>
+        <h4>Total : <i class="fa fa-inr"></i>  {{totalData.invtotal}}</h4>
+        <h4>GST : <i class="fa fa-inr"></i>  {{totalData.invgst}}</h4>
       </div>
       <div class="col-md-3">
         <canvas id="pie" class="chart chart-pie" chart-data="[totalData.invtotal,totalData.invgst]" chart-labels="['Total','GST']" chart-options="{legend: { display: true }}" chart-colors="['#90EE90', '#FF6600']" ></canvas>
