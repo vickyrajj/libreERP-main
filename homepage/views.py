@@ -134,7 +134,14 @@ def blogDetails(request, blogname):
             data['seoDetails']['description'] = sub.description
         if sub.dp:
             data['seoDetails']['image'] = sub.dp.url
-            w, h = get_image_dimensions(sub.dp.file)
+            try:
+                w, h = get_image_dimensions(sub.dp.file)
+            except:
+                data['seoDetails']['image'] = globalSettings.SEO_IMG
+                w = globalSettings.SEO_IMG_WIDTH
+                h = globalSettings.SEO_IMG_HEIGHT
+
+
             print w,h
             data['seoDetails']['width'] = w
             data['seoDetails']['height'] = h
