@@ -165,7 +165,10 @@ def blogDetails(request, blogname):
                 quesobj = Paper.objects.get(name__iexact=quesTitle)
                 data['blogobj'] = blogobj
                 data['quesobj'] = quesobj
-                print blogobj,quesobj
+                data['blogurl'] = blogobj.shortUrl
+                data['quesurl'] = quesobj.name
+                data['user'] = request.user.pk
+                print request.user.pk,quesobj
                 htmlName = 'paperSolutions.html'
 
             elif len(prts) == 3:

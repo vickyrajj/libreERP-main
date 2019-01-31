@@ -2316,6 +2316,33 @@ hr {
   z-index: 10;
   border-top-right-radius: 8px;
 }
+.savebtn {
+  color: #fff;
+  padding: 0.5em 2em;
+  border: 0;
+  background-color: #29B999;
+  margin-top: 1em;
+  font-size: 17px;
+  width: 15%;
+  margin-left: 0.5em;
+  /* background-image: linear-gradient(90deg, #02EBA3, #6A7EF1, #873be7); */
+  border-radius: 5px;
+  border-top-left-radius: 25px;
+}
+.btnaction {
+  color: #fff;
+  border: 0;
+  padding: 0.5em 2em;
+  background-color: #ED6060;
+  margin-top: 1em;
+  font-size: 17px;
+  width: 15%;
+  margin-left: 0.5em;
+  /* background-image: linear-gradient(90deg, #02EBA3, #6A7EF1, #873be7); */
+  border-radius: 5px;
+  border-top-left-radius: 25px;
+}
+
 
 .noteImage {
   width: 20%;

@@ -1,5 +1,4 @@
-
-var app = angular.module('app', ['ui.router', 'ui.bootstrap', 'angular-owl-carousel-2', 'ui.bootstrap.datetimepicker', 'flash', 'ngAside','uiSwitch','chart.js',]);
+var app = angular.module('app', ['ui.router', 'ui.bootstrap', 'angular-owl-carousel-2', 'ui.bootstrap.datetimepicker', 'flash', 'ngAside', 'uiSwitch', 'chart.js', ]);
 // $scope, $state, $users, $stateParams, $http, $timeout, $uibModal , $sce,$rootScope
 
 
@@ -503,19 +502,19 @@ app.controller('exam', function($scope, $state, $http, $timeout, $interval, $uib
       $scope.subtitle = []
       for (var i = 0; i < $scope.sublist.length; i++) {
         $scope.subtitle.push({
-          title:$scope.sublist[i],
-          ques:[]
+          title: $scope.sublist[i],
+          ques: []
         })
       }
 
       $http({
         method: 'GET',
-        url: '/api/LMS/answer/?user=' + $scope.userId + '&paper=' + $scope.quesId ,
+        url: '/api/LMS/answer/?user=' + $scope.userId + '&paper=' + $scope.quesId,
       }).then(function(response) {
         for (var i = 0; i < response.data.length; i++) {
-          if($scope.sublist.includes(response.data[i].question.topic.subject.title)){
+          if ($scope.sublist.includes(response.data[i].question.topic.subject.title)) {
             for (var j = 0; j < $scope.subtitle.length; j++) {
-              if($scope.subtitle[j].title == response.data[i].question.topic.subject.title){
+              if ($scope.subtitle[j].title == response.data[i].question.topic.subject.title) {
                 $scope.subtitle[j].ques.push(response.data[i])
               }
             }
@@ -523,28 +522,27 @@ app.controller('exam', function($scope, $state, $http, $timeout, $interval, $uib
           }
         }
       });
-      console.log($scope.subtitle.length,'subttt');
+      console.log($scope.subtitle.length, 'subttt');
       $scope.marks = 0;
-      $scope.incorrect  = 0;
-      $scope.correct= 0;
-      setTimeout(function () {
+      $scope.incorrect = 0;
+      $scope.correct = 0;
+      setTimeout(function() {
 
         for (var i = 0; i < $scope.subtitle.length; i++) {
-          if($scope.subtitle[i].title == $scope.sublist[i]){
+          if ($scope.subtitle[i].title == $scope.sublist[i]) {
             $scope.marks = 0;
-            $scope.incorrect  = 0;
-            $scope.correct= 0;
+            $scope.incorrect = 0;
+            $scope.correct = 0;
             for (var j = 0; j < $scope.subtitle[i].ques.length; j++) {
-              if($scope.subtitle[i].ques[j].correct == "no"){
+              if ($scope.subtitle[i].ques[j].correct == "no") {
                 $scope.marks -= $scope.subtitle[i].ques[j].marksObtained
-                $scope.incorrect +=1
+                $scope.incorrect += 1
                 $scope.subtitle[i].mark = $scope.marks
                 $scope.subtitle[i].incorrect = $scope.incorrect
 
-              }
-              else{
+              } else {
                 $scope.marks += $scope.subtitle[i].ques[j].marksObtained
-                $scope.correct+=1
+                $scope.correct += 1
                 $scope.subtitle[i].mark = $scope.marks
                 $scope.subtitle[i].correct = $scope.correct
               }
@@ -553,11 +551,11 @@ app.controller('exam', function($scope, $state, $http, $timeout, $interval, $uib
         }
         $scope.total = 0;
         for (var i = 0; i < $scope.subtitle.length; i++) {
-            $scope.total += $scope.subtitle[i].mark
-            $scope.totalcorrect +=  $scope.subtitle[i].correct
-            $scope.totalincorrect +=  $scope.subtitle[i].incorrect
+          $scope.total += $scope.subtitle[i].mark
+          $scope.totalcorrect += $scope.subtitle[i].correct
+          $scope.totalincorrect += $scope.subtitle[i].incorrect
         }
-        console.log($scope.subtitle,'marksssssssss');
+        console.log($scope.subtitle, 'marksssssssss');
         $uibModal.open({
           templateUrl: '/static/ngTemplates/examsubmit.html',
           size: 'md',
@@ -569,18 +567,18 @@ app.controller('exam', function($scope, $state, $http, $timeout, $interval, $uib
             answerlist: function() {
               return answerlist;
             },
-            userId:function() {
+            userId: function() {
               return $scope.userId;
             },
-            paperId:function() {
+            paperId: function() {
               return $scope.quesId;
             },
-            total:function() {
+            total: function() {
               return $scope.total;
             },
           },
 
-          controller: function($scope, questions, $uibModalInstance, answerlist,userId,paperId,total) {
+          controller: function($scope, questions, $uibModalInstance, answerlist, userId, paperId, total) {
 
 
             $scope.questions = questions
@@ -605,20 +603,20 @@ app.controller('exam', function($scope, $state, $http, $timeout, $interval, $uib
               }
 
             }
-            console.log(userId,paperId,'useriddddd');
+            console.log(userId, paperId, 'useriddddd');
             $scope.arr = [1, 2, 3, 4, 5, 6, 7, 8, 9, 0]
             $scope.submit = function() {
               $http({
                 method: 'POST',
                 url: '/api/LMS/paperhistory/',
-                data:{
-                  user:userId,
-                  paper:paperId,
-                  mark:total,
-                  attempted:$scope.attempted+$scope.attemptedreview ,
-                  notattempted:$scope.notAnswered,
-                  reviewed:$scope.reviewed,
-                  notview:$scope.notview,
+                data: {
+                  user: userId,
+                  paper: paperId,
+                  mark: total,
+                  attempted: $scope.attempted + $scope.attemptedreview,
+                  notattempted: $scope.notAnswered,
+                  reviewed: $scope.reviewed,
+                  notview: $scope.notview,
 
                 }
               }).then(function(response) {
@@ -653,7 +651,7 @@ app.controller('exam', function($scope, $state, $http, $timeout, $interval, $uib
 
 });
 
-app.controller('examresults',function($rootScope, $scope, $state, $http, $timeout, $interval, $uibModal, $stateParams, $sce, Flash, ) {
+app.controller('examresults', function($rootScope, $scope, $state, $http, $timeout, $interval, $uibModal, $stateParams, $sce, Flash, ) {
   if (QUESID != undefined) {
     $scope.quesId = QUESID
   } else {
@@ -668,13 +666,13 @@ app.controller('examresults',function($rootScope, $scope, $state, $http, $timeou
     method: 'GET',
     url: '/api/LMS/paperhistory/?user=' + $scope.userId + '&paper=' + $scope.quesId
   }).then(function(response) {
-    console.log(response.data,'dataaaaaaaa');
-      $scope.marks = response.data[length-1].mark
-      $scope.attemptresult = response.data[length-1].attempted
-      $scope.notattemptresult = response.data[length-1].notattempted
-      $scope.reviewresult = response.data[length-1].reviewed
-      $scope.notviewresult = response.data[length-1].notview
-      $scope.totalques =   $scope.attemptresult+  $scope.notattemptresult+  $scope.reviewresult+  $scope.notviewresult
+    console.log(response.data, 'dataaaaaaaa');
+    $scope.marks = response.data[length - 1].mark
+    $scope.attemptresult = response.data[length - 1].attempted
+    $scope.notattemptresult = response.data[length - 1].notattempted
+    $scope.reviewresult = response.data[length - 1].reviewed
+    $scope.notviewresult = response.data[length - 1].notview
+    $scope.totalques = $scope.attemptresult + $scope.notattemptresult + $scope.reviewresult + $scope.notviewresult
 
   });
   $scope.sublist = []
@@ -691,76 +689,74 @@ app.controller('examresults',function($rootScope, $scope, $state, $http, $timeou
       $scope.subname = $scope.paperData.questions[i].ques.topic.subject.title;
       if (!$scope.sublist.includes($scope.subname)) {
         $scope.sublist.push($scope.subname);
-      } else {
-      }
+      } else {}
     }
- })
- setTimeout(function () {
-   console.log($scope.sublist ,'sublistttt');
-   $scope.subtitle = []
-   for (var i = 0; i < $scope.sublist.length; i++) {
-     $scope.subtitle.push({
-       title:$scope.sublist[i],
-       ques:[]
-     })
-   }
+  })
+  setTimeout(function() {
+    console.log($scope.sublist, 'sublistttt');
+    $scope.subtitle = []
+    for (var i = 0; i < $scope.sublist.length; i++) {
+      $scope.subtitle.push({
+        title: $scope.sublist[i],
+        ques: []
+      })
+    }
 
-   $http({
-     method: 'GET',
-     url: '/api/LMS/answer/?user=' + $scope.userId + '&paper=' + $scope.quesId ,
-   }).then(function(response) {
-     if (!response.data.length ) {
+    $http({
+      method: 'GET',
+      url: '/api/LMS/answer/?user=' + $scope.userId + '&paper=' + $scope.quesId,
+    }).then(function(response) {
+      if (!response.data.length) {
 
-     }else{
-       for (var i = 0; i < response.data.length; i++) {
-         if($scope.sublist.includes(response.data[i].question.topic.subject.title)){
-           for (var j = 0; j < $scope.subtitle.length; j++) {
-             if($scope.subtitle[j].title == response.data[i].question.topic.subject.title){
-               $scope.subtitle[j].ques.push(response.data[i])
-             }
-           }
+      } else {
+        for (var i = 0; i < response.data.length; i++) {
+          if ($scope.sublist.includes(response.data[i].question.topic.subject.title)) {
+            for (var j = 0; j < $scope.subtitle.length; j++) {
+              if ($scope.subtitle[j].title == response.data[i].question.topic.subject.title) {
+                $scope.subtitle[j].ques.push(response.data[i])
+              }
+            }
 
-         }
-       }
+          }
+        }
 
 
-     }
-   });
-   console.log($scope.subtitle.length,'subttt');
-   setTimeout(function () {
-     $scope.marks = 0;
-     $scope.incorrect  = 0;
-     $scope.correct= 0;
+      }
+    });
+    console.log($scope.subtitle.length, 'subttt');
+    setTimeout(function() {
+      $scope.marks = 0;
+      $scope.incorrect = 0;
+      $scope.correct = 0;
 
-     for (var i = 0; i < $scope.subtitle.length; i++) {
-       if($scope.subtitle[i].title == $scope.sublist[i]){
-         $scope.marks = 0;
-         $scope.incorrect  = 0;
-         $scope.correct= 0;
-         for (var j = 0; j < $scope.subtitle[i].ques.length; j++) {
-           if($scope.subtitle[i].ques[j].correct == "no"){
-             $scope.marks -= $scope.subtitle[i].ques[j].marksObtained
-             $scope.incorrect +=1
-             $scope.subtitle[i].mark = $scope.marks
-             $scope.subtitle[i].incorrect = $scope.incorrect
+      for (var i = 0; i < $scope.subtitle.length; i++) {
+        if ($scope.subtitle[i].title == $scope.sublist[i]) {
+          $scope.marks = 0;
+          $scope.incorrect = 0;
+          $scope.correct = 0;
+          for (var j = 0; j < $scope.subtitle[i].ques.length; j++) {
+            if ($scope.subtitle[i].ques[j].correct == "no") {
+              $scope.marks -= $scope.subtitle[i].ques[j].marksObtained
+              $scope.incorrect += 1
+              $scope.subtitle[i].mark = $scope.marks
+              $scope.subtitle[i].incorrect = $scope.incorrect
 
-           }
-           else{
-             $scope.marks += $scope.subtitle[i].ques[j].marksObtained
-             $scope.correct+=1
-             $scope.subtitle[i].mark = $scope.marks
-             $scope.subtitle[i].correct = $scope.correct
-           }
-         }
-       }
-     }
-     $scope.total = 0;
-     console.log($scope.subtitle,'marksssssssss');
-     for (var i = 0; i < $scope.subtitle.length; i++) {
-         $scope.total += $scope.subtitle[i].mark
-     }
-   }, 1000)
- }, 1000);
+            } else {
+              $scope.marks += $scope.subtitle[i].ques[j].marksObtained
+              $scope.correct += 1
+              $scope.subtitle[i].mark = $scope.marks
+              $scope.subtitle[i].correct = $scope.correct
+            }
+          }
+        }
+      }
+      $scope.total = 0;
+      console.log($scope.subtitle, 'marksssssssss');
+      for (var i = 0; i < $scope.subtitle.length; i++) {
+        $scope.total += $scope.subtitle[i].mark
+      }
+    }, 1000)
+  }, 1000);
 
 
   $scope.arr = [1, 2, 3, 4, 5, 6, 7, 8, 9, 0]
@@ -860,6 +856,50 @@ app.controller('examresults',function($rootScope, $scope, $state, $http, $timeou
   ];
 
 })
+app.controller('startexam', function($scope, $state, $http, $timeout, $interval, $uibModal, $stateParams, $sce) {
+
+
+
+  $http({
+    method: 'GET',
+    url: '/api/LMS/paperhistory/?user=' + user + '&paper=' + ques,
+  }).then(function(response) {
+        $scope.data = response.data.length;
+        $scope.paper = ques.split('-').join('')
+        $scope.url = "/"+blog+"/"+$scope.paper+"/practice/";
+
+  })
+
+ $scope.startexam = function(){
+
+
+     $uibModal.open({
+       templateUrl: '/static/ngTemplates/startexam.html',
+       size: 'md',
+       backdrop: true,
+       resolve: {
+         blogobj: function() {
+           return blog;
+         },
+         quesobj: function() {
+           return ques;
+         },
+
+       },
+       controller: function($scope, $uibModalInstance,blogobj,quesobj) {
+
+         $scope.paper = quesobj.split('-').join('')
+         $scope.url = "/"+blogobj+"/"+$scope.paper+"/practice/";
+         $scope.closeModal = function(){
+           $uibModalInstance.close()
+         }
+       },
+     })
+
+ }
+
+
+});
 app.controller('testimonials', function($scope, $state, $http, $timeout, $interval, $uibModal, $stateParams, $sce) {
 
   $scope.myObj = {
@@ -871,20 +911,20 @@ app.controller('testimonials', function($scope, $state, $http, $timeout, $interv
 
 });
 
-app.controller('accountController', function($scope, $state, $http, $timeout, $interval, $uibModal, $stateParams, $sce, Flash, $users,$aside) {
+app.controller('accountController', function($scope, $state, $http, $timeout, $interval, $uibModal, $stateParams, $sce, Flash, $users, $aside) {
 
   console.log('account Controller');
 
-  $scope.durationCal = function(st,ed){
-    console.log(st,ed);
+  $scope.durationCal = function(st, ed) {
+    console.log(st, ed);
     stDate = new Date(st)
-    if (ed!==null && ed!=undefined&&ed.length>0) {
+    if (ed !== null && ed != undefined && ed.length > 0) {
       endDate = new Date(ed)
-    }else {
+    } else {
       endDate = new Date()
     }
-    var diff = Math.floor((endDate - stDate)/60000)
-    console.log(diff,'in minutessssssssss');
+    var diff = Math.floor((endDate - stDate) / 60000)
+    console.log(diff, 'in minutessssssssss');
     return diff + ' Min'
   }
   $scope.form = {
@@ -944,27 +984,27 @@ app.controller('accountController', function($scope, $state, $http, $timeout, $i
 
   $scope.getUsersessions = function() {
     $scope.sessionLimit += 5
-    if ($scope.profileData.typ=='T') {
+    if ($scope.profileData.typ == 'T') {
       var qry = 'tutor='
-    }else {
+    } else {
       var qry = 'student='
     }
     $http({
       method: 'GET',
-      url: '/api/tutors/tutors24Session/?started=true&'+qry+$scope.profileData.pk+'&limit='+$scope.sessionLimit
+      url: '/api/tutors/tutors24Session/?started=true&' + qry + $scope.profileData.pk + '&limit=' + $scope.sessionLimit
     }).
     then(function(response) {
       console.log(response.data, 'user sessionsssss');
       $scope.userSessions = response.data.results
-      if (response.data.next!=null&&response.data.next.length>0) {
+      if (response.data.next != null && response.data.next.length > 0) {
         $scope.showMore = true
-      }else {
+      } else {
         $scope.showMore = false
       }
     })
   }
 
-  $scope.viewSession = function(idx){
+  $scope.viewSession = function(idx) {
     console.log(idx);
     $aside.open({
       templateUrl: '/static/ngTemplates/app.homepage.account.sessionDetails.html',
