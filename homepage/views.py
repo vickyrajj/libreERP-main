@@ -26,6 +26,7 @@ from LMS.models import *
 import sys, traceback
 import random
 from django.core.files.images import get_image_dimensions
+from tutor.models import Tutors24Profile
 
 
 def index(request):
@@ -236,7 +237,11 @@ def blogDetails(request, blogname):
             return render(request, 'book.html', data)
         elif blogobj.contentType == 'course':
             course = Course.objects.get(pk=blogobj.header)
+            tutorpk = course.instructor.pk
+            tutordetail = Tutors24Profile.objects.filter(user__pk= tutorpk)[0]
+            detail = tutordetail.detail.split("||")
             data['course'] = course
+            data['detail'] = detail
             return render(request, 'homepageCourses.html', data)
 
     except:
