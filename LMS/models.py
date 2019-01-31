@@ -200,6 +200,10 @@ class PaperattemptHistory(models.Model):
     paper = models.ForeignKey(Paper , null = False , related_name='paperAttempted')
     user = models.ForeignKey(User , null = False , related_name='attemptedUser')
     mark = models.FloatField(default=0)
+    reviewed=models.PositiveIntegerField(default= 0)
+    attempted=models.PositiveIntegerField(default= 0)
+    notattempted=models.PositiveIntegerField(default= 0)
+    notview=models.PositiveIntegerField(default= 0)
 
 
 CORRECTION_CHOICES = (

@@ -12,26 +12,25 @@ from PIL import Image
 class Tutors24ProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = Tutors24Profile
-        fields = ('pk','user','created','updated','school','schoolName','standard','street','city','pinCode','state','country','balance' , 'typ' ,'parentEmail' , 'parentMobile')
+        fields = ('pk','user','created','updated','school','schoolName','standard','street','city','pinCode','state','country','balance' , 'typ' ,'parentEmail' , 'parentMobile','detail')
         read_only_fields=('user','balance' , 'typ')
 
     def update(self ,instance, validated_data):
-        # print 'updatingggggggggggggggggggggggggggggg'
-        # print validated_data
-        # print self.context['request'].data['mobile'],self.context['request'].data['gender']
-        for key in ['school','schoolName','standard','street','city','pinCode','state','country' , 'parentEmail' , 'parentMobile']:
+        print validated_data
+        for key in ['school','schoolName','standard','street','city','pinCode','state','country' , 'parentEmail' , 'parentMobile' ,'typ','detail']:
             try:
                 setattr(instance , key , validated_data[key])
             except:
                 pass
+        if 'typ' in self.context['request'].data:
+            instance.typ = str(self.context['request'].data['typ'])
         instance.save()
-        # print self.context['request'].user.pk
         hrobj = profile.objects.get(user_id=self.context['request'].user.pk)
-        # print hrobj.email
-        hrobj.mobile = self.context['request'].data['mobile']
-        hrobj.gender = self.context['request'].data['gender']
+        if 'mobile' in self.context['request'].data:
+            hrobj.mobile = self.context['request'].data['mobile']
+        if 'gender' in self.context['request'].data:
+            hrobj.gender = self.context['request'].data['gender']
         hrobj.save()
-
         return instance
 
 class SubjectLiteSerializer(serializers.ModelSerializer):

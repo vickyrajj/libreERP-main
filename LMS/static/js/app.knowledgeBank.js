@@ -440,6 +440,7 @@ app.controller("home.LMS.knowledgeBank.form", function($scope, $state, $users, $
     if (f.answer != null && f.answer.length > 0) {
       toSend.objectiveAnswer = f.answer;
     }
+    console.log(toSend.objectiveAnswer,'answerrr');
 
 
     if ($scope.form.typ == 'book') {

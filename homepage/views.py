@@ -50,18 +50,13 @@ def account(request):
         userObj = request.user
         userProfile = userObj.tutors24Profile
         userProf = userObj.profile
-
         balanceForm = {"minutes1" : 0 , "minutes2" : 0 , "hours1" : 0, "hours2" : 0}
-
         minutes = userProfile.balance % 60
         hours = int(userProfile.balance/60)
-
         balanceForm['minutes1'] = int(minutes/10)
         balanceForm['minutes2'] = minutes % 10
-
         balanceForm['hours1'] = int(hours/10)
         balanceForm['hours2'] = hours % 10
-
     except:
         userObj = None
         userProfile = None
@@ -140,6 +135,63 @@ def blogDetails(request, blogname):
             data['seoDetails']['height'] = h
         return render(request, 'courses.html', data )
     try:
+        try:
+            prts = []
+            blogobj = None
+            htmlName = None
+            if '/' in blogname:
+                prts = blogname.split('/')
+
+            print prts,'partsssssssssssssssss'
+
+            if len(prts) == 0:
+                blogname = blogname
+                blogobj = blogPost.objects.get(shortUrl=blogname)
+                groupObj = PaperGroup.objects.get(pk=int(blogobj.header))
+                papersList = Paper.objects.filter(group=groupObj)
+                data['blogobj'] = blogobj
+                data['groupObj'] = groupObj
+                data['papersList'] = papersList
+                print groupObj,blogobj,papersList
+                htmlName = 'questionPapersList.html'
+
+            elif len(prts) == 2:
+                blogname = prts[0]
+                quesTitle = prts[1]
+                quesTitle = str(quesTitle).split("-with-answers")[0].replace('-',' ')
+                print quesTitle,'titleeeeeee'
+                blogobj = blogPost.objects.get(shortUrl=blogname)
+                quesobj = Paper.objects.get(name__iexact=quesTitle)
+                data['blogobj'] = blogobj
+                data['quesobj'] = quesobj
+                print blogobj,quesobj
+                htmlName = 'paperSolutions.html'
+
+            elif len(prts) == 3:
+                blogname = prts[0]
+                quesTitle = prts[1]
+                quesTitle = str(quesTitle).replace('-',' ')
+                print quesTitle,'titleeeeeee'
+                blogobj = blogPost.objects.get(shortUrl=blogname)
+                quesobj = Paper.objects.get(name__iexact=quesTitle)
+                print quesobj,quesobj.pk
+                data['id'] = quesobj.pk
+                data['user'] = quesobj.user.pk
+                print data['user'] ,'userrrrr'
+                htmlName = 'exam.html'
+            if blogobj.title:
+                data['seoDetails']['title'] = blogobj.title
+            if blogobj.description:
+                data['seoDetails']['description'] = blogobj.description
+            if blogobj.ogimage:
+                data['seoDetails']['image'] = blogobj.ogimage.url
+                w, h = get_image_dimensions(blogobj.ogimage.file)
+                print w,h
+                data['seoDetails']['width'] = w
+                data['seoDetails']['height'] = h
+            return render(request, htmlName, data)
+        except:
+            pass
         # this section is for books pages
         blogobj = blogPost.objects.get(shortUrl=blogname)
         subobjs = Subject.objects.all().order_by('level')
@@ -246,6 +298,8 @@ def blogDetails(request, blogname):
             data['seoDetails']['title'] = sectionobj.title
         if sectionobj.description:
             data['seoDetails']['description'] = sectionobj.description
+        else:
+            data['seoDetails']['description'] = sectionobj.book.description
         data['bot'] = {'prev':prev,'nxt':nxt,'prevobj':prevobj,'nxtvobj':nxtvobj}
 
         return render(request, 'bookContent.html', data)

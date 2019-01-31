@@ -54,7 +54,7 @@ class tutors24SessionViewSet(viewsets.ModelViewSet):
     permission_classes = (permissions.IsAuthenticated,)
     serializer_class = tutors24SessionSerializer
     filter_backends = [DjangoFilterBackend]
-    filter_fields = ['initialQuestion' , 'student' , 'tutor' ]
+    filter_fields = ['initialQuestion' , 'student' , 'tutor' ,'started']
 
     def get_queryset(self):
         if 'mode' in self.request.GET:

@@ -1,9 +1,11 @@
-<div class="container-fluid">
+<div class="container-fluid" ng-controller="controller.manageUsers.editProfile">
 
-  <div class="col-md-8">
+  <div class="col-md-6 col-md-offset-3">
+
+      <h3>{{tab.title}}</h3>
 
     <div class="form-group">
-      Tutor <switch ng-model="data.tutors24Profile.typ" class="green"></switch><span style="margin-left:10px;">Student</span>
+      Student <switch ng-model="form.is_tutor" class="green"></switch><span style="margin-left:10px;">Tutor</span>
     </div>
 
     <div class="form-group">
@@ -13,25 +15,25 @@
           <br>
           School
           <br>
-          <input ng-model="data.tutors24Profile.school" name="type{{data.tutors24Profile.pk}}" type="radio" ng-value="'S'">
+          <input ng-model="form.school" name="type{{form.pk}}" type="radio" ng-value="'S'">
         </div>
         <div class="col-md-6 text-center">
           <img src="/static/images/24tut/univ.png" style="height:60px;height:60px;" class="img img-circle">
           <br>
           College
           <br>
-          <input ng-model="data.tutors24Profile.school" name="type{{data.tutors24Profile.pk}}" type="radio" ng-value="'C'">
+          <input ng-model="form.school" name="type{{form.pk}}" type="radio" ng-value="'C'">
         </div>
       </div>
     </div>
     <div class="form-group">
       <label>Institute Name</label>
-      <input class="form-control" type="text" ng-model="data.tutors24Profile.schoolName">
+      <input class="form-control" type="text" ng-model="form.schoolName">
     </div>
 
     <div class="form-group">
       <label>Standard</label>
-      <select class="form-control" ng-model="data.tutors24Profile.standard">
+      <select class="form-control" ng-model="form.standard">
         <option value="1">Class 1</option>
         <option value="2">Class 2</option>
         <option value="3">Class 3</option>
@@ -51,33 +53,42 @@
 
     <div class="form-group">
       <label>Street</label>
-      <input type="text" class="form-control" ng-model="data.tutors24Profile.street" placeholder="street">
+      <input type="text" class="form-control" ng-model="form.street" placeholder="street">
     </div>
 
     <div class="form-group">
       <label>City</label>
-      <input type="text" class="form-control" ng-model="data.tutors24Profile.city" placeholder="city">
+      <input type="text" class="form-control" ng-model="form.city" placeholder="city">
     </div>
     <div class="form-group">
       <label>PinCode</label>
-      <input type="text" class="form-control" ng-model="data.tutors24Profile.pinCode" placeholder="pinCode">
+      <input type="text" class="form-control" ng-model="form.pinCode" placeholder="pinCode">
     </div>
     <div class="form-group">
       <label>State</label>
-      <input type="text" name="state" class="form-control" ng-model="data.tutors24Profile.state">
+      <input type="text" name="state" class="form-control" ng-model="form.state">
     </div>
     <div class="form-group">
       <label>Country</label>
-      <input type="text" name="country" class="form-control" ng-model="data.tutors24Profile.country">
+      <input type="text" name="country" class="form-control" ng-model="form.country">
     </div>
     <div class="form-group">
       <label>ParentEmail</label>
-      <input type="text" name="parentEmail" class="form-control" ng-model="data.tutors24Profile.parentEmail">
+      <input type="text" name="parentEmail" class="form-control" ng-model="form.parentEmail">
     </div>
     <div class="form-group">
       <label>ParentMobile</label>
-      <input type="text" name="parentMobile" class="form-control" ng-model="data.tutors24Profile.parentMobile">
+      <input type="text" name="parentMobile" class="form-control" ng-model="form.parentMobile">
     </div>
-
+    <div class="form-group">
+      <label>Details</label>
+      <input type="text" name="details" class="form-control" ng-model="form.detail" placeholder="Fill all details seperated by ||">
+    </div>
+    <button type="button" class="btn btn-default" ng-click="updateProfile()">
+      Save
+    </button>
   </div>
+
+
+
 </div>

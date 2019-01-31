@@ -4,26 +4,59 @@
 {% block bookcontent %}
 
 <div class="container-fluid" style="padding-top:40px;">
-  <div class="col-md-12" style="margin-top:1em;">
-    <a href="/{{blogobj.shortUrl}}/{{quesobj.name.split|join:'-'}}/practise/"><span class="btn btn-primary">Start Exam</span></a>
+  <style>
+    a:hover {
+      text-decoration: none;
+    }
+  </style>
+  <div class="col-md-12 text-right" style="margin-top:3em">
+    <a href="/{{blogobj.shortUrl}}/{{quesobj.name.split|join:'-'}}/practise/"><span class="btn-style1">Start Exam</span></a>
   </div>
   <div class="col-md-12">
-    <div class="row">
-      <div class="col-md-6 col-xs-12">
-        <div style="display:inline-block;">
-          <h1 class="heading_medium">{{quesobj.name}}</h1>
-        </div>
+    <div class="col-md10 col-md-offset-1">
+      <div class="row">
+        <h1 class="heading_medium">{{quesobj.name}}</h1>
       </div>
-    </div>
-  </div>
-  <hr>
-  {% for ques in quesobj.questions.all %}
-    <ul>
+      {% for ques in quesobj.questions.all %}
+      <!-- <ul>
       <b>{{ forloop.counter }}</b> {{ques.ques.ques}}
       {% for sol in ques.ques.solutionParts.all %}
       <li>{{sol.txt}}<br></li>
       {% endfor %}
-    </ul>
-  {% endfor %}
+    </ul> -->
+      <div class="row">
+        <div class="col-md-1" style="padding-top:2em;">
+          <div class="pull-right">
+            <b style="font-size:20px;">{{ forloop.counter }}</b>
+          </div>
+        </div>
+        <div class="col-md-11" style="padding-left:0px;padding-top:2em;">
+          <div>
+            <span style="font-size:20px;">{{ques.ques.ques}}</span>
+          </div>
+          <ol type="A" style="margin-left:2em;font-size:20px;padding-top:1em;">
+            {% for opt in ques.ques.optionsParts.all %}
+            <li style="padding:1em;display:inline-block;">
+              <span style="font-size:20px;">{{ forloop.counter }}. {{opt.txt}}</span>
+            </li>
+            {% endfor %}
+          </ol>
+
+          <div style="padding-top:0.5em;">
+            {% for sol in ques.ques.solutionParts.all %}
+            <span style="font-size:17px;font-style: italic;">Solution: {{sol.txt}}</span>
+            {% endfor %}
+          </div>
+          <!-- <div class="col-md-offset-1 col-md-10">
+            {% for sol in ques.ques.solutionParts.all %}
+            <span style="font-size:20px;">{{sol.txt}}</span>
+            {% endfor %}
+          </div> -->
+        </div>
+      </div>
+      {% endfor %}
+
+    </div>
+  </div>
 </div>
 {% endblock %}

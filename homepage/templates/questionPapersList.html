@@ -4,28 +4,51 @@
 {% block bookcontent %}
 
 <div class="container-fluid" style="padding-top:40px;">
+  <style>
+    .nohover:hover {
+      text-decoration: none;
+    }
+  </style>
   <div class="col-md-12">
     <div class="row" style="margin-top:1em;">
-      <div class="col-md-6 col-xs-12">
-        <div style="display:inline-block;">
-          <h1 class="heading_medium">{{groupObj.title}}</h1>
+      <div class="col-md-12 col-xs-12">
+        <div>
+          <h1 class="heading_medium text-center">{{groupObj.title}}</h1>
         </div>
       </div>
     </div>
     <div class="row">
-      <div class="col-md-12">
-        <h3>Description</h3>
-        <p>{{groupObj.description}}</p>
+      <div class="col-md-12 text-center">
+        <!-- <h2><b>Description</b></h2> -->
+        <h3>{{groupObj.description}}</h3>
       </div>
     </div>
   </div>
   <hr>
-  {% for quespaper in papersList %}
-  <div class="col-md-3">
-    <div class="col-md-12 well">
-      <a href="/{{blogobj.shortUrl}}/{{quespaper.name.split|join:'-'}}-with-answers/">{{quespaper.name}}</a>
+  <div class="col-md-12">
+    <div class="row">
+
+      <div class="textcenter" style="margin:1em 0 ; display: flex;justify-content: center;align-items: center;margin: 2em;">
+        {% for quespaper in papersList %}
+        <!-- <div style="text-align:center; "> -->
+        <div class="well text-center" style="margin:1em;width:30%;">
+          <a class="nohover" href="/{{blogobj.shortUrl}}/{{quespaper.name.split|join:'-'}}-with-answers/"><b style="font-size:20px;color:#000;">{{quespaper.name}}</b></a>
+        </div>
+        <!-- </div> -->
+        <!-- <div class="cardstype nohover" style="margin-top:3em;border-top-left-radius: 50px;min-height:0vh;min-height:20vh;text-align: left;">
+        <div style="cursor:pointer;text-align: center;padding:2em 1em 1em 1em;min-height: 9em;"><span style="font-size:17px;">{{a.chapter}} </span><br />
+          <span style="font-size:17px;"> {{quespaper.name}}</span>
+        </div>
+        <div class="text-center">
+          <a href="/{{blogobj.shortUrl}}/{{quespaper.name.split|join:'-'}}-with-answers/"><button class="btn-style1" style="border-top-left-radius: 15px;padding: 0.5em 1em;margin-top: 0em;">View</button></a>
+        </div>
+
+      </div> -->
+        {% endfor %}
+      </div>
+
     </div>
+
   </div>
-  {% endfor %}
 </div>
 {% endblock %}
