@@ -2967,6 +2967,8 @@ def updateAndProcessOrder(orderID , amnt, referenceId=None):
         email_subject = 'Order Placed'
         email_to = []
         email_to.append(str(orderObj.user.email))
+        for i in globalSettings.G_ADMIN:
+            email_to.append(str(i))
         email_cc = []
         email_bcc = []
         send_email(email_body,email_to,email_subject,email_cc,email_bcc,'html')
