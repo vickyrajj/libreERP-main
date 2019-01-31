@@ -1,0 +1,24 @@
+<div class=" bg-white " style="position:relative;min-height:80vh;" ng-controller="app.company.explore" >
+  <div class="container-fluid" style="padding:0px;">
+    <div class="col-md-10" style="padding:0px;">
+      <div ng-if="inView.name=='Company Details'" ng-include="'/static/ngTemplates/app.customers.explore.companyDetails.html'"></div>
+      <div ng-if="inView.name=='UI Settings'" ng-include="'/static/ngTemplates/app.customers.explore.uiSettings.html'"></div>
+      <div ng-if="inView.name=='Knowledge Base'" ng-include="'/static/ngTemplates/app.customers.explore.knowledgeBase.html'"></div>
+      <div ng-if="inView.name=='Dynamic Forms'" ng-include="'/static/ngTemplates/app.customers.explore.dynamicForms.html'"></div>
+    </div>
+    <div class="col-md-1 animated fadeIn" style="position:absolute; height:100%;top:0px;right:0px;border-left:solid 2px #eeeeee ">
+      <div style="position:absolute;left:0px;width:100%;">
+        <ul class="nav padded" style="width:100%;">
+          <li ng-repeat="app in companyApps" style="cursor:pointer; {{app.name==inView.name?'background-color:#eee':''}}" class="ripple" ng-click="setView(app.name)">
+            <a>
+              <div align="center">
+                <i class="fa {{app.icon}} fa-2x pull-left"></i> {{app.name | humanize}}
+              </div>
+            </a>
+          </li>
+        </ul>
+      </div>
+
+    </div>
+  </div>
+</div>

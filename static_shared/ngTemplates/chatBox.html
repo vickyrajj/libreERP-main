@@ -1,38 +1,43 @@
 <div class="animated fadeIn" id="chatBox">
   <div style="min-height:83vh;margin-top:0px;padding:0px;border-left: 1px solid #eeeeee; border-right: 1px solid #eeeeee; background-color: white;border-bottom:2px solid #eeeeee " class="container-fluid">
-    <div class="container-fluid" style="padding:0px;border-bottom:1px solid #eeeeee;height:95px;">
+    <div class="container-fluid" style="padding:0px;border-bottom:1px solid #eeeeee;height: 110px;">
       <div class="row" style="padding:2px;margin:0px;border-bottom: 1px dotted grey;background-color:#eee">
         <div class="">
-          <div class="col-md-3" style="padding:0px">
+          <div class="col-md-offset-1 col-md-2" style="padding:0px">
             <div class=" btn-sm btn-block" style="border-radius:0px !important;text-align: center;" type="button" name="button" ng-click="knowledgeBase(data.companyPk)"><i class="fa fa-book" style="font-size:20px;" aria-hidden="true"></i>
             </div>
           </div>
-          <div class="col-md-3" style="padding:0px">
+          <div class="col-md-2" style="padding:0px">
             <div class=" btn-sm btn-block" type="button" style="border-radius:0px !important;padding:5px 0px;text-align: center;" name="button" mwl-confirm title="Transfer Chat" message="Are you sure?" data-placement="bottom" confirm-text="Yes <i class='fa fa-check'></i>" cancel-text="No" on-confirm="chatTransfer(data.uid,data.chatThreadPk)"
               confirm-button-type="default" cancel-button-type="default"><i style="font-size:20px" class="fa fa-user-o" aria-hidden="true"></i>
               <i style="font-size:12px" class="fa fa-exchange" aria-hidden="true"></i>
               <i style="font-size:20px" class="fa fa-user" aria-hidden="true"></i>
             </div>
           </div>
-          <div class="col-md-3" style="padding:0px">
+          <div class="col-md-2" style="padding:0px">
             <div class=" btn-sm btn-block" type="button" style="border-radius:0px !important;text-align: center;" name="button" mwl-confirm title="Close Chat" message="Are you sure?" data-placement="bottom" confirm-text="Yes <i class='fa fa-check'></i>" cancel-text="No" on-confirm="chatClose(index,data.uid,data.chatThreadPk);closed=true"
               confirm-button-type="default" cancel-button-type="default" ng-hide="closed">
               <img style="width:24px;border-radius:10px" src="/static/images/close_chat.png">
             </div>
             <span ng-if="closed" style="font-size:18px;color:red">Chat Closed</span>
           </div>
-          <div class="col-md-3 " style="padding:0px;font-size:20px;text-align:center;border-radius:1px">
+          <div class="col-md-2 " style="padding:0px;font-size:20px;text-align:center;border-radius:1px">
 
             <i class="fa fa-pencil " style="cursor:pointer;" aria-hidden="true" ng-click="editUserDetails(data.uid)" title="Edit Details"></i>
+          </div>
+          <div class="col-md-2 " style="padding:0px;font-size:20px;text-align:center;border-radius:1px">
+
+            <i class="fa fa-cog " style="cursor:pointer;" aria-hidden="true" ng-click="openDynamicFuncModal(data.uid)" title="Edit Details"></i>
           </div>
         </div>
       </div>
       <div class="row" style="padding:5px; position:relative;">
         <div class="col-md-9" style="padding-right:0px;">
           <i class="fa fa-circle" aria-hidden="true" style="color:{{data.isOnline ? '#37a508':'#ff0022'}}"></i>
-           <span style="font-size:15px; cursor:default;" ng-click="callToChatter()" ng-mouseover="showCompanyName = true" ng-mouseleave="showCompanyName = false">{{data.uid}}</span>
-           <span class="custom_tool_tip" ng-if="showCompanyName"> {{companyName}} </span>
-          <div style="margin:5px 10px">
+           <span style="font-size:15px; cursor:default;" ng-mouseover="showCompanyName = true" ng-mouseleave="showCompanyName = false">{{data.uid}}</span>
+           <div style="font-size:13px;">{{companyName}}</div>
+           <!-- <span class="custom_tool_tip" ng-if="showCompanyName"> {{companyName}} </span> -->
+          <div >
             <span ng-if="data.name" class="text-muted" style="font-size:15px;">{{data.name}} </span>
             <span ng-if="data.email" class="text-muted" style="font-size:10px;" >({{data.email}})</span>
           </div>

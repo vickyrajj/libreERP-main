@@ -41,6 +41,7 @@ class CustomerProfile(models.Model):
     chatIconPosition = models.CharField(max_length = 20000 , null = True ,blank=True)
     chatIconType = models.CharField(max_length = 20000 , null = True ,blank=True)
     is_blink = models.BooleanField(default = False)
+    support_icon = models.ImageField(upload_to = getdpPath , null = True)
 
 
 class SupportChat(models.Model):
@@ -179,3 +180,5 @@ class DynamicField(models.Model):
     field_typ = models.CharField(choices = FIELD_TYP_CHOICES , max_length = 15 , default = 'typeahead')
     parameters = models.CharField(max_length = 100 , null = True)
     field_name = models.CharField(max_length = 50 , null = True)
+    key = models.CharField(max_length = 50 , null = True)
+    is_required = models.BooleanField(default = False)

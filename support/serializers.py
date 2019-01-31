@@ -23,7 +23,7 @@ regex = re.compile('^HTTP_')
 class CustomerProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = CustomerProfile
-        fields = ( 'pk' , 'created' , 'service', 'chat' , 'call' , 'email', 'video' ,'audio', 'vr' ,'fontColor', 'windowColor' , 'callBack' , 'ticket','dp' ,'name' , 'supportBubbleColor','userApiKey','firstMessage','iconColor','chatIconPosition','chatIconType','is_blink')
+        fields = ( 'pk' , 'created' , 'service', 'chat' , 'call' , 'email', 'video' ,'audio', 'vr' ,'fontColor', 'windowColor' , 'callBack' , 'ticket','dp' ,'name' , 'supportBubbleColor','userApiKey','firstMessage','iconColor','chatIconPosition','chatIconType','is_blink','support_icon')
     def create(self ,  validated_data):
         c = CustomerProfile(**validated_data)
         c.service = service.objects.get(pk=self.context['request'].data['service'])
@@ -258,9 +258,9 @@ class CannedResponsesSerializer(serializers.ModelSerializer):
 class DynamicFormSerializer(serializers.ModelSerializer):
     class Meta:
         model = DynamicForm
-        fields = ( 'pk' , 'created' , 'user' ,'company', 'form_name', 'function_name' , 'form_description')
+        fields = ( 'pk' , 'created','updated' , 'user' ,'company', 'form_name', 'function_name' , 'form_description')
 
 class DynamicFieldSerializer(serializers.ModelSerializer):
     class Meta:
         model = DynamicField
-        fields = ( 'pk' , 'created' , 'form' ,'field_typ', 'parameters', 'field_name')
+        fields = ( 'pk' , 'created' , 'form' ,'field_typ', 'parameters', 'field_name', 'key', 'is_required')

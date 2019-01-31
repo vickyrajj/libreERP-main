@@ -312,6 +312,10 @@ var fontAndIconColor='{{fontColor}}'
 var position_of_chat="{{chatIconPosition}}";
 var type_of_icon='{{chatIconType}}'
 var is_blink = '{{is_blink}}'
+var support_icon = '{{support_icon}}'
+
+
+
 
 var sy_circle_class="sy-circle-"+position_of_chat.split('-')[0] //sy-circle-right , sy-circle-left
 var sy_text_class=" sy-text-"+position_of_chat.split('-')[0] // sy-text-right , sy-text-left
@@ -376,12 +380,13 @@ if (is_blink=='True') {
 }
 
 
-
+support_icon = '{{serverAddress}}'+'{{support_icon}}'
 if (dpSupport=='') {
   dpSupport = '{{serverAddress}}/static/images/img_avatar_card.png'
 }else {
   dpSupport = '{{serverAddress}}'+'{{dp}}'
 }
+
 
 if (chatSupport=='True') {
   chatSupport = true
@@ -581,6 +586,10 @@ document.addEventListener("DOMContentLoaded", function(event) {
     }
   }
 
+  // support_icon = ''
+
+
+
 
   window.onbeforeunload=function(){
   // alert('winodw refreshed');
@@ -612,6 +621,10 @@ document.addEventListener("DOMContentLoaded", function(event) {
       openChat()
       ChatWithUs.style.display="none"
     })
+    if (support_icon=='{{serverAddress}}') {
+      document.getElementById('24Icon').classList.add('font-Syrow24hSupport');
+      document.getElementById('supportDp').style.display = "none";
+    }
   }, 2000);
 
 
@@ -803,8 +816,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
     }
 
     function handleParentFunc(args) {
-      var message = {event_name : args[0], event_fun : args[1]};
-      var targetOrigin = '';
+      var message = {event_name : args[0], event_data : args[1]};
       window.postMessage(message, "*");
     }
 
@@ -924,7 +936,7 @@ function createChatDiv() {
                       '<div style="background: '+supportBubbleColor+' !important; color:'+iconColor+';cursor:pointer" class="sy-circle first_animation '+sy_circle_class+'" id="sy-main-icon">'+
                           '<span id="Syrow24hSupportText" style="background: '+supportBubbleColor+' !important; color:'+iconColor+'" class="sy-text '+sy_firsttext_class+'">24 Hours Support</span>'+
                           '<span id="chatSuggestionBar" style="display:none;background:'+supportBubbleColor+' !important; color:'+iconColor+'" class="sy-text-Suggested '+sy_firsttext_class+'">'+firstMessage+'</span>'+
-                          '<span class="SyrowFont font-Syrow24hSupport sy-md-1 sy-ops"></span>'+
+                          '<span id="24Icon" class="SyrowFont sy-md-1 sy-ops"><img id="supportDp" src="'+support_icon+'" style="width:40px; height:40px; border-radius:50%;"></img> </span>'+
                           '<div  id="sy-sub-icons">'+
                               '<div style="background: '+supportBubbleColor+' !important; color:'+iconColor+';cursor:pointer" id="callCircle" class="sy-circle '+sy_circle_class+'">'+
                                 '<span id="callCircleText" style="background: '+supportBubbleColor+' !important; color:'+iconColor+'" class="sy-text '+sy_text_class+'">Callback</span>'+
@@ -2003,6 +2015,9 @@ function createChatDiv() {
               border-radius: 5px;\
               cursor:pointer;\
             }\
+            #herere p {\
+              font-size:14px !important;\
+            }\
             @keyframes moveInLeft{\
               0%{\
                 opacity:0;\
@@ -2924,8 +2939,9 @@ setInterval(function () {
         firstMessage = firstMessage.replaceAll("&gt;",">")
         firstMessage = firstMessage.replaceAll("<a","<a style="+'color:'+windowColor+';text-decoration:none')
         firstMessage = firstMessage.replaceAll("<li>","<li style='list-style:none'>")
+
           div.innerHTML = '<div style="margin:0px 0px 10px; box-sizing:border-box;" >'+
-                  '<div id="herere" style="clear: both; float:left; background-color:#f6f6f6; padding:5px 10px;margin:8px; border-radius:5px; box-sizing:border-box;font-size:14px">'+
+                  '<div style="clear: both; float:left; background-color:#f6f6f6; padding:5px 10px;margin:8px; border-radius:5px; box-sizing:border-box;font-size:14px">'+
                      firstMessage+
                   '</div> '+
                 '</div> '
@@ -2933,7 +2949,15 @@ setInterval(function () {
         div.innerHTML = messageDiv(chat.messages[i])
       }
       messageBox.appendChild(div);
+
     }
+    // console.log(document.getElementById('herere').getElementsByTagName("p"),'ffffffffffffffffffffffffff');
+    // var pTags = document.getElementById('herere').getElementsByTagName("p");
+    // var pTags = document.getElementById('herere').firstChild.style.fontSize = "8px"
+    // for (var i = 0; i < pTags.length; i++) {
+    //   console.log(pTags,'inforrrrrrrrrrrrr');
+    //   pTags[i].style.fontSize = "8px;"
+    // }
     scroll();
   }
 

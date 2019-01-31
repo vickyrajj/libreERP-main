@@ -1218,6 +1218,10 @@ cursor: pointer
   border:1px solid #eee
 }
 
+.flex_box{
+  display: flex;
+}
+
 
 /* .removeGradientBtn .btn{
   display: inline-block;

@@ -1,0 +1,38 @@
+<div class="modal-header">
+  <h3 class="text-center">Quick Actions</h3>
+</div>
+<div class="modal-body">
+  <div class="container-fluid">
+
+    <h5 class="text-muted" ng-if="dynamicFrom.length==0"> No Dynamic form available. </h5>
+
+    <div class="row">
+      <div class="col-md-4">
+        <div class="card" ng-repeat="d in dynamicForms" style="padding:15px; margin-bottom:15px; cursor:pointer; {{formInView.form_name==d.form_name?'background-color:#e0e0e0;':''}}" ng-click="setForm(d.pk, $index)">
+          {{d.form_name}}
+        </div>
+      </div>
+      <div class="col-md-8" style="border-left:1px solid #e0e0e0;">
+        <p style="color:#575757; text-align:center;"> <b> {{formInView.form_name}}</b> </p>
+        <div class="row container-fluid" ng-repeat="f in formInView.fields" style="margin-bottom:15px; padding-left:30px;">
+
+          <div class="form-group">
+            <label for="">{{f.field_name}}</label>
+            <input ng-if="f.field_typ=='text'" type="text" class="form-control" id="" placeholder="text"  ng-model="f.value">
+            <input  uib-typeahead="res as res['title'] for res in typeahedSearch($viewValue , f.parameters)" ng-if="f.field_typ=='typeahead'" type="text" class="form-control" id="" placeholder="typeahead" ng-model="f.value">
+          </div>
+
+          <div ng-if="f.field_typ=='dropdown'" class="form-group">
+            <input type="text" class="form-control" id="" placeholder="dropdown" ng-model="f.value">
+          </div>
+
+        </div>
+        <button type="button" class="btn btn-primary" ng-click="send()">
+          Send
+        </button>
+      </div>
+    </div>
+
+  </div>
+</div>
+<span style="position:fixed; top:10px; right:10px; cursor:pointer;" ng-click="closeModal()" > <i class="fa fa-times"></i> </span>

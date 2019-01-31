@@ -785,8 +785,9 @@ app.directive('chatBox', function() {
         })
       }
 
-      $scope.callToChatter = function () {
-        connection.session.call(wamp_prefix + 'service.support.handleParentFunc.' + $scope.data.uid, ['call_function','signin']).then(
+      $scope.callToChatter = function (data) {
+        alert('sdfsdf')
+        connection.session.call(wamp_prefix + 'service.support.handleParentFunc.' + $scope.data.uid, ['func_call',data]).then(
           function(res) {
             console.log('called');
           },
@@ -854,6 +855,7 @@ app.directive('chatBox', function() {
         console.log(response.data);
         $scope.companyName = response.data.cDetails[0]
         $scope.compContactPersons = response.data.contactP
+        $scope.companyPk = response.data.servicePk
       })
 
       $http({
@@ -1819,13 +1821,14 @@ app.directive('chatBox', function() {
 
 
       $scope.searchCannedRes = function(val) {
+        console.log($scope.companyPk);
         var hash = "#"
         if (val.includes('#')) {
           var textAfterHash = val.slice(val.indexOf(hash) + hash.length);
           if (textAfterHash.length > 0) {
             return $http({
               method: 'GET',
-              url: '/api/support/cannedResponses/?text__icontains=' + textAfterHash + '&service=' + $scope.data.servicePk
+              url: '/api/support/cannedResponses/?text__icontains=' + textAfterHash + '&service=' + $scope.companyPk
             }).
             then(function(response) {
               console.log(response.data);
@@ -1864,7 +1867,83 @@ app.directive('chatBox', function() {
 
 
 
+      $scope.openDynamicFuncModal = function () {
 
+        console.log($scope.companyPk);
+
+          $uibModal.open({
+            templateUrl: '/static/ngTemplates/app.support.dynamicForms.modal.html',
+            size: 'lg',
+            backdrop: true,
+            resolve: {
+              servicePk: function() {
+                return $scope.companyPk;
+              },
+              callTochatter: function() {
+                return $scope.callToChatter;
+              }
+            },
+            controller: function($scope, servicePk, $users,callTochatter , $uibModalInstance, Flash) {
+
+              $http({
+                method:'GET',
+                url:'/api/support/dynamicForms/?companyPk='+servicePk
+              }).then(function (response) {
+                console.log(response.data);
+                $scope.dynamicForms = response.data
+                $scope.formInView = $scope.dynamicForms[0];
+
+                for (let i = 0; i < $scope.dynamicForms.length; i++) {
+                  $http({
+                    method:'GET',
+                    url:'/api/support/dynamicFields/?formPk='+$scope.dynamicForms[i].pk
+                  }).then(function (response) {
+                      $scope.dynamicForms[i].fields = response.data
+                  })
+                }
+              });
+
+              $scope.setForm = function (pk, indx) {
+                $scope.formInView = $scope.dynamicForms[indx]
+              }
+
+              $scope.closeModal = function () {
+                  $uibModalInstance.dismiss()
+              }
+
+              $scope.send = function () {
+                var toSend = {}
+                for (var i = 0; i < $scope.formInView.fields.length; i++) {
+                  if ($scope.formInView.fields[i].is_required && $scope.formInView.fields[i].value =='') {
+                    Flash.create('warning', $scope.formInView.fields[i].field_name + 'is required');
+                    return;
+                  }
+
+                  toSend[$scope.formInView.fields[i].field_name] = $scope.formInView.fields[i].value
+                }
+                console.log(toSend);
+
+                callTochatter(toSend);
+
+              }
+
+              $scope.typeahedSearch = function(query, parameter) {
+                return $http.get(parameter + query).
+                then(function(response) {
+                  return response.data.results;
+                })
+              };
+
+            },
+          }).result.then(function() {
+
+          }, function(data) {
+            if (data != 'backdrop click' && data != 'escape key press') {
+
+            }
+          });
+
+      }
 
 
 

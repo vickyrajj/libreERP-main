@@ -12,11 +12,11 @@ app.config(function($stateProvider) {
 });
 
 
-app.controller("businessManagement.customers", function($scope, $state, $users, $stateParams, $http, Flash, $uibModal, $rootScope ,$permissions , $timeout) {
+app.controller("businessManagement.customers", function($scope, $state, $users, $stateParams, $http, Flash, $uibModal, $rootScope, $permissions, $timeout) {
 
   $scope.me = $users.get('mySelf')
   $scope.customerCreatePerm = false;
-  $timeout(function () {
+  $timeout(function() {
     $scope.customerCreatePerm = $permissions.myPerms('module.customer.create')
   }, 300);
 
@@ -86,9 +86,9 @@ app.controller("businessManagement.customers", function($scope, $state, $users, 
   }
 });
 
-app.controller("businessManagement.customers.explore", function($scope, $state,$filter, $users, $stateParams, $http, Flash, $uibModal) {
+app.controller("businessManagement.customers.explore", function($scope, $state, $filter, $users, $stateParams, $http, Flash, $uibModal) {
 
- $scope.myAdvisors=[]
+  $scope.myAdvisors = []
 
 })
 
@@ -156,12 +156,12 @@ app.controller("businessManagement.customers.document", function($scope, $state,
       fd.append('docs', $scope.docForm.docs);
     }
 
-    if ($scope.docForm.process!=null && typeof $scope.docForm.process != 'string') {
-      fd.append('process' , $scope.docForm.process.pk)
+    if ($scope.docForm.process != null && typeof $scope.docForm.process != 'string') {
+      fd.append('process', $scope.docForm.process.pk)
     }
 
-    if ($scope.docForm.articleOwner!=null && typeof $scope.docForm.articleOwner != 'string') {
-      fd.append('articleOwner' , $scope.docForm.articleOwner.pk)
+    if ($scope.docForm.articleOwner != null && typeof $scope.docForm.articleOwner != 'string') {
+      fd.append('articleOwner', $scope.docForm.articleOwner.pk)
     }
     var method = 'POST'
     var url = '/api/support/documentation/'
@@ -186,19 +186,19 @@ app.controller("businessManagement.customers.document", function($scope, $state,
       }
       $scope.docForm = response.data
 
-        $http({
-          method: 'POST',
-          url: '/api/support/documentVersion/',
-          data: {
-            text: response.data.text,
-            parent: response.data.pk,
-            title: response.data.title
-          }
-        }).
-        then(function(response) {
-          response.data.active = false
-          $scope.versions.push(response.data)
-        });
+      $http({
+        method: 'POST',
+        url: '/api/support/documentVersion/',
+        data: {
+          text: response.data.text,
+          parent: response.data.pk,
+          title: response.data.title
+        }
+      }).
+      then(function(response) {
+        response.data.active = false
+        $scope.versions.push(response.data)
+      });
     })
   }
 
@@ -273,32 +273,215 @@ app.controller("businessManagement.customers.document", function($scope, $state,
       controller: function($scope, $users, version, $timeout, $uibModalInstance) {
         $scope.version = version
 
-        $scope.close = function () {
-            $uibModalInstance.dismiss();
+        $scope.close = function() {
+          $uibModalInstance.dismiss();
         }
       },
     })
   }
 
-    $scope.userSearch = function(query) {
-      return $http.get('/api/HR/userSearch/?username__contains=' + query).
-      then(function(response) {
-        return response.data;
-      })
-    };
-    $scope.processSearch = function(val) {
-      return $http({
-        method: 'GET',
-        url: '/api/support/companyProcess/?text__contains=' + val
-      }).
-      then(function(response) {
-        return response.data;
-      })
-    }
+  $scope.userSearch = function(query) {
+    return $http.get('/api/HR/userSearch/?username__contains=' + query).
+    then(function(response) {
+      return response.data;
+    })
+  };
+  $scope.processSearch = function(val) {
+    return $http({
+      method: 'GET',
+      url: '/api/support/companyProcess/?text__contains=' + val
+    }).
+    then(function(response) {
+      return response.data;
+    })
+  }
 
 })
 
-app.controller("businessManagement.customers.form", function($scope, $state, $users, $stateParams, $http, Flash,$uibModal) {
+app.controller("app.company.explore", function($scope, $state, $users, $stateParams, $http, Flash, $uibModal) {
+
+  $scope.me = $users.get('mySelf')
+  $scope.compDetails = $scope.tab.data
+
+  console.log($scope.compDetails);
+
+  $scope.inView = {
+    name: 'Company Details'
+  }
+
+  $scope.setView = function(appName) {
+    $scope.inView.name = appName
+  }
+
+  $scope.companyApps = [{
+    name: 'Company Details',
+    icon: 'fa-info'
+  }, {
+    name: 'UI Settings',
+    icon: 'fa-cog'
+  }, {
+    name: 'Knowledge Base',
+    icon: 'fa-book'
+  }, {
+    name: 'Dynamic Forms',
+    icon: 'fa-columns'
+  }]
+
+})
+
+
+app.controller("app.company.explore.dynamicForm", function($scope, $state, $users, $stateParams, $http, Flash, $uibModal) {
+  $scope.me = $users.get('mySelf');
+  $scope.cPk = $scope.compDetails.pk
+
+  // $scope.fieldType = [{},{},{}]
+
+  $scope.resetForm = function() {
+    $scope.newForm = {
+      user: $scope.me.pk,
+      form_name: '',
+      function_name: '',
+      form_description: '',
+      company: $scope.cPk,
+      fields: []
+    }
+  }
+  $scope.resetForm();
+
+
+  $scope.fetchForms = function() {
+    $http({
+      method: 'GET',
+      url: '/api/support/dynamicForms/?companyPk=' + $scope.cPk
+    }).then(function(response) {
+      $scope.dynamicForm = response.data
+
+      for (let i = 0; i < $scope.dynamicForm.length; i++) {
+        $http({
+          method: 'GET',
+          url: '/api/support/dynamicFields/?formPk=' + $scope.dynamicForm[i].pk
+        }).then(function(response) {
+          $scope.dynamicForm[i].fields = response.data
+        })
+      }
+    })
+  }
+
+  $scope.fetchForms();
+
+  $scope.setForm = function(indx) {
+    $scope.newForm = $scope.dynamicForm[indx]
+    $scope.dynamicFormIndex = indx
+  }
+
+  $scope.saveForm = function() {
+
+    if ($scope.newForm.form_name == '') {
+      Flash.create('warning', 'please fill form name')
+      return;
+    }
+
+    var toPost = {}
+    toPost.user = $scope.newForm.user
+    toPost.company = $scope.newForm.company
+    toPost.form_name = $scope.newForm.form_name
+    toPost.function_name = $scope.newForm.function_name
+    toPost.form_description = $scope.newForm.form_description
+
+    $http({
+      method: 'POST',
+      url: '/api/support/dynamicForms/',
+      data: toPost
+    }).then(function(response) {
+      $scope.dynamicForm.push(response.data);
+      $scope.setForm($scope.dynamicForm.length -1)
+      Flash.create('succes','form created')
+    },function (err) {
+      Flash.create('warning', 'error')
+    })
+  }
+
+  $scope.editDynamicForm = function(pk) {
+    if ($scope.newForm.form_name == '') {
+      Flash.create('warning', 'please fill all details')
+      return;
+    }
+    $http({
+      method: 'PATCH',
+      url: '/api/support/dynamicForms/' + pk + '/',
+      data: $scope.newForm
+    }).then(function(response) {
+      $scope.dynamicForm[$scope.setIndex] = response.data;
+      // $scope.resetForm();
+      Flash.create('success','edited')
+    },function (err) {
+      Flash.create('warning', 'error')
+    })
+  }
+
+  $scope.deleteForm = function(indx) {
+    var formToDelete = $scope.dynamicForm[indx];
+    $http({
+      method: 'DELETE',
+      url: '/api/support/dynamicForms/' + formToDelete.pk + '/',
+      data: $scope.newForm
+    }).then(function(response) {
+      $scope.dynamicForm.splice(indx, 1)
+      Flash.create('success', 'form deleted')
+    },function (err) {
+      Flash.create('warning', 'error')
+    })
+  }
+
+  $scope.fieldForm = {
+    field_typ : '',
+    parameters : '',
+    field_name : ''
+  }
+
+
+  $scope.addFields = function () {
+    if ($scope.fieldForm.field_name == '') {
+      Flash.create('warning', 'please fill all details')
+      return;
+    }
+
+    var toPost = $scope.fieldForm
+    toPost.form = $scope.newForm.pk
+    $http({
+      method: 'POST',
+      url: '/api/support/dynamicFields/',
+      data: toPost
+    }).then(function(response) {
+      $scope.newForm.fields.push(response.data)
+      $scope.fieldForm = {
+        field_typ : '',
+        parameters : '',
+        field_name : ''
+      }
+      Flash.create('success', 'field added')
+    },function (err) {
+      Flash.create('warning', 'error')
+    })
+  }
+
+  $scope.deleteDynamicField = function (pk, fieldIndex) {
+    $http({
+      method: 'DELETE',
+      url: '/api/support/dynamicFields/'+pk +'/',
+    }).then(function(response) {
+      $scope.newForm.fields.splice(fieldIndex,1)
+      Flash.create('success', 'field deleted')
+    },function (err) {
+      Flash.create('warning', 'error')
+    })
+  }
+
+
+
+})
+
+app.controller("businessManagement.customers.form", function($scope, $state, $users, $stateParams, $http, Flash, $uibModal) {
 
   $scope.tinymceOptions = {
     selector: 'textarea',
@@ -324,7 +507,7 @@ app.controller("businessManagement.customers.form", function($scope, $state, $us
     call: false,
     email: false,
     video: false,
-    audio:false,
+    audio: false,
     vr: false,
     windowColor: '#000000',
     fontColor: '#ffffff',
@@ -336,8 +519,9 @@ app.controller("businessManagement.customers.form", function($scope, $state, $us
     supportBubbleColor: '#286EFA',
     iconColor: '#FFFFFF',
     firstMessage: '',
-    chatIconPosition:'right-bottom',
-    chatIconType:'Box'
+    chatIconPosition: 'right-bottom',
+    chatIconType: 'Box',
+    support_icon: emptyFile,
   }
   $scope.fetCustomerProfile = function(pk) {
     $scope.cpForm.service = pk
@@ -355,98 +539,6 @@ app.controller("businessManagement.customers.form", function($scope, $state, $us
     });
   }
 
-  $scope.dynamicFormModal = function() {
-    console.log($scope.compDetails);
-
-    $uibModal.open({
-      templateUrl: '/static/ngTemplates/app.customer.dynamicForms.modal.html',
-      size: 'lg',
-      backdrop: true,
-      resolve: {
-        cPk:function () {
-          return $scope.compDetails.pk
-        },
-        myPk:function () {
-          return $scope.me.pk
-        }
-      },
-      controller: function($scope, $users, $timeout,cPk,myPk, $uibModalInstance,Flash) {
-        $scope.cPk = cPk
-
-        $scope.resetForm = function () {
-          $scope.form = {
-            user:myPk,
-            form_name:'',
-            function_name:'',
-            form_description:'',
-            company:cPk
-          }
-        }
-
-        $scope.resetForm();
-
-
-        $scope.getForms = function () {
-          $http({
-            method:'GET',
-            url:'/api/support/dynamicForms/?companyPk='+$scope.cPk
-          }).then(function (response) {
-            console.log(response.data);
-            $scope.dynamicFrom = response.data
-          })
-        }
-        $scope.getForms();
-
-        $scope.setForm = function (indx) {
-          $scope.form = $scope.dynamicFrom[indx]
-          $scope.setIndex = indx
-        }
-
-        $scope.saveForm = function () {
-
-          if ($scope.form.form_name=='') {
-            Flash.create('warning', 'please fill form name')
-            return ;
-          }
-
-
-          $http({
-            method:'POST',
-            url:'/api/support/dynamicForms/',
-            data:$scope.form
-          }).then(function (response) {
-            $scope.dynamicFrom.push(response.data);
-            $scope.resetForm();
-          })
-        }
-
-        $scope.editForm = function (pk) {
-          $http({
-            method:'PATCH',
-            url:'/api/support/dynamicForms/'+ pk + '/',
-            data:$scope.form
-          }).then(function (response) {
-            $scope.dynamicFrom[$scope.setIndex] = response.data;
-            $scope.resetForm();
-          })
-        }
-
-        $scope.deleteForm = function (indx) {
-          var formToDelete = $scope.dynamicFrom[indx];
-          $http({
-            method:'DELETE',
-            url:'/api/support/dynamicForms/'+ formToDelete.pk + '/',
-            data:$scope.form
-          }).then(function (response) {
-            $scope.dynamicFrom.splice(indx,1)
-          })
-        }
-
-      },
-    })
-
-  }
-
   $scope.generateScriptModal = function(pk) {
     $uibModal.open({
       templateUrl: '/static/ngTemplates/app.customer.generateScript.modal.html',
@@ -456,9 +548,9 @@ app.controller("businessManagement.customers.form", function($scope, $state, $us
         cPk: function() {
           return $scope.custDetails.pk;
         },
-        compDetail:$scope.compDetails,
+        compDetail: $scope.compDetails,
       },
-      controller: function($scope, $users, $timeout, $uibModalInstance, cPk,compDetail,Flash) {
+      controller: function($scope, $users, $timeout, $uibModalInstance, cPk, compDetail, Flash) {
         $scope.cpk;
         $http({
           method: 'GET',
@@ -470,7 +562,7 @@ app.controller("businessManagement.customers.form", function($scope, $state, $us
 
         });
 
-        $scope.sendEmail=function(){
+        $scope.sendEmail = function() {
           if ($scope.emailAddress) {
             $http({
               method: 'POST',
@@ -478,11 +570,11 @@ app.controller("businessManagement.customers.form", function($scope, $state, $us
               data: {
                 email: $scope.emailAddress,
                 script: $scope.src,
-                companyName:compDetail.name,
+                companyName: compDetail.name,
               }
             }).then(function(response) {
               Flash.create('success', 'Mail Sent')
-              $scope.emailAddress=''
+              $scope.emailAddress = ''
             });
           }
         }
@@ -495,10 +587,10 @@ app.controller("businessManagement.customers.form", function($scope, $state, $us
   }
 
   $scope.fetchProcess = function() {
-    $scope.process_list =[]
+    $scope.process_list = []
     $http({
       method: 'GET',
-      url: 'api/support/companyProcess/?service='+$scope.compDetails.pk
+      url: 'api/support/companyProcess/?service=' + $scope.compDetails.pk
     }).
     then(function(response) {
       console.log(response.data, 'response');
@@ -523,8 +615,8 @@ app.controller("businessManagement.customers.form", function($scope, $state, $us
         }
       }).
       then(function(response) {
-          $scope.process_list.push(response.data)
-          $scope.process_text = ''
+        $scope.process_list.push(response.data)
+        $scope.process_text = ''
       });
     } else {
       Flash.create('warning', 'Mention Some process')
@@ -532,9 +624,12 @@ app.controller("businessManagement.customers.form", function($scope, $state, $us
   }
 
   $scope.close_process = function(indx) {
-    $http({method : 'DELETE' , url : '/api/support/companyProcess/' + $scope.process_list[indx].pk + '/'}).
-    then(function(response){
-      Flash.create('success' , 'Deleted Successfully')
+    $http({
+      method: 'DELETE',
+      url: '/api/support/companyProcess/' + $scope.process_list[indx].pk + '/'
+    }).
+    then(function(response) {
+      Flash.create('success', 'Deleted Successfully')
       $scope.process_list.splice(indx, 1)
     })
   }
@@ -572,10 +667,10 @@ app.controller("businessManagement.customers.form", function($scope, $state, $us
       about: '',
       contactPerson: [],
       contactPersonPks: [],
-      advisors:[],
-      advisorsPks:[],
-      cpName:'',
-      adName:'',
+      advisors: [],
+      advisorsPks: [],
+      cpName: '',
+      adName: '',
       mobile: '',
       address: {
         street: null,
@@ -589,28 +684,28 @@ app.controller("businessManagement.customers.form", function($scope, $state, $us
       logo: '',
       web: ''
     }
-    $scope.compDetails=$scope.form
-    $scope.process_list=[]
+    $scope.compDetails = $scope.form
+    $scope.process_list = []
   }
 
-  $scope.addPerson = function(person){
+  $scope.addPerson = function(person) {
     if (typeof person != 'object') {
-      Flash.create('warning' , 'Please Select Suggested Person')
+      Flash.create('warning', 'Please Select Suggested Person')
       return;
     }
-    if ($scope.form.contactPersonPks.indexOf(person.pk)> -1) {
-      Flash.create('warning' , 'This Person Has Already Added')
+    if ($scope.form.contactPersonPks.indexOf(person.pk) > -1) {
+      Flash.create('warning', 'This Person Has Already Added')
       return;
     }
     $http({
-      method:'GET',
-      url:'/api/ERP/service/?contactPerson='+ person.pk
+      method: 'GET',
+      url: '/api/ERP/service/?contactPerson=' + person.pk
     }).
     then(function(response) {
-      if (response.data.length>0) {
-        Flash.create('warning' , 'You can not add this person')
-        return ;
-      }else {
+      if (response.data.length > 0) {
+        Flash.create('warning', 'You can not add this person')
+        return;
+      } else {
         $scope.form.contactPerson.push(person)
         $scope.form.contactPersonPks.push(person.pk)
         $scope.form.cpName = ''
@@ -625,9 +720,9 @@ app.controller("businessManagement.customers.form", function($scope, $state, $us
     })
   };
 
-  $scope.addAdvisor = function(person){
-    if ($scope.form.advisorsPks.indexOf(person.pk)> -1) {
-      Flash.create('warning' , 'This Person Has Already Added')
+  $scope.addAdvisor = function(person) {
+    if ($scope.form.advisorsPks.indexOf(person.pk) > -1) {
+      Flash.create('warning', 'This Person Has Already Added')
       return;
     }
     $scope.form.advisors.push(person)
@@ -635,14 +730,14 @@ app.controller("businessManagement.customers.form", function($scope, $state, $us
     $scope.form.adName = ''
   }
 
-  $scope.removePerson = function(idx){
-    $scope.form.contactPerson.splice(idx,1)
-    $scope.form.contactPersonPks.splice(idx,1)
+  $scope.removePerson = function(idx) {
+    $scope.form.contactPerson.splice(idx, 1)
+    $scope.form.contactPersonPks.splice(idx, 1)
   }
 
-  $scope.removeAdvisors = function(idx){
-    $scope.form.advisors.splice(idx,1)
-    $scope.form.advisorsPks.splice(idx,1)
+  $scope.removeAdvisors = function(idx) {
+    $scope.form.advisors.splice(idx, 1)
+    $scope.form.advisorsPks.splice(idx, 1)
   }
 
   $scope.saveCompanyDetails = function() {
@@ -655,8 +750,8 @@ app.controller("businessManagement.customers.form", function($scope, $state, $us
     $scope.toSend = {
       name: f.name,
       user: $scope.me.pk,
-      contactPerson : $scope.form.contactPersonPks,
-      advisors:$scope.form.advisorsPks
+      contactPerson: $scope.form.contactPersonPks,
+      advisors: $scope.form.advisorsPks
     }
     if (f.telephone != null && f.telephone.length > 0) {
       $scope.toSend.telephone = f.telephone
@@ -713,7 +808,7 @@ app.controller("businessManagement.customers.form", function($scope, $state, $us
         console.log(err, 'err');
         if (err.data.detail) {
           Flash.create('danger', err.data.detail);
-        }else {
+        } else {
           Flash.create('danger', err.status + ' : ' + err.statusText + ': ' + err.data.name);
         }
       });
@@ -818,6 +913,10 @@ app.controller("businessManagement.customers.form", function($scope, $state, $us
 
     if (cpF.dp && typeof cpF.dp != 'string') {
       fd.append('dp', cpF.dp);
+    }
+
+    if (cpF.support_icon && typeof cpF.support_icon != 'string') {
+      fd.append('support_icon', cpF.support_icon);
     }
 
     $http({
