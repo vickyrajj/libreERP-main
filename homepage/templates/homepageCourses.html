@@ -27,7 +27,7 @@
           <div class="col-md-5 text-muted">
             <span> <b>Added on :</b> </span>
           </div>
-          <div class="col-md-7"style="margin-left:-40px;">
+          <div class="col-md-7" style="margin-left:-40px;">
             {{course.created|date:"Y-M-d"}}
           </div>
         </div>
@@ -35,7 +35,7 @@
           <div class="col-md-5 text-muted">
             <span> <b>Subject :</b></span>
           </div>
-          <div class="col-md-7"style="margin-left:-40px;">
+          <div class="col-md-7" style="margin-left:-40px;">
             {{course.topic.subject.title}}
           </div>
         </div>
@@ -61,11 +61,9 @@
           </div>
         </div>
         <div class="col-md-8 instructor_info" style="line-height:2.2;">
-          <span><i class="fa fa-check-circle fa-fw" aria-hidden="true"></i> Teaches Mathematics</span><br>
-          <span><i class="fa fa-check-circle fa-fw" aria-hidden="true"></i> B.Tech & M.tech, IIT Madras (Gold Medalist)</span> | <span>6 Yrs teaching experience</span><br>
-          <span><i class="fa fa-check-circle fa-fw" aria-hidden="true"></i> Taught and Mentored more than 20,000 students</span><br>
-          <span><i class="fa fa-check-circle fa-fw" aria-hidden="true"></i> IIT - JEE Mains State Topper</span><br>
-          <span><i class="fa fa-check-circle fa-fw" aria-hidden="true"></i> Took 5000+ sessions with students of United States</span>
+          {% for d in detail %}
+          <span style="text-transform:capitalize;"><i class="fa fa-check-circle fa-fw" aria-hidden="true"></i>{{d}}</span><br>
+          {% endfor %}
         </div>
       </div>
       <hr>

@@ -16,6 +16,7 @@ app.controller('home.manageUsers', function($scope, $http, $aside, $state, Flash
     views: views,
     multiselectOptions: multiselectOptions,
     searchField: 'username',
+    itemsNumPerView: [6, 12, 24],
   };
 
   $scope.tabs = [];
@@ -251,53 +252,7 @@ app.controller('controller.manageUsers.editProfile', function($scope, $http, $as
 app.controller('controller.profile', function($scope, $http, $aside, $state, Flash, $users, $filter, $timeout) {
 
   $scope.data = $scope.tab.data;
-  console.log($scope.data);
-
-
-  console.log('aaaaaaaaaaaaaaaaaaaaaa', $scope.data.pk);
-  $http({
-    method: 'GET',
-    url: '/api/HR/payroll/?user=' + $scope.data.userPK
-  }).
-  then(function(response) {
-    $scope.payroll = response.data[0];
-    console.log($scope.payroll);
-  })
-  console.log('((((((((((((((()))))))))))))))', $scope.data.userPK);
-  $http({
-    method: 'GET',
-    url: '/api/HR/designation/?user=' + $scope.data.userPK
-  }).
-  then(function(response) {
-    console.log(response.data, '&&&&&&&&&&&&&&&&&&&&&&&7');
-    $scope.designation = response.data[0];
-    console.log($scope.designation);
-
-
-    if (typeof $scope.designation.division == 'number') {
-      $http({
-        method: 'GET',
-        url: '/api/organization/divisions/' + $scope.designation.division + '/'
-      }).
-      then(function(response) {
-        $scope.designation.division = response.data;
-      })
-    }
-
-    if (typeof $scope.designation.unit == 'number') {
-      $http({
-        method: 'GET',
-        url: '/api/organization/unit/' + $scope.designation.unit + '/'
-      }).
-      then(function(response) {
-        $scope.designation.unit = response.data;
-      })
-
-    }
-
-  })
-
-
-
-
+  $scope.profile = $scope.data.profile;
+  $scope.tutorData = $scope.data.tutors24Profile;
+  $scope.detail = $scope.data.tutors24Profile.detail.split("||");
 });
