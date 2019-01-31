@@ -1997,6 +1997,7 @@ class DownloadProjectSCExcelReponse(APIView):
                 listVal = 0
                 val = []
                 stockConsumed=0
+                total = 0
                 for k in materialObj:
                     mat = []
                     materialdata= list(k.materialIssue.all().values())
