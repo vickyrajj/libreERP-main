@@ -16,22 +16,18 @@ class Tutors24ProfileSerializer(serializers.ModelSerializer):
         read_only_fields=('user','balance' , 'typ')
 
     def update(self ,instance, validated_data):
-        # print 'updatingggggggggggggggggggggggggggggg'
-        # print validated_data
-        # print self.context['request'].data['mobile'],self.context['request'].data['gender']
         for key in ['school','schoolName','standard','street','city','pinCode','state','country' , 'parentEmail' , 'parentMobile']:
             try:
                 setattr(instance , key , validated_data[key])
             except:
                 pass
         instance.save()
-        # print self.context['request'].user.pk
         hrobj = profile.objects.get(user_id=self.context['request'].user.pk)
-        # print hrobj.email
-        hrobj.mobile = self.context['request'].data['mobile']
-        hrobj.gender = self.context['request'].data['gender']
+        if 'mobile' in self.context['request'].data:
+            hrobj.mobile = self.context['request'].data['mobile']
+        if 'gender' in self.context['request'].data:
+            hrobj.gender = self.context['request'].data['gender']
         hrobj.save()
-
         return instance
 
 class SubjectLiteSerializer(serializers.ModelSerializer):
