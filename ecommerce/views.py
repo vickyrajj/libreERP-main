@@ -2223,8 +2223,8 @@ def generateInvoiceBni(response, contract ,request):
     #
     # s12 =Paragraph("<para> </para>",styles['Normal'])
     # s13 = Paragraph("<para alignment='right' fontSize=18> INVOICE </para>",styles['Normal'])
-    s11 =Paragraph("<para fontSize=8>  <br/> <br/><b> Shipping Address </b> <br/> "+ str(contract.user.first_name) +" "+ str(contract.user.last_name) +"<br/>102 Eden Park, 20 Vittal Mallya Rd.<br/>"+ str(contract.city) +" - "+ str(contract.pincode) +"<br/>"+ str(contract.state) +" <br/> "+ str(contract.country) +"<br/>"+ str(contract.mobileNo) +"<br/><br/><br/></para>",styles['Normal'])
-    s12 =Paragraph("<para fontSize=8>  <br/> <br/><b> Billing Address </b> <br/> "+ str(contract.user.first_name) +" "+ str(contract.user.last_name) +"<br/>102 Eden Park, 20 Vittal Mallya Rd.<br/>"+ str(contract.billingCity) +" - "+ str(contract.billingPincode) +"<br/>"+ str(contract.billingState) +" <br/> "+ str(contract.billingState) +"<br/>"+ str(contract.mobileNo) +"<br/><br/><br/></para>",styles['Normal'])
+    s11 =Paragraph("<para fontSize=8>  <br/> <br/><b> Shipping Address </b> <br/> "+ str(contract.user.first_name) +" "+ str(contract.user.last_name) +"<br/>"+ str(contract.landMark) + "<br/>"+ str(contract.street) +"<br/>"+ str(contract.city) +" - "+ str(contract.pincode) +"<br/>"+ str(contract.state) +" <br/> "+ str(contract.country) +"<br/>"+ str(contract.mobileNo) +"<br/><br/><br/></para>",styles['Normal'])
+    s12 =Paragraph("<para fontSize=8>  <br/> <br/><b> Billing Address </b> <br/> "+ str(contract.user.first_name) +" "+ str(contract.user.last_name) +"<br/>"+ str(contract.billingLandMark) +"<br/>" + str(contract.billingStreet) +"<br/>"+ str(contract.billingCity) +" - "+ str(contract.billingPincode) +"<br/>"+ str(contract.billingState) +" <br/> "+ str(contract.billingState) +"<br/>"+ str(contract.mobileNo) +"<br/><br/><br/></para>",styles['Normal'])
     s13 = Paragraph("<para alignment='right' fontSize=18> INVOICE </para>",styles['Normal'])
     dataDetails +=[[s11,s12,s13]]
 
