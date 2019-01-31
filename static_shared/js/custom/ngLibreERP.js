@@ -22,7 +22,7 @@ app.run(['$rootScope', '$state', '$stateParams', '$permissions', function($rootS
 
 // Main controller is mainly for the Navbar and also contains some common components such as clipboad etc
 app.controller('main', function($scope, $state, $users, $aside, $http, $timeout, $uibModal, $permissions, ngAudio) {
-
+  
 
   function setCookie(cname,cvalue,exdays) {
     var d = new Date();
@@ -73,6 +73,7 @@ $scope.sideMenuVisibility = false;
         request : function() {
           return request;
         }
+
       },
       controller : function($scope, $interval , $uibModalInstance , request, $rootScope) {
         $scope.request = request;

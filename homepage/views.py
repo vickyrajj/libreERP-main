@@ -83,7 +83,7 @@ def blogDetails(request, blogname):
         sub = Subject.objects.get(title = title,level = int(level))
         print sub.pk
         print level,title,"------------hhhhh"
-        courseobjs = Course.objects.filter(topic__subject__pk=sub.pk)
+        courseobjs = Course.objects.filter(topic__subject__pk=sub.pk, urlSuffix__isnull = False)
         booklen = len(Book.objects.filter(subject__pk=sub.pk))
         bookobjs = Book.objects.filter(subject__pk=sub.pk)
         subobjs = Subject.objects.all().order_by('level')
@@ -93,8 +93,8 @@ def blogDetails(request, blogname):
         noteslen = len(noteobj)
         r = lambda: random.randint(150,250)
         color = ('#%02X%02X%02X' % (r(),r(),r()))
-        for i in refbookobjs:
-            color = ('#%02X%02X%02X' % (r(),r(),r()))
+        # for i in refbookobjs:
+        #     color = ('#%02X%02X%02X' % (r(),r(),r()))
         books = []
         videoCourse = []
         forum = []

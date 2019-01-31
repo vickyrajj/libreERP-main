@@ -1427,6 +1427,7 @@ hr {
   background-position: 100% 0;
   moz-transition: all .4s ease-in-out;
   -webkit-transition: all .9s ease-in-out;
+  color:#fff;
 }
 
 .owl-item.active.center {
@@ -1562,19 +1563,9 @@ hr {
   border-radius: 65px;
   /* border: 2px solid #A9A9A9; */
   position: absolute;
-  top: 17%;
-  left: 34%;
-}
-
-.movie-card:hover .colorcircle {
-  width: 130px;
-  height: 130px;
-  border-radius: 65px;
-  /* border: 2px solid #A9A9A9; */
-  background-color: #FFD119;
-  position: absolute;
-  top: 17%;
-  left: 34%;
+  top: 43%;
+  left: 78%;
+  z-index: -20;
 }
 
 .colorcircle1 {
@@ -1986,7 +1977,7 @@ hr {
 }
 
 .tb_image {
-  width: 50%;
+  width: 100%;
   border-radius: 6px;
   padding-top: 10px;
 }
@@ -2274,9 +2265,28 @@ hr {
   left: 45%;
 }
 
+.corner_img_div::before {
+  content: '';
+  background-color: #223657;
+  width: 120px;
+  height: 120px;
+  position: absolute;
+  top: 50px;
+  right: 0px;
+  border-bottom-left-radius: 100%;
+  z-index: 10;
+}
+
+.corner_img {
+  position: absolute;
+  top: 60px;
+  right: 18px;
+  z-index: 20;
+}
+
 .courseobj_container {
   box-shadow: 1px 1px 8px 0 rgba(70, 70, 70, 0.25);
-  height: 230px;
+  height: 250px;
   padding: 15px;
   overflow-y: hidden;
   border-radius: 8px;
@@ -2333,6 +2343,14 @@ hr {
   border-top-left-radius: 25px;
 }
 
+
+.noteImage {
+  width: 20%;
+}
+
+.instructor_info i {
+  color: #42C1F3;
+}
 
 /* exams css properties */
 /* for normal screens ends here.... */
@@ -2794,6 +2812,10 @@ hr {
 
   /* mobile display size starts here.... */
   /* courses */
+  .noteImage {
+    width: 100%;
+  }
+
   .arrow:before {
     content: "";
     /* border-top: 20px solid transparent;
@@ -2808,8 +2830,9 @@ hr {
     border-width: 20px 20px 20px 0;
     border-color: transparent #fff transparent
   }
-  .imgstyle{
-    width:125px;
+
+  .imgstyle {
+    width: 125px;
     height: 140px;
     border-radius: 0px;
   }
