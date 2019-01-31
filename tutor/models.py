@@ -60,8 +60,8 @@ class Tutors24Profile(models.Model):
     typ = models.CharField(choices = USER_TYPE , default = 'S' , max_length = 10 , null=True)
     parentEmail = models.EmailField(null = True)
     parentMobile = models.CharField(null = True , max_length = 14)
-
-User.tutors24Profile = property(lambda u : Tutors24Profile.objects.get_or_create(user = u)[0])
+    # gold medalist || 6 years of experience ||
+# User.tutors24Profile = property(lambda u : Tutors24Profile.objects.get_or_create(user = u)[0])
 
 
 class Session(models.Model):

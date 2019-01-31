@@ -250,6 +250,7 @@ class Course(models.Model):
     user = models.ForeignKey(User , related_name='courseCreated' , null = False)
     description = models.TextField(max_length=2000 , null = False)
     dp = models.FileField(upload_to = getCourseDPAttachmentPath , null = True)
+    urlSuffix = models.CharField(max_length = 100 , null = True)
 
 class Enrollment(models.Model):
     created = models.DateTimeField(auto_now_add = True)

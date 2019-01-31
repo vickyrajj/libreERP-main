@@ -306,6 +306,15 @@ app.controller("home.LMS.courses.explore", function($scope, $state, $users, $sta
             }
           }).
           then(function(response) {
+            $http({
+              method: 'PATCH',
+              url: '/api/LMS/course/' + courseId + '/',
+              data : {
+                urlSuffix: $scope.blogForm.shortUrl
+              }
+            }).
+            then(function(response) {
+            });
             if ($scope.blogForm.pk) {
               Flash.create('success', 'Updated');
             } else {

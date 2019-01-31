@@ -1,0 +1,70 @@
+<div class="modal-header text-center">
+  <h3>Edit Profile Details</h3>
+</div>
+<div class="modal-body">
+  <div class="container-fluid">
+    <div class="col-md-12">
+      <div class="form-group">
+        School <switch ng-model="profileform.collegeMode" class="green"></switch><span style="margin-left:10px;">College</span>
+      </div>
+    </div>
+    <div class="col-md-6">
+      <div class="form-group">
+        <label>{{profileform.collegeMode?'College':'School'}} Name</label>
+        <input type="text" ng-model="profileform.schoolName" class="form-control">
+      </div>
+    </div>
+    <div class="col-md-6">
+      <div class="form-group">
+        <label>Standard</label>
+        <select class="form-control text-center" ng-model="profileform.standard">
+          <option value="Arial Black">Arial Black</option>
+          <option value = "Times New Roman" >Times New Roman</option>
+          <option value="Arial">Arial</option>
+          <option value="Comic Sans">Comic Sans</option>
+          <option value="Sans-serif">Sans-serif</option>
+          <option value="Monospace">Monospace</option>
+        </select>
+      </div>
+    </div>
+    <div class="col-md-6">
+      <div class="form-group">
+        <label>Parent Email</label>
+        <input type="text" ng-model="profileform.parentEmail" class="form-control">
+      </div>
+    </div>
+    <div class="col-md-6">
+      <div class="form-group">
+        <label>Parent Mobile</label>
+        <input type="text" ng-model="profileform.parentMobile" class="form-control">
+      </div>
+    </div>
+    <div class="col-md-12">
+      <div class="form-group">
+        <label>Address</label>
+        <input placeholder="Street" type="text " class="form-control" ng-model="profileform.street">
+        <div class="row" style="margin-top:5px;">
+          <div class=" col-md-6">
+            <input placeholder="City" type="text " class="form-control" ng-model="profileform.city">
+          </div>
+          <div class="col-md-6">
+            <input placeholder="State" type="text " class="form-control" ng-model="profileform.state">
+          </div>
+
+        </div>
+        <div class="row" style="margin-top:5px;">
+          <div class=" col-md-6">
+            <input placeholder="pincode" type="tele " class="form-control" ng-model="profileform.pinCode">
+          </div>
+          <div class="col-md-6">
+            <input placeholder="Country" type="text " class="form-control" ng-model="profileform.country">
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="modal-footer">
+  <button type="button" class="btn btn-primary" ng-click="save()" >Save</button>
+  <button type="button" class="btn btn-default" ng-click="cancel()" >Cancel</button>
+</div>

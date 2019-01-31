@@ -1,28 +1,83 @@
 {% extends "tutorBook.html" %}
 
-
 {% block bookcontent %}
-
-<div class="container-fluid"style="padding-top:40px;">
-  <div class="col-md-12">
+<br><br>
+<div class="container-fluid corner_img_div" style="margin-top:80px;">
+  {% if course.topic.subject.title == 'Mathematics' %}<img src="/static/images/24tut/pi.png" class="corner_img">{% endif %}
+  {% if course.topic.subject.title == 'Physics' %}<img src="/static/images/24tut/phy.png" class="corner_img">{% endif %}
+  {% if course.topic.subject.title == 'Chemistry' %}<img src="/static/images/24tut/che.png" class="corner_img">{% endif %}
+  {% if course.topic.subject.title == 'Biology' %}<img src="/static/images/24tut/bio.png" class="corner_img">{% endif %}
+  <div class="col-md-8 col-md-offset-2">
     <div class="col-md-10">
       <div class="row" style="margin-top:1em;">
         <div class="col-md-6 col-xs-12">
           <div style="display:inline-block;">
-            <h1 class="heading_medium">{{course.title}}</h1>
+            <h1> <b>{{course.title}}</b> </h1>
           </div>
         </div>
       </div>
       <div class="row">
         <div class="col-md-12">
-          <h3>Description</h3>
           <p>{{course.description}}</p>
         </div>
+      </div>
+      <hr>
+      <div class="row">
+        <div class="col-md-4 no_padding">
+          <div class="col-md-5 text-muted">
+            <span> <b>Added on :</b> </span>
+          </div>
+          <div class="col-md-7"style="margin-left:-40px;">
+            {{course.created|date:"Y-M-d"}}
+          </div>
+        </div>
+        <div class="col-md-4 no_padding">
+          <div class="col-md-5 text-muted">
+            <span> <b>Subject :</b></span>
+          </div>
+          <div class="col-md-7"style="margin-left:-40px;">
+            {{course.topic.subject.title}}
+          </div>
+        </div>
+        <div class="col-md-4">
+          <i class="fa fa-star " style="color:#f4c810" aria-hidden="true"></i>
+          <i class="fa fa-star " style="color:#f4c810" aria-hidden="true"></i>
+          <i class="fa fa-star " style="color:#f4c810" aria-hidden="true"></i>
+          <i class="fa fa-star " style="color:#f4c810" aria-hidden="true"></i>
+          <i class="fa fa-star " style="color:#f4c810" aria-hidden="true"></i>
+          <span> ( 22 Reviews )</span>
+        </div>
+      </div>
+      <hr>
+      <div class="row" style="margin-top:20px;">
+        <div class="col-md-4" style="border-right:1px solid #c7c7c7;width:20%">
+          <h4> <b>Instructor Details</b></h4>
+          <div class="container-fluid" style="margin-left:20px">
+            <img src="/media/{{course.instructor.profile.displayPicture}}" width="60px" height="60px" style="border-radius:100%">
+          </div>
+          <div class="container-fluid" style="margin-left:10px">
+            <h5><b>{{course.instructor.first_name}} {{course.instructor.last_name}}</b></h5>
+            <h6> {{course.instructor.email}}</h6>
+          </div>
+        </div>
+        <div class="col-md-8 instructor_info" style="line-height:2.2;">
+          <span><i class="fa fa-check-circle fa-fw" aria-hidden="true"></i> Teaches Mathematics</span><br>
+          <span><i class="fa fa-check-circle fa-fw" aria-hidden="true"></i> B.Tech & M.tech, IIT Madras (Gold Medalist)</span> | <span>6 Yrs teaching experience</span><br>
+          <span><i class="fa fa-check-circle fa-fw" aria-hidden="true"></i> Taught and Mentored more than 20,000 students</span><br>
+          <span><i class="fa fa-check-circle fa-fw" aria-hidden="true"></i> IIT - JEE Mains State Topper</span><br>
+          <span><i class="fa fa-check-circle fa-fw" aria-hidden="true"></i> Took 5000+ sessions with students of United States</span>
+        </div>
+      </div>
+      <hr>
+      <div class="row">
+
       </div>
     </div>
     <div class="col-md-2 min_padd">
       <div class="text-center">
-        <img src="{{course.dp.url}}"class="tb_image">
+        {% if course.dp %}
+        <img src="{{course.dp.url}}" class="tb_image">
+        {% endif %}
       </div>
     </div>
   </div>

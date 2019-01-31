@@ -18,10 +18,10 @@
       </uib-tab>
       <uib-tab ng-repeat="tab in tabs" active="tab.active" disable="tab.disabled">
         <uib-tab-heading >
-          {{tab.title}} <i ng-if="tab.cancel" class="fa fa-close" ng-click="closeTab($index);"></i>
+          {{tab.title}}  <i ng-if="tab.cancel" class="fa fa-close" ng-click="closeTab($index);"></i>
         </uib-tab-heading>
         <div ng-if="tab.app == 'editProfile'">
-          <generic-Form template="'/static/ngTemplates/app.HR.form.userProfile.html'" data="tab.data" submit-Fn="updateProfile($index)" form-title="tab.title" wizard="true" max-page="5"></generic-Form>
+          <generic-Form template="'/static/ngTemplates/app.HR.form.userProfile.html'" data="tab.data" submit-Fn="updateProfile($index)" form-title="tab.title" ></generic-Form>
         </div>
         <div ng-if="tab.app == 'editMaster'">
           <generic-Form template="'/static/ngTemplates/app.HR.form.editMaster.html'" data="tab.data" submit-Fn="updateUserMasterDetails($index)" form-title="tab.title"></generic-Form>
@@ -32,11 +32,11 @@
 
         <div ng-if="tab.app == 'editDesignation'">
           <div ng-include="'/static/ngTemplates/app.HR.form.editDesignation.html'" data="tab.data" submit-Fn="editDesignation($index)" form-title="tab.title"></div>
-
-        <div ng-if="tab.app == 'editPayroll'">
-          <div ng-include="'/static/ngTemplates/app.HR.form.editPayroll.html'"></div>
-
         </div>
+
+        <div ng-if="tab.app == 'profile'">
+        <div ng-include="'/static/ngTemplates/app.HR.manage.profile.html'"  data="tab.data" form-title="tab.title"></div>
+      </div>
       </uib-tab>
     </uib-tabset>
   </div>

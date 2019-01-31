@@ -1427,6 +1427,7 @@ hr {
   background-position: 100% 0;
   moz-transition: all .4s ease-in-out;
   -webkit-transition: all .9s ease-in-out;
+  color:#fff;
 }
 
 .owl-item.active.center {
@@ -1564,9 +1565,8 @@ hr {
   position: absolute;
   top: 43%;
   left: 78%;
-  z-index:-20;
+  z-index: -20;
 }
-
 
 .colorcircle1 {
   width: 130px;
@@ -1977,7 +1977,7 @@ hr {
 }
 
 .tb_image {
-  width: 50%;
+  width: 100%;
   border-radius: 6px;
   padding-top: 10px;
 }
@@ -2265,9 +2265,28 @@ hr {
   left: 45%;
 }
 
+.corner_img_div::before {
+  content: '';
+  background-color: #223657;
+  width: 120px;
+  height: 120px;
+  position: absolute;
+  top: 50px;
+  right: 0px;
+  border-bottom-left-radius: 100%;
+  z-index: 10;
+}
+
+.corner_img {
+  position: absolute;
+  top: 60px;
+  right: 18px;
+  z-index: 20;
+}
+
 .courseobj_container {
   box-shadow: 1px 1px 8px 0 rgba(70, 70, 70, 0.25);
-  height: 230px;
+  height: 250px;
   padding: 15px;
   overflow-y: hidden;
   border-radius: 8px;
@@ -2300,6 +2319,10 @@ hr {
 
 .noteImage {
   width: 20%;
+}
+
+.instructor_info i {
+  color: #42C1F3;
 }
 
 /* exams css properties */
@@ -2765,6 +2788,7 @@ hr {
   .noteImage {
     width: 100%;
   }
+
   .arrow:before {
     content: "";
     /* border-top: 20px solid transparent;
