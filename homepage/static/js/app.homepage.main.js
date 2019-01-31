@@ -1,4 +1,5 @@
-var app = angular.module('app', ['ui.router', 'ui.bootstrap', 'angular-owl-carousel-2', 'ui.bootstrap.datetimepicker', 'flash', 'ngAside', 'uiSwitch', ]);
+
+var app = angular.module('app', ['ui.router', 'ui.bootstrap', 'angular-owl-carousel-2', 'ui.bootstrap.datetimepicker', 'flash', 'ngAside','uiSwitch','chart.js',]);
 // $scope, $state, $users, $stateParams, $http, $timeout, $uibModal , $sce,$rootScope
 
 
@@ -499,88 +500,140 @@ app.controller('exam', function($scope, $state, $http, $timeout, $interval, $uib
     }
 
     $scope.finish = function(answerlist, questions) {
+      $scope.subtitle = []
+      for (var i = 0; i < $scope.sublist.length; i++) {
+        $scope.subtitle.push({
+          title:$scope.sublist[i],
+          ques:[]
+        })
+      }
+
       $http({
         method: 'GET',
-        url: '/api/LMS/answer/?user=' + $scope.userId + '&paper=' + $scope.quesId + '/'
+        url: '/api/LMS/answer/?user=' + $scope.userId + '&paper=' + $scope.quesId ,
       }).then(function(response) {
-        if (!response.data.length) {
-
-        } else {
-
-
-        }
-      });
-
-      $uibModal.open({
-        templateUrl: '/static/ngTemplates/examsubmit.html',
-        size: 'md',
-        backdrop: true,
-        resolve: {
-          questions: function() {
-            return questions;
-          },
-          answerlist: function() {
-            return answerlist;
-          },
-          userId: function() {
-            return $scope.userId;
-          },
-          quesId: function() {
-            return $scope.quesId;
-          },
-        },
-
-        controller: function($scope, questions, $uibModalInstance, answerlist, userId, quesId) {
-
-
-          $scope.questions = questions
-          $scope.attempted = 0;
-          $scope.notAnswered = 0;
-          $scope.reviewed = 0;
-          $scope.attemptedreview = 0;
-          $scope.notview = 0;
-          for (var i = 0; i < $scope.questions.length; i++) {
-            for (var j = 0; j < $scope.questions[i].ques.length; j++) {
-              if ($scope.questions[i].ques[j].status == "answered") {
-                $scope.attempted += 1;
-              } else if ($scope.questions[i].ques[j].status == "notanswered") {
-                $scope.notAnswered += 1;
-              } else if ($scope.questions[i].ques[j].status == "reviewed") {
-                $scope.reviewed += 1;
-              } else if ($scope.questions[i].ques[j].status == "attemptreviewed") {
-                $scope.attemptedreview += 1;
-              } else {
-                $scope.notview += 1;
+        for (var i = 0; i < response.data.length; i++) {
+          if($scope.sublist.includes(response.data[i].question.topic.subject.title)){
+            for (var j = 0; j < $scope.subtitle.length; j++) {
+              if($scope.subtitle[j].title == response.data[i].question.topic.subject.title){
+                $scope.subtitle[j].ques.push(response.data[i])
               }
             }
 
           }
-          $scope.arr = [1, 2, 3, 4, 5, 6, 7, 8, 9, 0]
-          $scope.submit = function() {
-            $http({
-              method: 'POST',
-              url: '/api/LMS/paperhistory/',
-              data: {
-                user: userId,
-                paper: paperId,
+        }
+      });
+      console.log($scope.subtitle.length,'subttt');
+      $scope.marks = 0;
+      $scope.incorrect  = 0;
+      $scope.correct= 0;
+      setTimeout(function () {
+
+        for (var i = 0; i < $scope.subtitle.length; i++) {
+          if($scope.subtitle[i].title == $scope.sublist[i]){
+            $scope.marks = 0;
+            $scope.incorrect  = 0;
+            $scope.correct= 0;
+            for (var j = 0; j < $scope.subtitle[i].ques.length; j++) {
+              if($scope.subtitle[i].ques[j].correct == "no"){
+                $scope.marks -= $scope.subtitle[i].ques[j].marksObtained
+                $scope.incorrect +=1
+                $scope.subtitle[i].mark = $scope.marks
+                $scope.subtitle[i].incorrect = $scope.incorrect
+
               }
-            }).then(function(response) {
-              if (!response.data.length) {
-
-              } else {
-
-
+              else{
+                $scope.marks += $scope.subtitle[i].ques[j].marksObtained
+                $scope.correct+=1
+                $scope.subtitle[i].mark = $scope.marks
+                $scope.subtitle[i].correct = $scope.correct
               }
-            });
-            $uibModalInstance.close();
-
+            }
           }
-          $scope.closeModal = function() {
-            $uibModalInstance.dismiss();
-          }
+        }
+        $scope.total = 0;
+        for (var i = 0; i < $scope.subtitle.length; i++) {
+            $scope.total += $scope.subtitle[i].mark
+            $scope.totalcorrect +=  $scope.subtitle[i].correct
+            $scope.totalincorrect +=  $scope.subtitle[i].incorrect
+        }
+        console.log($scope.subtitle,'marksssssssss');
+        $uibModal.open({
+          templateUrl: '/static/ngTemplates/examsubmit.html',
+          size: 'md',
+          backdrop: true,
+          resolve: {
+            questions: function() {
+              return questions;
+            },
+            answerlist: function() {
+              return answerlist;
+            },
+            userId:function() {
+              return $scope.userId;
+            },
+            paperId:function() {
+              return $scope.quesId;
+            },
+            total:function() {
+              return $scope.total;
+            },
+          },
 
-        },
-      })
+          controller: function($scope, questions, $uibModalInstance, answerlist,userId,paperId,total) {
+
+
+            $scope.questions = questions
+            $scope.attempted = 0;
+            $scope.notAnswered = 0;
+            $scope.reviewed = 0;
+            $scope.attemptedreview = 0;
+            $scope.notview = 0;
+            for (var i = 0; i < $scope.questions.length; i++) {
+              for (var j = 0; j < $scope.questions[i].ques.length; j++) {
+                if ($scope.questions[i].ques[j].status == "answered") {
+                  $scope.attempted += 1;
+                } else if ($scope.questions[i].ques[j].status == "notanswered") {
+                  $scope.notAnswered += 1;
+                } else if ($scope.questions[i].ques[j].status == "reviewed") {
+                  $scope.reviewed += 1;
+                } else if ($scope.questions[i].ques[j].status == "attemptreviewed") {
+                  $scope.attemptedreview += 1;
+                } else {
+                  $scope.notview += 1;
+                }
+              }
+
+            }
+            console.log(userId,paperId,'useriddddd');
+            $scope.arr = [1, 2, 3, 4, 5, 6, 7, 8, 9, 0]
+            $scope.submit = function() {
+              $http({
+                method: 'POST',
+                url: '/api/LMS/paperhistory/',
+                data:{
+                  user:userId,
+                  paper:paperId,
+                  mark:total,
+                  attempted:$scope.attempted+$scope.attemptedreview ,
+                  notattempted:$scope.notAnswered,
+                  reviewed:$scope.reviewed,
+                  notview:$scope.notview,
+
+                }
+              }).then(function(response) {
+
+              });
+              $uibModalInstance.close();
+
+            }
+            $scope.closeModal = function() {
+              $uibModalInstance.dismiss();
+            }
+
+          },
+        })
+      }, 1000);
     }
   }, 1000);
 
@@ -600,7 +653,114 @@ app.controller('exam', function($scope, $state, $http, $timeout, $interval, $uib
 
 });
 
-app.controller('examresults', function($rootScope, $scope, $state, $http, $timeout, $interval, $uibModal, $stateParams, $sce, Flash, ) {
+app.controller('examresults',function($rootScope, $scope, $state, $http, $timeout, $interval, $uibModal, $stateParams, $sce, Flash, ) {
+  if (QUESID != undefined) {
+    $scope.quesId = QUESID
+  } else {
+    $scope.quesId = 1
+  }
+  if (USERID != undefined) {
+    $scope.userId = USERID
+  } else {
+    return
+  }
+  $http({
+    method: 'GET',
+    url: '/api/LMS/paperhistory/?user=' + $scope.userId + '&paper=' + $scope.quesId
+  }).then(function(response) {
+    console.log(response.data,'dataaaaaaaa');
+      $scope.marks = response.data[length-1].mark
+      $scope.attemptresult = response.data[length-1].attempted
+      $scope.notattemptresult = response.data[length-1].notattempted
+      $scope.reviewresult = response.data[length-1].reviewed
+      $scope.notviewresult = response.data[length-1].notview
+      $scope.totalques =   $scope.attemptresult+  $scope.notattemptresult+  $scope.reviewresult+  $scope.notviewresult
+
+  });
+  $scope.sublist = []
+
+
+  $http({
+    method: 'GET',
+    url: '/api/LMS/paper/' + $scope.quesId + '/'
+  }).then(function(response) {
+    $scope.paperData = response.data
+    for (var i = 0; i < $scope.paperData.questions.length; i++) {
+      var question = $scope.paperData.questions[i].ques.ques
+      var option = $scope.paperData.questions[i].ques.optionsParts
+      $scope.subname = $scope.paperData.questions[i].ques.topic.subject.title;
+      if (!$scope.sublist.includes($scope.subname)) {
+        $scope.sublist.push($scope.subname);
+      } else {
+      }
+    }
+ })
+ setTimeout(function () {
+   console.log($scope.sublist ,'sublistttt');
+   $scope.subtitle = []
+   for (var i = 0; i < $scope.sublist.length; i++) {
+     $scope.subtitle.push({
+       title:$scope.sublist[i],
+       ques:[]
+     })
+   }
+
+   $http({
+     method: 'GET',
+     url: '/api/LMS/answer/?user=' + $scope.userId + '&paper=' + $scope.quesId ,
+   }).then(function(response) {
+     if (!response.data.length ) {
+
+     }else{
+       for (var i = 0; i < response.data.length; i++) {
+         if($scope.sublist.includes(response.data[i].question.topic.subject.title)){
+           for (var j = 0; j < $scope.subtitle.length; j++) {
+             if($scope.subtitle[j].title == response.data[i].question.topic.subject.title){
+               $scope.subtitle[j].ques.push(response.data[i])
+             }
+           }
+
+         }
+       }
+
+
+     }
+   });
+   console.log($scope.subtitle.length,'subttt');
+   setTimeout(function () {
+     $scope.marks = 0;
+     $scope.incorrect  = 0;
+     $scope.correct= 0;
+
+     for (var i = 0; i < $scope.subtitle.length; i++) {
+       if($scope.subtitle[i].title == $scope.sublist[i]){
+         $scope.marks = 0;
+         $scope.incorrect  = 0;
+         $scope.correct= 0;
+         for (var j = 0; j < $scope.subtitle[i].ques.length; j++) {
+           if($scope.subtitle[i].ques[j].correct == "no"){
+             $scope.marks -= $scope.subtitle[i].ques[j].marksObtained
+             $scope.incorrect +=1
+             $scope.subtitle[i].mark = $scope.marks
+             $scope.subtitle[i].incorrect = $scope.incorrect
+
+           }
+           else{
+             $scope.marks += $scope.subtitle[i].ques[j].marksObtained
+             $scope.correct+=1
+             $scope.subtitle[i].mark = $scope.marks
+             $scope.subtitle[i].correct = $scope.correct
+           }
+         }
+       }
+     }
+     $scope.total = 0;
+     console.log($scope.subtitle,'marksssssssss');
+     for (var i = 0; i < $scope.subtitle.length; i++) {
+         $scope.total += $scope.subtitle[i].mark
+     }
+   }, 1000)
+ }, 1000);
 
 
   $scope.arr = [1, 2, 3, 4, 5, 6, 7, 8, 9, 0]
@@ -690,9 +850,9 @@ app.controller('examresults', function($rootScope, $scope, $state, $http, $timeo
 
   $scope.labels = ["Attempted", "Not Attempted", "Reviewed", "Not Visited"];
   $scope.data = [$scope.summary.attempt, $scope.summary.notattempt, $scope.summary.reviewed, $scope.summary.notview];
-  $scope.colors = ["#29B999", "#ED6060", "#D2D2D2", "#565FB8"]
+  $scope.colors = ["#29B999", "#ED6060"]
 
-  $scope.labels1 = ['Attempted', 'Not Attempted', 'Not Visited', 'Reviewed'];
+  $scope.labels1 = ['Correct', 'In Correct'];
 
 
   $scope.data1 = [

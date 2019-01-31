@@ -295,6 +295,8 @@
 
 .adjustwidth {
   width: 30%;
+  margin-left: 1em;
+  margin-top: 0em;
 }
 
 .leftalign {
@@ -306,6 +308,8 @@
 @media only screen and (max-width:768px) {
   .adjustwidth {
     width: 100%;
+    margin-left: 0em;
+    margin-top: 1em;
   }
 
   .leftalign {
@@ -488,15 +492,9 @@
 }
 
 /* mobile display size starts here.... */
-
-@media only screen and (max-height: 300px), screen and (max-height: 438px) {
-
-}
+@media only screen and (max-height: 300px), screen and (max-height: 438px) {}
 
 @media only screen and (device-width: 414px) and (device-height: 736px) and (-webkit-device-pixel-ratio: 3) {
-
   /* for iphones.... */
-  
-
   /* for google pixel devices ends here */
 }
