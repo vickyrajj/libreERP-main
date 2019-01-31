@@ -2,11 +2,11 @@
   <div class="col-md-12 text-left" style="margin-bottom:35px">
     <div class="col-md-3" >
       <h3><strong>Comm nr : </strong>{{cmrData.comm_nr}}</h3>
-      <h3 ng-if="cmrData.totalOrdered>0"><strong>Total Ordered : </strong>{{cmrData.totalOrdered.toFixed(2)}}</h3>
+      <h3 ng-if="cmrData.totalOrdered>0"><strong>Total Ordered : </strong>{{cmrData.totalPo.toFixed(2)}}</h3>
       <h3 ng-if="cmrData.totalOrdered>0"><strong>Total Consumed : </strong>{{cmrData.totalConsumed.toFixed(2)}}</h3><br>
     </div>
     <div class="col-md-9" ng-if="cmrData.totalOrdered>0">
-      <canvas id="pie" class="chart chart-pie" chart-data="[cmrData.totalOrdered,cmrData.totalConsumed]" chart-labels="['Total Ordered','Total Consumed']" chart-options="{legend: { display: true }}" chart-colors="['#90EE90', '#FF6600']" height="50vh"></canvas>
+      <canvas id="pie" class="chart chart-pie" chart-data="[cmrData.totalPo,cmrData.totalConsumed]" chart-labels="['Total Ordered','Total Consumed']" chart-options="{legend: { display: true }}" chart-colors="['#90EE90', '#FF6600']" height="50vh"></canvas>
     </div>
   </div>
   <div class="col-md-6" style="padding-bottom:20px;padding-left:10px;padding-right:10px;" ng-click="cmrTableAction($index,'details');$event.stopPropagation();" ng-repeat="cdt in cmrData.serializerData">
