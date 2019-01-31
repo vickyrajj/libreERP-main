@@ -204,4 +204,13 @@ app.controller('businessManagement.finance.sales', function($scope, $http, $asid
 
   // $scope.addTab({"title":"Browse Cost Center : 1","cancel":true,"app":"costCenterBrowser","data":{"pk":1,"index":0},"active":true});
 
+  $http({
+    method: 'GET',
+    url: '/api/finance/average/'
+  }).
+  then(function(response) {
+    $scope.totalData = response.data
+  })
+
+
 })

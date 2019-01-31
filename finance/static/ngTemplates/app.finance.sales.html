@@ -1,23 +1,69 @@
 <breadcrumb></breadcrumb>
 <div class="container-fluid">
+  <div class="row">
+    <div class="col-md-12">
+      <div class="row">
+        <div class="col-md-2">
+      <h3>Total : {{totalData.overallTotal}}</h3>
+      <h3>GST : {{totalData.overallGst}}</h3>
+    </div>
+    <div class="col-md-2">
+      <canvas id="pie" class="chart chart-pie" chart-data="[totalData.overallTotal,totalData.overallGst]" chart-labels="['Total','GST']"  chart-options="{legend: { display: true }}" chart-colors="['#90EE90', '#FF6600']" ></canvas>
+    </div>
+    </div>
+    </div>
+  </div>
+  <hr/>
+  <div class="row">
   <div class="col-md-6">
-    <div class="col-md-12 text-center">
+    <!-- <div class="col-md-12 text-center"> -->
+      <div class="row">
+        <div class="col-md-3" style="padding-left:10px">
+          <h4>Total : {{totalData.inboundtotal}}</h4>
+          <h4>GST : {{totalData.inboundgst}}</h4>
+        </div>
+        <div class="col-md-3">
+          <canvas id="pie" class="chart chart-pie" chart-data="[totalData.inboundtotal,totalData.inboundgst]" chart-labels="['Total','GST']" chart-options="{legend: { display: true }}" chart-colors="['#90EE90', '#FF6600']" ></canvas>
+        </div>
+        <div class="col-md-6">
       <h3>External Invoices</h3>
     </div>
+    </div>
+    <!-- </div> -->
     <generic-Table data="data.tableData" config-Obj="{{config}}" callback-Fn="tableAction"></generic-Table>
   </div>
   <div class="col-md-6" style="border-left:solid 2px #eee;">
-    <div class="row">
-      <div class="col-md-12 text-center">
-        <h3>CRM Invoices</h3>
-      </div>
+      <div class="row">
+        <div class="col-md-3" style="padding-left:30px">
+          <h4>Total : {{totalData.crmtotal}}</h4>
+          <h4>GST : {{totalData.crmgst}}</h4>
+        </div>
+        <div class="col-md-3">
+          <canvas id="pie" class="chart chart-pie" chart-data="[totalData.crmtotal,totalData.crmgst]" chart-labels="['Total','GST']" chart-options="{legend: { display: true }}" chart-colors="['#90EE90', '#FF6600']" ></canvas>
+        </div>
+        <div class="col-md-6">
+      <h3>CRM Invoices</h3>
+    </div>
+  </div>
+  <div class="row">
       <generic-Table data="data.crmData" config-Obj="{{crmConfig}}" callback-Fn="crmTableAction"></generic-Table>
     </div>
+      <hr/>
     <div class="row">
-      <div class="col-md-12 text-center">
-        <h3>Invoicing Invoices</h3>
+      <div class="col-md-3" style="padding-left:30px">
+        <h4>Total : {{totalData.invtotal}}</h4>
+        <h4>GST : {{totalData.invgst}}</h4>
       </div>
+      <div class="col-md-3">
+        <canvas id="pie" class="chart chart-pie" chart-data="[totalData.invtotal,totalData.invgst]" chart-labels="['Total','GST']" chart-options="{legend: { display: true }}" chart-colors="['#90EE90', '#FF6600']" ></canvas>
+      </div>
+      <div class="col-md-6">
+        <h3>Invoices</h3>
+      </div>
+    </div>
+      <div class="row">
       <generic-Table data="data.invoicingData" config-Obj="{{invoicingConfig}}" callback-Fn="invoicingTableAction"></generic-Table>
+    </div>
     </div>
   </div>
 </div>

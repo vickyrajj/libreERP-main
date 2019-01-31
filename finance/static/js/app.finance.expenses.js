@@ -62,9 +62,6 @@ app.controller('businessManagement.finance.expenses', function($scope, $http, $a
 
 
   $scope.tableAction = function(target, action, mode) {
-    console.log(target, action, mode);
-    console.log($scope.data.tableData);
-
     for (var i = 0; i < $scope.data.tableData.length; i++) {
       if ($scope.data.tableData[i].pk == parseInt(target)) {
         if (action == 'details') {
@@ -74,7 +71,6 @@ app.controller('businessManagement.finance.expenses', function($scope, $http, $a
           var title = 'edit :';
           var appType = 'edit';
         } else if (action == 'delete') {
-          console.log("aaaaaaaa");
           $http({
             method: 'DELETE',
             url: '/api/finance/purchaseorder/' + $scope.data.tableData[i].pk + '/'
@@ -167,7 +163,6 @@ app.controller('businessManagement.finance.expenses', function($scope, $http, $a
   }
 
   $scope.addTab = function(input) {
-    console.log(JSON.stringify(input));
     $scope.searchTabActive = false;
     alreadyOpen = false;
     for (var i = 0; i < $scope.tabs.length; i++) {
@@ -492,7 +487,6 @@ app.controller('businessManagement.finance.purchaseOrder.form', function($scope,
 
 
   $scope.deleteData = function(pkVal, idx) {
-    console.log(pkVal, idx);
     if (pkVal == undefined) {
       $scope.products.splice(idx, 1)
       return
@@ -634,7 +628,6 @@ app.controller('businessManagement.finance.purchaseOrder.explore', function($sco
   }
   $scope.invoice = false
   $scope.addToInvoice = function() {
-    console.log('gggggggggggggggggggggggg');
     $uibModal.open({
       templateUrl: '/static/ngTemplates/app.finance.purchaseOrder.bankDetails.modal.html',
       size: 'lg',
@@ -1161,7 +1154,6 @@ app.controller('businessManagement.finance.inboundInvoices.form', function($scop
               data: toSend
             }).
             then(function(response) {
-              console.log("heeeeeeeeeeerrrrrrrrreeeeeeeeee");
               $scope.resetForm()
             })
           }

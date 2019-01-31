@@ -1,5 +1,5 @@
 <div class="col-md-3 " style="margin-bottom:15px">
-  <div class="card" style="padding:20px;cursor:pointer;border:2px solid {{data.status=='created'?'#0b0b0b':''}}{{data.status=='Sent'?'#e81414':''}}{{data.status=='GRN'?'#245ae6':''}}{{data.status=='Approved'?'#73AD21':''}};border-radius: 25px"  ng-click = "rowActionClicked('details')">
+  <div class="card" style="padding:20px;cursor:pointer;border:2px solid {{data.status=='created'?'#0b0b0b':''}}{{data.status=='Sent'?'#e81414':''}}{{data.status=='GRN'?'#337bb8':''}}{{data.status=='Approved'?'#73AD21':''}};border-radius: 25px"  ng-click = "rowActionClicked('details')">
     <div class="row" >
       <div class="col-md-10">
         <!-- <div class="row" style="padding-top:5px">
@@ -40,7 +40,7 @@
           </div>
         </div>
       </div>
-      <div class="col-md-2" style="color:{{data.status=='created'?'#0b0b0b':''}}{{data.status=='Sent'?'#e81414':''}}{{data.status=='GRN'?'#245ae6':''}}{{data.status=='Approved'?'#73AD21':''}}">
+      <div class="col-md-2" style="color:{{data.status=='created'?'#0b0b0b':''}}{{data.status=='Sent'?'#e81414':''}}{{data.status=='GRN'?'#337bb8':''}}{{data.status=='Approved'?'#73AD21':''}}">
         <div class="row" >
             <i class="fa fa-2x fa-pencil" style="position:absolute;right:20px;top:10px;cursor:pointer;" ng-click = "rowActionClicked('edit');$event.stopPropagation();"></i>
         </div>

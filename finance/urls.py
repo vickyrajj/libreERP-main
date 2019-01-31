@@ -19,6 +19,8 @@ router.register(r'purchaseorderqty' , PurchaseOrderQtyViewSet , base_name ='purc
 router.register(r'expenseHeading' , ExpenseHeadingViewSet , base_name ='expenseHeading')
 router.register(r'outBoundInvoice' , OutBoundInvoiceViewSet , base_name ='outBoundInvoice')
 router.register(r'outBoundInvoiceQty' , OutBoundInvoiceQtyViewSet , base_name ='outBoundInvoiceQty')
+router.register(r'inventory' , InventoryViewSet , base_name ='inventory')
+router.register(r'inventoryLog' , InventoryLogViewSet , base_name ='inventoryLog')
 
 
 
@@ -32,5 +34,7 @@ urlpatterns = [
     url(r'grnDownload/$' , GrnAPIView.as_view()),
     url(r'invoiceDownload/$' , InvoiceAPIView.as_view()),
     url(r'sendInvoice/$' , SendInvoiceAPIView.as_view()),
+    url(r'average/$' , AverageAPIView.as_view()),
+
 
 ]

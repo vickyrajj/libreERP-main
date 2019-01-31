@@ -1,0 +1,39 @@
+<div class="modal-header">
+  <div class="col-md-11">
+    <h3>Add To Inventory</h3>
+  </div>
+  <div class="col-md-1" style="padding-top:10px">
+    <button class="btn btn-primary" ng-click="close()"><i class="fa fa-close"></i></button>
+  </div>
+</div>
+<div class="modal-body">
+  <div class="row">
+    <div class="col-md-4">
+      <div class="form-group">
+        <label>Product</label>
+        <input type="text " class="form-control" ng-model="form.name">
+      </div>
+    </div>
+    <div class="col-md-2">
+      <div class="form-group">
+        <label>Quantity</label>
+        <input type="text " class="form-control" ng-model="form.value">
+      </div>
+    </div>
+    <div class="col-md-2">
+      <div class="form-group">
+        <label>Price</label>
+        <input type="text " class="form-control" ng-model="form.rate">
+      </div>
+    </div>
+    <div class="col-md-2">
+      <div class="form-group">
+        <label>Refurnished</label>
+        <input type="text " class="form-control" ng-model="form.refurnished">
+      </div>
+    </div>
+    <div class="col-md-2" style="padding-top:25px">
+      <button type="button" class="btn btn-primary" ng-click="saveInventory()">Save</button>
+    </div>
+  </div>
+</div>

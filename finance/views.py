@@ -39,6 +39,8 @@ from reportlab.lib.colors import *
 from reportlab.lib.units import inch, cm
 from num2words import num2words
 from django.core.mail import send_mail, EmailMessage
+from django.db.models import CharField,FloatField, Value , Func
+from clientRelationships.models import Contract
 # Create your views here.
 
 class AccountViewSet(viewsets.ModelViewSet):
@@ -158,6 +160,13 @@ class InventoryViewSet(viewsets.ModelViewSet):
     permission_classes = (permissions.IsAuthenticated,)
     serializer_class = InventorySerializer
     queryset = Inventory.objects.all()
+    # filter_backends = [DjangoFilterBackend]
+    # filter_fields = ['outBound','product']
+
+class InventoryLogViewSet(viewsets.ModelViewSet):
+    permission_classes = (permissions.IsAuthenticated,)
+    serializer_class = InventoryLogSerializer
+    queryset = InventoryLog.objects.all()
     # filter_backends = [DjangoFilterBackend]
     # filter_fields = ['outBound','product']
 
@@ -655,3 +664,30 @@ class SendInvoiceAPIView(APIView):
 #         msg.attach_file(os.path.join(globalSettings.MEDIA_ROOT,str(c)))
 #         msg.send()
 #         return Response({}, status = status.HTTP_200_OK)
+
+class AverageAPIView(APIView):
+    renderer_classes = (JSONRenderer,)
+    def get(self, request, format=None):
+        invobj = OutBoundInvoiceQty.objects.all()
+        inboundobj = Inflow.objects.all()
+        crmobj = Contract.objects.all()
+
+        inboundtotal = 0
+        invgst = 0
+        inboundtotal = inboundobj.aggregate(inboundtotal=Sum(F('amount') ,output_field=FloatField())).get('inboundtotal',0)
+        inboundgst = inboundobj.aggregate(inboundgst=Sum(F('gstCollected') ,output_field=FloatField())).get('inboundgst',0)
+
+        invtotal = 0
+        invgst = 0
+        invtotal = invobj.aggregate(invtotal=Sum(F('total') ,output_field=FloatField())).get('invtotal',0)
+        invgst = invobj.aggregate(invgst=Sum(((F('total')*F('tax'))/100) ,output_field=FloatField())).get('invgst',0)
+
+        crmtotal = 0
+        crmgst = 0
+        crmtotal = crmobj.aggregate(crmtotal=Sum(F('grandTotal') ,output_field=FloatField())).get('crmtotal',0)
+        crmgst = crmobj.aggregate(crmgst=Sum(F('totalTax') ,output_field=FloatField())).get('crmgst',0)
+
+
+        overallTotal = inboundtotal + invtotal + crmtotal
+        overallGst = inboundgst + invgst + crmgst
+        return Response({'inboundtotal':inboundtotal,"inboundgst":inboundgst,'invtotal':invtotal,'invgst':invgst,'crmtotal':crmtotal,'crmgst':crmgst,'overallTotal':overallTotal,'overallGst':overallGst}, status = status.HTTP_200_OK)

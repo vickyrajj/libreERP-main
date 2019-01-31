@@ -212,11 +212,15 @@ class OutBoundInvoiceQty(models.Model):
 class Inventory(models.Model):
     created = models.DateTimeField(auto_now_add=True)
     name = models.CharField(max_length = 100 , null = True)
-    value = models.CharField(max_length = 100 , null = True)
+    value = models.CharField(max_length = 100 ,default = 0)
+    qtyAdded = models.CharField(max_length = 100 ,default = 0)
     rate = models.FloatField(default=1)
+    refurnished = models.CharField(max_length = 100 ,default = 0)
+    refurnishedAdded = models.CharField(max_length = 100 ,default = 0)
 
 class InventoryLog(models.Model):
     created = models.DateTimeField(auto_now_add=True)
     inventory =  models.ForeignKey(Inventory , related_name='inventorylog' , null = True)
     user = models.ForeignKey(User , related_name='inventoryUser' , null = False)
-    value = models.CharField(max_length = 100 , null = True)
+    value = models.CharField(max_length = 100 , default = 0)
+    refurnished = models.CharField(max_length = 100 ,default = 0)

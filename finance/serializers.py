@@ -408,19 +408,31 @@ class OutBoundInvoiceQtySerializer(serializers.ModelSerializer):
         return instance
 
 class InventorySerializer(serializers.ModelSerializer):
+    total = serializers.SerializerMethodField()
+    totalRef = serializers.SerializerMethodField()
     class Meta:
         model = Inventory
-        fields=('pk','created','name','value','rate')
+        fields=('pk','created','name','value','rate','total','qtyAdded','refurnished','refurnishedAdded','totalRef')
+    def get_total(self , obj):
+        tot = 0
+        objData = InventoryLog.objects.filter(inventory=obj.pk)
+        tot = sum(int(i.value) for i in objData)
+        return tot
+    def get_totalRef(self , obj):
+        totRef = 0
+        objData = InventoryLog.objects.filter(inventory=obj.pk)
+        totRef = sum(int(i.refurnished) for i in objData)
+        return totRef
 
 class InventoryLogSerializer(serializers.ModelSerializer):
     inventory = InventorySerializer(many = False , read_only = True)
     class Meta:
-        model = Inventory
-        fields=('pk','created','inventory','user','value')
+        model = InventoryLog
+        fields=('pk','created','inventory','user','value','refurnished')
         read_only_fields = ('user', )
     def create(self , validated_data):
         u = self.context['request'].user
-        inv = PurchaseOrder(**validated_data)
+        inv = InventoryLog(**validated_data)
         inv.user = u
         if 'inventory' in self.context['request'].data:
             inv.inventory = Inventory.objects.get(pk=int(self.context['request'].data['inventory']))

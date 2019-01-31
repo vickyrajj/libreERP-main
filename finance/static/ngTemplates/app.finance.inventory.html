@@ -1,6 +1,6 @@
 <breadcrumb></breadcrumb>
 <div class="container-fluid">
-  <uib-tabset>
+  <!-- <uib-tabset>
     <uib-tab active="searchTabActive">
       <uib-tab-heading>
         Add Inventory <i class="fa fa-plus"></i>
@@ -13,5 +13,59 @@
       </uib-tab-heading>
     </uib-tab>
 
-  </uib-tabset>
+  </uib-tabset> -->
+
+  <div class="row">
+    <!-- <div class="col-md-12 text-right">
+      <button class="btn btn-primary" ng-click="addInventory()"><i class="fa fa-plus" ></i> New</button>
+    </div> -->
+  </div>
+  <div class="row">
+    <div class="col-md-12">
+      <div class="row">
+        <div class="col-md-offset-2 col-md-8">
+        <div class="invoiceTable" style="width:100%;">
+          <table class="table">
+            <thead>
+              <tr style="height: 50px;border-top:1px solid #ddd;background-color: #eeeeee;">
+                <th style="width:10%" ng-click="getAll()" ><i class="fa fa-refresh" style="cursor:pointer;"></i></th>
+                <th  style="width:20%">Name</th>
+                <th  style="width:15%">Rate</th>
+                <th  style="width:10%">Quantity</th>
+                <th  style="width:10%">Refurnished</th>
+                <th  style="width:15%">Total</th>
+                <th style="width:10%"></th>
+                <!-- <th style="width:5%">Delete</th> -->
+              </tr>
+            </thead>
+            <tbody>
+              <tr ng-repeat = "i in inventoryData track by $index" onmouseover="this.style.backgroundColor='#f4f5f9';"  onMouseOut="this.style.backgroundColor='#ffffff'">
+                <td style="width:10%">{{$index + 1}}</td>
+                <td style="width:20%">{{i.name}}</td>
+                <td style="width:15%">{{i.rate}}</td>
+                <td style="width:10%" >
+                  <span ng-if="!i.open">{{i.total}}</span>
+                  <input ng-if="i.open" type="text" class="form-control-pos text-center" ng-model="i.qtyTotal"  ng-init="i.qtyTotal=i.total">
+                </td>
+                <td style="width:10%">
+                  <span ng-if="!i.open"> {{i.totalRef}} </span>
+                  <input ng-if="i.open" type="text" class="form-control-pos text-center" ng-model="i.qtyRef"  ng-init="i.qtyRef=i.totalRef">
+                </td>
+                  <td style="width:15%">{{(i.rate*i.total).toFixed(2)}}</td>
+                <td style="width:10%">
+                  <button type="button" ng-if="!i.open" class="btn btn-primary btn-sm"  ng-click="toggle(i.pk , $index)"> <i class="fa fa-pencil"></i> </button>
+                <button type="button" ng-if="i.open" class="btn btn-success btn-sm"  ng-click="editData(i.pk , i.qtyTotal,i.qtyRef)"> <i class="fa fa-save"></i> </button>
+                <button type="button" class="btn btn-danger btn-sm"  mwl-confirm title="Confirm" message="Are you sure?" confirm-text="Yes <i class='fa fa-check'></i>" cancel-text="No" on-confirm="deleteData(i.pk , $index)" confirm-button-type="danger" cancel-button-type="default" style="cursor:pointer;"> <i class="fa fa-trash" ></i></button>
+              </td>
+              </tr>
+              <tr>
+                <td><button style="background-color:white;border:none;" ng-click="addInventory()"><i class="fa fa-plus" style="cursor:pointer"></i></button></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+    </div>
+  </div>
 </div>
