@@ -41,6 +41,13 @@ from num2words import num2words
 from django.core.mail import send_mail, EmailMessage
 from django.db.models import CharField,FloatField, Value , Func
 from clientRelationships.models import Contract
+from openpyxl import load_workbook,Workbook
+from openpyxl.writer.excel import save_virtual_workbook
+from openpyxl.styles import Font
+from openpyxl.utils import get_column_letter
+from openpyxl import Workbook
+from openpyxl.writer.excel import save_virtual_workbook
+from openpyxl.styles import PatternFill , Font
 # Create your views here.
 
 class AccountViewSet(viewsets.ModelViewSet):
@@ -668,26 +675,79 @@ class SendInvoiceAPIView(APIView):
 class AverageAPIView(APIView):
     renderer_classes = (JSONRenderer,)
     def get(self, request, format=None):
-        invobj = OutBoundInvoiceQty.objects.all()
         inboundobj = Inflow.objects.all()
+        invobj = OutBoundInvoiceQty.objects.all()
         crmobj = Contract.objects.all()
-
         inboundtotal = 0
         invgst = 0
         inboundtotal = inboundobj.aggregate(inboundtotal=Sum(F('amount') ,output_field=FloatField())).get('inboundtotal',0)
         inboundgst = inboundobj.aggregate(inboundgst=Sum(F('gstCollected') ,output_field=FloatField())).get('inboundgst',0)
-
         invtotal = 0
         invgst = 0
         invtotal = invobj.aggregate(invtotal=Sum(F('total') ,output_field=FloatField())).get('invtotal',0)
         invgst = invobj.aggregate(invgst=Sum(((F('total')*F('tax'))/100) ,output_field=FloatField())).get('invgst',0)
-
         crmtotal = 0
         crmgst = 0
         crmtotal = crmobj.aggregate(crmtotal=Sum(F('grandTotal') ,output_field=FloatField())).get('crmtotal',0)
         crmgst = crmobj.aggregate(crmgst=Sum(F('totalTax') ,output_field=FloatField())).get('crmgst',0)
-
-
         overallTotal = inboundtotal + invtotal + crmtotal
         overallGst = inboundgst + invgst + crmgst
         return Response({'inboundtotal':inboundtotal,"inboundgst":inboundgst,'invtotal':invtotal,'invgst':invgst,'crmtotal':crmtotal,'crmgst':crmgst,'overallTotal':overallTotal,'overallGst':overallGst}, status = status.HTTP_200_OK)
+
+class InvoiceSheetAPIView(APIView):
+    def get(self, request, format=None):
+        workbook = Workbook()
+        Sheet1 = workbook.active
+        hdFont = Font(size=12,bold=True)
+        alphaChars = list(string.ascii_uppercase)
+        Sheet1.title = 'External Invoices'
+        hd = ["Bank", "Reference Id",'Amount','Description','GST']
+        hdWidth = [10,10,10,10,10,10,10]
+        Sheet1.append(hd)
+        inboundobj = Inflow.objects.all()
+        for i in inboundobj:
+            Sheet1.append([i.toAcc.title,i.referenceID,i.amount,i.description,i.gstCollected])
+        if Sheet1.max_column <= len(alphaChars):
+            for character in alphaChars[0:Sheet1.max_column]:
+                Sheet1.column_dimensions[character].width = 20
+        for idx,i in enumerate(hd):
+            cl = str(alphaChars[idx])+'1'
+            Sheet1[cl].fill = PatternFill(start_color="48dce0", end_color="48dce0", fill_type = "solid")
+            Sheet1[cl].font = hdFont
+        Sheet2 = workbook.create_sheet('CRM Invoices')
+        hd = ["Id","Dated", " Total Value",'Grand Total','Total Tax']
+        Sheet2.append(hd)
+        crmobj = Contract.objects.all()
+        for c in crmobj:
+            try:
+                dated = str(c.recievedDate).split(' ')[0]
+                if dated == "None":
+                    dated = ''
+            except:
+                dated = ''
+            Sheet2.append([c.pk,dated,c.value,c.grandTotal,c.totalTax])
+        if Sheet2.max_column <= len(alphaChars):
+            for character in alphaChars[0:Sheet2.max_column]:
+                Sheet2.column_dimensions[character].width = 20
+        for idx,i in enumerate(hd):
+            cl = str(alphaChars[idx])+'1'
+            Sheet2[cl].fill = PatternFill(start_color="48dce0", end_color="48dce0", fill_type = "solid")
+            Sheet2[cl].font = hdFont
+        Sheet3 = workbook.create_sheet('Invoices')
+        hd = ["Id", " Total",'Total Tax','Grand Total']
+        Sheet3.append(hd)
+        invobj = OutBoundInvoiceQty.objects.all()
+        for iv in invobj:
+            tax = ((iv.total*iv.tax)/100)
+            tot = iv.total - tax
+            Sheet3.append([iv.pk,tot,tax,iv.total])
+        if Sheet3.max_column <= len(alphaChars):
+            for character in alphaChars[0:Sheet3.max_column]:
+                Sheet3.column_dimensions[character].width = 20
+        for idx,i in enumerate(hd):
+            cl = str(alphaChars[idx])+'1'
+            Sheet3[cl].fill = PatternFill(start_color="48dce0", end_color="48dce0", fill_type = "solid")
+            Sheet3[cl].font = hdFont
+        response = HttpResponse(content=save_virtual_workbook(workbook),content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+        response['Content-Disposition'] = 'attachment; filename=stockConsumed.xlsx'
+        return response

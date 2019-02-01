@@ -35,6 +35,8 @@ urlpatterns = [
     url(r'invoiceDownload/$' , InvoiceAPIView.as_view()),
     url(r'sendInvoice/$' , SendInvoiceAPIView.as_view()),
     url(r'average/$' , AverageAPIView.as_view()),
+    url(r'invoiceSheet/$' , InvoiceSheetAPIView.as_view()),
+
 
 
 ]

@@ -6,9 +6,13 @@
         <div class="col-md-2">
       <h3>Total : <i class="fa fa-inr"></i>  {{totalData.overallTotal}}</h3>
       <h3>GST : <i class="fa fa-inr"></i>  {{totalData.overallGst}}</h3>
+
     </div>
     <div class="col-md-2">
       <canvas id="pie" class="chart chart-pie" chart-data="[totalData.overallTotal,totalData.overallGst]" chart-labels="['Total','GST']"  chart-options="{legend: { display: true }}" chart-colors="['#90EE90', '#FF6600']" ></canvas>
+    </div>
+    <div class="col-md-8 text-right">
+      <span > <a class="btn btn-primary" target="_blank" href="/api/finance/invoiceSheet/" style="min-width:50px">  <i class="fa fa-download"></i> Download </a></span>
     </div>
     </div>
     </div>
