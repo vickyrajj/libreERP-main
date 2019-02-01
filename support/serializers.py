@@ -117,12 +117,12 @@ class ChatThreadSerializer(serializers.ModelSerializer):
         if self.context['request'].META.get('REMOTE_ADDR'):
             c.userDeviceIp = self.context['request'].META.get('REMOTE_ADDR')
             try:
-                # api1=requests.request('GET',"http://api.ipstack.com/"+c.userDeviceIp+"?access_key=f6e584f19ad6fa9080e0434fb46ae508&format=1")
-                api1=requests.request('GET',"http://api.ipstack.com/43.224.128.172?access_key=f6e584f19ad6fa9080e0434fb46ae508&format=1")
+                api1=requests.request('GET',"http://api.ipstack.com/"+c.userDeviceIp+"?access_key=f6e584f19ad6fa9080e0434fb46ae508&format=1")
+                # api1=requests.request('GET',"http://api.ipstack.com/43.224.128.172?access_key=f6e584f19ad6fa9080e0434fb46ae508&format=1")
                 c.location=json.dumps(api1.json())
             except:
-                # api2=requests.request('GET','http://ip-api.com/json/'+c.userDeviceIp)
-                api2=requests.request('GET','http://ip-api.com/json/43.224.128.172')
+                api2=requests.request('GET','http://ip-api.com/json/'+c.userDeviceIp)
+                # api2=requests.request('GET','http://ip-api.com/json/43.224.128.172')
                 c.location=json.dumps(api2.json())
         c.save()
         return c
