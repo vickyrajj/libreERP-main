@@ -125,7 +125,7 @@ class GetMyUser(APIView):
                 # dic['chatThreadPk'] = ChatThread.objects.get(uid=i).pk
                 dic['companyPk'] = ChatThread.objects.filter(uid=i)[0].company.pk
                 dic['chatThreadPk'] = ChatThread.objects.filter(uid=i)[0].pk
-                dic['servicePk'] = service.objects.filter(pk = dic['companyPk'])[0].pk
+                dic['servicePk'] = CustomerProfile.objects.filter(pk = dic['companyPk'])[0].service.pk
                 print dic
                 toSend.append(dic)
             return Response(toSend, status=status.HTTP_200_OK)
@@ -150,7 +150,7 @@ class GetMyUser(APIView):
                     dic = {'uid':i,'name':'' ,'email':''}
                 dic['companyPk'] = ChatThread.objects.filter(uid=i)[0].company.pk
                 dic['chatThreadPk'] = ChatThread.objects.filter(uid=i)[0].pk
-                dic['servicePk'] = service.objects.filter(pk = dic['companyPk'])[0].pk
+                dic['servicePk'] = CustomerProfile.objects.filter(pk = dic['companyPk'])[0].service.pk
                 # print dic['me']
                 # print Support.objects.filter(uid = i).count() , 'CCCCCCCCCCCCCCCCCCCC'
                 toSend.append(dic)
