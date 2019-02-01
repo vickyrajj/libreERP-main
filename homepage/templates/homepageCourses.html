@@ -1,4 +1,4 @@
-{% extends "tutorBook.html" %}
+{% extends "tutorBook.html" %}{% load staticfiles %}
 
 {% block bookcontent %}
 <br><br>
@@ -80,4 +80,8 @@
     </div>
   </div>
 </div>
+{% endblock %}
+
+{% block tutorjs %}
+<script src="{% static 'js/app.tutor.home.main.js' %}"></script>
 {% endblock %}

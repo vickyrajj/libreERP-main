@@ -1,7 +1,6 @@
-{% extends "tutorBook.html" %}
+{% extends "tutorBase.html" %}}{% load staticfiles %}
 
-
-{% block bookcontent %}
+{% block tutorcontent %}
 
 <div class="container-fluid" style="padding-top:40px;">
   <style>
@@ -58,4 +57,8 @@
 
   </div>
 </div>
+{% endblock %}
+
+{% block tutorjs %}
+<script src="{% static 'js/app.tutor.home.main.js' %}"></script>
 {% endblock %}

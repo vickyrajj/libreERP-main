@@ -1,4 +1,4 @@
-app.controller('main', function($scope, $rootScope, $state, $http, $timeout, $interval, $uibModal, $stateParams, $sce, $document) {
+app.controller('main', function($scope, $rootScope, $http, $timeout, $interval, $uibModal, $document) {
 
   $scope.initiateMath = function() {
     MathJax.Hub.Queue(["Typeset", MathJax.Hub]);

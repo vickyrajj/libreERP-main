@@ -1,5 +1,19 @@
-{% extends "tutorBase.html" %} {% block tutorcontent %}
+{% extends "tutorBase.html" %} {% load staticfiles %}
+{% block specific_css %}
+<link rel="stylesheet" href="{% static 'css/homepage.css' %}" rel="stylesheet">
+<link rel="stylesheet" href="{% static 'css/angular-ui-switch.min.css' %}" charset="utf-8">
+<link rel="stylesheet" href="{% static 'css/angular-aside.min.css' %}" charset="utf-8">
+<link rel="stylesheet" href="{% static 'css/custom/base.css' %}" charset="utf-8">
+{% endblock %}
+{% block tutorcontent %}
 <div class="container-fluid" style="margin-top:50px; width:100%;  background-color:#F1F3FA" ng-controller="accountController">
   <div class="" ng-include="'/static/ngTemplates/accountsDetails.html'"></div>
 </div>
+{% endblock %}
+
+{% block tutorjs %}
+<script src="{% static 'js/angular-flash.js' %}"></script>
+<script src="{% static 'js/angular-aside.min.js' %}"></script>
+<script src="{% static 'js/app.tutor.accout.js' %}"></script>
+<script src="{% static 'js/angular-ui-switch.min.js' %}"></script>
 {% endblock %}
