@@ -701,12 +701,12 @@ class InvoiceSheetAPIView(APIView):
         hdFont = Font(size=12,bold=True)
         alphaChars = list(string.ascii_uppercase)
         Sheet1.title = 'External Invoices'
-        hd = ["Bank", "Reference Id",'Amount','Description','GST']
+        hd = ["Reference Id","Bank", 'Amount','Description','GST']
         hdWidth = [10,10,10,10,10,10,10]
         Sheet1.append(hd)
         inboundobj = Inflow.objects.all()
         for i in inboundobj:
-            Sheet1.append([i.toAcc.title,i.referenceID,i.amount,i.description,i.gstCollected])
+            Sheet1.append([i.referenceID,i.toAcc.title,i.amount,i.description,i.gstCollected])
         if Sheet1.max_column <= len(alphaChars):
             for character in alphaChars[0:Sheet1.max_column]:
                 Sheet1.column_dimensions[character].width = 20
@@ -725,7 +725,8 @@ class InvoiceSheetAPIView(APIView):
                     dated = ''
             except:
                 dated = ''
-            Sheet2.append([c.pk,dated,c.value,c.grandTotal,c.totalTax])
+            crmId = "CRM0" + str(c.pk)
+            Sheet2.append([crmId,dated,c.value,c.grandTotal,c.totalTax])
         if Sheet2.max_column <= len(alphaChars):
             for character in alphaChars[0:Sheet2.max_column]:
                 Sheet2.column_dimensions[character].width = 20
@@ -740,7 +741,8 @@ class InvoiceSheetAPIView(APIView):
         for iv in invobj:
             tax = ((iv.total*iv.tax)/100)
             tot = iv.total - tax
-            Sheet3.append([iv.pk,tot,tax,iv.total])
+            invId = "INV0" +str(iv.pk)
+            Sheet3.append([invId,tot,tax,iv.total])
         if Sheet3.max_column <= len(alphaChars):
             for character in alphaChars[0:Sheet3.max_column]:
                 Sheet3.column_dimensions[character].width = 20
