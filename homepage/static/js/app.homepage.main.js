@@ -1,25 +1,17 @@
-var app = angular.module('app', ['ui.router', 'ui.bootstrap', 'angular-owl-carousel-2', 'ui.bootstrap.datetimepicker', 'flash', 'ngAside', 'uiSwitch', 'chart.js', ]);
+var app = angular.module('app', [ 'ui.bootstrap']);
 // $scope, $state, $users, $stateParams, $http, $timeout, $uibModal , $sce,$rootScope
 
 
-app.config(function($stateProvider, $urlRouterProvider, $httpProvider) {
+app.config(function($httpProvider) {
   $httpProvider.defaults.xsrfCookieName = 'csrftoken';
   $httpProvider.defaults.xsrfHeaderName = 'X-CSRFToken';
   $httpProvider.defaults.withCredentials = true;
 })
 
-app.run(['$rootScope', '$state', '$stateParams', function($rootScope, $state, $stateParams) {
-  $rootScope.$state = $state;
-  $rootScope.$stateParams = $stateParams;
-  $rootScope.$on("$stateChangeError", console.log.bind(console));
-}]);
 
-
-app.controller('main', function($scope, $http, $sce, $interval, $uibModal) {
+app.controller('main', function($scope, $http, $interval) {
   // $scope.me = $users.get('mySelf');
   $scope.crmBannerID = 1;
-
-
 
   $scope.device = {
     name: ''
