@@ -322,7 +322,7 @@ class CourseSerializer(serializers.ModelSerializer):
     topic = TopicSerializer(many = False , read_only = True)
     class Meta:
         model = Course
-        fields = ('pk' , 'created' , 'updated', 'topic', 'enrollmentStatus', 'instructor' , 'TAs' , 'user' , 'description' , 'title' , 'enrollments' ,'dp', 'studyMaterials')
+        fields = ('pk' , 'created' , 'updated', 'topic', 'enrollmentStatus', 'instructor' , 'TAs' , 'user' , 'description' , 'title' , 'enrollments' ,'dp', 'studyMaterials','urlSuffix')
         read_only_fields = ('user', 'TAs')
     def create(self , validated_data):
         c = Course(**validated_data)
@@ -335,7 +335,7 @@ class CourseSerializer(serializers.ModelSerializer):
         c.save()
         return c
     def update(self , instance , validated_data):
-        for key in ['enrollmentStatus', 'description' , 'title' , 'enrollments' , 'studyMaterials','user','dp']:
+        for key in ['enrollmentStatus', 'description' , 'title' , 'enrollments' , 'studyMaterials','user','dp','urlSuffix']:
             try:
                 setattr(instance , key , validated_data[key])
             except:
@@ -346,8 +346,9 @@ class CourseSerializer(serializers.ModelSerializer):
         if 'instructor' in self.context['request'].data:
             instance.instructor = User.objects.get(pk =self.context['request'].data['instructor'])
 
-        for u in self.context['request'].data['TAs'].split(','):
-            instance.TAs.add(User.objects.get(pk = int(u)))
+        if 'TAs' in self.context['request'].data:
+            for u in self.context['request'].data['TAs'].split(','):
+                instance.TAs.add(User.objects.get(pk = int(u)))
 
         instance.save()
         return instance

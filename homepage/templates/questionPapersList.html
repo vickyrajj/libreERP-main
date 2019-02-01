@@ -8,6 +8,24 @@
     .nohover:hover {
       text-decoration: none;
     }
+    .groupname{
+      margin:1em;
+      width:30%;
+    }
+    .groupwrap{
+       display: flex;
+       justify-content: center;
+       align-items: center;
+    }
+  </style>
+  <style media="screen and (max-width:768px)">
+    .groupname{
+      width: 100%;
+      margin:1em 0;
+    }
+    .groupwrap{
+       display: block;
+    }
   </style>
   <div class="col-md-12">
     <div class="row" style="margin-top:1em;">
@@ -19,7 +37,6 @@
     </div>
     <div class="row">
       <div class="col-md-12 text-center">
-        <!-- <h2><b>Description</b></h2> -->
         <h3>{{groupObj.description}}</h3>
       </div>
     </div>
@@ -28,22 +45,12 @@
   <div class="col-md-12">
     <div class="row">
 
-      <div class="textcenter" style="margin:1em 0 ; display: flex;justify-content: center;align-items: center;margin: 2em;">
+      <div class="textcenter groupwrap" style="margin:1em 0 ;margin: 2em;">
         {% for quespaper in papersList %}
-        <!-- <div style="text-align:center; "> -->
-        <div class="well text-center" style="margin:1em;width:30%;">
+        <div class="well text-center groupname" >
           <a class="nohover" href="/{{blogobj.shortUrl}}/{{quespaper.name.split|join:'-'}}-with-answers/"><b style="font-size:20px;color:#000;">{{quespaper.name}}</b></a>
         </div>
-        <!-- </div> -->
-        <!-- <div class="cardstype nohover" style="margin-top:3em;border-top-left-radius: 50px;min-height:0vh;min-height:20vh;text-align: left;">
-        <div style="cursor:pointer;text-align: center;padding:2em 1em 1em 1em;min-height: 9em;"><span style="font-size:17px;">{{a.chapter}} </span><br />
-          <span style="font-size:17px;"> {{quespaper.name}}</span>
-        </div>
-        <div class="text-center">
-          <a href="/{{blogobj.shortUrl}}/{{quespaper.name.split|join:'-'}}-with-answers/"><button class="btn-style1" style="border-top-left-radius: 15px;padding: 0.5em 1em;margin-top: 0em;">View</button></a>
-        </div>
 
-      </div> -->
         {% endfor %}
       </div>
 

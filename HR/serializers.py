@@ -5,6 +5,8 @@ from rest_framework import serializers
 from rest_framework.exceptions import *
 from .models import *
 from PIM.serializers import *
+from tutor.models import Tutors24Profile
+from tutor.serializers import Tutors24ProfileSerializer
 
 class userProfileLiteSerializer(serializers.ModelSerializer):
     # to be used in the typehead tag search input, only a small set of fields is responded to reduce the bandwidth requirements
@@ -15,9 +17,10 @@ class userProfileLiteSerializer(serializers.ModelSerializer):
 class userSearchSerializer(serializers.ModelSerializer):
     # to be used in the typehead tag search input, only a small set of fields is responded to reduce the bandwidth requirements
     profile = userProfileLiteSerializer(many=False , read_only=True)
+    tutors24Profile = Tutors24ProfileSerializer(many = False , read_only = True)
     class Meta:
         model = User
-        fields = ( 'pk', 'username' , 'first_name' , 'last_name' , 'profile'  , 'designation' )
+        fields = ( 'pk', 'username' , 'first_name' , 'last_name' , 'profile'  , 'designation','tutors24Profile' )
 
 
 class rankSerializer(serializers.ModelSerializer):
@@ -58,32 +61,33 @@ class userProfileAdminModeSerializer(serializers.ModelSerializer):
         'note1' , 'note2' , 'note3')
 
 
-class payrollSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = payroll
-        fields = ('pk','user','created','updated','hra','special','lta','basic','adHoc','policyNumber','provider','amount','noticePeriodRecovery','al','ml','adHocLeaves','joiningDate','off','accountNumber','ifscCode','bankName','deboarded','lastWorkingDate')
+# class payrollSerializer(serializers.ModelSerializer):
+#     class Meta:
+#         model = payroll
+#         fields = ('pk','user','created','updated','hra','special','lta','basic','adHoc','policyNumber','provider','amount','noticePeriodRecovery','al','ml','adHocLeaves','joiningDate','off','accountNumber','ifscCode','bankName','deboarded','lastWorkingDate')
+#
+#     def update(self ,instance, validated_data):
+#         for key in ['hra','special','lta','basic','adHoc','policyNumber','provider','amount','noticePeriodRecovery','al','ml','adHocLeaves','joiningDate','off','accountNumber','ifscCode','bankName','deboarded','lastWorkingDate']:
+#             try:
+#                 setattr(instance , key , validated_data[key])
+#             except:
+#                 pass
+#         instance.save()
+#         return instance
 
-    def update(self ,instance, validated_data):
-        for key in ['hra','special','lta','basic','adHoc','policyNumber','provider','amount','noticePeriodRecovery','al','ml','adHocLeaves','joiningDate','off','accountNumber','ifscCode','bankName','deboarded','lastWorkingDate']:
-            try:
-                setattr(instance , key , validated_data[key])
-            except:
-                pass
-        instance.save()
-        return instance
-
-class payrollLiteSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = payroll
-        fields = ('pk','user', 'al','ml','adHocLeaves','joiningDate','off')
+# class payrollLiteSerializer(serializers.ModelSerializer):
+#     class Meta:
+#         model = payroll
+#         fields = ('pk','user', 'al','ml','adHocLeaves','joiningDate','off')
 
 class userSerializer(serializers.ModelSerializer):
     profile = userProfileSerializer(many=False , read_only=True)
-    payroll = payrollLiteSerializer(many = False , read_only = True)
+    # payroll = payrollLiteSerializer(many = False , read_only = True)
+    tutors24Profile = Tutors24ProfileSerializer(many = False , read_only = True)
     class Meta:
         model = User
-        fields = ('pk' , 'username' , 'email' , 'first_name' , 'last_name' , 'designation' ,'profile'  ,'settings' , 'password' , 'payroll')
-        read_only_fields = ('designation' , 'profile' , 'settings' , 'payroll' )
+        fields = ('pk' , 'username' , 'email' , 'first_name' , 'last_name' , 'designation' ,'profile'  ,'settings' , 'password' ,'tutors24Profile')
+        read_only_fields = ('designation' , 'profile' , 'settings' ,'tutors24Profile' )
         extra_kwargs = {'password': {'write_only': True} }
     def create(self , validated_data):
         raise PermissionDenied(detail=None)

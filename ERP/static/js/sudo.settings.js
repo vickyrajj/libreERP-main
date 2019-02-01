@@ -1,16 +1,22 @@
-app.controller('home.settings.configure.blog' , function($scope , $stateParams , $http , $aside , $state , Flash , $users , $filter){
+app.controller('home.settings.configure.blog', function($scope, $stateParams, $http, $aside, $state, Flash, $users, $filter) {
   console.log('hey');
 
-  $scope.editor = {title : '' , pk : null}
+  $scope.editor = {
+    title: '',
+    pk: null
+  }
 
-  $http({method : 'GET' , url : '/api/PIM/blogTags/'}).
+  $http({
+    method: 'GET',
+    url: '/api/PIM/blogTags/'
+  }).
   then(function(response) {
     $scope.tags = response.data;
   })
 
   $scope.edit = function(index) {
     $scope.tagBackup = angular.copy($scope.tags[index]);
-    $scope.tags.splice(index , 1)
+    $scope.tags.splice(index, 1)
     $scope.editor.title = angular.copy($scope.tagBackup.title);
     $scope.editor.pk = angular.copy($scope.tagBackup.pk);
   }
@@ -19,67 +25,87 @@ app.controller('home.settings.configure.blog' , function($scope , $stateParams ,
     var url = '/api/PIM/blogTags/'
     var method = 'POST';
     var dataToSend = {
-      title : $scope.editor.title
+      title: $scope.editor.title
     };
-    if($scope.editor.pk != null){
+    if ($scope.editor.pk != null) {
       $scope.tagBackup.title = $scope.editor.title;
       url += $scope.editor.pk + '/';
       method = 'PATCH';
     }
 
-    $http({method : method , url : url , data : dataToSend}).
+    $http({
+      method: method,
+      url: url,
+      data: dataToSend
+    }).
     then(function(response) {
       $scope.tags.push(response.data);
-      $scope.editor = {title : '' , pk : null};
+      $scope.editor = {
+        title: '',
+        pk: null
+      };
     })
 
   }
 
   $scope.delete = function(index) {
-    $http({method : 'DELETE' , url : '/api/PIM/blogTags/' + $scope.tags[index].pk +'/'}).
+    $http({
+      method: 'DELETE',
+      url: '/api/PIM/blogTags/' + $scope.tags[index].pk + '/'
+    }).
     then(function(response) {
-      $scope.tags.splice(index , 1);
+      $scope.tags.splice(index, 1);
     })
   }
 
   $scope.cancelEditor = function() {
     $scope.tags.push($scope.tagBackup);
-    $scope.editor = {title : '' , pk : null};
+    $scope.editor = {
+      title: '',
+      pk: null
+    };
   }
 
 });
-app.controller('home.settings.configure' , function($scope , $stateParams , $http , $aside , $state , Flash , $users , $filter){
+app.controller('home.settings.configure', function($scope, $stateParams, $http, $aside, $state, Flash, $users, $filter) {
 
   // settings for dashboard controller
   if (typeof $stateParams.canConfigure == 'undefined') {
     return;
   }
 
-  $http({method:'GET' , url : '/api/ERP/appSettingsAdminMode/?app=' + $stateParams.canConfigure}).
-  then(function(response){
+  $http({
+    method: 'GET',
+    url: '/api/ERP/appSettingsAdminMode/?app=' + $stateParams.canConfigure
+  }).
+  then(function(response) {
     $scope.settings = response.data;
     for (var i = 0; i < $scope.settings.length; i++) {
       $scope.settings[i].data = $scope.settings[i][$scope.settings[i].fieldType];
     }
   })
 
-  $scope.save = function(){
+  $scope.save = function() {
     for (var i = 0; i < $scope.settings.length; i++) {
       if ($scope.settings[i].fieldType == 'flag') {
         dataToSend = {
-          flag : $scope.settings[i].flag
+          flag: $scope.settings[i].flag
         }
 
-      }else {
+      } else {
         dataToSend = {
-          value : $scope.settings[i].value
+          value: $scope.settings[i].value
         }
       }
-      $http({method : 'PATCH' , url : '/api/ERP/appSettingsAdminMode/'+ $scope.settings[i].pk + '/' , data : dataToSend } ).
-      then(function(response){
-        Flash.create('success', response.status + ' : ' + response.statusText );
-      }, function(response){
-        Flash.create('danger', response.status + ' : ' + response.statusText );
+      $http({
+        method: 'PATCH',
+        url: '/api/ERP/appSettingsAdminMode/' + $scope.settings[i].pk + '/',
+        data: dataToSend
+      }).
+      then(function(response) {
+        Flash.create('success', response.status + ' : ' + response.statusText);
+      }, function(response) {
+        Flash.create('danger', response.status + ' : ' + response.statusText);
       });
     }
   }
@@ -88,22 +114,22 @@ app.controller('home.settings.configure' , function($scope , $stateParams , $htt
 });
 
 
-app.controller('home.settings.menu' , function($scope , $http , $aside , $state, Flash , $users , $filter , $permissions){
+app.controller('home.settings.menu', function($scope, $http, $aside, $state, Flash, $users, $filter, $permissions) {
   // settings main page controller
 
-  var getState = function(input){
+  var getState = function(input) {
     parts = input.name.split('.');
     // console.log(parts);
     if (parts[0] == 'configure') {
-      return  'home.settings.configure ({canConfigure :' + input.canConfigure + ', app :"' + parts[2] + '"})'; ;
+      return 'home.settings.configure ({canConfigure :' + input.canConfigure + ', app :"' + parts[2] + '"})';;
     } else {
-      return input.name.replace('sudo' , 'home')
+      return input.name.replace('sudo', 'home')
     }
   }
 
   $scope.apps = [];
 
-  $scope.buildMenu = function(apps){
+  $scope.buildMenu = function(apps) {
     for (var i = 0; i < apps.length; i++) {
       a = apps[i];
       parts = a.name.split('.');
@@ -111,33 +137,70 @@ app.controller('home.settings.menu' , function($scope , $http , $aside , $state,
         continue;
       }
       a.state = getState(a)
-      a.dispName = parts[parts.length -1];
+      a.dispName = parts[parts.length - 1];
       $scope.apps.push(a);
     }
   }
 
   as = $permissions.apps();
-  if(typeof as.success == 'undefined'){
+  if (typeof as.success == 'undefined') {
     $scope.buildMenu(as);
   } else {
-    as.success(function(response){
+    as.success(function(response) {
       $scope.buildMenu(response);
     });
   };
 
-  $scope.isActive = function(index){
+  $scope.isActive = function(index) {
     app = $scope.apps[index]
     if (angular.isDefined($state.params.app)) {
       return $state.params.app == app.name.split('.')[2]
     } else {
-      return  $state.is(app.name.replace('sudo' , 'home'))
+      return $state.is(app.name.replace('sudo', 'home'))
     }
   }
 
 });
 
 
-app.controller('home.settings' , function($scope , $http , $aside , $state , Flash , $users , $filter){
-
-
+app.controller('home.settings', function($scope, $http, $aside, $state, Flash, $users, $filter) {
+  console.log('insettingssssssss');
+  $scope.sai = 'Kiran'
+  $scope.blogsData = []
+  $http({
+    method: 'GET',
+    url: '/api/PIM/blog/?contentType=article&state=published'
+  }).
+  then(function(response) {
+    console.log('articleeeeeeeee',response.data);
+    if (response.data.length>0) {
+      $scope.blogsData = $scope.blogsData.concat(response.data)
+    }
+  })
+  $http({
+    method: 'GET',
+    url: '/api/PIM/blog/?contentType__in=book,course,paperGroup'
+  }).
+  then(function(response) {
+    console.log('booksssssss',response.data);
+    if (response.data.length>0) {
+      $scope.blogsData = $scope.blogsData.concat(response.data)
+    }
+  })
+  $http({
+    method: 'GET',
+    url: '/api/LMS/section/'
+  }).
+  then(function(response) {
+    console.log('courseeeeeee',response.data);
+    $scope.SectionData = response.data;
+  })
+  $http({
+    method: 'GET',
+    url: '/api/LMS/subject/'
+  }).
+  then(function(response) {
+    console.log('paperGroupeeeeeeee',response.data);
+    $scope.subjectData = response.data;
+  })
 });

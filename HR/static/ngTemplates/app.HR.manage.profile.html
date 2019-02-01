@@ -1,0 +1,78 @@
+<div class="container-fluid" style="padding:20px;" ng-controller="controller.profile">
+  <div class="col-md-3" style="border-right:solid 2px #eeeeee;min-height:70vh;">
+    <div class="row">
+      <div class="container-fluid text-center">
+        <img ng-src="{{data.profile.displayPicture}}" class="img img-circle" style="height:100px;width:100px;margin-bottom:20px;"> <br>
+        <span class="text-muted" style="font-size:18px;">{{data.first_name}}{{data.last_name}}</span> <br><br>
+      </div>
+    </div>
+
+    <div class="row" style="margin-top:20px;">
+      <div class="row">
+        <div class="col-md-5 text-right">
+          <label><i class="fa fa-envelope-o"></i> School/College : </label> <br>
+        </div>
+        <div class="col-md-7">
+          <span>{{tutorData.school= 'S'?'School':'College'}}</span> <br>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-5 text-right">
+          <label><i class="fa fa-envelope-o"></i> Institue Name : </label><br>
+        </div>
+        <div class="col-md-7">
+          <span>{{tutorData.schoolName}}<span ng-if="!tutorData.schoolName" class="text-danger">NA</span></span> <br>
+        </div>
+      </div>
+      <hr>
+      <div class="row">
+        <div class="col-md-12">
+          <div class="" style="line-height:2.2;" ng-repeat="d in detail">
+            <span style="text-transform:capitalize;"><i class="fa fa-check-circle fa-fw" aria-hidden="true"></i>{{d}}</span><br>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <div class="col-md-6">
+    <div class="container-fluid">
+
+
+      <div class="row" style="padding:20px;">
+        <div class="row">
+          <div class="col-md-3 text-right">
+            <label>Address :</label> <br>
+            <i class="fa fa-map-marker fa-3x pull-right" style="color:#eeeeee;"></i>
+          </div>
+          <div class="col-md-9">
+            <span>{{tutorData.street}}<span ng-if="!tutorData.street" class="text-danger">NA</span></span><br>
+            <span>{{tutorData.city}}<span ng-if="!tutorData.city" class="text-danger">NA</span></span><br>
+            <span>{{tutorData.state}}<span ng-if="!tutorData.state" class="text-danger">NA</span></span><br>
+            <span>{{tutorData.country}}<span ng-if="!tutorData.country" class="text-danger">NA</span></span><br>
+          </div>
+        </div>
+      </div>
+
+      <div class="row" style="padding:20px;">
+        <div class="row">
+          <div class="col-md-3 text-right">
+            <label>Parent's Email :</label>
+          </div>
+          <div class="col-md-9">
+            {{tutorData.parentEmail}}
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-3 text-right">
+            <label>Parent's Number :</label>
+          </div>
+          <div class="col-md-9">
+            {{tutorData.parentMobile}}
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>

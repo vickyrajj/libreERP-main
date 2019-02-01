@@ -1,12 +1,93 @@
-
-<div class="shaddowed card bg-white " style="position:relative;min-height:95vh;">
+<!-- <div class="shaddowed card bg-white " style="position:relative;min-height:95vh;">
   <div class="container-fluid" style="padding:0px;">
     <breadcrumb></breadcrumb>
     <p style="text-align:center;padding-top:200px;">
       <i class="fa fa-search-plus fa-5x"></i>
       <i class="fa fa-cogs fa-5x "></i>
       <br>
-      <h3 class="text-muted" style="text-align:center;"> Settings default page</h3>
+      <h3 class="text-muted" style="text-align:center;"> Settings default page {{sai}}</h3>
     </p>
+  </div>
+</div> -->
+
+<div class="shaddowed card bg-white " style="position:relative;min-height:95vh;">
+  <div class="container-fluid" style="padding:0px;">
+    <breadcrumb></breadcrumb>
+    <div class="col-md-12">
+      <div class="col-md-12 text-center">
+        <h3>SEO Related Details</h3>
+      </div>
+      <div class="col-md-12">
+        <h3>Blogs Data</h3>
+        <table class="table table-hover" style="background-color:#dbda97;border-radius:15px">
+          <thead>
+            <tr>
+              <th scope="col" style="width:8%">Object Type</th>
+              <th scope="col">Title</th>
+              <th scope="col">Description</th>
+              <th scope="col">URL</th>
+              <th scope="col">Image</th>
+              <th scope="col">Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr ng-repeat="blog in blogsData">
+              <th scope="row">
+                <span ng-if="blog.contentType=='book'"><i class="fa fa-book fa-lg"></i></span><span ng-if="blog.contentType=='article'"><i class="fa fa-newspaper-o fa-lg"></i></span><span ng-if="blog.contentType=='course'"><i class="fa fa-laptop fa-lg"></i></span><span ng-if="blog.contentType=='paperGroup'"><i class="fa fa-file-pdf-o fa-lg"></i></span> &nbsp;{{blog.contentType|humanize}}</th>
+              <td>{{blog.title}}</td>
+              <td>{{blog.description}}</td>
+              <td>{{blog.shortUrl}}</td>
+              <td><span ng-if="blog.ogimage"><img ng-src="{{blog.ogimage}}" alt="Article Image" style="height:70px;width:70px"></span><span ng-if="blog.ogimageUrl&&blog.ogimageUrl!='null'"><a href="{{blog.ogimageUrl}}" target="_blank">{{blog.ogimageUrl}}</a></span></td>
+              <td><i class="fa fa-pencil fa-2x"></i></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="col-md-12">
+        <h3>Subject Data</h3>
+        <table class="table table-hover" style="background-color:#c7e79f;border-radius:15px">
+          <thead>
+            <tr>
+              <th scope="col">Level</th>
+              <th scope="col">Title</th>
+              <th scope="col">Description</th>
+              <th scope="col">DP</th>
+              <th scope="col">Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr ng-repeat="sub in subjectData">
+              <td>Class {{sub.level}}</td>
+              <td>{{sub.title}}</td>
+              <td>{{sub.description}}</td>
+              <td><span ng-if="sub.dp"><img ng-src="{{sub.dp}}" alt="Subject DP" style="height:70px;width:70px"></span></td>
+              <td><i class="fa fa-pencil fa-2x"></i></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="col-md-12">
+        <h3>Section Data</h3>
+        <table class="table table-hover" style="background-color:#e7b89f;border-radius:15px">
+          <thead>
+            <tr>
+              <th scope="col">Title</th>
+              <th scope="col">Description</th>
+              <th scope="col">URL</th>
+              <th scope="col">Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr ng-repeat="sec in SectionData">
+              <td>{{sec.seoTitle}}</td>
+              <td>{{sec.description}}</td>
+              <td>{{sec.shortUrl}}</td>
+              <td><i class="fa fa-pencil fa-2x"></i></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+    </div>
   </div>
 </div>

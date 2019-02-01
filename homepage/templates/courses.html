@@ -23,7 +23,7 @@
       <div class="row" style="margin-top:4em;">
         <div class="col-md-6 col-xs-12">
           <div style="margin-right:2em;display:inline-block;">
-            <span style="font-size:30px;color:#000;"><b>Class {{level}} std</b></span>
+            <h1><b>Class {{level}} std</b></h1>
           </div>
         </div>
       </div>
@@ -47,7 +47,8 @@
         <div class="col-md-3 col-xs-7 smdevice">
           <table>
             <tr>
-              <td style="width:50%"> <i class="fa fa-star " style="color:#f4c810" aria-hidden="true"></i>
+              <td style="width:50%">
+                 <i class="fa fa-star " style="color:#f4c810" aria-hidden="true"></i>
                 <i class="fa fa-star " style="color:#f4c810" aria-hidden="true"></i>
                 <i class="fa fa-star " style="color:#f4c810" aria-hidden="true"></i>
                 <i class="fa fa-star " style="color:#f4c810" aria-hidden="true"></i>
@@ -114,10 +115,20 @@
       <div class="col-md-8 col-md-offset-2">
         {% for c in courseobj %}
         <div class="col-md-3" style="display:inline-block;padding-bottom: 20px;">
-          <img src="{{c.dp}}" class="courseobj_img">
+          {% if c.topic.subject.title == 'Mathematics' %}<img src="/static/images/24tut/pi.png" class="courseobj_img">{% endif %}
+          {% if c.topic.subject.title == 'Physics' %}<img src="/static/images/24tut/phy.png" class="courseobj_img">{% endif %}
+          {% if c.topic.subject.title == 'Chemistry' %}<img src="/static/images/24tut/che.png" class="courseobj_img">{% endif %}
+          {% if c.topic.subject.title == 'Biology' %}<img src="/static/images/24tut/bio.png" class="courseobj_img">{% endif %}
           <div class="container-fluid courseobj_container">
             <h5> <b>{{c.title}}</b> </h5>
-            <span>{{c.description}}</span>
+            <div class=""style="height:120px;overflow-y:hidden;">
+              <span>{{c.description}}</span>
+            </div>
+            <div class="text-center"style="padding-top:15px;">
+            <a href="/{{c.urlSuffix}}/" class="btn-style1" style="border-top-left-radius: 15px;padding: 0.5em 1em;margin-top: 0em;text-decoration:none;">
+                View this Course
+            </a>
+            </div>
           </div>
         </div>
         {% endfor %}
@@ -259,11 +270,11 @@
         {% for r in refbookobjs %}
         <div class="col-md-6 col-xs-12" style="position: relative;text-decoration:none;">
           <div class="movie-card" style="border-bottom-left-radius:0px;border-bottom-right-radius:0px;">
-            <div class="colorcircle" style="background-color:{{color}}"></div>
-            <div class="col-md-5 studentcard col-xs-5" style="min-height:300px;">
+            <div class="col-md-5 studentcard col-xs-5" style="min-height:300px;position:relative">
+              <div class="colorcircle" style="background-color:{{color}}"></div>
               <img src="/media/{{r.book.dp}}" class="imgstyle" style="border-bottom-left-radius:0px;border-bottom-right-radius:0px;">
             </div>
-            <div class="col-md-7 text-left col-xs-7">
+            <div class="col-md-7 text-left col-xs-7"style="z-index:20;">
               <div style="margin-top:1em;">
                 <span style="font-size:18px;color:#5B5B5B;"> <strong>{{r.book.title}}</strong> </span><br>
                 <span style="color:#5B5B5B;"> <b>Volume - </b> {{r.book.volume}}</span><br>

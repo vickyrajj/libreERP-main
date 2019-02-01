@@ -18,6 +18,7 @@
   color: #fff;
 }
 
+
 .notview {
   width: 35px;
   height: 35px;
@@ -249,6 +250,12 @@
   background-color: #fff;
 }
 
+.timer {
+  position: fixed;
+  top: 1em;
+  right: 35em;
+}
+
 .saves {
   margin-left: 30em;
 }
@@ -343,6 +350,13 @@
     box-sizing: border-box;
     z-index: 99;
     background-color: #fff;
+  }
+
+  .timer {
+    position: fixed;
+    top: 0em;
+    right: 0em;
+    z-index: 99;
   }
 
   .saves {

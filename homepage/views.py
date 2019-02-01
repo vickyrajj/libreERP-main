@@ -26,6 +26,7 @@ from LMS.models import *
 import sys, traceback
 import random
 from django.core.files.images import get_image_dimensions
+from tutor.models import Tutors24Profile
 
 
 def index(request):
@@ -83,7 +84,7 @@ def blogDetails(request, blogname):
         sub = Subject.objects.get(title = title,level = int(level))
         print sub.pk
         print level,title,"------------hhhhh"
-        courseobjs = Course.objects.filter(topic__subject__pk=sub.pk)
+        courseobjs = Course.objects.filter(topic__subject__pk=sub.pk, urlSuffix__isnull = False)
         booklen = len(Book.objects.filter(subject__pk=sub.pk))
         bookobjs = Book.objects.filter(subject__pk=sub.pk)
         subobjs = Subject.objects.all().order_by('level')
@@ -93,8 +94,8 @@ def blogDetails(request, blogname):
         noteslen = len(noteobj)
         r = lambda: random.randint(150,250)
         color = ('#%02X%02X%02X' % (r(),r(),r()))
-        for i in refbookobjs:
-            color = ('#%02X%02X%02X' % (r(),r(),r()))
+        # for i in refbookobjs:
+        #     color = ('#%02X%02X%02X' % (r(),r(),r()))
         books = []
         videoCourse = []
         forum = []
@@ -164,7 +165,10 @@ def blogDetails(request, blogname):
                 quesobj = Paper.objects.get(name__iexact=quesTitle)
                 data['blogobj'] = blogobj
                 data['quesobj'] = quesobj
-                print blogobj,quesobj
+                data['blogurl'] = blogobj.shortUrl
+                data['quesurl'] = quesobj.name
+                data['user'] = request.user.pk
+                print request.user.pk,quesobj
                 htmlName = 'paperSolutions.html'
 
             elif len(prts) == 3:
@@ -236,7 +240,11 @@ def blogDetails(request, blogname):
             return render(request, 'book.html', data)
         elif blogobj.contentType == 'course':
             course = Course.objects.get(pk=blogobj.header)
+            tutorpk = course.instructor.pk
+            tutordetail = Tutors24Profile.objects.filter(user__pk= tutorpk)[0]
+            detail = tutordetail.detail.split("||")
             data['course'] = course
+            data['detail'] = detail
             return render(request, 'homepageCourses.html', data)
 
     except:
@@ -306,7 +314,7 @@ def blogDetails(request, blogname):
 
 
 def blog(request):
-    blogObj = blogPost.objects.filter(contentType='article').order_by('-created')
+    blogObj = blogPost.objects.filter(contentType='article',state='published').order_by('-created')
     pagesize = 6
     try:
         page = int(request.GET.get('page', 1))
@@ -340,7 +348,7 @@ def blogAnotherView(request):
     print 'ininnnnnnnnnnnnnnnnnnn bloggssss main'
     subobjs = Subject.objects.all().order_by('level')
     print subobjs,'----------------got objectss ssss'
-    allBlogs = list(blogPost.objects.filter(contentType='article').order_by('-created').values())
+    allBlogs = list(blogPost.objects.filter(contentType='article',state='published').order_by('-created').values())
     pagesize = 13
     try:
         page = int(request.GET.get('page', 1))
