@@ -11,9 +11,6 @@
                 Browse
                 <i class="fa fa-list-ul"></i>
               </uib-tab-heading>
-              <!-- <div style="text-align:center;position:fixed;top:40%;right:40%" ng-if="loadingData">
-                <img ng-src="/static/images/spinner.gif" alt="">
-              </div> -->
                                         <!-- ===========Table View============= -->
 
 
@@ -26,27 +23,24 @@
                               <tr>
                                 <th style="text-align:center;display:none">Chat Start</th>
                               </tr>
-                              <!-- <button type="button" name="button"  disabled data-ng-click="something()">Here</button> -->
                             </thead>
                            <tbody>
-                           <tr id="id{{$index}}" ng-repeat="data in reviewData" ng-click="tabelRowAction(data)" style="background-color: {{$index==lastActiveTR?'#f0f0f0':' '}}">
-                             <td class="tabel_data" style="height:7rem">
+                           <tr id="id{{$index}}" ng-repeat="data in reviewData" ng-click="tabelRowAction(data)" style="height:10vh;background-color: {{$index==lastActiveTR?'#f0f0f0':' '}}">
+                             <td class="tabel_data" style="height:9vh">
                                 <img class="table_image" ng-if="data.user_id" src="{{data.user_id | getDP}}" alt="">
                                 <img class="table_image" ng-if="!data.user_id" ng-src="/static/images/avatar04.png" alt="">
                                 <span style="display:inline-block">
-                                   <!-- <div ng-if="data.user_id">
-                                     <span style="font-weight: 500;font-size:90%">{{data.user_id|getName}}</span>
-                                   </div> -->
-                                   <span style="font-size:83%">{{data.uid}} , {{data.location.country_name}}</span>
+                                   <span ng-if="!data.Vname" style="font-size:83%">{{data.uid}}</span>
+                                   <span ng-if="data.Vname" style="font-size:83%">{{data.Vname}}</span>
                                    <span ng-if="data.isLate" style="color:#C83737;font-size:75%">-Late</span>
-                                   <!-- <div class="">
-                                     <span style="font-size:83%">{{data.userDeviceIp}}</span>
-                                   </div> -->
                                    <div>
-                                     <span ng-if="data.chatDuration>0.0" style="font-size:90%"><i class="fa fa-clock-o" aria-hidden="true"></i>  {{data.chatDuration}} Min</span>
+                                     <span ng-if="data.chatDuration>0.0" style="font-size:80%"><i class="fa fa-clock-o" aria-hidden="true"></i>  {{data.chatDuration}} Min</span>
                                    </div>
                                    <div class="tabel_dataStatus" style="font-size:80%">
-                                     <span style="background:#fff;" ><i class="fa fa-calendar-o" aria-hidden="true"></i> {{data.created|  date : 'dd-MMM-yyyy'}}</span>
+                                     <span style="background:#fff;" ><i class="fa fa-calendar-o" aria-hidden="true"></i> {{data.created|  date : 'dd-MMM-yyyy'}}  {{data.created | date : 'hh:mm:a' }}</span>
+                                   </div>
+                                   <div ng-if="data.location.city">
+                                     <span style="font-size:80%"><i class="fa fa-globe" aria-hidden="true"></i> {{data.location.city}} , {{data.location.country_name}}</span>
                                    </div>
                                  </span>
                                  <span style="float:right;opacity:0.6;padding:5px;text-align:center">
@@ -54,18 +48,16 @@
                                    <i ng-if="data.typ=='video'" class="fa fa-video-camera fa-md" aria-hidden="true"></i>
                                    <i ng-if="data.typ!='video'&&data.typ!='audio'" class="fa fa-commenting-o fa-md" aria-hidden="true"></i>
                                    <div class="tabel_dataStatus" style="font-size:80%">
-
-                                     <span ng-if="data.status=='started'" style="color:green"><b>{{data.status|humanize}}</b></span>
-                                     <span ng-if="data.status=='closed'" style="color:#A40B0B"><b>{{data.status|humanize}}</b></span>
-                                     <span ng-if="data.status=='reviewed'" style="color:brown"><b>{{data.status|humanize}}</b></span>
-                                     <span ng-if="data.status=='resolved'" style="color:#FF8C00"><b>{{data.status|humanize}}</b></span>
-                                     <span ng-if="data.status=='missed'" style="color:#F90000"><b>Missed</b></span>
+                                     <span ng-if="data.status=='closed'" style="color:#111BE3">{{data.status|humanize}}</span>
+                                     <span ng-if="data.status=='reviewed'" style="color:brown">{{data.status|humanize}}</span>
+                                     <span ng-if="data.status=='resolved'" style="color:#FF8C00">{{data.status|humanize}}</span>
+                                     <span ng-if="data.status=='missed'" style="color:#F90000">Missed</span>
                                   </div>
                                   <div>
-                                    <span ng-if="data.customerRating<=3&&data.customerRating" style="font-size:80%;margin-right:1rem;padding: .1rem 1rem;color:red">{{data.customerRating}}
+                                    <span ng-if="data.customerRating<=3&&data.customerRating" style="font-size:80%;color:red">{{data.customerRating}}
                                     <i class="fa fa-star fa-md" aria-hidden="true"></i>
                                    </span>
-                                    <span ng-if="data.customerRating>3" style="font-size:80%;margin-right:1rem;padding: .1rem 1rem;color:green">{{data.customerRating}}
+                                    <span ng-if="data.customerRating>3" style="font-size:80%;color:green">{{data.customerRating}}
                                         <i class="fa fa-star fa-md" aria-hidden="true"></i>
                                    </span>
                                   </div>
@@ -102,7 +94,7 @@
 
                                   <!-- ***********Middle_container******************** -->
 
-                      <review-info ng-if="detailInfoData.chatThreadData&&detailInfoData.supportChatData.length>0&&isDetailInfoUpdated&&!noDataDialouge"  data ="detailInfoData"></review-info>
+                      <reviewqc-info ng-if="detailInfoData.chatThreadData&&detailInfoData.supportChatData.length>0&&isDetailInfoUpdated&&!noDataDialouge"  data ="detailInfoData"></reviewqc-info>
 
                                  <!-- ************** Right_container******************** -->
 
@@ -131,6 +123,16 @@
                               <label><b> Visitor Email </b></label>
                               <input type="email" class="form-control" placeholder="User E-mail..." ng-model="form.email">
                             </div>
+                            <div class="form-group">
+                               <label> Agent Name </label>
+                               <input type="text" class="form-control"  placeholder="Search and select" uib-typeahead="user as user.username for user in userSearch($viewValue)" ng-model="form.user">
+                            </div>
+
+                           <div class="form-group">
+                             <label> Client Name </label>
+                             <input type="text" class="form-control"  placeholder="Search and select" uib-typeahead="service as service.name for service in serviceSearch($viewValue)" ng-model="form.client">
+                           </div>
+
                             <div class="form-group login-input-group">
                                 <label for="sel1">Select Chat Type (Audio/Video):</label>
                                 <select class="form-control login-input-group" id="sel1" ng-model="form.selectedChatType" style="border:none">
@@ -164,33 +166,39 @@
                                 <div class="row" style="padding:0px 10px; min-height:120px;">
                                   <div class="col-md-8">
                                     <!-- <h6>Agent Name : {{r.user_id | getName}}</h6> -->
-                                    <h6>UID : {{r.uid}}</h6>
-                                    <h6>Date : {{r.created | date : "dd-MMM-yyyy"}}</h6>
-                                    <h6 ng-if="r.email">Visitor's Email : {{r.email}}</h6>
+                                    <h6 ng-if="!r.Vname">UID : {{r.uid}}</h6>
+                                    <h6 ng-if="r.Vname">Name : {{r.Vname}}</h6>
+                                    <h6 ng-if="r.location.city"><i class="fa fa-globe" aria-hidden="true"></i> {{r.location.city}} , {{r.location.country_name}}</h6>
+
                                     <h6 ng-if="r.chatDuration!=0">Chat Duration : {{r.chatDuration}}</h6>
+                                    <h6 style="background:#fff;" ><i class="fa fa-calendar-o" aria-hidden="true"></i> {{r.created|  date : 'dd-MMM-yyyy'}}  {{r.created | date : 'hh:mm:a' }}</h6>
                                   </div>
                                   <div class="col-md-4">
                                     <div class="row">
-                                      <span ng-if="r.rating == 5" class="pull-right">
+                                      <span ng-if="r.customerRating == 5" class="pull-right">
                                           <i class="fa fa fa-smile-o fa-lg" style="color:#086b0a" aria-hidden="true"></i>
                                           <i class="fa fa-star fa-lg" style="color:#086b0a" aria-hidden="true"></i>
                                          </span>
-                                      <span ng-if="r.rating == 4" class="pull-right">
+                                      <span ng-if="r.customerRating == 4" class="pull-right">
                                            <i class="fa fa fa-smile-o fa-lg" style="color:#2fdd23" aria-hidden="true"></i>
                                           <i class="fa fa-star fa-lg" style="color:#2fdd23" aria-hidden="true"></i>
                                          </span>
-                                      <span ng-if="r.rating == 3" class="pull-right">
+                                      <span ng-if="r.customerRating == 3" class="pull-right">
                                            <i class="fa fa-meh-o fa-lg" style="color:#dff20c" aria-hidden="true"></i>
                                            <i class="fa fa-star fa-lg" style="color:#dff20c" aria-hidden="true"></i>
                                           </span>
-                                      <span ng-if="r.rating == 2||data.rating == 1" class="pull-right">
+                                      <span ng-if="r.customerRating == 2||data.rating == 1" class="pull-right">
                                            <i class="fa fa fa-frown-o fa-lg" style="color:#f70202" aria-hidden="true"></i>
                                            <i class="fa fa-star fa-lg" style="color:#f70202" aria-hidden="true"></i>
                                        </span>
                                     </div>
-                                    <div class="row" style="padding-top:15px;" >
-                                      <span class="pull-right" style="color:#286090 ;font-size:15px">{{r.numOfComments}} <i class="fa fa-comments-o fa-lg" aria-hidden="true"></i></span>
-                                    </div>
+                                    <div class="pull-right">
+                                      <span ng-if="r.status=='closed'" style="color:#111BE3">{{r.status|humanize}}</span>
+                                      <span ng-if="r.status=='reviewed'" style="color:brown">{{r.status|humanize}}</span>
+                                      <span ng-if="r.status=='resolved'" style="color:#FF8C00">{{r.status|humanize}}</span>
+                                      <span ng-if="r.status=='missed'" style="color:#F90000">Missed</span>
+                                   </div>
+
                                 </div>
                               </div>
                           </div>
@@ -300,20 +308,21 @@
                           </thead>
                          <tbody>
                          <tr id="id{{$index}}" ng-repeat="data in archivedData" ng-click="tabelRowActionArch(data)" style="background-color: {{$index==lastActiveTRArch?'#f0f0f0':' '}}">
-                           <td class="tabel_data" style="height:7rem" >
+                           <td class="tabel_data" style="height:9vh">
                               <img class="table_image" ng-if="data.user_id" src="{{data.user_id | getDP}}" alt="">
                               <img class="table_image" ng-if="!data.user_id" ng-src="/static/images/avatar04.png" alt="">
                               <span style="display:inline-block">
-                                 <div ng-if="data.name">
-                                   <span style="font-weight: 500;font-size:90%">{{data.name}}</span>
-                                 </div>
-                                 <span style="font-size:83%">{{data.uid}}</span>
-                                 <span ng-if="data.isLate" style="color:#C83737">-Late</span>
+                                 <span ng-if="!data.Vname" style="font-size:83%">{{data.uid}}</span>
+                                 <span ng-if="data.Vname" style="font-size:83%">{{data.Vname}}</span>
+                                 <span ng-if="data.isLate" style="color:#C83737;font-size:75%">-Late</span>
                                  <div>
-                                   <span ng-if="data.chatDuration>0.0" style="font-size:90%"><i class="fa fa-clock-o" aria-hidden="true"></i>  {{data.chatDuration}} Min</span>
+                                   <span ng-if="data.chatDuration>0.0" style="font-size:80%"><i class="fa fa-clock-o" aria-hidden="true"></i>  {{data.chatDuration}} Min</span>
                                  </div>
                                  <div class="tabel_dataStatus" style="font-size:80%">
-                                   <span style="background:#fff;" ><i class="fa fa-calendar-o" aria-hidden="true"></i> {{data.created|  date : 'dd-MMM-yyyy'}}</span>
+                                   <span style="background:#fff;" ><i class="fa fa-calendar-o" aria-hidden="true"></i> {{data.created|  date : 'dd-MMM-yyyy'}}  {{data.created | date : 'hh:mm:a' }}</span>
+                                 </div>
+                                 <div ng-if="data.location.city">
+                                   <span style="font-size:80%"><i class="fa fa-globe" aria-hidden="true"></i> {{data.location.city}} , {{data.location.country_name}}</span>
                                  </div>
                                </span>
                                <span style="float:right;opacity:0.6;padding:5px;text-align:center">
@@ -321,18 +330,16 @@
                                  <i ng-if="data.typ=='video'" class="fa fa-video-camera fa-md" aria-hidden="true"></i>
                                  <i ng-if="data.typ!='video'&&data.typ!='audio'" class="fa fa-commenting-o fa-md" aria-hidden="true"></i>
                                  <div class="tabel_dataStatus" style="font-size:80%">
-
-                                   <span ng-if="data.status=='started'" style="color:green"><b>{{data.status|humanize}}</b></span>
-                                   <span ng-if="data.status=='closed'" style="color:#A40B0B"><b>{{data.status|humanize}}</b></span>
-                                   <span ng-if="data.status=='reviewed'" style="color:brown"><b>{{data.status|humanize}}</b></span>
-                                   <span ng-if="data.status=='resolved'" style="color:#FF8C00"><b>{{data.status|humanize}}</b></span>
-                                   <span ng-if="data.status=='missed'" style="color:#F90000"><b>Missed</b></span>
+                                   <span ng-if="data.status=='closed'" style="color:#111BE3">{{data.status|humanize}}</span>
+                                   <span ng-if="data.status=='reviewed'" style="color:brown">{{data.status|humanize}}</span>
+                                   <span ng-if="data.status=='resolved'" style="color:#FF8C00">{{data.status|humanize}}</span>
+                                   <span ng-if="data.status=='missed'" style="color:#F90000">Missed</span>
                                 </div>
-                                <div class="">
-                                  <span ng-if="data.customerRating<=3&&data.customerRating" style="font-size:80%;margin-right:1rem;padding: .1rem 1rem;color:red">{{data.customerRating}}
+                                <div>
+                                  <span ng-if="data.customerRating<=3&&data.customerRating" style="font-size:80%;color:red">{{data.customerRating}}
                                   <i class="fa fa-star fa-md" aria-hidden="true"></i>
                                  </span>
-                                  <span ng-if="data.customerRating>3" style="font-size:80%;margin-right:1rem;padding: .1rem 1rem;color:green">{{data.customerRating}}
+                                  <span ng-if="data.customerRating>3" style="font-size:80%;color:green">{{data.customerRating}}
                                       <i class="fa fa-star fa-md" aria-hidden="true"></i>
                                  </span>
                                 </div>
@@ -370,7 +377,7 @@
                                 <!-- ***********Middle_container******************** -->
 
                     <!-- <review-info ng-if="isDetailInfoUpdatedArch&&detailInfoDataArch"  data ="detailInfoDataArch" ></review-info> -->
-                    <review-info ng-if="detailInfoDataArch.chatThreadData&&detailInfoDataArch.supportChatData.length>0&&isDetailInfoUpdatedArch&&!archievedMyDialouge"  data ="detailInfoDataArch"></review-info>
+                    <reviewqc-info ng-if="detailInfoDataArch.chatThreadData&&detailInfoDataArch.supportChatData.length>0&&isDetailInfoUpdatedArch&&!archievedMyDialouge"  data ="detailInfoDataArch"></reviewqc-info>
 
                                <!-- ************** Right_container******************** -->
 
@@ -399,6 +406,15 @@
                             <label><b> Visitor Email </b></label>
                             <input type="email" class="form-control" placeholder="User E-mail..." ng-model="form.email">
                           </div>
+                          <div class="form-group">
+                             <label> Agent Name </label>
+                             <input type="text" class="form-control"  placeholder="Search and select" uib-typeahead="user as user.username for user in userSearch($viewValue)" ng-model="form.user">
+                          </div>
+
+                         <div class="form-group">
+                           <label> Client Name </label>
+                           <input type="text" class="form-control"  placeholder="Search and select" uib-typeahead="service as service.name for service in serviceSearch($viewValue)" ng-model="form.client">
+                         </div>
                           <div class="form-group login-input-group">
                               <label for="sel1">Select Chat Type (Audio/Video):</label>
                               <select class="form-control login-input-group" id="sel1" ng-model="form.selectedChatType" style="border:none">
