@@ -1276,7 +1276,7 @@ app.directive('chatBox', function() {
           console.log('here');
         }
 
-        if(e.shiftKey && e.keyCode == 72) {
+        if(e.ctrlKey && e.altKey  && e.keyCode == 72) {
           console.log("Hey! shift+H event captured!");
           $scope.sendCustomMessage($scope.chatBox.messageToSend)
         }
