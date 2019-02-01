@@ -25,7 +25,7 @@
                               </tr>
                             </thead>
                            <tbody>
-                           <tr id="id{{$index}}" ng-repeat="data in reviewData" ng-click="tabelRowAction(data)" style="height:10vh;background-color: {{$index==lastActiveTR?'#f0f0f0':' '}}">
+                           <tr id="id{{$index}}" ng-repeat="data in reviewData" ng-click="tabelRowAction(data)" style="height:9vh;background-color: {{$index==lastActiveTR?'#f0f0f0':' '}}">
                              <td class="tabel_data" style="height:9vh">
                                 <img class="table_image" ng-if="data.user_id" src="{{data.user_id | getDP}}" alt="">
                                 <img class="table_image" ng-if="!data.user_id" ng-src="/static/images/avatar04.png" alt="">

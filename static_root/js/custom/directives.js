@@ -324,7 +324,6 @@ app.directive('reviewqcInfo', function() {
       data: '=',
     },
     controller: function($scope, $state, $http, $permissions, $timeout, $uibModal) {
-      alert('fjdkf')
       if ($scope.data.chatThreadData != null) {
         console.log($scope.data);
         $scope.msgData = $scope.data.chatThreadData
