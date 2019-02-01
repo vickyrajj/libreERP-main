@@ -18,6 +18,8 @@ router.register(r'companyProcess' , CompanyProcessViewSet , base_name = 'company
 router.register(r'cannedResponses' , CannedResponsesViewSet , base_name = 'cannedResponses')
 router.register(r'dynamicForms' , DynamicFormViewSet , base_name = 'dynamicForms')
 router.register(r'dynamicFields' , DynamicFieldViewSet , base_name = 'dynamicFields')
+router.register(r'activity' , ActivityFieldViewSet , base_name = 'activity')
+
 
 
 urlpatterns = [

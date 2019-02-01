@@ -15,17 +15,12 @@
       <div class="col-md-8" style="border-left:1px solid #e0e0e0;">
         <p style="color:#575757; text-align:center;"> <b> {{formInView.form_name}}</b> </p>
         <div class="row container-fluid" ng-repeat="f in formInView.fields" style="margin-bottom:15px; padding-left:30px;">
-
           <div class="form-group">
             <label for="">{{f.field_name}}</label>
             <input ng-if="f.field_typ=='text'" type="text" class="form-control" id="" placeholder="text"  ng-model="f.value">
-            <input  uib-typeahead="res as res['title'] for res in typeahedSearch($viewValue , f.parameters)" ng-if="f.field_typ=='typeahead'" type="text" class="form-control" id="" placeholder="typeahead" ng-model="f.value">
+            <select class="form-control" ng-if="f.field_typ=='dropdown'" ng-model="f.value" ng-options="item for item in f.parameters.split(',')"></select>
+            <input  uib-typeahead="res as res[f.key] for res in typeahedSearch($viewValue , f.parameters)" ng-if="f.field_typ=='typeahead'" type="text" class="form-control" id="" placeholder="typeahead" ng-model="f.value">
           </div>
-
-          <div ng-if="f.field_typ=='dropdown'" class="form-group">
-            <input type="text" class="form-control" id="" placeholder="dropdown" ng-model="f.value">
-          </div>
-
         </div>
         <button type="button" class="btn btn-primary" ng-click="send()">
           Send

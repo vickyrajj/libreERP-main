@@ -381,6 +381,15 @@ var hasAccesss=true;
     checkOnline();
   }, 7000)
 
+  function handleQuickActions(args) {
+    console.log(args);
+    if (args[0]=='session_started') {
+      window.open('http://localhost:8000/tutorHome/?session='+args[1].pk)
+
+    }
+  }
+
+
   session.subscribe(wamp_prefix+'service.support.agent', supportChatResponse).then(
     function(sub) {
       console.log("registered to topic 'supportChatResponse'");
@@ -398,6 +407,16 @@ setTimeout(function () {
     },
     function(err) {
       console.log("failed to registered: " + err);
+    }
+  );
+
+
+  session.register(wamp_prefix+'service.support.handleQuickActions.'+scope.me.pk, handleQuickActions).then(
+    function (sub) {
+      console.log("registered to service.support.handleQuickActions'");
+    },
+    function (err) {
+      console.log("failed to register: service.support.handleQuickActions" + err);
     }
   );
 

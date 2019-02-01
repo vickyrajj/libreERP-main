@@ -182,3 +182,11 @@ class DynamicField(models.Model):
     field_name = models.CharField(max_length = 50 , null = True)
     key = models.CharField(max_length = 50 , null = True)
     is_required = models.BooleanField(default = False)
+
+
+class Activity(models.Model):
+    created = models.DateTimeField(auto_now_add = True)
+    updated = models.DateTimeField(auto_now=True)
+    uid =  models.CharField(max_length = 50, null = False)
+    page = models.CharField(max_length = 50 , null = False)
+    timeDuration = models.FloatField(default = 0.0)

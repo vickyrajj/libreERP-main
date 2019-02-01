@@ -263,3 +263,8 @@ class DynamicFieldSerializer(serializers.ModelSerializer):
     class Meta:
         model = DynamicField
         fields = ( 'pk' , 'created' , 'form' ,'field_typ', 'parameters', 'field_name', 'key', 'is_required')
+
+class ActivitySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Activity
+        fields = ( 'pk' , 'created' , 'updated' ,'uid', 'page', 'timeDuration')

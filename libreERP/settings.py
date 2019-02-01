@@ -24,7 +24,7 @@ ON_REGISTRATION_SUCCESS_REDIRECT = '/ERP' # when signup using google the user wi
 
 SITE_ADDRESS = 'http://127.0.0.1:8080' # the url prefix of the site
 WEBRTC_ADDRESS = 'http://localhost:1111'
-WAMP_PREFIX = 'syrow.'
+WAMP_PREFIX = 'local.'
 
 ROOT_APP = 'index' # the default app
 ECOMMERCE_APP = {

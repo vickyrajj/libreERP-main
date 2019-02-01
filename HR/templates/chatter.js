@@ -815,7 +815,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
         setCookie("uidDetails", JSON.stringify({email:args[0].email , name:args[0].name , phoneNumber:args[0].phoneNumber}), 365);
     }
 
-    function handleParentFunc(args) {
+    function handleQuickActions(args) {
       var message = {event_name : args[0], event_data : args[1]};
       window.postMessage(message, "*");
     }
@@ -846,12 +846,12 @@ document.addEventListener("DOMContentLoaded", function(event) {
       }
     );
 
-    session.register(wamp_prefix+'service.support.handleParentFunc.'+uid, handleParentFunc).then(
+    session.register(wamp_prefix+'service.support.handleQuickActions.'+uid, handleQuickActions).then(
       function (res) {
-        console.log("registered to service.support.handleParentFunc'");
+        console.log("registered to service.support.handleQuickActions'");
       },
       function (err) {
-        console.log("failed to register: service.support.handleParentFunc" + err);
+        console.log("failed to register: service.support.handleQuickActions" + err);
       }
     );
 
@@ -2159,7 +2159,7 @@ function createChatDiv() {
     div.id="offlineMessage"
     div.innerHTML =  '<div style="margin:0px 0px 10px; box-sizing:border-box;" >'+
                       '<div style="text-align:center;clear: both; float:left; background-color:#f6f6f6; padding:10px;margin:8px; box-sizing:border-box;font-size:14px!important; ">'+
-                      '<p style="line-height: 1.75; margin:0px; word-wrap: break-word; font-size:12px !important;color:rgba(0,0,0,0.5); box-sizing:border-box;">Please provide your feedback below:</p>'+
+                      '<p style="line-height: 1.75; margin:0px; word-wrap: break-word; font-size:12px !important; color:rgba(0,0,0,0.5); box-sizing:border-box;">Please provide your feedback below:</p>'+
                       '<form>'+
                         '<div class="stars">'+
                           '<form id="stars">'+
@@ -2532,6 +2532,19 @@ var myformrating;
           }
         }
     }
+    if (event.data.event_name=='session_started') {
+      if (agentPk) {
+        connection.session.call(wamp_prefix + 'service.support.handleQuickActions.' + agentPk, ['session_started',event.data.event_data]).then(
+          function(res) {
+            console.log('called');
+          },
+          function(err) {
+            console.log(err);
+          }
+        );
+      }
+    }
+
   }
 
 function endOfConversation() {
@@ -2875,9 +2888,9 @@ function addExitConfirmation() {
           res.forEach((r)=>{
             if (r.match(regex)) {
               str=str.replace(r,'<a style="color:'+fontAndIconColor+'" href="'+r+'" target="_blank">'+r+'</a>')
-                pTag='<p style="font-size:14px !important; margin:5px 0px !important; box-sizing:border-box !important;">'+ str +'</p>'
+                pTag='<p style="font-size:14px !important; margin:5px 0px !important; box-sizing:border-box !important; text-align:start !important;">'+ str +'</p>'
             }else{
-                 pTag='<p style="font-size:14px !important; margin:5px 0px !important; box-sizing:border-box !important;">'+ str +'</p>'
+                 pTag='<p style="font-size:14px !important; margin:5px 0px !important; box-sizing:border-box !important; text-align:start !important;">'+ str +'</p>'
             }
           })
           msgDiv = pTag
@@ -2929,6 +2942,25 @@ setInterval(function () {
     })
   }
 }, 5000);
+
+
+var activityPk;
+var loadTime = new Date().getTime();
+function createActivity() {
+  var dataToPost = {"uid":uid, "page":window.location.href}
+  var xhttp = new XMLHttpRequest();
+   xhttp.onreadystatechange = function() {
+     if (this.readyState == 4 && this.status == 201) {
+       console.log(this.responseText);
+       activityPk = JSON.parse(this.responseText).pk
+       console.log(activityPk);
+     }
+   };
+   xhttp.open('POST', '{{serverAddress}}/api/support/activity/', true);
+   xhttp.setRequestHeader("Content-type", "application/json");
+   xhttp.send(JSON.stringify(dataToPost));
+}
+createActivity()
 
 
   function pushMessages() {

@@ -945,8 +945,12 @@ class DynamicFieldViewSet(viewsets.ModelViewSet):
             return DynamicField.objects.filter(form = self.request.GET['formPk'])
         return DynamicField.objects.all()
 
-
-
+class ActivityFieldViewSet(viewsets.ModelViewSet):
+    permission_classes = (permissions.AllowAny,)
+    serializer_class = ActivitySerializer
+    queryset = Activity.objects.all()
+    def get_queryset(self):
+        return Activity.objects.all()
 
 class HeartbeatApi(APIView):
     permission_classes = (permissions.AllowAny,)
