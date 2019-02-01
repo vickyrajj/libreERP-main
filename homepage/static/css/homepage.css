@@ -3226,8 +3226,8 @@ hr {
   /*  enroll page ends*/
   .container_box {
     font-size: 12px !important;
-    top: 10px !important;
-    left: 130px !important;
+    top: 0px !important;
+    left: 95px !important;
     width: 100% !important;
   }
 

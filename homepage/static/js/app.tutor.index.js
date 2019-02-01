@@ -1,4 +1,26 @@
 app.controller('main', function($scope, $http, $interval,$uibModal) {
+  $scope.device = {
+    name:''
+  }
+  function lgDevice(x) {
+    if (x.matches) {
+      $scope.device.name = 'large'
+    }
+  }
+
+  function smDevice(x) {
+    if (x.matches) {
+      $scope.device.name = 'small'
+    }
+  }
+
+  var sm = window.matchMedia("(max-width: 600px)")
+  smDevice(sm) // Call listener function at run time
+  sm.addListener(smDevice) // Attach listener function on state changes
+
+  var lg = window.matchMedia("(min-width: 600px)")
+  lgDevice(lg)
+  lg.addListener(lgDevice)
   $scope.active = null
   $scope.drop = function(val) {
     if (val == 0) {
