@@ -103,7 +103,7 @@ class Projects(models.Model):
     gst2 = models.FloatField(default = 0)
     clearingCharges1 = models.FloatField(default = 0)
     clearingCharges2 = models.FloatField(default = 0)
-    exRate = models.FloatField(default = 75)
+    exRate = models.FloatField( default = 75)
     profitMargin =  models.FloatField( default = 0)
     poNumber =  models.CharField( max_length = 20 , null=True,blank=True)
     poDate = models.DateField(null = True)
