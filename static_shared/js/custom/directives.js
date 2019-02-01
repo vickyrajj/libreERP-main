@@ -786,10 +786,10 @@ app.directive('chatBox', function() {
       }
 
       $scope.callToChatter = function (data) {
-        alert('sdfsdf')
-        connection.session.call(wamp_prefix + 'service.support.handleParentFunc.' + $scope.data.uid, ['func_call',data]).then(
+        connection.session.call(wamp_prefix + 'service.support.handleQuickActions.' + $scope.data.uid, ['start_session',data]).then(
           function(res) {
             console.log('called');
+            Flash.create('success','Sent')
           },
           function(err) {
             console.log(err);
@@ -1913,17 +1913,14 @@ app.directive('chatBox', function() {
               $scope.send = function () {
                 var toSend = {}
                 for (var i = 0; i < $scope.formInView.fields.length; i++) {
-                  if ($scope.formInView.fields[i].is_required && $scope.formInView.fields[i].value =='') {
-                    Flash.create('warning', $scope.formInView.fields[i].field_name + 'is required');
+                  if ($scope.formInView.fields[i].is_required && ($scope.formInView.fields[i].value=='' || $scope.formInView.fields[i].value == undefined) ) {
+                    Flash.create('warning', $scope.formInView.fields[i].field_name + ' is required');
                     return;
                   }
-
                   toSend[$scope.formInView.fields[i].field_name] = $scope.formInView.fields[i].value
                 }
                 console.log(toSend);
-
                 callTochatter(toSend);
-
               }
 
               $scope.typeahedSearch = function(query, parameter) {

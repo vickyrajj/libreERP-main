@@ -428,6 +428,7 @@ app.controller("app.company.explore.dynamicForm", function($scope, $state, $user
     }).then(function(response) {
       $scope.dynamicForm.splice(indx, 1)
       Flash.create('success', 'form deleted')
+        $scope.resetForm();
     },function (err) {
       Flash.create('warning', 'error')
     })
@@ -436,7 +437,8 @@ app.controller("app.company.explore.dynamicForm", function($scope, $state, $user
   $scope.fieldForm = {
     field_typ : '',
     parameters : '',
-    field_name : ''
+    field_name : '',
+    is_required:false
   }
 
 
@@ -448,6 +450,16 @@ app.controller("app.company.explore.dynamicForm", function($scope, $state, $user
 
     var toPost = $scope.fieldForm
     toPost.form = $scope.newForm.pk
+
+    if (toPost.field_typ=='text') {
+        delete toPost.parameters
+        delete toPost.key
+    }
+
+    if (toPost.field_typ=='dropdown') {
+        delete toPost.key
+    }
+
     $http({
       method: 'POST',
       url: '/api/support/dynamicFields/',
@@ -457,12 +469,53 @@ app.controller("app.company.explore.dynamicForm", function($scope, $state, $user
       $scope.fieldForm = {
         field_typ : '',
         parameters : '',
-        field_name : ''
+        field_name : '',
+        is_required:false
       }
       Flash.create('success', 'field added')
     },function (err) {
       Flash.create('warning', 'error')
     })
+  }
+
+  $scope.editFields = function () {
+    if ($scope.fieldForm.field_name == '') {
+      Flash.create('warning', 'please fill all details')
+      return;
+    }
+    var toPost = $scope.fieldForm
+    toPost.form = $scope.newForm.pk
+
+    if (toPost.field_typ=='text') {
+        delete toPost.parameters
+        delete toPost.key
+    }
+
+    if (toPost.field_typ=='dropdown') {
+        delete toPost.key
+    }
+
+    $http({
+      method: 'PATCH',
+      url: '/api/support/dynamicFields/'+ $scope.newForm.fields[$scope.dynFieldIndex].pk +'/',
+      data: toPost
+    }).then(function(response) {
+      $scope.newForm.fields[$scope.dynFieldIndex] = response.data
+      $scope.fieldForm = {
+        field_typ : '',
+        parameters : '',
+        field_name : '',
+        is_required:false
+      }
+      Flash.create('success', 'field edited')
+    },function (err) {
+      Flash.create('warning', 'error')
+    })
+  }
+
+  $scope.editDynamicField = function (pk, fieldIndex) {
+    $scope.dynFieldIndex = fieldIndex;
+    $scope.fieldForm =   $scope.newForm.fields[fieldIndex]
   }
 
   $scope.deleteDynamicField = function (pk, fieldIndex) {
