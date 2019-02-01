@@ -602,7 +602,30 @@ app.controller("businessManagement.projects.service.view", function($scope, $sta
   };
 
 
-
+  $scope.invoceSave = function() {
+    console.log("aaaaaa");
+    $scope.form.invoiceValue = 0
+    if($scope.projects.length>0){
+      for (var i = 0; i < $scope.projects.length; i++) {
+        $scope.form.invoiceValue += ($scope.projects[i].quantity1 *  $scope.projects[i].price )
+      }
+    }
+    if($scope.data.length>0){
+      for (var i = 0; i < $scope.data.length; i++) {
+        $scope.form.invoiceValue += ($scope.data[i].quantity1 *  $scope.data[i].price )
+      }
+    }
+    console.log($scope.form.invoiceValue,'ddddddddd');
+    var send = {
+      invoiceValue: $scope.form.invoiceValue,
+    }
+    $http({
+      method: 'PATCH',
+      url: '/api/support/projects/' + $scope.form.pk + '/',
+      data: send,
+    }).
+    then(function(response) {})
+  }
 
 
   $scope.projects = []
@@ -644,19 +667,9 @@ app.controller("businessManagement.projects.service.view", function($scope, $sta
         $scope.data[i].landed_price = (($scope.data[i].cif + $scope.data[i].customVal + $scope.data[i].socialVal + $scope.data[i].charge1 + $scope.data[i].charge2).toFixed(2))
       }
     }
+    $scope.invoceSave()
   }
-  $scope.invoceSave = function() {
-    console.log("aaaaaa");
-    var send = {
-      invoiceValue: $scope.form.invoiceValue,
-    }
-    $http({
-      method: 'PATCH',
-      url: '/api/support/projects/' + $scope.form.pk + '/',
-      data: send,
-    }).
-    then(function(response) {})
-  }
+
 
   function sum(data) {
     if (data == $scope.materialIssue) {
@@ -1966,7 +1979,19 @@ app.controller("businessManagement.projects.archieve.explore", function($scope, 
     }
   }
   $scope.invoceSave = function() {
-    console.log("aaaaaa");
+    console.log("herrrrrrrrr");
+    $scope.form.invoiceValue = 0
+    if($scope.projects.length>0){
+      for (var i = 0; i < $scope.projects.length; i++) {
+        $scope.form.invoiceValue += ($scope.projects[i].quantity1 *  $scope.projects[i].price )
+      }
+    }
+    if($scope.data.length>0){
+      for (var i = 0; i < $scope.data.length; i++) {
+        $scope.form.invoiceValue += ($scope.data[i].quantity1 *  $scope.data[i].price )
+      }
+    }
+    console.log($scope.form.invoiceValue,'ssssssssssssssjjjjj');
     var send = {
       invoiceValue: $scope.form.invoiceValue,
     }
@@ -2149,6 +2174,17 @@ app.controller("businessManagement.projects.junk.explore", function($scope, $sta
   }
 
   $scope.invoceSave = function() {
+    $scope.form.invoiceValue = 0
+    if($scope.projects.length>0){
+      for (var i = 0; i < $scope.projects.length; i++) {
+        $scope.form.invoiceValue += ($scope.projects[i].quantity1 *  $scope.projects[i].price )
+      }
+    }
+    if($scope.data.length>0){
+      for (var i = 0; i < $scope.data.length; i++) {
+        $scope.form.invoiceValue += ($scope.data[i].quantity1 *  $scope.data[i].price )
+      }
+    }
     console.log("aaaaaa");
     var send = {
       invoiceValue: $scope.form.invoiceValue,
