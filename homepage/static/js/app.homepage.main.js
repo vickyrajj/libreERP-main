@@ -344,7 +344,9 @@ app.controller('exam', function($scope, $state, $http, $timeout, $interval, $uib
     $scope.pkforpatch = []
     console.log($scope.subquestions, 'pppp');
     for (var i = 0; i < $scope.subquestions.length; i++) {
-      $scope.selections[i]
+      for (var j = 0; j < $scope.subquestions[i].ques.length; j++) {
+        $scope.subquestions[i].ques[j].timer = 0;
+      }
     }
     $scope.subjectSelect = function(sub, idx) {
       if ($scope.subquestions[idx].ques[0].status == "default") {
@@ -377,7 +379,13 @@ app.controller('exam', function($scope, $state, $http, $timeout, $interval, $uib
       $scope.test[questionno].savedIndex = answerno;
 
     }
+    setInterval(timer,1000);
+    function timer() {
+      $scope.subquestions[$scope.subcount].ques[$scope.count].timer += 1
+    }
+    var interval;
     $scope.save = function(subval, val) {
+      // clearInterval(interval);
       if ($scope.subquestions[subval].ques[val].option[$scope.selections[subval].answers[val]] != undefined) {
         $scope.selectedpk = $scope.subquestions[subval].ques[val].option[$scope.selections[subval].answers[val]].txt;
       } else {
@@ -419,7 +427,9 @@ app.controller('exam', function($scope, $state, $http, $timeout, $interval, $uib
 
 
       }
-
+      // setTimeout(function () {
+      //    $location.path( '/testresults');
+      // }, 10000);
 
       if ($scope.subcount == subval) {
 
@@ -427,6 +437,7 @@ app.controller('exam', function($scope, $state, $http, $timeout, $interval, $uib
         if ($scope.count == $scope.test.length - 1) {
           $scope.count = $scope.count;
           $scope.questionno = $scope.count;
+          // interval = setInterval(timer(val), 1000);
           console.log($scope.test.length, 'ssss');
           if ($scope.test[val].savedIndex != null) {
             $scope.test[val].status = 'answered';
@@ -435,6 +446,7 @@ app.controller('exam', function($scope, $state, $http, $timeout, $interval, $uib
           if ($scope.test[val].savedIndex != null) {
             $scope.count = $scope.count + 1;
             $scope.questionno = $scope.count;
+            // interval = setInterval(timer(val), 1000);
             $scope.test[val].status = 'answered';
             if ($scope.test[$scope.count].status != 'answered' && $scope.test[$scope.count].status != 'reviewed' && $scope.test[$scope.count].status != 'attemptreviewed') {
               $scope.test[$scope.count].status = 'notanswered';
@@ -451,6 +463,7 @@ app.controller('exam', function($scope, $state, $http, $timeout, $interval, $uib
 
     }
     $scope.review = function(subval, val) {
+      // clearInterval(interval);
       if ($scope.subcount == subval) {
 
         if ($scope.count == $scope.test.length - 1) {
@@ -464,15 +477,21 @@ app.controller('exam', function($scope, $state, $http, $timeout, $interval, $uib
         } else {
           if ($scope.test[val].savedIndex != null) {
             $scope.count = $scope.count + 1;
+            // interval = setInterval(timer(val), 1000);
             $scope.questionno = $scope.count;
             $scope.test[val].status = 'attemptreviewed';
-            $scope.test[$scope.count].status = 'notanswered';
+            if ($scope.test[$scope.count].status != 'answered' && $scope.test[$scope.count].status != 'reviewed' && $scope.test[$scope.count].status != 'attemptreviewed') {
+              $scope.test[$scope.count].status = 'notanswered';
+            };
           } else {
 
             $scope.count = $scope.count + 1;
             $scope.questionno = $scope.count;
+            // interval = setInterval(timer(val), 1000);
             $scope.test[val].status = 'reviewed';
-            $scope.test[$scope.count].status = 'notanswered';
+            if ($scope.test[$scope.count].status != 'answered' && $scope.test[$scope.count].status != 'reviewed' && $scope.test[$scope.count].status != 'attemptreviewed') {
+              $scope.test[$scope.count].status = 'notanswered';
+            }
             Flash.create('warning', 'Please Select One Option');
             return
           }
@@ -481,6 +500,7 @@ app.controller('exam', function($scope, $state, $http, $timeout, $interval, $uib
 
 
     }
+
     $scope.clearselection = function(subval, val) {
       if ($scope.subcount == subval) {
 
@@ -489,8 +509,11 @@ app.controller('exam', function($scope, $state, $http, $timeout, $interval, $uib
         $scope.test[val].savedIndex = null;
       }
     }
-    $scope.queclick = function(val) {
 
+    $scope.queclick = function(val) {
+      // clearInterval(interval);
+      // interval = setInterval(timer(val), 1000);
+      console.log($scope.subquestions[$scope.subcount].ques[val].timer,'kkk');
       $scope.count = val;
       $scope.questionno = $scope.count;
       if ($scope.test[val].status != 'answered' && $scope.test[val].status != 'reviewed' && $scope.test[val].status != 'attemptreviewed') {
@@ -625,6 +648,9 @@ app.controller('exam', function($scope, $state, $http, $timeout, $interval, $uib
               $uibModalInstance.close();
 
             }
+            setTimeout(function () {
+              return   $scope.submit();
+            }, 10000);
             $scope.closeModal = function() {
               $uibModalInstance.dismiss();
             }
@@ -666,12 +692,11 @@ app.controller('examresults', function($rootScope, $scope, $state, $http, $timeo
     method: 'GET',
     url: '/api/LMS/paperhistory/?user=' + $scope.userId + '&paper=' + $scope.quesId
   }).then(function(response) {
-    console.log(response.data, 'dataaaaaaaa');
-    $scope.marks = response.data[length - 1].mark
-    $scope.attemptresult = response.data[length - 1].attempted
-    $scope.notattemptresult = response.data[length - 1].notattempted
-    $scope.reviewresult = response.data[length - 1].reviewed
-    $scope.notviewresult = response.data[length - 1].notview
+    $scope.marks = response.data[response.data.length - 1].mark
+    $scope.attemptresult = response.data[response.data.length - 1].attempted
+    $scope.notattemptresult = response.data[response.data.length - 1].notattempted
+    $scope.reviewresult = response.data[response.data.length - 1].reviewed
+    $scope.notviewresult = response.data[response.data.length - 1].notview
     $scope.totalques = $scope.attemptresult + $scope.notattemptresult + $scope.reviewresult + $scope.notviewresult
 
   });
@@ -864,39 +889,68 @@ app.controller('startexam', function($scope, $state, $http, $timeout, $interval,
     method: 'GET',
     url: '/api/LMS/paperhistory/?user=' + user + '&paper=' + ques,
   }).then(function(response) {
-        $scope.data = response.data.length;
-        $scope.paper = ques.split('-').join('')
-        $scope.url = "/"+blog+"/"+$scope.paper+"/practice/";
+    $scope.data = response.data.length;
+    $scope.paper = ques.split('-').join('')
+    $scope.url = "/" + blog + "/" + $scope.paper + "/practice/";
 
   })
 
- $scope.startexam = function(){
+  $scope.startexam = function() {
 
 
-     $uibModal.open({
-       templateUrl: '/static/ngTemplates/startexam.html',
-       size: 'md',
-       backdrop: true,
-       resolve: {
-         blogobj: function() {
-           return blog;
-         },
-         quesobj: function() {
-           return ques;
-         },
+    $uibModal.open({
+      templateUrl: '/static/ngTemplates/startexam.html',
+      size: 'md',
+      backdrop: true,
+      resolve: {
+        blogobj: function() {
+          return blog;
+        },
+        quesobj: function() {
+          return ques;
+        },
+        user: function() {
+          return user;
+        },
+        paper: function() {
+          return paper;
+        }
 
-       },
-       controller: function($scope, $uibModalInstance,blogobj,quesobj) {
+      },
+      controller: function($scope, $uibModalInstance, blogobj, quesobj, user, paper) {
 
-         $scope.paper = quesobj.split('-').join('')
-         $scope.url = "/"+blogobj+"/"+$scope.paper+"/practice/";
-         $scope.closeModal = function(){
-           $uibModalInstance.close()
-         }
-       },
-     })
+        $scope.paper = quesobj.split('-').join('')
+        $scope.url = "/" + blogobj + "/" + $scope.paper + "/practice/";
+        $scope.closeModal = function() {
+          $uibModalInstance.close()
+        }
+        $scope.next = function() {
+          $http({
+            method: 'GET',
+            url: '/api/LMS/answer/?user=' + user + '&paper=' + paper,
+          }).
+          then(function(response) {
+            $scope.answers = []
+            for (var i = 0; i < response.data.length; i++) {
+              $scope.answers.push(response.data[i].pk)
+              console.log($scope.answers);
+            }
+            for (var i = 0; i < $scope.answers.length; i++) {
+              console.log($scope.answers[i], 'answersss');
+              $http({
+                method: 'DELETE',
+                url: '/api/LMS/answer/' + $scope.answers[i] + '/'
+              }).
+              then(function(response) {
+                console.log(response.data);
+              })
+            }
+          })
+        }
+      },
+    })
 
- }
+  }
 
 
 });

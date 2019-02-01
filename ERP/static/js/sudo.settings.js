@@ -163,8 +163,8 @@ app.controller('home.settings.menu', function($scope, $http, $aside, $state, Fla
 });
 
 
-app.controller('home.settings', function($scope, $http, $aside, $state, Flash, $users, $filter) {
-  console.log('insettingssssssss');
+app.controller('home.settings', function($scope, $http, $aside, $state, Flash, $users, $filter,$uibModal) {
+  console.log('in settingssssssss');
   $scope.sai = 'Kiran'
   $scope.blogsData = []
   $http({
@@ -182,25 +182,243 @@ app.controller('home.settings', function($scope, $http, $aside, $state, Flash, $
     url: '/api/PIM/blog/?contentType__in=book,course,paperGroup'
   }).
   then(function(response) {
-    console.log('booksssssss',response.data);
+    console.log('books,course,papergroupdataaaaaa',response.data);
     if (response.data.length>0) {
       $scope.blogsData = $scope.blogsData.concat(response.data)
     }
   })
   $http({
     method: 'GET',
+    url: '/api/LMS/subject/'
+  }).
+  then(function(response) {
+    console.log('subjecttttttttt',response.data);
+    $scope.subjectData = response.data;
+  })
+  $http({
+    method: 'GET',
     url: '/api/LMS/section/'
   }).
   then(function(response) {
-    console.log('courseeeeeee',response.data);
+    console.log('sectipnnnnnnnnnnn',response.data);
     $scope.SectionData = response.data;
   })
   $http({
     method: 'GET',
-    url: '/api/LMS/subject/'
+    url: '/api/LMS/note/'
   }).
   then(function(response) {
-    console.log('paperGroupeeeeeeee',response.data);
-    $scope.subjectData = response.data;
+    console.log('notesssssssss',response.data);
+    $scope.notesData = response.data;
   })
+  $http({
+    method: 'GET',
+    url: '/api/LMS/paper/'
+  }).
+  then(function(response) {
+    console.log('paperrrrrrr',response.data);
+    $scope.paperData = response.data;
+  })
+  $scope.editObject = function(typ,idx,clr){
+    console.log(typ,idx);
+    $uibModal.open({
+      templateUrl: '/static/ngTemplates/app.ERP.settings.editSeoDetails.html',
+      size: 'lg',
+      backdrop: true,
+      resolve: {
+        formData: function() {
+          if (typ=='blog') {
+            return $scope.blogsData[idx];
+          }else if (typ=='subject') {
+            return $scope.subjectData[idx];
+          }else if (typ=='section') {
+            return $scope.SectionData[idx];
+          }else if (typ=='notes') {
+            return $scope.notesData[idx];
+          }else if (typ=='paper') {
+            return $scope.paperData[idx];
+          }else {
+            return 'sai';
+          }
+        },
+      },
+      controller: function($scope, $uibModalInstance,formData) {
+        console.log('editttttttt',typ,idx,clr,formData);
+        $scope.formData = formData
+        $scope.typ = typ
+        $scope.clr = clr
+        $scope.saveBlog = function() {
+          console.log('save blog postssssssss');
+          if ($scope.formData.title==null||$scope.formData.title.length==0) {
+            Flash.create('danger', 'Title Is Required')
+            return
+          }
+          if ($scope.formData.description==null||$scope.formData.description.length==0) {
+            Flash.create('danger', 'Description Is Required')
+            return
+          }
+          if ($scope.formData.shortUrl==null||$scope.formData.shortUrl.length==0) {
+            Flash.create('danger', 'Description Is Required')
+            return
+          }
+          if ($scope.formData.ogimage==null&&$scope.formData.ogimageUrl==null) {
+            Flash.create('danger', 'Either Og Image Or Og Image URL Is Required')
+            return
+          }
+          var fd = new FormData();
+          fd.append('title',$scope.formData.title)
+          fd.append('description',$scope.formData.description)
+          fd.append('shortUrl',$scope.formData.shortUrl)
+          fd.append('ogimageUrl',$scope.formData.ogimageUrl)
+          if ($scope.formData.ogimage!=null&&typeof $scope.formData.ogimage!='string') {
+            fd.append('ogimage',$scope.formData.ogimage)
+          }
+          $http({
+            method: 'PATCH',
+            url: '/api/PIM/blog/'+$scope.formData.pk+'/',
+            data: fd,
+            transformRequest: angular.identity,
+            headers: {
+              'Content-Type': undefined
+            }
+          }).
+          then(function(response) {
+            $uibModalInstance.dismiss(response.data)
+            Flash.create('success', 'Updated Successfully')
+          }, function(err) {
+            Flash.create('danger', 'Internal Error')
+          })
+        }
+        $scope.saveSubject = function() {
+          console.log('save subjecttttttt');
+          if ($scope.formData.description==null||$scope.formData.description.length==0) {
+            Flash.create('danger', 'Description Is Required')
+            return
+          }
+          var fd = new FormData();
+          fd.append('description',$scope.formData.description)
+          if ($scope.formData.dp!=null&&typeof $scope.formData.dp!='string') {
+            fd.append('dp',$scope.formData.dp)
+          }
+          $http({
+            method: 'PATCH',
+            url: '/api/LMS/subject/'+$scope.formData.pk+'/',
+            data: fd,
+            transformRequest: angular.identity,
+            headers: {
+              'Content-Type': undefined
+            }
+          }).
+          then(function(response) {
+            $uibModalInstance.dismiss(response.data)
+            Flash.create('success', 'Updated Successfully')
+          }, function(err) {
+            Flash.create('danger', 'Internal Error')
+          })
+        }
+        $scope.saveSection = function() {
+          console.log('save Sectionnnnnnnn');
+          if ($scope.formData.seoTitle==null||$scope.formData.seoTitle.length==0) {
+            Flash.create('danger', 'Title Is Required')
+            return
+          }
+          if ($scope.formData.description==null||$scope.formData.description.length==0) {
+            Flash.create('danger', 'Description Is Required')
+            return
+          }
+          if ($scope.formData.shortUrl==null||$scope.formData.shortUrl.length==0) {
+            Flash.create('danger', 'URL Is Required')
+            return
+          }
+          $http({
+            method: 'PATCH',
+            url: '/api/LMS/section/'+$scope.formData.pk+'/',
+            data: {seoTitle:$scope.formData.seoTitle,description:$scope.formData.description,shortUrl:$scope.formData.shortUrl}
+          }).
+          then(function(response) {
+            $uibModalInstance.dismiss(response.data)
+            Flash.create('success', 'Updated Successfully')
+          }, function(err) {
+            Flash.create('danger', 'Internal Error')
+          })
+        }
+        $scope.saveNotes = function() {
+          console.log('save notessssss');
+          if ($scope.formData.title==null||$scope.formData.title.length==0) {
+            Flash.create('danger', 'Title Is Required')
+            return
+          }
+          if ($scope.formData.description==null||$scope.formData.description.length==0) {
+            Flash.create('danger', 'Description Is Required')
+            return
+          }
+          if ($scope.formData.urlSuffix==null||$scope.formData.urlSuffix.length==0) {
+            Flash.create('danger', 'URL Is Required')
+            return
+          }
+          var fd = new FormData();
+          fd.append('title',$scope.formData.title)
+          fd.append('description',$scope.formData.description)
+          fd.append('urlSuffix',$scope.formData.urlSuffix)
+          if ($scope.formData.image!=null&&typeof $scope.formData.image!='string') {
+            fd.append('image',$scope.formData.image)
+          }
+          $http({
+            method: 'PATCH',
+            url: '/api/LMS/note/'+$scope.formData.pk+'/',
+            data: fd,
+            transformRequest: angular.identity,
+            headers: {
+              'Content-Type': undefined
+            }
+          }).
+          then(function(response) {
+            $uibModalInstance.dismiss(response.data)
+            Flash.create('success', 'Updated Successfully')
+          }, function(err) {
+            Flash.create('danger', 'Internal Error')
+          })
+        }
+        $scope.savePaper = function() {
+          console.log('save paperrrr');
+          if ($scope.formData.name==null||$scope.formData.name.length==0) {
+            Flash.create('danger', 'Title Is Required')
+            return
+          }
+          if ($scope.formData.description==null||$scope.formData.description.length==0) {
+            Flash.create('danger', 'Description Is Required')
+            return
+          }
+          $http({
+            method: 'PATCH',
+            url: '/api/LMS/paper/'+$scope.formData.pk+'/',
+            data: {name:$scope.formData.name,description:$scope.formData.description}
+          }).
+          then(function(response) {
+            $uibModalInstance.dismiss(response.data)
+            Flash.create('success', 'Updated Successfully')
+          }, function(err) {
+            Flash.create('danger', 'Internal Error')
+          })
+        }
+      },
+    }).result.then(function() {
+
+    }, function(reason) {
+      console.log(reason,typ,idx);
+      if (reason.pk) {
+        if (typ=='blog') {
+          $scope.blogsData[idx] = reason
+        }else if (typ=='subject') {
+          $scope.subjectData[idx] = reason
+        }else if (typ=='section') {
+          $scope.SectionData[idx] = reason
+        }else if (typ=='notes') {
+          $scope.notesData[idx] = reason
+        }else if (typ=='paper') {
+          $scope.paperData[idx] = reason
+        }
+      }
+    });
+  }
 });

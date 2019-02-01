@@ -168,6 +168,7 @@ def blogDetails(request, blogname):
                 data['blogurl'] = blogobj.shortUrl
                 data['quesurl'] = quesobj.name
                 data['user'] = request.user.pk
+                data['paper'] = quesobj.pk
                 print request.user.pk,quesobj
                 htmlName = 'paperSolutions.html'
 

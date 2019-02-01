@@ -216,13 +216,14 @@ class PaperSerializer(serializers.ModelSerializer):
     def update(self , instance , validated_data):
         # for i in instance.questions.all():
         #     instance.questions.remove(i)
-        instance.questions.clear()
-        for i in self.context['request'].data['questions']:
-            i['ques']=Question.objects.get(id=i['ques'])
-            pq = PaperQues(**i)
-            pq.user = self.context['request'].user
-            pq.save()
-            instance.questions.add(pq)
+        if 'questions' in self.context['request'].data:
+            instance.questions.clear()
+            for i in self.context['request'].data['questions']:
+                i['ques']=Question.objects.get(id=i['ques'])
+                pq = PaperQues(**i)
+                pq.user = self.context['request'].user
+                pq.save()
+                instance.questions.add(pq)
         if 'name' in self.context['request'].data:
             instance.name = self.context['request'].data['name']
         if 'group' in self.context['request'].data:
