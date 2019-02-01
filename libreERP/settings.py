@@ -244,24 +244,16 @@ USE_L10N = True
 
 USE_TZ = True
 
-# EMAIL_HOST_SUFFIX = 'cioc.in'
-#
-# EMAIL_HOST = 'email.cioc.in'
-# EMAIL_HOST_USER = 'testmail@cioc.in'
-# EMAIL_HOST_PASSWORD = 'Titan@1234'
-# EMAIL_PORT = 587
-# EMAIL_USE_TLS = True
+EMAIL_HOST_SUFFIX = 'cioc.in'
 
-EMAIL_HOST_SUFFIX = 'syrow.in'
-
-EMAIL_HOST = 'syrow.in'
-EMAIL_HOST_USER = 'noreply@syrow.in'
-EMAIL_HOST_PASSWORD = 'wqR3qQisrl'
+EMAIL_HOST = 'email.cioc.in'
+EMAIL_HOST_USER = 'testmail@cioc.in'
+EMAIL_HOST_PASSWORD = 'Titan@1234'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 # EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
-DEFAULT_FROM_EMAIL = 'noreply@syrow.in'
+DEFAULT_FROM_EMAIL = 'testmail@cioc.in'
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.8/howto/static-files/
 
