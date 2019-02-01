@@ -386,7 +386,7 @@ app.controller("businessManagement.reviews", function($scope, $state, $users, $s
   $scope.selectedSortOption={
     value:'Created'
   }
-  $scope.pageOptions=['11','20','30']
+  $scope.pageOptions=['9','20','30']
   $scope.pageOptionsSelected={
     value:$scope.pageOptions[0]
   }
@@ -394,8 +394,6 @@ app.controller("businessManagement.reviews", function($scope, $state, $users, $s
     value:'Created'
   }
   $scope.isTableView=true
-  // $scope.viewby = 12;
-  // $scope.viewbyArch = 15;
   $scope.currentPage = {
     page:0
   }
@@ -489,7 +487,6 @@ app.controller("businessManagement.reviews", function($scope, $state, $users, $s
      $http({
        method: 'GET',
        url: '/api/support/supportChat/?uid='+data.uid,
-       // url: '/api/support/supportChat/?uid='+data.uid,
      }).
      then(function(response) {
        console.log('response data' , response.data);
@@ -502,7 +499,6 @@ app.controller("businessManagement.reviews", function($scope, $state, $users, $s
    $scope.fetchChatsForUIDArch= function(data){
      $http({
        method: 'GET',
-       // url: '/api/support/supportChat/?uid='+data.uid,
        url: '/api/support/supportChat/?uid='+data.uid,
      }).
      then(function(response) {
@@ -515,53 +511,36 @@ app.controller("businessManagement.reviews", function($scope, $state, $users, $s
    }
 
 
-
-  // $scope.$watch('selectedSortOption.value',function(newValue,oldValue){
-  //   if (newValue==undefined) {
-  //     return
-  //   }
-  //   switch (newValue) {
-  //       case 'Created':
-  //         $scope.filterByCreated(false);
-  //         break;
-  //       case 'Agent Name':
-  //         $scope.filterByUser(false);
-  //         break;
-  //       case 'UID':
-  //          $scope.filterByUid(false);
-  //         break;
-  //       case 'Rating':
-  //         $scope.filterByRating(false);
-  //         break;
-  //       case 'Company':
-  //         $scope.filterByCompany(false);
-  //         break;
-  //     }
-  // },true)
-  // $scope.$watch('selectedSortOptionArch.value',function(newValue,oldValue){
-  //   if (newValue==undefined) {
-  //     return
-  //   }
-  //   switch (newValue) {
-  //       case 'Created':
-  //         $scope.filterByCreated(true);
-  //         break;
-  //       case 'Agent Name':
-  //         $scope.filterByUser(true);
-  //         break;
-  //       case 'UID':
-  //          $scope.filterByUid(true);
-  //         break;
-  //       case 'Rating':
-  //         $scope.filterByRating(true);
-  //         break;
-  //       case 'Company':
-  //         $scope.filterByCompany(true);
-  //         break;
-  //     }
-  // },true)
   let myCount=0;
   let myCountArch=0;
+
+  $scope.setLocationData=function(data){
+
+    let myLocationData = JSON.parse(data)
+    if (myLocationData.city != null) {
+      if (myLocationData.hasOwnProperty('timezone')) {
+        return {
+          'city': myLocationData.city,
+          'country_name': myLocationData.country,
+          'region_name': myLocationData.regionName,
+          'zip': myLocationData.zip,
+          'ip': myLocationData.query,
+          'flag': '/static/Flags/' + myLocationData.countryCode.toLowerCase() + '.png',
+          'location': {
+            'capital': null,
+            'languages': null
+          },
+          'longitude':myLocationData.lon,
+          'latitude':myLocationData.lat
+        }
+      } else {
+        let dataValue = Object.assign(myLocationData)
+        dataValue.flag = '/static/Flags/' + myLocationData.country_code.toLowerCase() + '.png',
+        dataValue.timezone = null
+        return dataValue
+      }
+    }
+  }
 
   $scope.getArchData = function(date,user,email,client,download,typOfCall){
     $scope.archivedData=[];
@@ -605,8 +584,10 @@ app.controller("businessManagement.reviews", function($scope, $state, $users, $s
       then(function(response) {
         $scope.archivedData = response.data.data
         console.log($scope.archivedData , " Archieve data");
-        for (var i = 0; i < $scope.archivedData.length; i++) {
-          $scope.archivedData[i].location=JSON.parse($scope.archivedData[i].location)
+        for (let i = 0; i < $scope.archivedData.length; i++) {
+          if($scope.archivedData[i].location){
+            $scope.archivedData[i].location=$scope.setLocationData($scope.archivedData[i].location)
+          }
         }
         $scope.archivedDataLength = response.data.dataLength
         $scope.totalItemsArch = response.data.dataLength
@@ -671,11 +652,12 @@ app.controller("businessManagement.reviews", function($scope, $state, $users, $s
       }).
       then(function(response) {
         $scope.reviewData = response.data.data
-        // $scope.locationData=response.data.data.location
         console.log($scope.reviewData , " Review data");
-        // $scope.locationData=$scope.reviewData.location
+
         for (var i = 0; i < $scope.reviewData.length; i++) {
-          $scope.reviewData[i].location=Object.assign(JSON.parse($scope.reviewData[i].location))
+          if($scope.reviewData[i].location){
+            $scope.reviewData[i].location=$scope.setLocationData($scope.reviewData[i].location)
+          }
         }
         $scope.reviewDataLength = response.data.dataLength
         $scope.totalItems = response.data.dataLength

@@ -125,7 +125,6 @@ class GetMyUser(APIView):
                 # dic['chatThreadPk'] = ChatThread.objects.get(uid=i).pk
                 dic['companyPk'] = ChatThread.objects.filter(uid=i)[0].company.pk
                 dic['chatThreadPk'] = ChatThread.objects.filter(uid=i)[0].pk
-                # dic['servicePk'] = service.objects.filter(pk = dic['companyPk'])[0].pk
                 dic['servicePk'] = CustomerProfile.objects.filter(pk = dic['companyPk'])[0].service.pk
                 print dic
                 toSend.append(dic)
@@ -151,7 +150,6 @@ class GetMyUser(APIView):
                     dic = {'uid':i,'name':'' ,'email':''}
                 dic['companyPk'] = ChatThread.objects.filter(uid=i)[0].company.pk
                 dic['chatThreadPk'] = ChatThread.objects.filter(uid=i)[0].pk
-                # dic['servicePk'] = service.objects.filter(pk = dic['companyPk'])[0].pk
                 dic['servicePk'] = CustomerProfile.objects.filter(pk = dic['companyPk'])[0].service.pk
                 # print dic['me']
                 # print Support.objects.filter(uid = i).count() , 'CCCCCCCCCCCCCCCCCCCC'
@@ -279,6 +277,14 @@ class ReviewFilterCalAPIView2(APIView):
             offset = int(self.request.GET['offset'])
             limit = offset+int(self.request.GET['limit'])
             chatThreadList = chatThreadList[offset:limit]
+        toPush = []
+        for idx,chatT in enumerate(chatThreadList):
+            print chatT,"@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+            uidList = Visitor.objects.filter(uid=chatT['uid'])
+            if len(uidList)>0:
+                chatThreadList[idx]["Vname"] = uidList[0].name
+            else:
+                chatThreadList[idx]["Vname"] = False
 
         print len(chatThreadList)
         toReturn['data'] = chatThreadList
@@ -1057,19 +1063,16 @@ class getChatStatus(APIView):
         chatT= ChatThread.objects.filter(uid=uid)[0]
         compPk=chatT.company.pk
         if 'sendMail' in request.GET:
-            if chatT.lastActivity is None:
-                pass
-            else:
-                diff=timezone.now()-chatT.lastActivity
-                diffInMin = diff.total_seconds()/60
-                if diffInMin>10 and chatT.status=='started' and chatT.mailSent is None:
-                    sendMail=True;
-                    chatT.mailSent=timezone.now();
-                    chatT.save()
-                elif diffInMin>10 and chatT.status=='started' and chatT.lastActivity>chatT.mailSent:
-                    sendMail=True;
-                    chatT.mailSent=timezone.now();
-                    chatT.save()
+            diff=timezone.now()-chatT.lastActivity
+            diffInMin = diff.total_seconds()/60
+            if diffInMin>10 and chatT.status=='started' and chatT.mailSent is None:
+                sendMail=True;
+                chatT.mailSent=timezone.now();
+                chatT.save()
+            elif diffInMin>10 and chatT.status=='started' and chatT.lastActivity>chatT.mailSent:
+                sendMail=True;
+                chatT.mailSent=timezone.now();
+                chatT.save()
         if 'checkStatus' in request.GET:
             diffForstatus=timezone.now()-chatT.created
             diffForstatusInMints=diffForstatus.total_seconds()/60

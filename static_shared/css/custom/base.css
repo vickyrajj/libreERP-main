@@ -157,20 +157,22 @@ input:checked + .bal_slider:before {
 } */
 
 .uibTypeaheadDropup ul li{
-		transform: rotate(180deg);
+		/* transform: rotate(180deg); */
 		/* transform: scaleY(-1); */
     overflow-x: hidden
 }
 
 .uibTypeaheadDropup ul{
 	margin-bottom: 100px;
-  width:300px;
-  left:-30px !important;
-	transform: rotate(180deg);
-  transform-origin: top right;
+  width:100%;
+  top:84vh !important;
+  transform: translate(0px,-100%);
+  background: #ddd
+  /* left:-30px !important; */
+	/* transform: rotate(180deg); */
+  /* transform-origin: top right; */
 	/* transform: scaleY(-1); */
 }
-
 .basicAppLink :hover , .basicAppLink.active{
   background: var(--themeMain);
   color: white;
@@ -1126,7 +1128,6 @@ body {
 .Left_container {
     width: 35rem;
     /* display: flex; */
-    margin-top:1rem;
 }
 
 .Middle_container {
@@ -1134,7 +1135,7 @@ body {
 }
 
 .Right_container {
-    width: 35rem;
+    width: 40rem;
 }
 .Right_container label {
     font-size: 85% !important;

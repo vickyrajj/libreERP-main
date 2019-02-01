@@ -7,27 +7,35 @@
 
     <div style="margin:15px 0px">
       <img style="width:5rem" ng-if="msgData.user_id" src="{{msgData.user_id | getDP}}" alt="">
+      <span class="btn btn-primary" ng-click="showChart()" style="float:right">Change Status</span>
       <div class="" style="display:inline-block">
         <p ng-if="" style="font-size:16px;font-weight:700">{{msgData.user_id | getName}}</p>
       </div>
     </div>
-    <span class="btn btn-primary" ng-click="showChart()" style="float:right">Change Status</span>
-    <p><strong><i class="fa fa-calendar-o" aria-hidden="true"></i> </strong>{{msgData.created | date : 'dd-MMM-yyyy'}}</p>
-    <p ng-if="msgData.chatDuration>0.0"><strong><i class="fa fa-clock-o" aria-hidden="true"></i> </strong>{{msgData.chatDuration}} Min</p>
-    <!-- <p ng-if="msgData.company"><strong>Client : </strong>{{msgData.company}}</p> -->
-    <p ng-if="visitorDetails.email"><strong>Visitor's Email : </strong>{{visitorDetails.email}}</p>
-    <p ng-if="visitorDetails.name"><strong>Visitor's Name : </strong>{{visitorDetails.name}}</p>
-    <p ng-if="visitorDetails.phoneNumber"><strong>Visitor's Number : </strong>{{visitorDetails.phoneNumber}}</p>
-    <p><strong>Device IP : </strong>{{msgData.userDeviceIp}}</p>
-    <p ng-if="msgData.customerRating"><strong><i class="fa fa-star fa-md" aria-hidden="true"></i> </strong>{{msgData.customerRating}} </p>
-    <p ng-if="msgData.customerFeedback"><strong>Feedback : </strong>{{msgData.customerFeedback}}</p>
-    <p ng-if="msgData.uid!=none"><strong>Status : </strong>{{msgData.status}}
-      <span ng-if="msgData.statusChat!='started'">
-        <span ng-if="msgData[msgData.statusChat+'By']&&msgData[msgData.statusChat+'On']">by {{msgData[msgData.statusChat+'By']}}</span>
-        <span ng-if="msgData[msgData.statusChat+'On']&&!msgData[msgData.statusChat+'By']"> by Visitor</span>
-        <span ng-if="msgData[msgData.statusChat+'On']">on {{msgData[msgData.statusChat+'On'].split('.')[0].split(' ')[0]}} at {{msgData[msgData.statusChat+'On'].split('.')[0].split(' ')[1]}}</span>
-     </span>
-    </p>
+
+    <div class="row">
+      <div class="col-md-6">
+        <p><strong><i class="fa fa-calendar-o" aria-hidden="true"></i> </strong>{{msgData.created | date : 'dd-MMM-yyyy'}}</p>
+        <p ng-if="msgData.chatDuration>0.0"><strong><i class="fa fa-clock-o" aria-hidden="true"></i> </strong>{{msgData.chatDuration}} Min</p>
+        <p ng-if="visitorDetails.phoneNumber"><strong>Visitor's Number : </strong>{{visitorDetails.phoneNumber}}</p>
+        <p><strong>Device IP : </strong>{{msgData.userDeviceIp}}</p>
+        <p ng-if="msgData.customerFeedback"><strong>Feedback : </strong>{{msgData.customerFeedback}}</p>
+        <p ng-if="msgData.uid!=none"><strong>Status : </strong>{{msgData.status}}
+          <span ng-if="msgData.statusChat!='started'">
+            <span ng-if="msgData[msgData.statusChat+'By']&&msgData[msgData.statusChat+'On']">by {{msgData[msgData.statusChat+'By']}}</span>
+            <span ng-if="msgData[msgData.statusChat+'On']&&!msgData[msgData.statusChat+'By']"> by Visitor</span>
+            <span ng-if="msgData[msgData.statusChat+'On']">on {{msgData[msgData.statusChat+'On'].split('.')[0].split(' ')[0]}} at {{msgData[msgData.statusChat+'On'].split('.')[0].split(' ')[1]}}</span>
+         </span>
+        </p>
+      </div>
+      <div class="col-md-6">
+        <p ng-if="msgData.customerRating"><strong><i class="fa fa-star fa-md" aria-hidden="true"></i> </strong>{{msgData.customerRating}} </p>
+        <p ng-if="visitorDetails.email"><strong>Visitor's Email : </strong>{{visitorDetails.email}}</p>
+        <p ng-if="visitorDetails.name"><strong>Visitor's Name : </strong>{{visitorDetails.name}}</p>
+        <p ng-if="msgData.location.city"><i class="fa fa-globe" aria-hidden="true"></i> {{msgData.location.city}} , {{msgData.location.country_name}}</p>
+      </div>
+
+    </div>
   </div>
 <div class="center_container" style="padding:2.5rem;">   <!-- main section -->
 

@@ -386,7 +386,7 @@ app.controller("businessManagement.sessionHistory", function($scope, $state, $us
   $scope.selectedSortOption={
     value:'Created'
   }
-  $scope.pageOptions=['11','20','30']
+  $scope.pageOptions=['8','20','30']
   $scope.pageOptionsSelected={
     value:$scope.pageOptions[0]
   }
@@ -561,6 +561,34 @@ app.controller("businessManagement.sessionHistory", function($scope, $state, $us
   let myCount=0;
   let myCountArch=0;
 
+  $scope.setLocationData=function(data){
+
+    let myLocationData = JSON.parse(data)
+    if (myLocationData.city != null) {
+      if (myLocationData.hasOwnProperty('timezone')) {
+        return {
+          'city': myLocationData.city,
+          'country_name': myLocationData.country,
+          'region_name': myLocationData.regionName,
+          'zip': myLocationData.zip,
+          'ip': myLocationData.query,
+          'flag': '/static/Flags/' + myLocationData.countryCode.toLowerCase() + '.png',
+          'location': {
+            'capital': null,
+            'languages': null
+          },
+          'longitude':myLocationData.lon,
+          'latitude':myLocationData.lat
+        }
+      } else {
+        let dataValue = Object.assign(myLocationData)
+        dataValue.flag = '/static/Flags/' + myLocationData.country_code.toLowerCase() + '.png',
+        dataValue.timezone = null
+        return dataValue
+      }
+    }
+  }
+
   $scope.getArchData = function(date,user,email,client,download,typOfCall){
     $scope.archivedData=[];
     $scope.loadingDataForArc=true;
@@ -604,6 +632,11 @@ app.controller("businessManagement.sessionHistory", function($scope, $state, $us
       then(function(response) {
         $scope.archivedData = response.data.data
         console.log($scope.archivedData , " Archieve data");
+        for (let i = 0; i < $scope.archivedData.length; i++) {
+          if($scope.archivedData[i].location){
+            $scope.archivedData[i].location=$scope.setLocationData($scope.archivedData[i].location)
+          }
+        }
         $scope.archivedDataLength = response.data.dataLength
         $scope.totalItemsArch = response.data.dataLength
         if($scope.archivedData.length>0){
@@ -623,6 +656,8 @@ app.controller("businessManagement.sessionHistory", function($scope, $state, $us
       });
     }
   }
+
+
 
 
 
@@ -669,6 +704,11 @@ app.controller("businessManagement.sessionHistory", function($scope, $state, $us
       then(function(response) {
         $scope.reviewData = response.data.data
         console.log($scope.reviewData , " Review data");
+        for (let i = 0; i < $scope.archivedData.length; i++) {
+          if($scope.reviewData[i].location){
+            $scope.reviewData[i].location=$scope.setLocationData($scope.reviewData[i].location)
+          }
+        }
         $scope.reviewDataLength = response.data.dataLength
         $scope.totalItems = response.data.dataLength
         if($scope.reviewData.length>0){
