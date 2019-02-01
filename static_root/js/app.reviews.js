@@ -21,7 +21,7 @@ app.controller("businessManagement.customerReviews", function($scope, $state, $h
   $scope.currentPage = {
     page:1
   }
-  $scope.pageOptions=['11','20','30']
+  $scope.pageOptions=['8','20','30']
   $scope.pageOptionsSelected={
     value:$scope.pageOptions[0]
   }
@@ -172,6 +172,34 @@ app.controller("businessManagement.customerReviews", function($scope, $state, $h
   }
   $scope.loadingData=true;
 
+  $scope.setLocationData=function(data){
+
+    let myLocationData = JSON.parse(data)
+    if (myLocationData.city != null) {
+      if (myLocationData.hasOwnProperty('timezone')) {
+        return {
+          'city': myLocationData.city,
+          'country_name': myLocationData.country,
+          'region_name': myLocationData.regionName,
+          'zip': myLocationData.zip,
+          'ip': myLocationData.query,
+          'flag': '/static/Flags/' + myLocationData.countryCode.toLowerCase() + '.png',
+          'location': {
+            'capital': null,
+            'languages': null
+          },
+          'longitude':myLocationData.lon,
+          'latitude':myLocationData.lat
+        }
+      } else {
+        let dataValue = Object.assign(myLocationData)
+        dataValue.flag = '/static/Flags/' + myLocationData.country_code.toLowerCase() + '.png',
+        dataValue.timezone = null
+        return dataValue
+      }
+    }
+  }
+
   $scope.getData = function(date,email,download,typOfCall){
    $scope.reviewData=[]
    $scope.loadingData=true;
@@ -207,6 +235,9 @@ app.controller("businessManagement.customerReviews", function($scope, $state, $h
       then(function(response) {
         $scope.reviewData = response.data.data
         console.log($scope.reviewData , " Review data");
+        for (let i = 0; i < $scope.archivedData.length; i++) {
+          $scope.reviewData[i].location=$scope.setLocationData($scope.reviewData[i].location)
+        }
         $scope.reviewDataLength = response.data.dataLength
         $scope.totalItems = response.data.dataLength
         if($scope.reviewData.length>0){
