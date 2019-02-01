@@ -124,6 +124,7 @@ app.controller('exam', function($scope, $http, $timeout, $interval, $uibModal, $
 
         }
       }
+      
     }
     for (var i = 0; i < $scope.subquestions.length; i++) {
       $scope.selections.push({
@@ -134,6 +135,7 @@ app.controller('exam', function($scope, $http, $timeout, $interval, $uibModal, $
 
       $scope.selections[subcount].answers[questionno] = answerno;
       $scope.test[questionno].savedIndex = answerno;
+
 
     }
     setInterval(timer, 1000);
@@ -209,6 +211,7 @@ app.controller('exam', function($scope, $http, $timeout, $interval, $uibModal, $
 
 
     }
+
     $scope.review = function(subval, val) {
       if ($scope.subcount == subval) {
 
@@ -255,6 +258,7 @@ app.controller('exam', function($scope, $http, $timeout, $interval, $uibModal, $
     }
 
     $scope.queclick = function(val) {
+      console.log($scope.subquestions[$scope.subcount].ques[$scope.count].timer);
       $scope.count = val;
       $scope.questionno = $scope.count;
       if ($scope.test[val].status != 'answered' && $scope.test[val].status != 'reviewed' && $scope.test[val].status != 'attemptreviewed') {
@@ -291,6 +295,21 @@ app.controller('exam', function($scope, $http, $timeout, $interval, $uibModal, $
       }
       $scope.answerlist()
       $scope.callmodal = function() {
+        $scope.timecount = []
+        $scope.spend = function(){
+          console.log($scope.subquestions,'questionsss');
+          for (var i = 0; i < $scope.subquestions.length; i++) {
+            $scope.timecount.push({
+              sub: $scope.subquestions[i].subname,
+            })
+            $scope.timer = 0
+            for (var j = 0; j < $scope.subquestions[i].ques.length; j++) {
+              $scope.timer += $scope.subquestions[i].ques[j].timer
+            }
+              $scope.timecount[i].timer = $scope.timer
+          }
+          return $scope.timecount;
+        }
         $scope.marks = 0;
         $scope.incorrect = 0;
         $scope.correct = 0;
@@ -344,10 +363,13 @@ app.controller('exam', function($scope, $http, $timeout, $interval, $uibModal, $
             total: function() {
               return $scope.total;
             },
+            spend:function(){
+              return $scope.spend();
+            }
           },
 
-          controller: function($scope, questions, $uibModalInstance, answerlist, userId, paperId, total, $location) {
-
+          controller: function($scope, questions, $uibModalInstance, answerlist, userId, paperId, total, spend) {
+console.log(spend,'spensddd');
             $scope.questions = questions
             $scope.attempted = 0;
             $scope.notAnswered = 0;
@@ -453,20 +475,22 @@ app.controller('examresults', function($scope, $http, $timeout, $interval, $uibM
       $scope.subname = $scope.paperData.questions[i].ques.topic.subject.title;
       if (!$scope.sublist.includes($scope.subname)) {
         $scope.sublist.push($scope.subname);
-      } else {
-      }
+      } else {}
     }
     for (var i = 0; i < $scope.sublist.length; i++) {
-      var count=0;
-      var arr= $scope.paperData.questions.filter(function (item) {
-        if (item.ques.topic.subject.title ==  $scope.sublist[i] ) {
+      var count = 0;
+      var arr = $scope.paperData.questions.filter(function(item) {
+        if (item.ques.topic.subject.title == $scope.sublist[i]) {
           return true;
         }
       })
-      $scope.subcount.push({name:$scope.sublist[i],count:arr.length})
+      $scope.subcount.push({
+        name: $scope.sublist[i],
+        count: arr.length
+      })
     }
-    console.log(  $scope.subcount,'jjjj');
-  $scope.showresults()
+    console.log($scope.subcount, 'jjjj');
+    $scope.showresults()
   })
   $scope.showresults = function() {
     $scope.subtitle = []
@@ -500,7 +524,7 @@ app.controller('examresults', function($scope, $http, $timeout, $interval, $uibM
       $scope.correct = 0;
 
       for (var i = 0; i < $scope.subtitle.length; i++) {
-        if ($scope.subtitle[i].title == $scope.sublist[i]&&$scope.subtitle[i].ques.length) {
+        if ($scope.subtitle[i].title == $scope.sublist[i] && $scope.subtitle[i].ques.length) {
           $scope.marks = 0;
           $scope.incorrect = 0;
           $scope.correct = 0;
