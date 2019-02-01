@@ -909,10 +909,10 @@ function createChatDiv() {
                     '</div>'+
                     '<div id="chatBox_footer" class="chatBox_footer">'+
                           '<div class="chatbox_branding">'+
-                            '<a style="color:'+fontAndIconColor+' ;text-decoration:none;font-size:10px;" href="https://www.syrow.com/" target="_blank">We run on Syrow</a>'+
+                            '<a style="color:'+fontAndIconColor+' ;text-decoration:none;font-size:10px !important;" href="https://www.syrow.com/" target="_blank">We run on Syrow</a>'+
                           '</div>'+
                           '<div id="messageComposer" class="flex_container">'+
-                            '<textarea id="inputText" placeholder="Message..." name="name" rows="2" style="background-color:#fff;outline:none;font-size:14px" ></textarea>'+
+                            '<textarea id="inputText" placeholder="Message..." name="name" rows="2" style="background-color:#fff;outline:none;font-size:14px !important;" ></textarea>'+
                             '<input id="filePicker" type="file" style="display:none;"/>'+
                             '<i id="paperClip"  class="paperClip SyrowFont font-SyrowPaperclip" aria-hidden="true"></i>'+
                             '<i id="paperPlane" class="paperClip SyrowFont font-SyrowNavigation" aria-hidden="true"></i>'+
@@ -936,7 +936,7 @@ function createChatDiv() {
                       '<div style="background: '+supportBubbleColor+' !important; color:'+iconColor+';cursor:pointer" class="sy-circle first_animation '+sy_circle_class+'" id="sy-main-icon">'+
                           '<span id="Syrow24hSupportText" style="background: '+supportBubbleColor+' !important; color:'+iconColor+'" class="sy-text '+sy_firsttext_class+'">24 Hours Support</span>'+
                           '<span id="chatSuggestionBar" style="display:none;background:'+supportBubbleColor+' !important; color:'+iconColor+'" class="sy-text-Suggested '+sy_firsttext_class+'">'+firstMessage+'</span>'+
-                          '<span id="24Icon" class="SyrowFont sy-md-1 sy-ops"><img id="supportDp" src="'+support_icon+'" style="width:40px; height:40px; border-radius:50%;"></img> </span>'+
+                          '<span id="24Icon" class="SyrowFont sy-md-1 sy-ops"><img id="supportDp" src="'+support_icon+'" style="width:40px !important; height:40px important; border-radius:50% !important;"></img> </span>'+
                           '<div  id="sy-sub-icons">'+
                               '<div style="background: '+supportBubbleColor+' !important; color:'+iconColor+';cursor:pointer" id="callCircle" class="sy-circle '+sy_circle_class+'">'+
                                 '<span id="callCircleText" style="background: '+supportBubbleColor+' !important; color:'+iconColor+'" class="sy-text '+sy_text_class+'">Callback</span>'+
@@ -964,15 +964,15 @@ function createChatDiv() {
 
                   '<div id="singleService" style="background: '+supportBubbleColor+' !important; color:'+iconColor+';cursor:pointer" class="sy-circle first_animation '+sy_circle_class+'">'+
                     '<span id="singleServiceText" style="background: '+supportBubbleColor+' !important; color:'+iconColor+' ;display:none; transition: .5s;opacity:0" class="sy-text '+sy_text_class+'  "></span>'+
-                    '<span id="chatSuggestionBar1" style="display:none;background: '+supportBubbleColor+' !important; color:'+iconColor+';font-size:13px;" class="sy-text-Suggested '+sy_firsttext_class+'">'+firstMessage+'</span>'+
+                    '<span id="chatSuggestionBar1" style="display:none;background: '+supportBubbleColor+' !important; color:'+iconColor+';font-size:13px !important;" class="sy-text-Suggested '+sy_firsttext_class+'">'+firstMessage+'</span>'+
                     '<span id="singleServiceFont" class="SyrowFont font-SyrowCallBack sy-md-2 sy-ops"></span></a>'+
                   '</div>'+
               '</div>'+
 
           '<div id="boxStyle">'+
             '<div id="ChatWithUs" style="background: '+supportBubbleColor+' !important; color:'+iconColor+';cursor:pointer;" class="chat_with_us '+position_of_chat+'">'+
-              '<span style="margin-right:10px;font-size:17px;">Chat With Us</span>'+
-              '<span style="font-size:16px;" class="SyrowFont font-SyrowChat"></span>'+
+              '<span style="margin-right:10px;font-size:17px !important;">Chat With Us</span>'+
+              '<span style="font-size:16px !important;" class="SyrowFont font-SyrowChat"></span>'+
             '</div>'+
           '</div>'+
 
@@ -1486,10 +1486,10 @@ function createChatDiv() {
                 vertical-align: middle;\
               }\
               .sy-md-1 {\
-              font-size: 40px;\
+              font-size: 40px !important;\
             }\
               .sy-md-2 {\
-              font-size: 34px;\
+              font-size: 34px !important;\
             }\
               .sy-ops {\
               position: absolute;\
@@ -1519,7 +1519,7 @@ function createChatDiv() {
               border-radius: 15px;\
               padding: 4px 8px;\
               font-family: Verdana, Arial, sans-serif;\
-              font-size: 14px;\
+              font-size: 14px !important;\
               display: inline-block;\
               white-space: nowrap;\
               max-width: 250px;\
@@ -1543,7 +1543,7 @@ function createChatDiv() {
               border-radius: 15px;\
               padding: 4px 8px;\
               font-family: Verdana, Arial, sans-serif;\
-              font-size: 13px;\
+              font-size: 13px !important;\
               max-width:300px;\
               bottom:25px;\
               animation:chatSuggestionBar 3s\
@@ -1599,7 +1599,7 @@ function createChatDiv() {
               label.star {\
                 float: right;\
                 padding: 8px;\
-                font-size: 32px;\
+                font-size: 32px !important;\
                 color: #fff;\
                 text-shadow: #ff720b 1px 0 1px;\
                 transition: all .5s;\
@@ -1659,7 +1659,7 @@ function createChatDiv() {
               .close {\
               color:  rgb(0,0,0);\
               float: right;\
-              font-size: 28px;\
+              font-size: 28px !important;\
               font-weight: bold;\
           }\
               .first_animation {\
@@ -1761,7 +1761,7 @@ function createChatDiv() {
           	}\
           }\
           .typingBox{\
-            display:none;z-index:11111111111111111111111111111;position:absolute;bottom:81px;font-size:15px;padding:5px;background-color:#f6f6f6;color:#000;border-radius: 0px 20px 20px 20px;left:0px;\
+            display:none;z-index:11111111111111111111111111111;position:absolute;bottom:81px;font-size:15px !important;padding:5px;background-color:#f6f6f6;color:#000;border-radius: 0px 20px 20px 20px;left:0px;\
           }\
             @media only screen and (max-width: 600px) {\
               .chatdiv-right {\
@@ -1879,7 +1879,7 @@ function createChatDiv() {
               border-radius: 10px 10px 0 0;\
             }\
             .chatBox_header i{\
-               font-size:25px;\
+               font-size:25px !important;\
                color:"+fontAndIconColor+"\
             }\
             .chatBox_header > .logo_image{\
@@ -1898,13 +1898,13 @@ function createChatDiv() {
             }\
             .chatBox_header .chatBox_name{\
               display: block;\
-              font-size: 15px;\
+              font-size: 15px !important;\
               padding:0px;\
               margin:0px;\
             }\
             .chatBox_header .chatBox_status{\
               display: block;\
-              font-size: 10px;\
+              font-size: 10px !important;\
               margin-top:5px;\
               padding:0px;\
             }\
@@ -1918,7 +1918,7 @@ function createChatDiv() {
               box-sizing:border-box;\
             }\
             .paperClip{\
-              font-size:25px;\
+              font-size:25px !important;\
               margin:15px 15px 0px 0px;\
               color:#A0A0A0\
             }\
@@ -1943,7 +1943,7 @@ function createChatDiv() {
             .chatBox_footer  textarea {\
               width: 77%;\
               margin: 10px;\
-              font-size: 16px;\
+              font-size: 16px !important;\
               resize:none;\
               overflow: visible;\
               border: none;\
@@ -1965,7 +1965,7 @@ function createChatDiv() {
             .chatBox_footer .chatbox_branding{\
               min-height: 15px;\
               text-align: center;\
-              font-size: 10px;\
+              font-size: 10px !important;\
               background-image:linear-gradient(to right, "+windowColor +","+ windowColor+","+ windowColor+");\
               width: 100%;\
               color: "+fontAndIconColor+";\
@@ -1982,7 +1982,7 @@ function createChatDiv() {
               display:none;\
             }\
             .startNewChatBtn > span{\
-              font-size:14px;\
+              font-size:14px !important;\
               font-weight:bolder;\
             }\
             .confirmationDiv{\
@@ -1995,7 +1995,7 @@ function createChatDiv() {
             }\
             .confirmationSureText{\
               color: "+windowColor+";\
-              font-size: 16px;\
+              font-size: 16px !important;\
               font-weight: bold;\
               text-align: center;\
               padding: 15px;\
@@ -2158,8 +2158,8 @@ function createChatDiv() {
     var div = document.createElement("div");
     div.id="offlineMessage"
     div.innerHTML =  '<div style="margin:0px 0px 10px; box-sizing:border-box;" >'+
-                      '<div style="text-align:center;clear: both; float:left; background-color:#f6f6f6; padding:10px;margin:8px; box-sizing:border-box;font-size:14px">'+
-                      '<p style="line-height: 1.75; margin:0px; word-wrap: break-word; font-size:12px;color:rgba(0,0,0,0.5); box-sizing:border-box;">Please provide your feedback below:</p>'+
+                      '<div style="text-align:center;clear: both; float:left; background-color:#f6f6f6; padding:10px;margin:8px; box-sizing:border-box;font-size:14px!important; ">'+
+                      '<p style="line-height: 1.75; margin:0px; word-wrap: break-word; font-size:12px !important;color:rgba(0,0,0,0.5); box-sizing:border-box;">Please provide your feedback below:</p>'+
                       '<form>'+
                         '<div class="stars">'+
                           '<form id="stars">'+
@@ -2177,10 +2177,10 @@ function createChatDiv() {
                         '</div>'+
                         '<input type="text" id="emailId" placeholder="Email (Optional)"  style="width:100%; padding:5px;border:none; margin-bottom:10px;">'+
                          '<textarea id="feedbackText" style="width:100%;outline:none;padding:5px; resize:none;border:none; box-shadow:.3px .3px #fff; box-sizing:border-box;" rows="3" placeholder="Feedback"></textarea>'+
-                         '<button id="submitCancel" type="button" style="margin-top:10px; padding:4px 8px; border-radius:8px; background-color:'+fontAndIconColor+' ; color:'+windowColor+'; text-transform:none; font-size:11px; cursor:pointer;" >'+
+                         '<button id="submitCancel" type="button" style="margin-top:10px; padding:4px 8px; border-radius:8px; background-color:'+fontAndIconColor+' ; color:'+windowColor+'; text-transform:none; font-size:11px !important; cursor:pointer;" >'+
                            'Cancel'+
                          '</button>'+
-                         '<button id="submitStars" type="button" style="margin-top:10px;margin-left:10%; padding:4px 8px; border-radius:8px; background-color:'+windowColor+' ; color:'+fontAndIconColor+'; text-transform:none; font-size:11px; cursor:pointer;" >'+
+                         '<button id="submitStars" type="button" style="margin-top:10px;margin-left:10%; padding:4px 8px; border-radius:8px; background-color:'+windowColor+' ; color:'+fontAndIconColor+'; text-transform:none; font-size:11px !important; cursor:pointer;" >'+
                            'Submit'+
                          '</button>'+
                         '</form>'+
@@ -2210,7 +2210,7 @@ function createChatDiv() {
     div.id="thankYou"
     div.innerHTML = '<div style="margin:0px 0px 10px; box-sizing:border-box;" >'+
                     '<div style="clear: both; float:left; background-color:#f6f6f6; padding:10px;margin:8px; border-radius:0px 20px 20px 20px; box-sizing:border-box;">'+
-                    '<p style="line-height: 1.75; margin:0px; word-wrap: break-word; font-size:14px; box-sizing:border-box;">Thank You !</p>'+
+                    '<p style="line-height: 1.75; margin:0px; word-wrap: break-word; font-size:14px !important; box-sizing:border-box;">Thank You !</p>'+
                     '</div> '+
                     '</div>'
   messageBox.appendChild(div);
@@ -2875,9 +2875,9 @@ function addExitConfirmation() {
           res.forEach((r)=>{
             if (r.match(regex)) {
               str=str.replace(r,'<a style="color:'+fontAndIconColor+'" href="'+r+'" target="_blank">'+r+'</a>')
-                pTag='<p style="font-size:14px; margin:5px 0px; box-sizing:border-box;">'+ str +'</p>'
+                pTag='<p style="font-size:14px !important; margin:5px 0px !important; box-sizing:border-box !important;">'+ str +'</p>'
             }else{
-                 pTag='<p style="font-size:14px; margin:5px 0px; box-sizing:border-box;">'+ str +'</p>'
+                 pTag='<p style="font-size:14px !important; margin:5px 0px !important; box-sizing:border-box !important;">'+ str +'</p>'
             }
           })
           msgDiv = pTag
@@ -2895,7 +2895,7 @@ function addExitConfirmation() {
                         '<div style=" clear: both; float:right; background-color:'+ windowColor +'; color:'+fontAndIconColor+';  padding:5px 10px;margin:8px; border-radius:20px 0px 20px 20px; box-sizing:border-box;">'+
                           msgDiv+
                         '</div>'+
-                        '<div style="clear: both; float:right; padding:0px 10px; font-size:9px">'+ message.timeDate +'</div>'+
+                        '<div style="clear: both; float:right; padding:0px 10px; font-size:9px !important;">'+ message.timeDate +'</div>'+
                       '</div>'
         return msgHtml
 
@@ -2904,7 +2904,7 @@ function addExitConfirmation() {
                   '<div style="clear: both; float:left; background-color:#f6f6f6; padding:5px 10px;margin:8px; border-radius:0px 20px 20px 20px; box-sizing:border-box;">'+
                      msgDiv+
                   '</div> '+
-                  '<div style="clear: both; float:left; padding:0px 10px; font-size:9px">'+ message.timeDate +'</div>'+
+                  '<div style="clear: both; float:left; padding:0px 10px; font-size:9px !important;">'+ message.timeDate +'</div>'+
                 '</div> '
         return msgHtml
       }
@@ -3141,11 +3141,11 @@ setInterval(function () {
 
           div.innerHTML =  '<div style="margin:0px 0px 10px; box-sizing:border-box;" >'+
                             '<div style="clear: both; float:left; background-color:#f6f6f6; padding:10px;margin:8px; border-radius:0px 20px 20px 20px; box-sizing:border-box;">'+
-                            '<p style="line-height: 1.75; margin:0px 0px 10px; word-wrap: break-word; font-size:14px; box-sizing:border-box;">Sorry we are offline. Please email us your query.</p>'+
+                            '<p style="line-height: 1.75; margin:0px 0px 10px; word-wrap: break-word; font-size:14px !important; box-sizing:border-box;">Sorry we are offline. Please email us your query.</p>'+
                             '<form>'+
                               '<input id="emailAddr" style="width:100%; margin-bottom:8px; box-sizing:border-box;" name="fname" type="text" placeholder="Email.." >'+
                                '<textarea style="width:100%; outline:none;resize:none; box-shadow:none; box-sizing:border-box;" rows="3" placeholder="Type your message here.."></textarea>'+
-                               '<button id="sendEmail" type="button" style="margin-top:10px; border:none; margin-left:38%; padding:8px; border-radius:8px; background-color:#286EFA ; color:#fff; text-transform:none; font-size:11px; cursor:pointer;" >'+
+                               '<button id="sendEmail" type="button" style="margin-top:10px; border:none; margin-left:38%; padding:8px; border-radius:8px; background-color:#286EFA ; color:#fff; text-transform:none; font-size:11px !important; cursor:pointer;" >'+
                                  'Submit'+
                                '</button>'+
                               '</form>'+
