@@ -7,7 +7,7 @@ app.controller('startexam', function($scope, $http, $timeout, $interval, $uibMod
   $scope.initiateMath = function() {
     MathJax.Hub.Queue(["Typeset", MathJax.Hub]);
   }
-  
+
   $http({
     method: 'GET',
     url: '/api/LMS/paperhistory/?user=' + user + '&paper=' + ques,
