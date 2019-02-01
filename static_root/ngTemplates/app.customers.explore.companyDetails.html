@@ -1,0 +1,152 @@
+<div class="container-fluid" ng-controller="businessManagement.customers.form" style="overflow-x:hidden">
+  <div class="row">
+    <div class="col-md-8" style="padding-left:25px;">
+      <h3>{{mode=='new'?'Create':'Edit'}} Client</h3>
+    </div>
+    <div class="col-md-4" ng-if="form.pk" style="padding: 15px;">
+      <span class="btn btn-primary pull-right" ng-click="generateScriptModal()">Generate Script</span>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-6">
+      <div class="form-group">
+        <label>Name</label>
+        <input type="text " class="form-control input_style" ng-model="form.name">
+      </div>
+    </div>
+    <div class="col-md-6">
+      <div class="form-group">
+        <label>Telephone</label>
+        <input type="text " class="form-control input_style" ng-model="form.telephone">
+      </div>
+    </div>
+    <div class="col-md-6">
+      <div class="form-group">
+        <label>Mobile</label>
+        <input type="text " class="form-control input_style" ng-model="form.mobile">
+      </div>
+    </div>
+    <div class="col-md-6">
+      <div class="form-group">
+        <label>About</label>
+        <textarea class="form-control input_style" rows="5" ng-model="form.about"></textarea>
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-6">
+      <div class="form-group">
+        <label>Contact Person</label>
+        <div class="input-group">
+          <input type="text " class="form-control input_style" ng-model="form.cpName" uib-typeahead="u as u.username for u in userSearch($viewValue)" placeholder="Search by username">
+          <span class="input-group-btn">
+          <button type="button" class="btn btn-success" ng-click="addPerson(form.cpName)">Add <i class="fa fa-plus"></i></button>
+        </span>
+        </div>
+      </div>
+      <div class="row" ng-if="form.contactPerson.length>0" style="margin:10px">
+        <div class="col-md-5 col-md-offset-1 card" ng-repeat="person in form.contactPerson" style="padding:10px;margin-top:10px">
+          <div class="col-md-10" style="font-size:18px">
+            <span>{{person.username}}</span>
+          </div>
+          <div class="col-md-2">
+            <i class="fa fa-times fa-lg" ng-click="removePerson($index)" style="cursor:pointer"></i>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-6">
+      <div class="form-group">
+        <label>Advisors</label>
+        <div class="input-group">
+          <input type="text " class="form-control input_style" ng-model="form.adName" uib-typeahead="u as u.username for u in advisorSearch($viewValue)" placeholder="Search by username">
+          <span class="input-group-btn">
+          <button type="button" class="btn btn-success" ng-click="addAdvisor(form.adName)">Add <i class="fa fa-plus"></i></button>
+        </span>
+        </div>
+      </div>
+
+      <div class="row" ng-if="form.advisors.length>0" style="margin:10px">
+        <div class="col-md-5 col-md-offset-1 card" ng-repeat="person in form.advisors" style="padding:10px;margin-top:10px">
+          <div class="col-md-10" style="font-size:18px">
+            <span>{{person.username}}</span>
+          </div>
+          <div class="col-md-2">
+            <i class="fa fa-times fa-lg" ng-click="removeAdvisors($index)" style="cursor:pointer"></i>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-6">
+      <div ng-if="form.pk">
+        <label>Processes</label> <br>
+        <div class="input-group">
+          <input type="text" class="form-control" placeholder="Process" ng-model="process_text">
+          <span class="input-group-addon" ng-click="add_process1()" style="cursor:pointer">Add</span>
+        </div>
+        <div class="row" style="padding-top:15px;">
+          <div class="col-md-6" ng-repeat="pl in process_list" style="margin:10px 0px;">
+            <div class="container-fluid card">
+              <i class="fa fa-times fa-lg pull-right" style="padding-top:10px;cursor:pointer" ng-click="close_process($index)"></i>
+              <div class="row container-fluid" style="">
+                <h4>{{pl.text}}</h4>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+
+  <div style="cursor:pointer;margin:20px;" ng-click="companyAdvanceOptions = !companyAdvanceOptions">
+    <div class="text-primary">
+      <i class="fa fa-lg fa-sort-{{companyAdvanceOptions? 'up':'desc'}}" style="margin-right:20px;"></i> Show Advance Options
+    </div>
+  </div>
+
+  <div ng-if="companyAdvanceOptions" class="animated fadeIn">
+    <div class="form-group">
+      <label>Address</label>
+      <input placeholder="Street" type="text " class="form-control input_style" ng-model="form.address.street">
+      <div class="row" style="margin-top:5px;">
+        <div class=" col-md-6">
+          <input placeholder="City" type="text " class="form-control input_style" ng-model="form.address.city">
+        </div>
+        <div class="col-md-6">
+          <input placeholder="State" type="text " class="form-control input_style" ng-model="form.address.state">
+        </div>
+      </div>
+      <div class="row" style="margin-top:5px;">
+        <div class=" col-md-6">
+          <input placeholder="pincode" type="text " class="form-control input_style" ng-model="form.address.pincode">
+        </div>
+        <div class="col-md-6">
+          <input placeholder="Country" type="text " class="form-control input_style" ng-model="form.address.country">
+        </div>
+      </div>
+    </div>
+    <div class="form-group">
+      <label>CIN</label>
+      <input type="text " class="form-control input_style" ng-model="form.cin">
+    </div>
+    <div class="form-group">
+      <label>TIN</label>
+      <input type="text " class="form-control input_style" ng-model="form.tin">
+    </div>
+    <div class="form-group">
+      <label>Logo</label>
+      <input type="text " class="form-control input_style" ng-model="form.logo">
+    </div>
+    <div class="form-group">
+      <label>web</label>
+      <input type="text " class="form-control input_style" ng-model="form.web">
+    </div>
+  </div>
+  <div class="row text-center" style="padding-bottom:15px;">
+    <button type="button" class="btn btn-primary" ng-click="saveCustomerProfile()">Save</button>
+  </div>
+</div>

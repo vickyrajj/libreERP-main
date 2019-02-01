@@ -262,21 +262,10 @@ p,k){p.exports={name:"autobahn",version:"0.9.6",description:"An implementation o
 
 
 
-function setCookie(cname, cvalue, exdays) {
-  console.log('set cookie');
-  var d = new Date();
-  d.setTime(d.getTime() + (exdays*24*60*60*1000));
-  var expires = "expires="+ d.toUTCString();
-  document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
-}
-
-
 function getCookie(cname) {
   var name = cname + "=";
   var decodedCookie = decodeURIComponent(document.cookie);
-  console.log(decodedCookie);
   var ca = decodedCookie.split(';');
-  console.log(ca);
   for(var i = 0; i < ca.length; i++) {
       var c = ca[i];
       while (c.charAt(0) == ' ') {
@@ -289,47 +278,115 @@ function getCookie(cname) {
   return "";
 }
 
-
+function setCookie(cname, cvalue, exdays) {
+  console.log('set cookie');
+  var d = new Date();
+  d.setTime(d.getTime() + (exdays*24*60*60*1000));
+  var expires = "expires="+ d.toUTCString();
+  document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
+}
 
 var connection = new autobahn.Connection({url: '{{wampServer}}', realm: 'default'});
 
 var webRtcAddress = '{{webrtcAddress}}';
-
-
+var wamp_prefix = '{{wamp_prefix}}'
+var msgCount=0;
 var custID = {{pk}};
+var custName='{{name}}'
 console.log('customer id....', custID);
-// var borderColor = '#ACA626';
-// var custName = 'CIOC'
+
+
 var windowColor = '{{windowColor}}'
 var custName = '{{custName}}'
 var chatSupport = '{{chat}}'
 var callBackSupport = '{{callBack}}'
-var videoAndAudioSupport = '{{videoAndAudio}}'
+var videoSupport = '{{video}}'
+var audioSupport = '{{audio}}'
 var ticketSupport = '{{ticket}}'
 var nameSupport = '{{name}}'
 var dpSupport = '{{dp}}'
 var supportBubbleColor = '{{supportBubbleColor}}'
 var firstMessage = `{{firstMessage}}`;
 var iconColor = '{{iconColor}}'
+var fontAndIconColor='{{fontColor}}'
+var position_of_chat="{{chatIconPosition}}";
+var type_of_icon='{{chatIconType}}'
+var is_blink = '{{is_blink}}'
+var support_icon = '{{support_icon}}'
+
+
+
+
+var sy_circle_class="sy-circle-"+position_of_chat.split('-')[0] //sy-circle-right , sy-circle-left
+var sy_text_class=" sy-text-"+position_of_chat.split('-')[0] // sy-text-right , sy-text-left
+var sy_firsttext_class="sy-firsttext-"+position_of_chat.split('-')[0]
+var chat_div_class="chatdiv-"+position_of_chat.split('-')[0];
+var suggested_text =
+
+firstMessage = firstMessage.replaceAll("&lt;",'<')
+firstMessage = firstMessage.replaceAll("&gt;",">")
+firstMessage = firstMessage.replaceAll("<a","<a style="+'color:'+windowColor+';text-decoration:none')
+firstMessage = firstMessage.replaceAll("<li>","<li style='list-style:none'>")
 
 
 if (nameSupport=='None') {
   nameSupport = 'Agent'
 }
 
-windowColor = "#1f5b82"
-
 var windowColorR = parseInt(windowColor.slice(1,3),16)
 var windowColorG = parseInt(windowColor.slice(3,5),16)
 var windowColorB = parseInt(windowColor.slice(5,7),16)
 var windowColorNew = "rgba("+windowColorR+","+ windowColorG+","+ windowColorB+","+0.6 +")";
 
+var metaTag=document.createElement('meta');
+  metaTag.name="viewport";
+  metaTag.content = "width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"
+  document.getElementsByTagName('head')[0].appendChild(metaTag);
 
+var linkStyle = document.createElement('link');
+    linkStyle.rel = 'stylesheet';
+    linkStyle.href = 'https://fonts.googleapis.com/css?family=Muli';
+    document.head.appendChild(linkStyle);
+var failedMessages=[];
+var trySendingAgain=[];
+
+var viewports = {
+		default: metaTag.getAttribute('content'),
+		landscape: 'width=990'
+	};
+
+// Change the viewport value based on screen.width
+var viewport_set = function() {
+		if ( screen.width > 768 )
+			metaTag.setAttribute( 'content', viewports.landscape );
+		else
+			metaTag.setAttribute( 'content', viewports.default );
+	}
+
+// Set the correct viewport value on page load
+viewport_set();
+
+// Set the correct viewport after device orientation change or resize
+window.onresize = function() {
+	viewport_set();
+}
+
+if (is_blink=='True') {
+  is_blink = true
+  var blinkCss = ", blink 3s infinite"
+}else {
+  var blinkCss = ""
+  is_blink = true
+}
+
+
+support_icon = '{{serverAddress}}'+'{{support_icon}}'
 if (dpSupport=='') {
   dpSupport = '{{serverAddress}}/static/images/img_avatar_card.png'
 }else {
   dpSupport = '{{serverAddress}}'+'{{dp}}'
 }
+
 
 if (chatSupport=='True') {
   chatSupport = true
@@ -343,16 +400,21 @@ if (callBackSupport=='True') {
   callBackSupport = false
 }
 
-if (videoAndAudioSupport=='True') {
-  videoAndAudioSupport = true
+if (videoSupport=='True') {
+  videoSupport = true
 }else {
-  videoAndAudioSupport = false
+  videoSupport = false
 }
 
 if (ticketSupport=='True') {
   ticketSupport = true
 }else {
   ticketSupport = false
+}
+if (audioSupport=='True') {
+  audioSupport = true
+}else {
+  audioSupport = false
 }
 
 
@@ -363,17 +425,14 @@ var agentPk = null;
 var notification = new Audio('{{serverAddress}}/static/audio/notification.ogg');
 var emailRecieved = false
 
-
 var chat = {user : custName , messages : [ { message:"first", sentByAgent:true , created:  new Date() } ] }
-
-
 
 
 function fetchMessages(uid) {
   console.log('user exist....' , uid);
   var xhttp = new XMLHttpRequest();
   xhttp.onreadystatechange = function() {
-      console.log(this.readyState , this.status , 'onreadyyyyyyyyyyyyyyyyyy' );
+      // console.log(this.readyState , this.status , 'onreadyyyyyyyyyyyyyyyyyy' );
       if (this.readyState == 4 && this.status == 200) {
         var data = JSON.parse(this.responseText)
         for (var i = 0; i < data.length; i++) {
@@ -381,7 +440,7 @@ function fetchMessages(uid) {
         }
       }
   };
-  xhttp.open('GET', '{{serverAddress}}/api/support/supportChat/?uid=' + uid , true);
+  xhttp.open('GET', '{{serverAddress}}/api/support/supportChat/?visitorReq=1&uid=' + uid , true);
   xhttp.send();
 }
 
@@ -397,8 +456,8 @@ function fetchThread(uid) {
           console.log(data,'fffffffffffffffff');
           chatThreadPk = data[0].pk
           agentPk = data[0].user
+          streamType=data[0].typ
         }
-        console.log(data);
         fetchMessages(uid);
       } else if (this.responseText == '{"PARAMS":"createCookie"}') {
         console.log('genertate new uid');
@@ -417,54 +476,40 @@ function fetchThread(uid) {
 var threadExist
 var threadResponse
 var chatThreadPk
+var streamType=''
 
 
-function checkCookie() {
-  uid = getCookie("uid");
-  if (uid != "") {
-      // alert("Welcome again " + user);
-      console.log('cookie exu=ist');
-      fetchThread(uid);
-      // if (threadExist!=undefined && threadExist) {
-      //   fetchMessages(uid);
-      // }
-  } else {
-      // uid = custID +'$'+custName+'$'+broswer.charAt(0)
-      uid = new Date().getTime()
-      console.log(uid);
-      if (uid != "" && uid != null) {
-          setCookie("uid", uid, 365);
-      }
-  }
+function addHtmlNode() {
+
 }
 
-checkCookie();
+function addCustomMessage() {
 
-
+}
 
 
 function setVisitorDetails(name , phoneNumber , email) {
-  console.log('coming in chatter', name , phoneNumber , email);
+  // console.log('coming in chatter', name , phoneNumber , email);
 
   detail = getCookie("uidDetails");
   if (detail != "") {
-    console.log('already there');
+    // console.log('already there');
     document.cookie = encodeURIComponent("uidDetails") + "=deleted; expires=" + new Date(0).toUTCString()
   }
 
   console.log(getCookie("uid") , uid , 'getttttttttttttt`');
 
   if (uid!="") {
-    console.log(uid);
+    // console.log(uid);
     var xhttp = new XMLHttpRequest();
     xhttp.onreadystatechange = function() {
-        console.log(this.readyState , this.status , 'onreadyyyyyyyyyyyyyyyyyy' );
+        // console.log(this.readyState , this.status , 'onreadyyyyyyyyyyyyyyyyyy' );
         if (this.readyState == 4 && this.status == 200) {
-          console.log(this.responseText);
+          // console.log(this.responseText);
           var data = JSON.parse(this.responseText)
-          console.log(data,'');
+          // console.log(data,'');
           if (data.length==0) {
-            console.log('vistor not there');
+            // console.log('vistor not there');
             var xhttp = new XMLHttpRequest();
              xhttp.onreadystatechange = function() {
                if (this.readyState == 4 && this.status == 201) {
@@ -484,6 +529,10 @@ function setVisitorDetails(name , phoneNumber , email) {
   setCookie("uidDetails", JSON.stringify({email:email , name:name , phoneNumber:phoneNumber}), 365);
 }
 
+function setColors(bubbleColor , windowColor , fontColor) {
+  var windowColor = "#000"
+}
+
 
 function unsetVisitorDetails() {
   detail = getCookie("uidDetails");
@@ -501,47 +550,154 @@ function getVisitorDetails() {
 
 
 
+
+function setIframeRotated(){
+  iframeDiv.style.position = "fixed";
+  iframeDiv.style.height = "70vh";
+  iframeDiv.style.width = "70vh";
+  iframeDiv.style.bottom = "85px";
+  iframeDiv.style.right = "400px";
+  iframeDiv.style.transition = "all .2s"
+  iframeDiv.style.animation = "moveInFront 0.6s"
+  iframeDiv.style.transform = "rotate(90deg)";
+  document.getElementById('iFrame1').style.height='50px'
+  iframeDiv.style.boxShadow='';
+  iframeDiv.style.borderRadius='10px';
+
+}
+function setIframeToNormal(){
+  iframeDiv.style.position = "fixed";
+  iframeDiv.style.height = "70vh";
+  iframeDiv.style.width = "50%";
+  iframeDiv.style.bottom = "85px";
+  iframeDiv.style.right = "400px";
+  iframeDiv.style.transform = "rotate(0deg)";
+  document.getElementById('iFrame1').style.height='100%'
+  iframeDiv.style.boxShadow='-5px -10px 10px rgb(0,0,0,0.2)';
+}
+// var subs;
+// var connectionIsOff=true
 document.addEventListener("DOMContentLoaded", function(event) {
 
+
+   window.CUSTOM_MESSAGE = {
+    sendCustomMessage:function (msg) {
+      sendMessage(msg,true)
+    }
+  }
+
+  // support_icon = ''
+
+
+
+
+  window.onbeforeunload=function(){
+  // alert('winodw refreshed');
+  if(isAudioClicked||isVideoClicked){
+        if(isAudioClicked){
+          audioBtn.click()
+        }
+        if(isVideoClicked){
+          videoBtn.click()
+        }
+    } else {
+      return
+    }
+    // return 'Are you sure you want to leave?';
+  }
+
+  // window.onbeforeunload = function(){
+  //   // console.log('herererere');
+  //   myfun();
+  //   return 'Are you sure you want to leave?';
+  // };
+  //
+  // function myfun(){
+  //   console.log('thererer');
+  // }
+  setTimeout(function () {
+    var ChatWithUs=document.getElementById('ChatWithUs')
+    ChatWithUs.addEventListener('click',function(){
+      openChat()
+      ChatWithUs.style.display="none"
+    })
+    if (support_icon=='{{serverAddress}}') {
+      document.getElementById('24Icon').classList.add('font-Syrow24hSupport');
+      document.getElementById('supportDp').style.display = "none";
+    }
+  }, 2000);
 
 
   connection.onopen = function (session) {
      console.log("session established!");
+     // connectionIsOff=false
+     // document.getElementById('noConnection').style.display='none'
+     // var div2 = document.createElement("div");
+     // div2.id = "bubble";
+     // messageBox.appendChild(div2);
+     setTimeout(function () {
+       inputText.placeholder = "Message...";
+       paperClip.style.display = "";
+       paperPlane.style.display = "";
+     }, 3000);
 
     var supportChat = function(args) {
-      console.log(args);
+      console.log('These are the arguments '+ args);
       var message;
-
+      if(args[0]=='hideVisitorScreen'){
+        document.getElementById('iframeDiv').style.display = "none";
+        chatBox.style.display = "none";
+        return
+      }
+      else if(args[0]=='ShowVisitorScreen'){
+        document.getElementById('iframeDiv').style.display = "block";
+        chatBox.style.display = "block";
+        return
+      // }else if(args[0]=='ToggleVisitorVideo'){
+      //     setIframeRotated()
+      //     getFrameContent.postMessage('AgentClickedToHide','*')
+      //   return
+      // }else if(args[0]=='ShowVisitorVideo'){
+      //   setIframeToNormal()
+      //   getFrameContent.postMessage('AgentClickedToshow','*')
+      //   return
+      }else if(args[0]=='calledToShowVisitorVideo'){
+        setIframeToNormal()
+        getFrameContent.postMessage('rotateIcons','*')
+        return
+      }else if(args[0]=='calledToHideVisitorVideo'){
+        setIframeRotated()
+        getFrameContent.postMessage('rotateIcons','*')
+        return
+      }
 
       if (args[0]=='T') {
-        console.log('typingggggggggggggggggggggg');
-        onlineStatus.innerHTML = 'Typing...';
-        // isTyping.style.display = "";
+        document.getElementById('TypingBox').style.display="block";
+        // onlineStatus.innerHTML = 'Typing...';
+        scroll();
         setTimeout(function(){
-          // isTyping.style.display = "none";
-        onlineStatus.innerHTML = 'Online';
-        }, 1500);
+          document.getElementById('TypingBox').style.display="none";
+        // onlineStatus.innerHTML = 'Online';
+      }, 5000);
         return
       }
 
       if (args[0]=="M") {
-        console.log('MMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM');
-          // notification.play();
           message = args[1]
-         // message = {msg:args[1].msg , sentByMe:false , created: args[1].created }
-         // chat.messages.push(args[1]);
          if (!chatOpen) {
            unreadMsgCount+=1;
-           // unreadMsg.style.display = "";
-           // unreadMsg.innerHTML =   '<span style="color:#286EFA;" >'+unreadMsgCount+'</span>'
          }
 
-      agentName.innerHTML = args[2];
+      // agentName.innerHTML = args[2];
+      agentName.innerHTML = args[2].first_name+' '+args[2].last_name
+      document.getElementById('logo_ji').src=args[2].profile.displayPicture
+      // dpSupport= args[2].profile.displayPicture
 
       }else if (args[0]=="MF") {
         console.log('MF');
         // notification.play();
-        agentName.innerHTML = args[2]
+        agentName.innerHTML = args[2].first_name+' '+args[2].last_name
+        document.getElementById('logo_ji').src=args[2].profile.displayPicture
 
         if (!chatOpen) {
           unreadMsgCount+=1;
@@ -553,15 +709,15 @@ document.addEventListener("DOMContentLoaded", function(event) {
         var attachment;
         var xhttp = new XMLHttpRequest();
         xhttp.onreadystatechange = function() {
-            console.log(this.readyState , this.status , 'onreadyyyyyyyyyyyyyyyyyy' );
+            // console.log(this.readyState , this.status , 'onreadyyyyyyyyyyyyyyyyyy' );
             if (this.readyState == 4 && this.status == 200) {
-              console.log(this.responseText);
+              // console.log(this.responseText);
               var data = JSON.parse(this.responseText)
               // attachment = data.attachment
               // console.log('attachmenttttttttttt' , attachment);
               message = data
 
-              console.log(data,'ddddddddddd');
+              // console.log(data,'ddddddddddd');
 
               if (data.attachmentType=='instructionImage') {
                 openModal(data.attachment)
@@ -574,7 +730,9 @@ document.addEventListener("DOMContentLoaded", function(event) {
 
       }else if (args[0]=='ML') {
         console.log('ML');
-        agentName.innerHTML = args[2]
+        // agentName.innerHTML = args[2]
+        agentName.innerHTML = args[2].first_name+' '+args[2].last_name
+        document.getElementById('logo_ji').src=args[2].profile.displayPicture
         if (!chatOpen) {
           unreadMsgCount+=1;
           // unreadMsg.style.display = "";
@@ -582,7 +740,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
         }
          message = args[1]
       }else if (args[0]=='AP') {
-        console.log('agent pk recieveddddddddddddddddddddddddddddddddd');
+        console.log('agent pk recieveddddddddddddddddddddddddddddddddd , it is '+ args[1]);
         agentPk = args[1];
         isAgentOnline = true;
         // videoCallAccepted = true
@@ -590,28 +748,35 @@ document.addEventListener("DOMContentLoaded", function(event) {
         return
       }else if (args[0]=='O') {
         console.log('yes online');
-        console.log('O');
+        // console.log('O');
         isAgentOnline = true;
         onlineStatus.innerHTML = 'Online'
         // agentName.innerHTML = '<p style="line-height: 1.75;">Syrow Agent</p>'
         return
       }else if (args[0]=='A') {
         console.log('asigned');
-        console.log('A');
+        // console.log('A');
         isAgentOnline = true;
         agentName.innerHTML = args[1]
         return
       }else if (args[0]=='F') {
-        console.log('F');
+        // console.log('F');
         console.log('open feedback');
         openFeedback(args[1])
         return
+      }else if (args[0]=='HTML') {
+        var div = document.createElement("div");
+        div.innerHTML = args[1]
+        messageBox.appendChild(div);
+        scroll();
+
+        return
       }
 
-      console.log('IIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIII');
+      // console.log('IIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIII');
 
       setTimeout(function(){
-        console.log('inside timeooutttttttttttttt');
+        // console.log('inside timeooutttttttttttttt');
         var div = document.createElement("div");
         console.log(message,'message');
         div.innerHTML = messageDiv(message)
@@ -629,15 +794,15 @@ document.addEventListener("DOMContentLoaded", function(event) {
 
 
     function heartbeat() {
-      console.log('caming in heartttttttttttttttttttttttttttttttttttttt here');
-      var isOnline = true
+      console.log("coming hrere and im sending "+uid);
+      // var isOnline = true
       return uid
     }
 
 
     function createCookieDetail(args) {
-      console.log('create deleteeeeeeeeeeeeeeeeeeeeeee');
-      console.log(args[0]);
+      // console.log('create deleteeeeeeeeeeeeeeeeeeeeeee');
+      // console.log(args[0]);
         detail = getCookie("uidDetails");
         if (detail != "") {
           console.log('already there');
@@ -646,42 +811,70 @@ document.addEventListener("DOMContentLoaded", function(event) {
         if (args[0].email!='') {
           emailRecieved = true
         }
-        console.log(emailRecieved);
+        // console.log(emailRecieved);
         setCookie("uidDetails", JSON.stringify({email:args[0].email , name:args[0].name , phoneNumber:args[0].phoneNumber}), 365);
     }
 
-    session.register('service.support.createDetailCookie.'+uid, createCookieDetail).then(
+    function handleParentFunc(args) {
+      var message = {event_name : args[0], event_data : args[1]};
+      window.postMessage(message, "*");
+    }
+
+    session.subscribe(wamp_prefix+'service.support.createDetailCookie.'+uid, createCookieDetail).then(
       function (res) {
-        console.log("registered to service.support.createDetailCookie'");
+        console.log("subscribed to service.support.createDetailCookie'");
       },
       function (err) {
-        console.log("failed to registered: ");
+        console.log("failed to subscribe: service.support.createDetailCookie");
       }
     );
 
-    session.register('service.support.heartbeat.'+uid, heartbeat).then(
+    session.register(wamp_prefix+'service.support.heartbeat.'+uid, heartbeat).then(
       function (res) {
         console.log("registered to service.support.heartbeat'");
       },
       function (err) {
-        console.log("failed to registered: " + err);
+        console.log("failed to register: service.support.heartbeat" + err);
+        // session.register(wamp_prefix+'service.support.heartbeat.'+uid, heartbeat).then(
+        //   function (res) {
+        //     console.log("registered to service.support.heartbeat'");
+        //   },
+        //   function (err) {
+        //     console.log("failed to register: service.support.heartbeat" + err);
+        //   }
+        // );
       }
     );
 
-    session.subscribe('service.support.chat.' + uid, supportChat).then(
-      function (sub) {
-        console.log("subscribed to topic 'service.support.chat'" , uid );
+    session.register(wamp_prefix+'service.support.handleParentFunc.'+uid, handleParentFunc).then(
+      function (res) {
+        console.log("registered to service.support.handleParentFunc'");
       },
       function (err) {
-        console.log("failed to subscribed: " + err);
+        console.log("failed to register: service.support.handleParentFunc" + err);
       }
     );
 
-
+    session.subscribe(wamp_prefix+'service.support.chat.' + uid, supportChat).then(
+      function (sub) {
+        subs=sub
+        console.log("subscribed to topic 'service.support.chat'" , uid );
+        enableTextArea()
+      },
+      function (err) {
+        console.log("failed to subscribe: service.support.chat" + err);
+        disableTextArea()
+      }
+    );
   };
 
-  connection.open();
+    connection.onclose = function (session) {
+      // alert('hererere');
+      // connectionIsOff=true;
+      // document.getElementById('noConnection').style.display='block'
+    }
 
+  connection.open();
 
 
 
@@ -691,104 +884,107 @@ function createChatDiv() {
   var body = document.getElementsByTagName("BODY")[0];
   var mainDiv = document.createElement("mainDiv");
   mainDiv.id="mainDiv"
-  //chatboxhtml
 
-  mainDiv.innerHTML = '<div id="chatBox" class="ChatBoxDiv">'+
-          '<div id="chatBox_header" class="chatBox_header flex_container">'+
-            '<img class="logo_image" src="'+dpSupport+'" alt="">'+
-            '<div class="chatBox_info">'+
-              '<span id="agentName" class="chatBox_name">'+ nameSupport +'</span>'+
-              '<span id="onlineStatus" class="chatBox_status">Online</span>'+
+  mainDiv.innerHTML =
+                '<div id="chatBox" class="ChatBoxDiv '+chat_div_class+'">'+
+                    '<div id="chatBox_header" class="chatBox_header flex_container">'+
+                        '<img class="logo_image" id="logo_ji" src="'+dpSupport+'" alt="">'+
+                        '<div class="chatBox_info">'+
+                            '<span id="agentName" class="chatBox_name">'+ nameSupport +'</span>'+
+                            '<span id="onlineStatus" class="chatBox_status">Online</span>'+
+                        '</div>'+
+                        '<i class="exitBtn SyrowFont font-SyrowPhone1" style="display:none" id="audioBtn"></i>'+
+                        '<i class="exitBtn SyrowFont font-SyrowVideoCall" style="display:none" id="videoBtn"></i>'+
+                        '<i class="closeIcon SyrowFont font-SyrowX" id="closeIcon"></i>'+
+                        '<i class="exitBtn SyrowFont font-SyrowLog-out" id="exitBtn"></i>'+
+                    '</div>'+
+                    '<div id="audioSection" class="audio_section">'+
+                    '</div>'+
+                    '<div id="videoSection" class="video_section">'+
+                    '</div>'+
+                    '<p id="TypingBox" class="typingBox">Typing....</p>'+
+                    '<div id="chatBox_content" class="chatBox_content">'+
+                        '<div id="messageBox" class="content_section">'+
+                        '</div>'+
+                    '</div>'+
+                    '<div id="chatBox_footer" class="chatBox_footer">'+
+                          '<div class="chatbox_branding">'+
+                            '<a style="color:'+fontAndIconColor+' ;text-decoration:none;font-size:10px;" href="https://www.syrow.com/" target="_blank">We run on Syrow</a>'+
+                          '</div>'+
+                          '<div id="messageComposer" class="flex_container">'+
+                            '<textarea id="inputText" placeholder="Message..." name="name" rows="2" style="background-color:#fff;outline:none;font-size:14px" ></textarea>'+
+                            '<input id="filePicker" type="file" style="display:none;"/>'+
+                            '<i id="paperClip"  class="paperClip SyrowFont font-SyrowPaperclip" aria-hidden="true"></i>'+
+                            '<i id="paperPlane" class="paperClip SyrowFont font-SyrowNavigation" aria-hidden="true"></i>'+
+                          '</div>'+
+                          '<div class="startNewChatBtn flex_container" id="startNewChatBtn" class="flex_container">'+
+                            '<span>Start New Conversation </span>'+
+                          '</div>'+
+                    '</div>'+
+              '</div>'+
+
+
+
+              '<div id="closeSupport" class="close-support '+sy_circle_class+'" style="height:60px; width:60px; background-color: '+supportBubbleColor+'; border-radius:50%; position:fixed ; z-index:997654321; cursor:pointer;">'+
+                '<svg style="position:absolute; top:20px; left:19px; height:51px;" viewBox="0 0 28 32">'+
+                   '<path id="closeChatSvg" style="fill:'+iconColor+';" d="M13.978 12.637l-1.341 1.341L6.989 8.33l-5.648 5.648L0 12.637l5.648-5.648L0 1.341 1.341 0l5.648 5.648L12.637 0l1.341 1.341L8.33 6.989l5.648 5.648z" fill-rule="evenodd"></path>'+
+                 '</svg>'+
+              '</div>'+
+
+              '<div id="circleStyle">'+
+                  '<div id="supportCircle">'+
+                      '<div style="background: '+supportBubbleColor+' !important; color:'+iconColor+';cursor:pointer" class="sy-circle first_animation '+sy_circle_class+'" id="sy-main-icon">'+
+                          '<span id="Syrow24hSupportText" style="background: '+supportBubbleColor+' !important; color:'+iconColor+'" class="sy-text '+sy_firsttext_class+'">24 Hours Support</span>'+
+                          '<span id="chatSuggestionBar" style="display:none;background:'+supportBubbleColor+' !important; color:'+iconColor+'" class="sy-text-Suggested '+sy_firsttext_class+'">'+firstMessage+'</span>'+
+                          '<span id="24Icon" class="SyrowFont sy-md-1 sy-ops"><img id="supportDp" src="'+support_icon+'" style="width:40px; height:40px; border-radius:50%;"></img> </span>'+
+                          '<div  id="sy-sub-icons">'+
+                              '<div style="background: '+supportBubbleColor+' !important; color:'+iconColor+';cursor:pointer" id="callCircle" class="sy-circle '+sy_circle_class+'">'+
+                                '<span id="callCircleText" style="background: '+supportBubbleColor+' !important; color:'+iconColor+'" class="sy-text '+sy_text_class+'">Callback</span>'+
+                                '<span class="SyrowFont font-SyrowCallBack sy-md-1 sy-ops"></span></a>'+
+                              '</div>'+
+                              '<div style="background: '+supportBubbleColor+' !important; color:'+iconColor+';cursor:pointer" id="chatCircle" class="sy-circle '+sy_circle_class+'">'+
+                                '<span id="chatCircleText" style="background: '+supportBubbleColor+' !important; color:'+iconColor+'" class="sy-text '+sy_text_class+'">Chat</span>'+
+                                '<span class="SyrowFont font-SyrowChat sy-md-2 sy-ops"></span>'+
+                              '</div>'+
+                              '<div style="background: '+supportBubbleColor+' !important; color:'+iconColor+';cursor:pointer" id="audioCircle" class="sy-circle '+sy_circle_class+'">'+
+                                '<span id="audioCircleText" style="background: '+supportBubbleColor+' !important; color:'+iconColor+'" class="sy-text '+sy_text_class+'">Audio Call</span>'+
+                                '<span class="SyrowFont font-SyrowAudioCall sy-md-2 sy-ops"></span>'+
+                              '</div>'+
+                              '<div style="background: '+supportBubbleColor+' !important; color:'+iconColor+';cursor:pointer" id="videoCircle" class="sy-circle '+sy_circle_class+'" >'+
+                                '<span id="videoCircleText" style="background: '+supportBubbleColor+' !important; color:'+iconColor+'" class="sy-text '+sy_text_class+'">Video Call</span>'+
+                                '<span class="SyrowFont font-SyrowVideoCall sy-md-2 sy-ops"></span>'+
+                              '</div>'+
+                              '<div style="background: '+supportBubbleColor+' !important; color:'+iconColor+';cursor:pointer" id="ticketCircle" class="sy-circle '+sy_circle_class+'">'+
+                                '<span id="ticketCircleText" style="background: '+supportBubbleColor+' !important; color:'+iconColor+'" class="sy-text '+sy_text_class+'">Ticket</span>'+
+                                '<span class="SyrowFont font-SyrowTicket sy-md-1 sy-ops"></span>'+
+                              '</div>'+
+                          '</div>'+
+                      '</div>'+
+                  '</div>'+
+
+                  '<div id="singleService" style="background: '+supportBubbleColor+' !important; color:'+iconColor+';cursor:pointer" class="sy-circle first_animation '+sy_circle_class+'">'+
+                    '<span id="singleServiceText" style="background: '+supportBubbleColor+' !important; color:'+iconColor+' ;display:none; transition: .5s;opacity:0" class="sy-text '+sy_text_class+'  "></span>'+
+                    '<span id="chatSuggestionBar1" style="display:none;background: '+supportBubbleColor+' !important; color:'+iconColor+';font-size:13px;" class="sy-text-Suggested '+sy_firsttext_class+'">'+firstMessage+'</span>'+
+                    '<span id="singleServiceFont" class="SyrowFont font-SyrowCallBack sy-md-2 sy-ops"></span></a>'+
+                  '</div>'+
+              '</div>'+
+
+          '<div id="boxStyle">'+
+            '<div id="ChatWithUs" style="background: '+supportBubbleColor+' !important; color:'+iconColor+';cursor:pointer;" class="chat_with_us '+position_of_chat+'">'+
+              '<span style="margin-right:10px;font-size:17px;">Chat With Us</span>'+
+              '<span style="font-size:16px;" class="SyrowFont font-SyrowChat"></span>'+
             '</div>'+
-            '<img class="closeIcon" id="closeIcon" src="{{serverAddress}}/static/images/close.png" tooltip="" alt="close">'+
-            // '<i id="closeIcon" class="fa fa-times closeIcon" aria-hidden="true"></i>'+
-            '<img class="exitBtn" id="exitBtn" src="{{serverAddress}}/static/images/exit.png" alt="exit">'+
-            // '<i id="exitBtn" class="fa fa-sign-out" aria-hidden="true"></i>'+
           '</div>'+
-          '<div id="audioSection" class="audio_section">'+
-          '</div>'+
-          '<div id="videoSection" class="video_section">'+
-          '</div>'+
-          '<div id="chatBox_content" class="chatBox_content">'+
-            '<div id="messageBox" class="content_section">'+
-            '</div>'+
-          '</div>'+
-          '<div id="chatBox_footer" class="chatBox_footer">'+
-              '<div class="chatbox_branding">'+
-                '<p>We run on Syrow</p>'+
-              '</div>'+
-              '<div id="messageComposer" class="flex_container">'+
-                '<textarea id="inputText" placeholder="Write a Reply..." name="name" rows="2" style="background-color:#fff;" ></textarea>'+
-                '<input id="filePicker" type="file" style="display:none;"/>'+
-                // '<i id="paperClip" class="fa fa-paperclip" aria-hidden="true"></i>'+
-                '<img class="paperClip" id="paperClip" src="{{serverAddress}}/static/images/clip.png" alt="Paper Clip">'+
-                '<img id="paperPlane" src="{{serverAddress}}/static/images/paperPlane.png" alt="Paper Plane" style="height:30px !important; width:30px !important;">'+
-                // '<i id="paperPlane" class="fa fa-paper-plane-o" aria-hidden="true"></i>'+
-              '</div>'+
-              '<div class="startNewChatBtn flex_container" id="startNewChatBtn" class="flex_container">'+
-                '<span>Sart New Conversation </span>'+
-              '</div>'+
-          '</div>'+
-        '</div>'+
 
 
-
-        '<div id="closeSupport" class="close-support" style="height:60px; width:60px; background-color: '+supportBubbleColor+'; border-radius:50%; position:fixed ; bottom:20px; right:40px; z-index:997654321; cursor:pointer;">'+
-          '<svg style="position:absolute; top:20px; left:19px; height:51px;" viewBox="0 0 28 32">'+
-             '<path id="closeChatSvg" style="fill:'+iconColor+';" d="M13.978 12.637l-1.341 1.341L6.989 8.33l-5.648 5.648L0 12.637l5.648-5.648L0 1.341 1.341 0l5.648 5.648L12.637 0l1.341 1.341L8.33 6.989l5.648 5.648z" fill-rule="evenodd"></path>'+
-           '</svg>'+
-        '</div>'+
-
-        '<div id="supportCircle">'+
-    			'<div style="background: '+supportBubbleColor+' !important; color:'+iconColor+';cursor:pointer" class="sy-circle" onclick="" id="sy-main-icon">'+
-    				'<span id="Syrow24hSupportText" style="background: '+supportBubbleColor+' !important; color:'+iconColor+'" class="sy-text">24 Hours Support</span>'+
-    				'<span class="SyrowFont font-Syrow24hSupport sy-md-1 sy-ops"></span>'+
-    				'<div  id="sy-sub-icons">'+
-    					'<div style="background: '+supportBubbleColor+' !important; color:'+iconColor+';cursor:pointer" id="callCircle" class="sy-circle">'+
-    						'<span id="callCircleText" style="background: '+supportBubbleColor+' !important; color:'+iconColor+'" class="sy-text">Callback</span>'+
-    						'<span class="SyrowFont font-SyrowCallBack sy-md-2 sy-ops"></span></a>'+
-    					'</div>'+
-    					'<div style="background: '+supportBubbleColor+' !important; color:'+iconColor+';cursor:pointer" id="chatCircle" class="sy-circle">'+
-    						'<span id="chatCircleText" style="background: '+supportBubbleColor+' !important; color:'+iconColor+'" class="sy-text">Chat</span>'+
-    						'<span class="SyrowFont font-SyrowChat sy-md-2 sy-ops"></span>'+
-    					'</div>'+
-    					'<div style="background: '+supportBubbleColor+' !important; color:'+iconColor+';cursor:pointer" id="audioCircle" class="sy-circle">'+
-    						'<span id="audioCircleText" style="background: '+supportBubbleColor+' !important; color:'+iconColor+'" class="sy-text">Audio Call</span>'+
-    						'<span class="SyrowFont font-SyrowAudioCall sy-md-2 sy-ops"></span>'+
-    					'</div>'+
-    					'<div style="background: '+supportBubbleColor+' !important; color:'+iconColor+';cursor:pointer" id="videoCircle" class="sy-circle" >'+
-    						'<span id="videoCircleText" style="background: '+supportBubbleColor+' !important; color:'+iconColor+'" class="sy-text">Video Call</span>'+
-    						'<span class="SyrowFont font-SyrowVideoCall sy-md-2 sy-ops"></span>'+
-    					'</div>'+
-    					'<div style="background: '+supportBubbleColor+' !important; color:'+iconColor+';cursor:pointer" id="ticketCircle" class="sy-circle">'+
-    						'<span id="ticketCircleText" style="background: '+supportBubbleColor+' !important; color:'+iconColor+'" class="sy-text">Ticket</span>'+
-    						'<span class="SyrowFont font-SyrowTicket sy-md-1 sy-ops"></span>'+
-    					'</div>'+
-    				'</div>'+
-    			'</div>'+
-    		'</div>'+
-
-        '<div id="singleService" style="background: '+supportBubbleColor+' !important; color:'+iconColor+';cursor:pointer" class="sy-circle">'+
-          '<span id="singleServiceText" style="background: '+supportBubbleColor+' !important; color:'+iconColor+' ; right:105px; display:none; transition: .5s" class="sy-text">Chat</span>'+
-          '<span id="singleServiceFont" class="SyrowFont font-SyrowCallBack sy-md-2 sy-ops"></span></a>'+
-        '</div>'+
-        // '<div id="syrowBranding" style="height:2vh; background-color:'+ windowColor +'; text-align:center;">'+
-        // '<span style="color:#fff; font-weight:bolder; font-size:11px;" > We run on Syrow </span>'+
-        // '</div>'+
-        // '<div id="footer" style="border-top: 1px solid #e0e0e0;  width:100%; height:9vh;">'+
-        //   '<div style="padding-top:"10px" >'+
-        //      '<textarea id="inputText" rows="2" style="border:none; font-size:17px; resize:none;width:70%;padding:10px; height:40px;outline:none;background-color:#fff;" placeholder="Write a reply..." ></textarea>'+
-        //      '<input id="filePicker" type="file" style="display:none; margin-top:15px;" />'+
-        //      '<span id="paperClip" style="background-color:#fff; padding:0% 2%;cursor:pointer;"><img src="{{serverAddress}}/static/images/clip.png" alt="Paper Clip" style="width:25px" ></span>'+
-        //      '<span id="paperPlane" style="background-color:#fff;cursor:pointer;float:right;padding:5px"><img src="{{serverAddress}}/static/images/paperPlane.png" alt="Paper Plane" style="width:40px; padding-top:1%;"></span>'+
-          '</div>'+
-        '</div>'+
-        '<div id="myModal" class="modal">'+
-          '<div id="modalContent" class="modal-content">'+
+        '<div id="myModal" class="syrow_modal">'+
+          '<div id="modalContent" class="syrow_modal_content">'+
           '</div>'+
         '</div>'
-        '<div id="myModal" class="modal">'+
-          '<div id="modalContent" class="modal-content">'+
+
+
+        '<div id="myModal" class="syrow_modal">'+
+          '<div id="modalContent" class="syrow_modal_content">'+
           '</div>'+
         '</div>'
 
@@ -800,12 +996,19 @@ function createChatDiv() {
 }
 
   createChatDiv()
+    // document.getElementById('boxStyle').style.display='none';
+    if(type_of_icon=="Box"){
+      document.getElementById('circleStyle').style.display='none';
+      document.getElementById('boxStyle').style.display='';
+    }else{
+      document.getElementById('circleStyle').style.display='';
+      document.getElementById('boxStyle').style.display='none';
+    }
 
   //variables
   var device;
   var chatOpen = false;
-  // var chatIconSvg = document.getElementById('chatIconSvg');
-  // var chatCloseSvg = document.getElementById('closeChatSvg');
+  var audioContains=false,videoContains=false;
   var chatBox = document.getElementById('chatBox');
   var closeIcon = document.getElementById("closeIcon");
   var headerChat = document.getElementById("headerChat");
@@ -817,8 +1020,6 @@ function createChatDiv() {
   var filePicker = document.getElementById('filePicker');
   var inputText = document.getElementById("inputText");
   var startConversation = document.getElementById("startConversation");
-  // var demo = document.getElementById("demo");
-  // var exploreSyrow = document.getElementById('exploreSyrow');
   var headerInit = document.getElementById('headerInit');
   var closeIconInit = document.getElementById('closeIconInit');
   var onlineStatus = document.getElementById('onlineStatus');
@@ -838,7 +1039,18 @@ function createChatDiv() {
   var chatBox_header = document.getElementById('chatBox_header')
   var chatBox_footer = document.getElementById('chatBox_footer')
   var chatBox_content = document.getElementById('chatBox_content')
-  // var isTyping = document.getElementById('isTyping');
+
+
+  var xhttp1 = new XMLHttpRequest();
+   xhttp1.onreadystatechange = function() {
+     if (this.readyState == 4 && this.status == 200) {
+        var data = JSON.parse(this.responseText)
+        // console.log(data);
+     }
+   };
+    xhttp1.open('GET', '{{serverAddress}}/api/support/customerProfile/' + custID + '/' , true);
+   // xhttp1.open('GET', '{{serverAddress}}/api/support/supportChat/', true);
+   xhttp1.send();
 
   var exitBtn = document.getElementById('exitBtn');
 
@@ -855,21 +1067,39 @@ function createChatDiv() {
       }
   }
 
+
   chatBox.style.display = "none";
+    inputText.addEventListener('keyup',function(e){
+      if(inputText.value.length>0){
+        document.getElementById('paperPlane').style.color=windowColor
+      }else{
+        document.getElementById('paperPlane').style.color="#A0A0A0"
+      }
+    })
 
-  // inputText.style.display = "none"
 
-  // var eventMethod = window.addEventListener ? "addEventListener" : "attachEvent";
-  // var eventer = window[eventMethod];
-  // var messageEvent = eventMethod == "attachEvent" ? "onmessage" : "message";
-  //
-  // // Listen to message from child window
-  // eventer(messageEvent,function(e) {
-  //     var key = e.message ? "message" : "data";
-  //     var data = e[key];
-  //     alert('cameeee')
-  //     //run function//
-  // },false);
+  inputText.addEventListener('keydown',function(e){
+
+    if(window.innerWidth <= 600) {
+      // console.log('its a mobile');
+     return
+   } else {
+     // console.log('its a desktop');
+     if (e.keyCode == 13 && !e.shiftKey)
+         {
+             // prevent default behavior
+             e.preventDefault();
+             // console.log('both');
+             sendMessage(inputText.value);
+         }
+         if (e.keyCode == 13&&e.shiftKey)
+         {
+           // console.log('here');
+         }
+   }
+
+  })
+
 
 
   var chatCircleText =   document.getElementById('chatCircleText')
@@ -878,12 +1108,7 @@ function createChatDiv() {
   var videoCircleText = document.getElementById('videoCircleText')
   var ticketCircleText = document.getElementById('ticketCircleText')
   var Syrow24hSupportText = document.getElementById('Syrow24hSupportText')
-  var urlforConferenceForAgent,urlforConference,winCol;
-
-  // exitBtn.style.display ="none"
-  // var videoCallAccepted = false;
-
-
+  var urlforConferenceForAgent,urlforConference,winCol,streamTyp
 
 
   function openModal(imageSrc) {
@@ -891,28 +1116,40 @@ function createChatDiv() {
     modal.style.display = "block";
   }
 
+  function activeVideoCall(){
+    winCol = windowColor.split('#')[1]
+    urlforConferenceForAgent= webRtcAddress +'/'+uid+'?audio_video=video&windowColor='+winCol+'&agent=true';
+    urlforConference =  webRtcAddress +'/' +uid+'?audio_video=video&windowColor='+winCol+'&agent=false';
+    console.log('URL for activating video call is '+urlforConference);
+    if (device=='sm') {
+      urlforConferenceForAgent = urlforConferenceForAgent + '&userMob=true'
+      urlforConference = urlforConference + '&userMob=true'
+    }
+    streamTyp='video'
+   openVideoAudioIframe(urlforConference , urlforConferenceForAgent,streamTyp)
+  }
+  function activeAudioCall(){
+    winCol = windowColor.split('#')[1]
+    urlforConferenceForAgent= webRtcAddress +'/' +uid+'?audio_video=audio&windowColor='+winCol+'&agent=true';
+    urlforConference =  webRtcAddress +'/' +uid+'?audio_video=audio&windowColor='+winCol+'&agent=false';
+    console.log('URL for activating audio call is '+urlforConference);
+    streamTyp='audio'
+    openVideoAudioIframe(urlforConference , urlforConferenceForAgent , streamTyp)
+  }
 
 
-  videoCircle.addEventListener('click',function () {
-     winCol = windowColor.split('#')[1]
-     urlforConferenceForAgent= webRtcAddress +'/'+uid+'?audio_video=video&windowColor='+winCol+'&agent=true';
-     urlforConference =  webRtcAddress +'/' +uid+'?audio_video=video&windowColor='+winCol+'&agent=false';
-     console.log(urlforConference);
-     if (device=='sm') {
-       urlforConferenceForAgent = urlforConferenceForAgent + '&userMob=true'
-       urlforConference = urlforConference + '&userMob=true'
-     }
-    openVideoAudioIframe(urlforConference , urlforConferenceForAgent,'video')
-    openChat()
-  })
+  function reachChatBoxForInfo(){
+    connection.session.publish(wamp_prefix+'service.support.agent.'+agentPk, [uid , 'CustmorClosedTheChat' ] , {}, {
+      acknowledge: true
+    }).
+    then(function(publication) {
+      console.log("call sent to "+agentPk +" for closing the chat by customer");
+    },function(){
+      console.log('failed to call '+agentPk+' for closing the chat by customer');
+    });
+  }
 
-  audioCircle.addEventListener('click',function () {
-     winCol = windowColor.split('#')[1]
-     urlforConferenceForAgent= webRtcAddress +'/' +uid+'?audio_video=audio&windowColor='+winCol+'&agent=true';
-     urlforConference =  webRtcAddress +'/' +uid+'?audio_video=audio&windowColor='+winCol+'&agent=false';
-    openVideoAudioIframe(urlforConference , urlforConferenceForAgent , 'audio')
-    openChat()
-  })
+
 
   var videoOpened = false
   var audioOpened = false
@@ -926,112 +1163,6 @@ function createChatDiv() {
     }
 
 
-    var dataToSend = {uid: uid , sentByAgent:false , created: new Date() };
-
-    if (streamTyp=='video') {
-      videoOpened = true
-      var callType = 'VCS'
-      chatBox_header.style.borderRadius = "0px 10px 0px 0px"
-      chatBox_footer.style.borderRadius = "0px 0px 10px 0px"
-      dataToSend.logs = 'video call started'
-    }else if(streamTyp=='audio'){
-      audioOpened = true
-      var callType = 'AC'
-      dataToSend.logs = 'audio call started'
-    }
-
-
-    console.log(agentPk);
-    if (agentPk) {
-      console.log('agent pk is pnline',isAgentOnline);
-      dataToSend.user = agentPk
-      if (!isAgentOnline) {
-        console.log('agetn oflineee');
-        dataToSend.user = null
-      }else {
-        dataToSend.user = agentPk
-      }
-    }
-    // var message = dataToSend
-    dataToSend = JSON.stringify(dataToSend)
-
-
-    var xhttp = new XMLHttpRequest();
-     xhttp.onreadystatechange = function() {
-       if (this.readyState == 4 && this.status == 201) {
-         console.log('posted successfully');
-       }
-     };
-     xhttp.open('POST', '{{serverAddress}}/api/support/supportChat/', true);
-     xhttp.setRequestHeader("Content-type", "application/json");
-     xhttp.send(dataToSend);
-
-      if (threadExist==undefined) {
-        dataToPublish = [uid, callType, [] , custID]
-        details = getCookie("uidDetails");
-        if (details != "") {
-          console.log(details);
-           dataToPublish.push(JSON.parse(details))
-        } else {
-          dataToPublish.push(false)
-        }
-
-        var dataToSend = JSON.stringify({uid: uid , company: custID, typ: streamTyp});
-        var xhttp = new XMLHttpRequest();
-         xhttp.onreadystatechange = function() {
-           if (this.readyState == 4 && this.status == 201) {
-             console.log('posted successfully');
-             var data = JSON.parse(this.responseText)
-             threadExist=true
-             chatThreadPk = data.pk
-             dataToPublish.push(chatThreadPk)
-             dataToPublish.push(urlforConferenceForAgent)
-             connection.session.publish('service.support.agent', dataToPublish , {}, {
-               acknowledge: true
-             }).
-             then(function(publication) {
-               console.log("Published");
-             });
-           }
-         };
-         xhttp.open('POST', '{{serverAddress}}/api/support/chatThread/', true);
-         xhttp.setRequestHeader("Content-type", "application/json");
-         xhttp.send(dataToSend);
-      }else {
-
-
-        var xhttp = new XMLHttpRequest();
-         xhttp.onreadystatechange = function() {
-           if (this.readyState == 4 && this.status == 200) {
-             console.log('chat thread typ changed');
-           }
-         };
-         xhttp.open('PATCH', '{{serverAddress}}/api/support/chatThread/'+ chatThreadPk + '/', true);
-         xhttp.setRequestHeader("Content-type", "application/json");
-         xhttp.send(JSON.stringify({typ:streamTyp}));
-
-
-
-        dataToPublish = [uid, callType, [] , custID, urlforConferenceForAgent]
-        if (isAgentOnline) {
-          console.log('ONLINE' , agentPk);
-          connection.session.publish('service.support.agent.'+agentPk, dataToPublish , {}, {
-            acknowledge: true
-          }).
-          then(function(publication) {
-            console.log("Published service.support.agent."+agentPk);
-          });
-        }else {
-          console.log('offline send to all');
-          connection.session.publish('service.support.agent', dataToPublish , {}, {
-            acknowledge: true
-          }).
-          then(function(publication) {
-            console.log("Published");
-          });
-        }
-
-      }
 
       if (streamTyp=='video') {
         var body = document.getElementsByTagName("BODY")[0]
@@ -1040,9 +1171,12 @@ function createChatDiv() {
         iframeDiv.style.position = "fixed";
         iframeDiv.style.height = "70vh";
         iframeDiv.style.width = "50%";
-        iframeDiv.style.bottom = "100px";
-        iframeDiv.style.right = "410px";
+        iframeDiv.style.bottom = "85px";
+        iframeDiv.style.right = "400px";
         iframeDiv.style.animation = "moveInFront 0.6s"
+        iframeDiv.style.boxShadow='-5px -5px 10px rgb(0,0,0,0.2)';
+        chatBox_header.style.borderRadius = "0px 10px 0px 0px"
+        chatBox_footer.style.borderRadius = "0px 0px 10px 0px"
       }
 
 
@@ -1063,7 +1197,7 @@ function createChatDiv() {
           audioSection.appendChild(iFrame)
           audioSection.style.display = "block";
           chatBox_content.style.marginTop = "40px";
-          console.log(messageBox.style,'messageBoxmessageBoxmessageBoxmessageBox');
+          // console.log(messageBox.style,'messageBoxmessageBoxmessageBoxmessageBox');
         }else {
 
           if (device=='sm') {
@@ -1075,94 +1209,49 @@ function createChatDiv() {
             body.appendChild(iframeDiv)
           }
         }
-
-
-        // checkVideoCallAccepted()
-
-
-        // span.addEventListener('click',function () {
-        //   videoOpened = false
-        //   iFrame.src = '';
-        //   iframeDiv.parentNode.removeChild(iframeDiv);
-        //
-        //   dataToPublish = [uid, 'VCC']
-        //   connection.session.publish('service.support.agent', dataToPublish , {}, {
-        //     acknowledge: true
-        //   }).
-        //   then(function(publication) {
-        //     console.log("Published");
-        //   });
-        // })
     }
-
-  // function checkVideoCallAccepted() {
-  //   if (videoCallAccepted) {
-  //     iframeDiv.style.display = "";
-  //   }else {
-  //     iframeDiv.style.display = "none";
-  //   }
-  // }
-
-
-  // isTyping.style.display = "none";
-//   setTimeout(function(){
-//   footer.style.display = "none";
-//
-// }, 3000);
 
   singleService.style.display = "none";
 
 
+  function checkCookie() {
+    uid = getCookie("uid");
+    if (uid != "") {
+        fetchThread(uid);
+    } else {
+        // uid = custID +'$'+custName+'$'+broswer.charAt(0)
+        uid = new Date().getTime()
+        // console.log(uid);
+        if (uid != "" && uid != null) {
+            setCookie("uid", uid, 365);
+        }
+    }
+  }
+
+  checkCookie();
+
   document.getElementById('sy-main-icon').style.display = "none";
   setTimeout(function(){
+    isChatOpened = getCookie("chatOpenCookie");
+    if (isChatOpened != "") {
+        if (isChatOpened==='true') {
+          document.getElementById("sy-main-icon").classList.remove('first_animation');
+          singleService.classList.remove('first_animation');
+          openChat()
+        }
+    }
     document.getElementById('sy-main-icon').style.display = "";
-
-
   }, 2000);
 
-  // console.log(supportCircle,'scir');
-  // console.log(document.getElementsByClassName('font-SyrowCallBack'));
-  // var docTitle = document.title;
-  // console.log(docTitle);
 
 
 
   var unreadMsgCount = 0;
 
-
-
-  // window.onfocus = function() {
-  //   console.log('coming');
-  //   document.title = docTitle
-  //   unreadMsgCount = 0
-  // };
-  //
-  // window.onblur = function() {
-  //   console.log('going');
-  //   console.log(unreadMsgCount);
-  //   if (unreadMsgCount>0) {
-  //     document.title = "New message";
-  //   }
-  // };
-
-
-
-  // function setColors(colors) {
-  //   console.log('coming in set colorsssssssssssssssssssssssssssssss');
-  //   headerChat.style.backgroundColor = colors.main
-  //   console.log(headerChat.style.backgroundColor);
-  //   console.log(colors);
-  //   // startConversation.style =  colors.main
-  //   // border-top: 2px solid '+ windowColor +'"
-  // }
-
-
-
   var mainStr = "";
-  var supportOptions = [ {name:'callCircle' , value:true} , {name:'chatCircle' , value:false} , {name:'audioCircle' , value:true}, {name:'videoCircle' , value:true} , {name:'ticketCircle' , value:true} ];
+  var supportOptions = [ {name:'callCircle' , value:true} , {name:'chatCircle' , value:true} , {name:'audioCircle' , value:true}, {name:'videoCircle' , value:true} , {name:'ticketCircle' , value:true} ];
 
-
-  for (var i = 0; i < supportOptions.length; i++) {
+  for (let i = 0; i < supportOptions.length; i++) {
     if (supportOptions[i].name=='callCircle') {
       supportOptions[i].value = callBackSupport;
     }
@@ -1170,10 +1259,37 @@ function createChatDiv() {
       supportOptions[i].value = chatSupport;
     }
     if (supportOptions[i].name=='audioCircle') {
-      supportOptions[i].value = videoAndAudioSupport;
+
+      // console.log('************************');
+      if(videoSupport){
+          videoContains=true;
+      }
+      setTimeout(function () {
+        console.log(streamType);
+        if(streamType=='video'){
+          supportOptions[i].value = false;
+        }else{
+          supportOptions[i].value = audioSupport;
+        }
+
+      }, 1000);
     }
-    if (supportOptions[i].name=='videoCircle') {
-      supportOptions[i].value = videoAndAudioSupport;
+    if (supportOptions[i].name=='videoCircle'&&streamType!='audio') {
+      if(audioSupport){
+          audioContains=true;
+      }
+
+      setTimeout(function () {
+        console.log(streamType);
+        if(streamType=='audio'){
+          supportOptions[i].value = false;
+        }else{
+          supportOptions[i].value = videoSupport;
+        }
+
+      }, 1000);
+
+
     }
     if (supportOptions[i].name=='ticketCircle') {
       supportOptions[i].value = ticketSupport;
@@ -1182,97 +1298,108 @@ function createChatDiv() {
 
   // console.log(supportOptions,'so');
     serviceCount = 0
-    for (var i = 0 , rD = 0 , mB = 0 , mR=0 ; i < supportOptions.length; i++) {
+    setTimeout(function () {
+      for (var i = 0 , rD = 0 , mB = 0 , mR=0 ; i < supportOptions.length; i++) {
 
-      if (supportOptions[i].value) {
-        serviceCount ++;
-        var activeService = supportOptions[i].name
-        rD+=2;
-        mB+=60;
-        mR+=1;
-        var itemName = 'item-'+(i+1);
+        if (supportOptions[i].value) {
+          serviceCount++;
+          var activeService = supportOptions[i].name
+          rD+=2;
+          mB+=60;
+          mR+=1;
+          var itemName = 'item-'+(i+1);
 
-        supportString = "\
-          @-moz-keyframes "+ itemName +" { 100% { \
-          margin-bottom: "+mB+"px; \
-          margin-right: -"+mR+"px; \
-          opacity: 1; \
-          -webkit-transform: rotate("+rD+"deg); \
-        } }\
-        @-webkit-keyframes "+ itemName +" { 100% { \
-          margin-bottom: "+mB+"px; \
-          margin-right: -"+mR+"px; \
-          opacity: 1; \
-          -webkit-transform: rotate("+rD+"deg); \
-        } }\
-        @-ms-keyframes item-1 { 100% { \
-          margin-bottom: "+mB+"px; \
-          margin-right: -"+mR+"px; \
-          opacity: 1; \
-          -ms-transform: rotate("+rD+"deg); \
-        } }\
-        "
-        mainStr = mainStr.concat(supportString);
-      }else {
-          document.getElementById(supportOptions[i].name).style.display = "none";
+          supportString = "\
+            @-moz-keyframes "+ itemName +" { 100% { \
+            margin-bottom: "+mB+"px; \
+            margin-right: -"+mR+"px; \
+            opacity: 1; \
+            -webkit-transform: rotate("+rD+"deg); \
+          } }\
+          @-webkit-keyframes "+ itemName +" { 100% { \
+            margin-bottom: "+mB+"px; \
+            margin-right: -"+mR+"px; \
+            opacity: 1; \
+            -webkit-transform: rotate("+rD+"deg); \
+          } }\
+          @-ms-keyframes item-1 { 100% { \
+            margin-bottom: "+mB+"px; \
+            margin-right: -"+mR+"px; \
+            opacity: 1; \
+            -ms-transform: rotate("+rD+"deg); \
+          } }\
+          "
+          mainStr = mainStr.concat(supportString);
+        }else {
+            document.getElementById(supportOptions[i].name).style.display = "none";
+        }
+
       }
+      if (serviceCount==1) {
 
-    }
+        // alert('display only one service')
+        // display none of main
+        setTimeout(function () {
+            singleService.style.display = ""
+            supportCircle.style.display = "none"
 
-    if (serviceCount==1) {
-      // alert('display only one service')
-      // display none of main
-      setTimeout(function () {
-          singleService.style.display = ""
-          supportCircle.style.display = "none"
+            var singleServiceText = document.getElementById('singleServiceText')
+            var singleServiceFont = document.getElementById('singleServiceFont')
 
-          var singleServiceText = document.getElementById('singleServiceText')
-          var singleServiceFont = document.getElementById('singleServiceFont')
+            singleService.addEventListener("mouseover" , function () {
+              singleServiceText.style.display = ""
+            })
 
-          // singleService = document.getElementById('singleService')
+            singleService.addEventListener("mouseleave" , function () {
+              singleServiceText.style.display = "none"
+            })
 
-          singleService.addEventListener("mouseover" , function () {
-            singleServiceText.style.display = ""
-          })
+            if (activeService == 'callCircle') {
+              singleServiceText.innerHTML = "Callback"
+              singleServiceFont.className = "SyrowFont font-SyrowCallBack sy-md-2 sy-ops"
+            }else if (activeService == 'chatCircle') {
+              singleServiceText.innerHTML = "Chat"
+              singleServiceFont.className = "SyrowFont font-SyrowChat sy-md-2 sy-ops"
+              singleService.addEventListener("click" , openChat , false)
+            }else if (activeService == 'audioCircle') {
+              singleServiceText.innerHTML = "Audio Call"
+              singleServiceFont.className = "SyrowFont font-SyrowAudioCall sy-md-2 sy-ops"
+              // singleService.addEventListener("click" , openChat , false)
+            }else if (activeService == 'videoCircle') {
+              singleServiceText.innerHTML = "Video Call"
+              singleServiceFont.className = "SyrowFont font-SyrowVideoCall sy-md-2 sy-ops"
+            }else if (activeService == 'ticketCircle') {
+              singleServiceText.innerHTML = "Ticket"
+              singleServiceFont.className = "SyrowFont font-SyrowTicket sy-md-1 sy-ops"
+            }
 
-          singleService.addEventListener("mouseleave" , function () {
-            singleServiceText.style.display = "none"
-          })
+        }, 110);
 
-          if (activeService == 'callCircle') {
-            singleServiceText.innerHTML = "Callback"
-            singleServiceFont.className = "SyrowFont font-SyrowCallBack sy-md-2 sy-ops"
-          }else if (activeService == 'chatCircle') {
-            singleServiceText.innerHTML = "Chat"
-            singleServiceFont.className = "SyrowFont font-SyrowChat sy-md-2 sy-ops"
-            singleService.addEventListener("click" , openChat , false)
-          }else if (activeService == 'audioCircle') {
-            singleServiceText.innerHTML = "Audio Call"
-            singleServiceFont.className = "SyrowFont font-SyrowAudioCall sy-md-2 sy-ops"
-          }else if (activeService == 'videoCircle') {
-            singleServiceText.innerHTML = "Video Call"
-            singleServiceFont.className = "SyrowFont font-SyrowVideoCall sy-md-2 sy-ops"
-          }else if (activeService == 'ticketCircle') {
-            singleServiceText.innerHTML = "Ticket"
-            singleServiceFont.className = "SyrowFont font-SyrowTicket sy-md-1 sy-ops"
-          }
+      }
+    }, 1000);
 
-      }, 1700);
-
-    }
 
 
     function setStyle() {
-            //chatboxcss
+
             var newStyle = document.createElement('style');
             newStyle.appendChild(document.createTextNode("\
             @font-face {\
               font-family: 'Syrow';\
-              src:  url('https://raw.githubusercontent.com/pkyad/libreERP-main/syrow/static_shared/fonts/syrow/Syrow.eot?a8jyi4');\
               src:  url('https://raw.githubusercontent.com/pkyad/libreERP-main/syrow/static_shared/fonts/syrow/Syrow.eot?a8jyi4#iefix') format('embedded-opentype'),\
               url('https://raw.githubusercontent.com/pkyad/libreERP-main/syrow/static_shared/fonts/syrow/Syrow.ttf?a8jyi4') format('truetype'),\
               url('https://raw.githubusercontent.com/pkyad/libreERP-main/syrow/static_shared/fonts/syrow/Syrow.woff?a8jyi4') format('woff'),\
               url('https://raw.githubusercontent.com/pkyad/libreERP-main/syrow/static_shared/fonts/syrow/Syrow.svg?a8jyi4#Syrow') format('svg');\
+              font-weight: normal;\
+              font-style: normal;\
+            }\
+            @font-face {\
+              font-family: 'Syrow';\
+              src:  url('https://raw.githubusercontent.com/pkyad/libreERP-main/syrow/static_shared/fonts/syrow/Syrow.eot?7na8rs');\
+              src:  url('https://raw.githubusercontent.com/pkyad/libreERP-main/syrow/static_shared/fonts/syrow/Syrow.eot?7na8rs#iefix') format('embedded-opentype'),\
+                url('https://raw.githubusercontent.com/pkyad/libreERP-main/syrow/static_shared/fonts/syrow/Syrow.ttf?7na8rs') format('truetype'),\
+                url('https://raw.githubusercontent.com/pkyad/libreERP-main/syrow/static_shared/fonts/syrow/Syrow.woff?7na8rs') format('woff'),\
+                url('https://raw.githubusercontent.com/pkyad/libreERP-main/syrow/static_shared/fonts/syrow/Syrow.svg?7na8rs#Syrow') format('svg');\
               font-weight: normal;\
               font-style: normal;\
             }\
@@ -1292,6 +1419,22 @@ function createChatDiv() {
               .font-Syrow24hSupport:before {\
               content: '\\61';\
             }\
+	#chatSuggestionBar1 p{font-size:13px ! important;}\
+            .font-SyrowX:before {\
+               content: '\\e97e';\
+             }\
+             .font-SyrowLog-out:before {\
+                content: '\\e92b';\
+              }\
+             .font-SyrowPhone-call:before {\
+                content: '\\e93d';\
+              }\
+             .font-SyrowNavigation:before {\
+                content: '\\e93a';\
+              }\
+             .font-SyrowPaperclip:before {\
+                content: '\\e93b';\
+              }\
               .font-SyrowChat:before {\
               content: '\\62';\
             }\
@@ -1304,18 +1447,44 @@ function createChatDiv() {
               .font-SyrowCallBack:before {\
               content: '\\65';\
             }\
+            .font-SyrowPhone1:before {\
+                content: '\\e93c';\
+              }\
+            .font-SyrowVideo-off:before {\
+                content: '\\e972';\
+              }\
+              .font-SyrowPhone-call:before {\
+                content: '\\e93d';\
+              }\
               .font-SyrowTicket:before {\
               content: '\\66';\
+            }\
+            .font-SyrowBar-chart-2:before {\
+              content: '\\e902';\
             }\
               .sy-circle {\
               z-index: 987654321!important;\
               position: fixed!important;\
-              bottom: 20px;\
-              right: 40px;\
               width: 60px!important;\
               height: 60px!important;\
               border-radius: 50%!important;\
             }\
+              .fa1 {\
+                  display: inline-block;\
+                  font: normal normal normal 14px/1 'FontAwesome' !important;\
+                  font-size: inherit;\
+                  text-rendering: auto;\
+                  -webkit-font-smoothing: antialiased;\
+                  -moz-osx-font-smoothing: grayscale;\
+                }\
+            .fa-stack1 {\
+                position: relative;\
+                display: inline-block;\
+                width: 2em;\
+                height: 2em;\
+                line-height: 2em;\
+                vertical-align: middle;\
+              }\
               .sy-md-1 {\
               font-size: 40px;\
             }\
@@ -1341,9 +1510,11 @@ function createChatDiv() {
               transition: transform .16s linear,opacity .08s linear;\
               transition: transform .16s linear,opacity .08s linear,-webkit-transform .16s linear;\
             }\
+            .changeOpacity{\
+              animation:changingOpacity 3s infinite\
+            }\
               .sy-text {\
               position: fixed;\
-              right: 70px;\
               margin-top: 15px;\
               border-radius: 15px;\
               padding: 4px 8px;\
@@ -1354,70 +1525,101 @@ function createChatDiv() {
               max-width: 250px;\
               overflow: hidden;\
             }\
+              .sy-text-left {\
+              left: 70px;\
+            }\
+              .sy-text-right {\
+              right: 70px;\
+            }\
+              .sy-firsttext-left {\
+              left: 110px;\
+            }\
+              .sy-firsttext-right {\
+              right: 110px;\
+            }\
+              .sy-text-Suggested {\
+              position: fixed;\
+              margin-top: 13px;\
+              border-radius: 15px;\
+              padding: 4px 8px;\
+              font-family: Verdana, Arial, sans-serif;\
+              font-size: 13px;\
+              max-width:300px;\
+              bottom:25px;\
+              animation:chatSuggestionBar 3s\
+            }\
               .sy-circle a, .sy-circle a:visited, .sy-circle a:active, .sy-circle a:hover, .sy-circle a:link {\
               text-decoration: none;\
             }\
               #sy-sub-icons .sy-circle, #sy-main-icon > .sy-text {\
               display: none;\
             }\
-              #sy-main-icon:hover > .sy-text {\
+            #singleService:hover > .sy-text-Suggested{ display:none !important}\
+              #sy-main-icon:hover > .sy-text, #sy-main-icon:active > .sy-text {\
               display: inline-block;\
-              right: 110px;\
+            }\
+              #sy-main-icon:hover > .sy-text-Suggested, #sy-main-icon:active > .sy-text-Suggested {\
+              display: none !important;\
             }\
             "+ mainStr+"\
-              #sy-main-icon:hover > #sy-sub-icons > div:nth-of-type(1) { \
+              #sy-main-icon:hover > #sy-sub-icons > div:nth-of-type(1), #sy-main-icon:active > #sy-sub-icons > div:nth-of-type(1) { \
               display: block;\
               -webkit-animation: item-1 0.5s forwards; \
               -ms-animation: item-1 0.5s forwards; \
               -moz-animation: item-1 0.5s forwards;\
             }\
-              #sy-main-icon:hover > #sy-sub-icons > div:nth-of-type(2) { \
+              #sy-main-icon:hover > #sy-sub-icons > div:nth-of-type(2), #sy-main-icon:active > #sy-sub-icons > div:nth-of-type(2) { \
               display: block;\
               -webkit-animation: item-2 0.5s forwards; \
               -ms-animation: item-2 0.5s forwards;\
               -moz-animation: item-2 0.5s forwards; \
             }\
-              #sy-main-icon:hover > #sy-sub-icons > div:nth-of-type(3) {\
+              #sy-main-icon:hover > #sy-sub-icons > div:nth-of-type(3), #sy-main-icon:active > #sy-sub-icons > div:nth-of-type(3) {\
               display: block;\
               -webkit-animation: item-3 0.5s forwards; \
               -ms-animation: item-3 0.5s forwards; \
               -moz-animation: item-3 0.5s forwards; \
             }\
-              #sy-main-icon:hover > #sy-sub-icons > div:nth-of-type(4) { \
+              #sy-main-icon:hover > #sy-sub-icons > div:nth-of-type(4), #sy-main-icon:active > #sy-sub-icons > div:nth-of-type(4) { \
               display: block;\
               -webkit-animation: item-4 0.5s forwards; \
               -ms-animation: item-4 0.5s forwards; \
               -moz-animation: item-4 0.5s forwards; \
             }\
-              #sy-main-icon:hover > #sy-sub-icons > div:nth-of-type(5) { \
+              #sy-main-icon:hover > #sy-sub-icons > div:nth-of-type(5), #sy-main-icon:active > #sy-sub-icons > div:nth-of-type(5) { \
               display: block;\
               -webkit-animation: item-5 0.5s forwards; \
               -ms-animation: item-5 0.5s forwards; \
               -moz-animation: item-5 0.5s forwards; \
             }\
                 div.stars {\
-                width: 270px;\
                 display: inline-block;\
               }\
               input.star { display: none; }\
               label.star {\
                 float: right;\
-                padding: 10px;\
-                font-size: 36px;\
-                color: #444;\
-                transition: all .2s;\
+                padding: 8px;\
+                font-size: 32px;\
+                color: #fff;\
+                text-shadow: #ff720b 1px 0 1px;\
+                transition: all .5s;\
               }\
               input.star:checked ~ label.star:before {\
                 content: '\\2605';\
-                color: #FD4;\
+                color: #ff720b;\
                 transition: all .25s;\
               }\
+              .star1 {\
+                content: '\\2605';\
+                color: #ff720b;\
+              }\
               input.star-5:checked ~ label.star:before {\
-                color: #FE7;\
+                color: #ff720b;\
                 text-shadow: 0 0 20px #952;\
               }\
-              input.star-1:checked ~ label.star:before { color: #F62; }\
-              label.star:hover { transform: rotate(-15deg) scale(1.3); }\
+              input.star-1:checked ~ label.star:before { color: #ff720b; }\
+              label.star:hover { color: #ff720b; }\
+              label.star:hover ~ label.star:before { color: #ff720b; }\
               label.star:before {\
                 content: '\\2605';\
               }\
@@ -1427,14 +1629,12 @@ function createChatDiv() {
               @keyframes msgDiv{\
                 0%{\
                     opacity:0;\
-                    transform:translateY(10px);\
                 	}\
                 100%{\
                     opacity:1;\
-                    transform:translateY(0px);\
                 	}\
                 }\
-                .modal {\
+                .syrow_modal {\
                 display: none;\
                 position: fixed;\
                 z-index: 999999999;\
@@ -1447,7 +1647,7 @@ function createChatDiv() {
                 background-color: rgb(0,0,0);\
                 background-color: rgba(0,0,0,0.4);\
             }\
-            .modal-content {\
+            .syrow_modal_content {\
                 background-color: #fefefe;\
                 margin: auto;\
                 padding: 20px;\
@@ -1462,6 +1662,45 @@ function createChatDiv() {
               font-size: 28px;\
               font-weight: bold;\
           }\
+              .first_animation {\
+              animation: first_animation 1s "+blinkCss+";\
+          }\
+              .left-center {\
+                    left: -55px;\
+                    bottom: 45%;\
+                    transform: rotate(90deg);\
+          }\
+              .right-center {\
+                    right: -55px;\
+                    bottom: 45%;\
+                    transform: rotate(-90deg);\
+          }\
+              .left-bottom {\
+                    left: 30px;\
+                    bottom: 0%;\
+          }\
+              .right-bottom {\
+                    right: 30px;\
+                    bottom: 0%;\
+          }\
+              .chat_with_us {\
+              background-color: "+windowColor+";\
+              color:"+fontAndIconColor+"\
+              cursor:  pointer;\
+              display:  inline-block;\
+              position: fixed;\
+              padding:  10px 15px;\
+              border-radius: 5px;\
+              animation:changingOpacity 1s;\
+          }\
+              .sy-circle-right {\
+                bottom: 20px;\
+                right: 40px;\
+          }\
+              .sy-circle-left {\
+                bottom: 20px;\
+                left: 40px;\
+          }\
           @keyframes modalBox{\
         	0%{\
               transform:translateY(-200px);\
@@ -1473,18 +1712,87 @@ function createChatDiv() {
               	transform:translateY(0px);\
           	}\
           }\
+          @keyframes first_animation{\
+            0%{\
+                transform:translateY(20px);\
+                opacity:0.5;\
+            	}\
+            40%{\
+                transform:translateY(-120px);\
+                opacity:0.7;\
+            	}\
+            90%{\
+                transform:translateY(10px);\
+                opacity:0.9;\
+            	}\
+              100%{\
+                	transform:translateY();\
+                  opacity:1;\
+            	}\
+            }\
+          }\
+          @keyframes changingOpacity{\
+        	0%{\
+              opacity:0.4;\
+          	}\
+            100%{\
+              	opacity:1;\
+          	}\
+          }\
+          @keyframes blink{\
+          0%{\
+              box-shadow:0px 0px 0px #5B8DE8;\
+            }\
+            50%{\
+              box-shadow:2px 0px 30px #5B8DE8\
+            }\
+            100%{\
+              box-shadow:0px 0px 0px #5B8DE8\
+            }\
+          }\
+          @keyframes chatSuggestionBar{\
+        	0%{\
+              transform:scale(0px);\
+              opacity:0;\
+          	}\
+            100%{\
+              	transform:scale(1);\
+                opacity:1;\
+          	}\
+          }\
+          .typingBox{\
+            display:none;z-index:11111111111111111111111111111;position:absolute;bottom:81px;font-size:15px;padding:5px;background-color:#f6f6f6;color:#000;border-radius: 0px 20px 20px 20px;left:0px;\
+          }\
             @media only screen and (max-width: 600px) {\
+              .chatdiv-right {\
+                    right: 0px;\
+                }\
+              .chatdiv-left {\
+                    left: 0px;\
+                }\
               .ChatBoxDiv{\
                 padding:0px;\
                 margin:0px;\
                 height: 100%;\
                 position: fixed;\
                 top:0px;\
+                font-family: 'Muli', sans-serif;\
                 right: 0px;\
                 min-width: 100%;\
-                z-index:99999\
+                color:black;\
+                z-index:9999999999999999999;\
+                border-radius:0px\
+              }\
+              .chatBox_header{\
+                border-radius:0px !important;\
+              }\
+              .chatBox_footer{\
+                border-radius:0px !important;\
               }\
               .closeIcon{\
+                display:block;\
+              }\
+              .closeIcon_box{\
                 display:block;\
               }\
               .close-support{\
@@ -1492,19 +1800,29 @@ function createChatDiv() {
               }\
             }\
             @media only screen and (min-width: 600px) {\
+              .chatdiv-right {\
+                    right: 30px;\
+                }\
+              .chatdiv-left {\
+                    left: 30px;\
+              }\
               .ChatBoxDiv{\
                 padding:0px;\
                 margin:0px;\
                 height: 70vh;\
                 position: fixed;\
-                bottom: 100px;\
-                right: 40px;\
+                bottom: 85px;\
+                font-family: 'Muli', sans-serif;\
                 min-width: 370px;\
                 border-radius:10px;\
-                box-shadow:-5px -5px 10px rgba(0,0,0,0.2);\
-                z-index:99999\
+                box-shadow: 0px 0px 25px 5px rgba(0,0,0,0.2);\
+                z-index:9999999999999999999;\
+                color:black;\
               }\
               .closeIcon{\
+                display:none;\
+              }\
+              .closeIcon_box{\
                 display:none;\
               }\
               .close-support{\
@@ -1519,9 +1837,9 @@ function createChatDiv() {
               padding:0px;\
               margin:0px;\
               position: absolute;\
-              top:80px;\
+              top:81px;\
               width:100%;\
-              bottom: 90px;\
+              bottom: 80px;\
               background-color: white;\
               overflow-x:hidden;\
               overflow-y: auto;\
@@ -1560,45 +1878,56 @@ function createChatDiv() {
               color: rgba(255, 255, 255, 0.8);\
               border-radius: 10px 10px 0 0;\
             }\
+            .chatBox_header i{\
+               font-size:25px;\
+               color:"+fontAndIconColor+"\
+            }\
             .chatBox_header > .logo_image{\
               width: 70px;\
               height:70px;\
               border-radius: 50%;\
               margin: 10px;\
               padding: 10px;\
+              box-sizing:border-box;\
             }\
             .chatBox_header .chatBox_info{\
               margin: 20px 10px;;\
               width: 60%;\
               padding:0px;\
+              color:"+fontAndIconColor+"\
             }\
             .chatBox_header .chatBox_name{\
               display: block;\
-              font-size: 18px;\
+              font-size: 15px;\
               padding:0px;\
               margin:0px;\
             }\
             .chatBox_header .chatBox_status{\
               display: block;\
-              font-size: 12px;\
-              margin:5px;\
+              font-size: 10px;\
+              margin-top:5px;\
               padding:0px;\
             }\
             .exitBtn, .closeIcon {\
-              margin: 20px 15px;\
+              margin: 15px 10px;\
               padding-top: 10px;\
               text-align: center;\
-              width: 24px;\
+              width: 50px;\
               height:34px;\
-              font-size: 25px;\
               transition: 0.5s;\
+              box-sizing:border-box;\
+            }\
+            .paperClip{\
+              font-size:25px;\
+              margin:15px 15px 0px 0px;\
+              color:#A0A0A0\
             }\
             .exitBtn:hover{\
-              transform: scale(1.2) ;\
+              transform: scale(1.1) ;\
               cursor: pointer;\
             }\
             .closeIcon:hover{\
-              transform: scale(1.2) ;\
+              transform: scale(0.9) ;\
               cursor: pointer;\
             }\
             .chatBox_footer{\
@@ -1607,7 +1936,7 @@ function createChatDiv() {
               position: absolute;\
               bottom:0px;\
               width:100%;\
-              min-height: 90px;\
+              min-height: 80px;\
               background-color: white;\
               border-radius:0px 0px 10px 10px;\
             }\
@@ -1634,12 +1963,12 @@ function createChatDiv() {
               cursor: pointer;\
             }\
             .chatBox_footer .chatbox_branding{\
-              min-height: 20px;\
+              min-height: 15px;\
               text-align: center;\
-              font-size: 15px;\
+              font-size: 10px;\
               background-image:linear-gradient(to right, "+windowColor +","+ windowColor+","+ windowColor+");\
               width: 100%;\
-              color: white;\
+              color: "+fontAndIconColor+";\
               padding:0px;\
               margin:0px;\
             }\
@@ -1656,14 +1985,46 @@ function createChatDiv() {
               font-size:14px;\
               font-weight:bolder;\
             }\
+            .confirmationDiv{\
+              clear: both; \
+              background-color:#eee; \
+              border-radius:5px; \
+              box-sizing:border-box; \
+              margin: 9px;\
+              animation: msgDiv 0.7s ease;\
+            }\
+            .confirmationSureText{\
+              color: "+windowColor+";\
+              font-size: 16px;\
+              font-weight: bold;\
+              text-align: center;\
+              padding: 15px;\
+              opacity:0.9;\
+            }\
+            .confirmationBtnDiv{\
+              text-align: center;\
+              padding: 15px;\
+            }\
+            .confirmationBtn{\
+              background-color: "+supportBubbleColor+";\
+              padding: 5px 10px;\
+              border: 1px solid #fff;\
+              width: 78px;\
+              margin: 0px 10px;\
+              color: #fff;\
+              font-weight: bold;\
+              border-radius: 5px;\
+              cursor:pointer;\
+            }\
+            #herere p {\
+              font-size:14px !important;\
+            }\
             @keyframes moveInLeft{\
               0%{\
                 opacity:0;\
-                transform:translateX(80px);\
               }\
               80%{\
                 opacity:1;\
-                transform:translateX(-10px);\
               }\
               100%{\
                 opacity:1;\
@@ -1672,12 +2033,16 @@ function createChatDiv() {
             }\
             @keyframes moveInDown{\
               0%{\
-                opacity:0;\
+                opacity:1;\
                 transform:translateY(0px);\
               }\
+              50%{\
+                opacity:0;\
+                transform:translateY(10px);\
+              }\
               100%{\
-                opacity:1;\
-                transform:translateY(10px) scale(0.5);\
+                opacity:0;\
+                transform:translateY(10px);\
               }\
             }\
             @keyframes rotateAnti{\
@@ -1730,7 +2095,7 @@ function createChatDiv() {
     console.log('inside end chattttttttttt');
     chatClosed = true
 
-    console.log(feedbackFormOpened);
+    // console.log(feedbackFormOpened);
 
     if (feedbackFormOpened) {
       return
@@ -1741,20 +2106,19 @@ function createChatDiv() {
        if (this.readyState == 4 && this.status == 200) {
          console.log('posted successfully');
 
-          setCookie("chatOpenCookie", false, 365);
-
+         setCookie("chatOpenCookie", false, 365);
 
          var dataToSend = {uid:uid , userEndedChat: 'CHAT CLOSED BY USER' , sentByAgent:false };
 
-         connection.session.publish('service.support.agent.'+agentPk, [uid , 'CL' , dataToSend ] , {}, {
+         connection.session.publish(wamp_prefix+'service.support.agent.'+agentPk, [uid , 'CL' , dataToSend ] , {}, {
            acknowledge: true
          }).
          then(function(publication) {
-           console.log("Published daaaaaaaaaaaaaaaaaaaaaa");
+           console.log("Published to "+agentPk+" to end chat");
+         },function(){
+           console.log('failed to call '+agentPk+" to end chat");
+           // alert('failed to publish chat close')
          });
-
-
-
        }
      };
      xhttp.open('PATCH', '{{serverAddress}}/api/support/chatThread/'+ chatThreadPk + '/', true);
@@ -1764,12 +2128,25 @@ function createChatDiv() {
     openFeedback()
   }
 
+  // setTimeout(function () {
+  //   alert('sending now');
+  //   connection.session.call('service.self', 'balram', {}, {
+  //     acknowledge: true
+  //   }).
+  //   then(function(publication) {
+  //     console.log("Published to "+agentPk+" to end chat");
+  //   },function(){
+  //     console.log('failed to call '+agentPk+" to end chat");
+  //   });
+  // }, 5000);
+
   feedbackFormOpened = false
   feedbackFormSubmitted = false
 
   function openFeedback(id) {
+    hideAudioAndVidoeBtn();
 
-    console.log(feedbackFormOpened , 'feedbackFormOpened');
+    // console.log(feedbackFormOpened , 'feedbackFormOpened');
 
     if (feedbackFormOpened) {
       return
@@ -1781,8 +2158,8 @@ function createChatDiv() {
     var div = document.createElement("div");
     div.id="offlineMessage"
     div.innerHTML =  '<div style="margin:0px 0px 10px; box-sizing:border-box;" >'+
-                      '<div style="clear: both; float:left; background-color:#e0e0e0; padding:10px;margin:8px; border-radius:0px 20px 20px 20px; box-sizing:border-box;font-size:12px">'+
-                      '<p style="line-height: 1.75; margin:0px; word-wrap: break-word; font-size:12px; box-sizing:border-box;">Please provide your feedback below:</p>'+
+                      '<div style="text-align:center;clear: both; float:left; background-color:#f6f6f6; padding:10px;margin:8px; box-sizing:border-box;font-size:14px">'+
+                      '<p style="line-height: 1.75; margin:0px; word-wrap: break-word; font-size:12px;color:rgba(0,0,0,0.5); box-sizing:border-box;">Please provide your feedback below:</p>'+
                       '<form>'+
                         '<div class="stars">'+
                           '<form id="stars">'+
@@ -1798,9 +2175,12 @@ function createChatDiv() {
                             '<label class="star star-1" for="star-1"></label>'+
                           '</form>'+
                         '</div>'+
-                        '<input type="text" id="emailId" placeholder="Emaid id (optional)"  style="width:100%; padding-bottom:10px; margin-bottom:10px;">'+
-                         '<textarea id="feedbackText" style="width:100%; resize:none; box-shadow:none; box-sizing:border-box;" rows="3" placeholder="Type your feedback here.."></textarea>'+
-                         '<button id="submitStars" type="button" style="margin-top:10px; border:none; margin-left:38%; padding:8px; border-radius:8px; background-color:#286EFA ; color:#fff; text-transform:none; font-size:11px; cursor:pointer;" >'+
+                        '<input type="text" id="emailId" placeholder="Email (Optional)"  style="width:100%; padding:5px;border:none; margin-bottom:10px;">'+
+                         '<textarea id="feedbackText" style="width:100%;outline:none;padding:5px; resize:none;border:none; box-shadow:.3px .3px #fff; box-sizing:border-box;" rows="3" placeholder="Feedback"></textarea>'+
+                         '<button id="submitCancel" type="button" style="margin-top:10px; padding:4px 8px; border-radius:8px; background-color:'+fontAndIconColor+' ; color:'+windowColor+'; text-transform:none; font-size:11px; cursor:pointer;" >'+
+                           'Cancel'+
+                         '</button>'+
+                         '<button id="submitStars" type="button" style="margin-top:10px;margin-left:10%; padding:4px 8px; border-radius:8px; background-color:'+windowColor+' ; color:'+fontAndIconColor+'; text-transform:none; font-size:11px; cursor:pointer;" >'+
                            'Submit'+
                          '</button>'+
                         '</form>'+
@@ -1810,14 +2190,6 @@ function createChatDiv() {
     scroll();
     var stars = document.getElementById('stars');
     var submitStars = document.getElementById('submitStars');
-
-    // disable input type here.. and remove send and attach button
-
-    // inputText.disabled = true;
-    // inputText.placeholder = "Chat is closed....";
-    //
-    // paperClip.style.display = "none";
-    // paperPlane.style.display = "none";
 
     messageComposer.style.display = "none";
     startNewChatBtn.style.display = "block";
@@ -1837,19 +2209,34 @@ function createChatDiv() {
     var div = document.createElement("div");
     div.id="thankYou"
     div.innerHTML = '<div style="margin:0px 0px 10px; box-sizing:border-box;" >'+
-                    '<div style="clear: both; float:left; background-color:#e0e0e0; padding:10px;margin:8px; border-radius:0px 20px 20px 20px; box-sizing:border-box;">'+
-                    '<p style="line-height: 1.75; margin:0px; word-wrap: break-word; font-size:12px; box-sizing:border-box;">Thank You !</p>'+
+                    '<div style="clear: both; float:left; background-color:#f6f6f6; padding:10px;margin:8px; border-radius:0px 20px 20px 20px; box-sizing:border-box;">'+
+                    '<p style="line-height: 1.75; margin:0px; word-wrap: break-word; font-size:14px; box-sizing:border-box;">Thank You !</p>'+
                     '</div> '+
                     '</div>'
   messageBox.appendChild(div);
   scroll();
   }
 
+
+
+
   function submitStarForm(id) {
 
+    var submitCancel=document.getElementById('submitCancel')
+    var offlineMessage=document.getElementById('offlineMessage')
+
+    submitCancel.addEventListener('click',function(){
+        thankYouMessage();
+        submitStars.style.display = "none";
+        offlineMessage.style.display="none"
+    })
+
+var myformrating;
 
     submitStars.addEventListener("click", function() {
-      console.log('somthing hereeeeee' , this);
+      // console.log('somthing hereeeeee' , this);
+      submitStars.style.display = "none";
+      offlineMessage.style.display="none"
       // id="star-5"
       // console.log(document.getElementById('feedbackText').value);
       var feedbackText = document.getElementById('feedbackText')
@@ -1861,20 +2248,15 @@ function createChatDiv() {
 
       var emailId = document.getElementById('emailId').value
 
-
       if (!emailRecieved) {
         ratingForm.email = emailId
       }
-
-
-
 
       var star1 = document.getElementById('star-1')
       var star2 = document.getElementById('star-2')
       var star3 = document.getElementById('star-3')
       var star4 = document.getElementById('star-4')
       var star5 = document.getElementById('star-5')
-
 
       // var rating;
       if (star1.checked) {
@@ -1892,32 +2274,33 @@ function createChatDiv() {
       if (star5.checked) {
         ratingForm.customerRating = 5
       }
-
-    console.log(ratingForm);
+      myformrating=ratingForm.customerRating
+    // console.log(ratingForm);
     ratingFormObject = ratingForm
     ratingForm = JSON.stringify(ratingForm)
-    // feedbackText.value = ''
       var xhttp = new XMLHttpRequest();
        xhttp.onreadystatechange = function() {
          if (this.readyState == 4 && this.status == 200) {
            console.log('posted successfully');
            console.log(ratingForm);
            submitStars.style.display = "none";
+           submitCancel.style.display='none'
            thankYouMessage()
            feedbackFormSubmitted = true
-           // var dataToPublish = [uid , status , message , custID ];
 
-           console.log(ratingFormObject);
+           // console.log(ratingFormObject);
 
             var dataToSend = {uid:uid , usersFeedback:ratingFormObject.customerFeedback  , rating:ratingFormObject.customerRating , sentByAgent:false };
 
-             connection.session.publish('service.support.agent.'+agentPk, [uid , 'FB' , dataToSend ] , {}, {
+             connection.session.publish(wamp_prefix+'service.support.agent.'+agentPk, [uid , 'FB' , dataToSend ] , {}, {
                acknowledge: true
              }).
              then(function(publication) {
-               console.log("Published daaaaaaaaaaaaaaaaaaaaaa");
+               console.log("Published to "+agentPk+" for feedback");
+             },function(){
+                console.log("failed to publish "+agentPk+" for feedback");
+                alert('failed to publish feedback')
              });
-
          }
        };
        xhttp.open('PATCH', '{{serverAddress}}/api/support/chatThread/'+ chatThreadPk + '/', true);
@@ -1926,38 +2309,35 @@ function createChatDiv() {
 
     }, false);
 
-
-
   }
 
-
   closeSupport.style.display = "none";
-
-
   var chatClosed = false
-
 
   startNewChatBtn.addEventListener("click" , function () {
     // or you can use variable feedbackFormSubmitted which is true only if feedbackForm is submitted
     messageBox.innerHTML = '';
-    // messageBox.innerHTML = '';
+    isConfirmedToEnd=false;
+    msgCount=0;
     agentName.innerHTML = nameSupport
-    // delete uid from cookies and create a new one
     document.cookie = encodeURIComponent("uid") + "=deleted; expires=" + new Date(0).toUTCString()
     uid = new Date().getTime()
-    // console.log('nn',uid ,document.cookie);
     setCookie("uid", uid, 365);
-    // uidDetails should remane same
     chat = {user : custName , messages : [ { message:"first", sentByAgent:true , created:  new Date() } ] }
     pushMessages()
+    setAudioVideoBtn();
+    streamType=''
+    countForFrameContent=0;
+    if(countForFrameContent>0){
+      document.getElementById('iFrame1').src = '';
+    }
 
-    console.log('Came here ... chat ');
-    // first welcome message should come
-    // reset chat.messages  var chat = {user : custName , messages : [ { message:"first", sentByAgent:true , created:  new Date() } ] }
-    // call pushMessages() again
+    // console.log('Came here ... chat ');
     messageComposer.style.display = "";
     startNewChatBtn.style.display = "none";
-    // display footer and hide start chat button
+    audioSection.style.display = "none";
+    videoSection.style.display = "none";
+    chatBox_content.style.marginTop = "0"
 
     agentPk =  null;
     threadExist = undefined;
@@ -1965,14 +2345,8 @@ function createChatDiv() {
     emailRecieved = false;
     unreadMsgCount = 0;
     isAgentOnline = false;
-    // chatClosed = false;
 
     connection._transport.close()
-    // console.log(connection);
-    // connection.onclose()
-    // connection.open()
-
-
     inputText.disabled = true;
     inputText.placeholder = "Initializing....";
     paperClip.style.display = "none";
@@ -1980,97 +2354,445 @@ function createChatDiv() {
 
     setTimeout(function () {
       inputText.disabled = false;
-      inputText.placeholder = "Write a reply...";
+      inputText.placeholder = "Message...";
       paperClip.style.display = "";
       paperPlane.style.display = "";
     }, 2000);
 
-    connection.onclose = function(reason, details) {
-      console.log("Connection lost: ");
-      var connection = new autobahn.Connection({url: '{{wampServer}}', realm: 'default'});
-      connection.open()
-    }
 
-    //subscribe to this uid again
-    // alert('initialise chat again')
 
     feedbackFormOpened = false
     feedbackFormSubmitted = false
 
   })
 
+  connection.onclose = function(reason, details) {
+    console.log("Connection lost: ");
+    inputText.placeholder = "Connecting....";
+    paperClip.style.display = "none";
+    paperPlane.style.display = "none";
+    var connection = new autobahn.Connection({url: '{{wampServer}}', realm: 'default'});
+    connection.open()
+  }
+
 
   window.addEventListener("message", receiveMessage, false);
 
   function receiveMessage(event){
     if (event.data=='loadMyOrders') {
-      // console.log(''event);
-      // alert('instakk ext')
-      console.log('opennnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnn');
-
       var url = 'https://chrome.google.com/webstore/detail/screen-capturing/ajhifddimkapgcifgcodmmfdlknahffk'
        window.open(url);
-      // window.location = 'https://chrome.google.com/webstore/detail/screen-capturing/ajhifddimkapgcifgcodmmfdlknahffk'
-
     }
-    if (event.data== 'userleft'){
+    if (event.data=='calledToHideVideo') {
 
-      document.getElementById('iframeDiv').style.display="none"
-      setTimeout(function () {
-        if (videoOpened) {
+      connection.session.publish(wamp_prefix+'service.support.agent.'+agentPk, [uid , 'calledToHideVideo' ] , {}, {
+        acknowledge: true
+      }).
+      then(function(publication) {
+        console.log("Published to "+agentPk+" for calledToHideVideo");
+      },function(){
+        console.log("Fialed to publish "+agentPk+" for calledToHideVideo");
+      });
+    }
+    if (event.data=='calledToShowVideo') {
 
-          if (device=='sm') {
-            videoSection.innerHTML = "";
-            videoSection.style.display = "none";
-            chatBox_content.style.marginTop = "0";
-          }else {
-            chatBox_header.style.borderRadius = "10px 10px 0px 0px"
-            chatBox_footer.style.borderRadius = "0px 0px 10px 10px"
-            // chatBox.style.borderRadius = "10px 10px 10px 10px"
-            var iframeDiv = document.getElementById('iframeDiv')
-            iframeDiv.parentNode.removeChild(iframeDiv);
-          }
-          var iFrame = document.getElementById('iFrame1')
-          iFrame.src = '';
-          videoOpened = false
-        }else if (audioOpened) {
-          var iFrame = document.getElementById('iFrame1')
-          iFrame.src = '';
-          audioSection.innerHTML = "";
-          audioSection.style.display = "none";
-          chatBox_content.style.marginTop = "0";
-          audioOpened = false;
+      connection.session.publish(wamp_prefix+'service.support.agent.'+agentPk, [uid , 'calledToShowVideo' ] , {}, {
+        acknowledge: true
+      }).
+      then(function(publication) {
+        console.log("Published to "+agentPk+" for calledToShowVideo");
+      },function(){
+        console.log("Fialed to publish "+agentPk+" for calledToShowVideo");
+      });
+    }
+    if (event.data=='hideTheMainFrame') {
+      document.getElementById('iframeDiv').style.display = "none";
+    }else if(event.data=='showTheMainFrame'){
+      document.getElementById('iframeDiv').style.display = "block";
+    }
+    if (event.data== 'replyToUseruserleft'){
+      setTimeout(endOfConversation, 2000);
+    }
+    if (event.data== 'dintPickTheCall'){
+      if(isAudioClicked){
+        audioBtn.click()
+      }else if(isVideoClicked){
+        videoBtn.click()
+      }
+    }
+    if (event.data== 'timeToStart'){
+
+      // alert('here')
+      var dataToSend = {uid: uid , sentByAgent:false , created: new Date() };
+
+      if (streamTyp=='video') {
+        videoOpened = true
+        var callType = 'VCS'
+        dataToSend.logs = 'video call started'
+      }else if(streamTyp=='audio'){
+        audioOpened = true
+        var callType = 'AC'
+        dataToSend.logs = 'audio call started'
+      }
+
+      // console.log(agentPk);
+      if (agentPk) {
+        console.log('agent pk is pnline',isAgentOnline);
+        dataToSend.user = agentPk
+        if (!isAgentOnline) {
+          console.log('agetn oflineee');
+          dataToSend.user = null
+        }else {
+          dataToSend.user = agentPk
         }
-      }, 5000);
+      }
+      // var message = dataToSend
+      dataToSend = JSON.stringify(dataToSend)
+
+      var xhttp = new XMLHttpRequest();
+       xhttp.onreadystatechange = function() {
+         if (this.readyState == 4 && this.status == 201) {
+           console.log('posted successfully');
+         }
+       };
+       xhttp.open('POST', '{{serverAddress}}/api/support/supportChat/', true);
+       xhttp.setRequestHeader("Content-type", "application/json");
+       xhttp.send(dataToSend);
+
+        if (threadExist==undefined) {
+          dataToPublish = [uid, callType, [] , custID]
+          details = getCookie("uidDetails");
+          if (details != "") {
+            // console.log(details);
+             dataToPublish.push(JSON.parse(details))
+          } else {
+            dataToPublish.push(false)
+          }
+
+          var dataToSend = JSON.stringify({uid: uid , company: custID, typ: streamTyp});
+          var xhttp = new XMLHttpRequest();
+           xhttp.onreadystatechange = function() {
+             if (this.readyState == 4 && this.status == 201) {
+               console.log('posted successfully',this.responseText);
+               var data = JSON.parse(this.responseText)
+               threadExist=true
+               chatThreadPk = data.pk
+               dataToPublish.push(chatThreadPk)
+               dataToPublish.push(urlforConferenceForAgent)
+              setTimeout(function () {
+                connection.session.publish(wamp_prefix+'service.support.agent', dataToPublish , {}, {
+                  acknowledge: true
+                }).
+                then(function(publication) {
+                  console.log("Published to all");
+                },function(){
+                  console.log('unable to publish to all');
+                })
+              }, 1000);
+             }
+           };
+           xhttp.open('POST', '{{serverAddress}}/api/support/chatThread/', true);
+           xhttp.setRequestHeader("Content-type", "application/json");
+           xhttp.send(dataToSend);
+        }else {
+
+          var xhttp = new XMLHttpRequest();
+           xhttp.onreadystatechange = function() {
+             if (this.readyState == 4 && this.status == 200) {
+               console.log('chat thread typ changed');
+             }
+           };
+           xhttp.open('PATCH', '{{serverAddress}}/api/support/chatThread/'+ chatThreadPk + '/', true);
+           xhttp.setRequestHeader("Content-type", "application/json");
+           xhttp.send(JSON.stringify({typ:streamTyp}));
+
+          dataToPublish = [uid, callType, [] , custID, urlforConferenceForAgent]
+          if (isAgentOnline) {
+            console.log('ONLINE' , agentPk);
+            setTimeout(function () {
+              connection.session.publish(wamp_prefix+'service.support.agent.'+agentPk, dataToPublish , {}, {
+                acknowledge: true
+              }).
+              then(function(publication) {
+                console.log("called service.support.agent."+agentPk);
+              },function(err){
+                console.log("failed to call "+agentPk);
+              });
+            }, 1000);
+          }else {
+            console.log('offline send to all');
+          setTimeout(function () {
+            connection.session.publish(wamp_prefix+'service.support.agent', dataToPublish , {}, {
+              acknowledge: true
+            }).
+            then(function(publication) {
+              console.log("Published");
+            });
+          }, 1000);
+          }
+        }
     }
   }
+
+function endOfConversation() {
+
+    if (videoOpened) {
+      var iFrame = document.getElementById('iFrame1')
+      iFrame.src = '';
+      if (device=='sm') {
+        videoSection.innerHTML = "";
+        videoSection.style.display = "none";
+        chatBox_content.style.marginTop = "0";
+      }else {
+        chatBox_header.style.borderRadius = "10px 10px 0px 0px"
+        chatBox_footer.style.borderRadius = "0px 0px 10px 10px"
+        var iframeDiv = document.getElementById('iframeDiv')
+        iframeDiv.parentNode.removeChild(iframeDiv);
+      }
+      videoOpened = false
+    }else if(audioOpened){
+
+      var iFrame = document.getElementById('iFrame1')
+      iFrame.src = '';
+      audioSection.innerHTML = "";
+      audioSection.style.display = "none";
+      chatBox_content.style.marginTop = "0";
+      audioOpened = false;
+    }
+  }
+
+  function deactivateAudioFrame(){
+    if(getFrameContent!=undefined){
+      getFrameContent.postMessage('userleft',webRtcAddress );
+    }
+    audioSection.style.display = "none";
+    chatBox_content.style.marginTop = "0";
+  }
+  function deactivateVideoFrame(){
+    if(getFrameContent!=undefined){
+      getFrameContent.postMessage('userleft',webRtcAddress );
+    }
+    // alert('deactivating audio frame')
+    document.getElementById('iframeDiv').style.display="none"
+    videoSection.style.display = "none";
+    chatBox_content.style.marginTop = "0";
+  }
+
+function togglingActive(element,value,type){
+  if(type=='video'){
+    if(value){
+      element.classList.add('changeOpacity')
+      element.classList.remove('font-SyrowVideoCall')
+      element.classList.add('font-SyrowVideo-off')
+    }else{
+      element.classList.remove('changeOpacity')
+      element.classList.add('font-SyrowVideoCall')
+      element.classList.remove('font-SyrowVideo-off')
+    }
+  }else{
+    if(value){
+      element.classList.add('changeOpacity')
+      element.classList.remove('font-SyrowPhone1')
+      element.classList.add('font-SyrowPhone-call')
+    }else{
+      element.classList.remove('changeOpacity')
+      element.classList.add('font-SyrowPhone1')
+      element.classList.remove('font-SyrowPhone-call')
+    }
+  }
+
+}
+    var videoBtn=document.getElementById('videoBtn')
+    var audioBtn=document.getElementById('audioBtn')
+    var isVideoClicked=false;
+    var isAudioClicked=false;
+
+    function setAudioVideoBtn(){
+      setTimeout(function () {
+        if(videoContains&&streamType!='audio'){
+          videoBtn.style.display='block'
+        }
+        if(audioContains&&streamType!='video'){
+          audioBtn.style.display='block'
+        }
+      }, 1000);
+    }
+
+    setAudioVideoBtn();
+
+    var audioSet=false;
+    var videoSet=false;
+
+    videoBtn.addEventListener("click",function(){
+      if(isAudioClicked){
+        alert('Audio call is Active')
+        return
+      }
+      if(audioSet){
+        alert('you have made audio call')
+        return
+      }
+      if(isConfirmedToEnd){
+        alert('start new chat')
+        return
+      }
+      videoSet=true
+      audioBtn.style.display='none'
+      isVideoClicked=!isVideoClicked
+      if(isVideoClicked){
+        videoOpened=false;
+        countForFrameContent++;
+        activeVideoCall();
+        if(countForFrameContent>1){
+          getFrameContent.postMessage('refreshIframeVistorSide',webRtcAddress);
+        }
+      }else{
+        // alert(document.getElementById('iFrame1'))
+        deactivateVideoFrame()
+        hideTheIframeOnAgentSide()
+      }
+      togglingActive(videoBtn,isVideoClicked,'video')
+    })
+
+    videoCircle.addEventListener('click',function () {
+      openChat();
+      videoBtn.click()
+    })
+
+    audioCircle.addEventListener('click',function () {
+      openChat();
+      audioBtn.click()
+    })
+
+var countForFrameContent=0;
+
+  audioBtn.addEventListener("click",function(){
+    audioSet=true
+    if(isConfirmedToEnd){
+      alert('start new chat')
+      return
+    }
+    if(videoSet){
+      alert('you have made video call')
+      return
+    }
+    if(isVideoClicked){
+      alert('Video call is Active')
+      return
+    }
+    isAudioClicked=!isAudioClicked
+    videoBtn.style.display='none';
+    if(isAudioClicked){
+      countForFrameContent++;
+      activeAudioCall()
+      // audioOpened = false
+      if(countForFrameContent>1){
+        getFrameContent.postMessage('refreshIframeVistorSide',webRtcAddress);
+      }
+    }else{
+      deactivateAudioFrame()
+      hideTheIframeOnAgentSide()
+    }
+    togglingActive(audioBtn,isAudioClicked,'audio')
+  })
+
+function hideTheIframeOnAgentSide(){
+  connection.session.publish(wamp_prefix+'service.support.agent.'+agentPk, [uid , 'hideTheIframe' ] , {}, {
+    acknowledge: true
+  }).
+  then(function(publication) {
+    console.log("called service.supoort.agent with "+agentPk+" to hide the Iframe on agent side" );
+  },function(err){
+    console.log("unable to call service.supoort.agent with "+agentPk+" to hide the Iframe on agent side" );
+  });
+}
+
+function hideAudioAndVidoeBtn(){
+  videoBtn.style.display='none'
+  audioBtn.style.display='none'
+}
+
+var isConfirmedToEnd=false;
+
+function addExitConfirmation() {
+  var confirmationBox = '<div class="confirmationDiv">'+
+  '<div class="confirmationSureText">Are you sure you want to end this chat?</div>'+
+  '<div class="confirmationBtnDiv">'+
+    '<button id="confirmationCancel" class="confirmationBtn">Cancel</button>'+
+    '<button id="confirmationYes" class="confirmationBtn">Yes</button>'+
+    '</div>'+
+  '</div>'
+  var div = document.createElement("div");
+  div.setAttribute("id", "confirmationBox")
+  div.innerHTML = confirmationBox
+  messageBox.appendChild(div);
+  scroll();
+  document.getElementById('confirmationCancel').addEventListener("click", function() {
+    var confBox = document.getElementById('confirmationBox')
+    confBox.parentNode.removeChild(confBox);
+  });
+
+  document.getElementById('confirmationYes').addEventListener("click", function() {
+
+    var confBox = document.getElementById('confirmationBox')
+    confBox.parentNode.removeChild(confBox);
+
+    isConfirmedToEnd=true
+      if(getFrameContent!=undefined){
+        getFrameContent.postMessage('userleft',webRtcAddress );
+        hideTheIframeOnAgentSide()
+      }
+        if (threadExist==undefined) {
+          return
+        }
+        endChat();
+        hideAudioAndVidoeBtn()
+  });
+}
+
 
 
   exitBtn.addEventListener("click", function() {
 
-      if(getFrameContent!=undefined){
-        getFrameContent.postMessage('userleft',webRtcAddress );
+    if(isConfirmedToEnd){
+      if (feedbackFormOpened) {
+        closeSupport.click()
+        return
       }
-    if (threadExist==undefined) {
-      return
+    }else{
+      if(chat.messages.length<2){
+        closeSupport.click()
+        return
+      }
+
+      addExitConfirmation()
+      // if (confirm("Are you sure you want to end this chat ?")) {
+      //   isConfirmedToEnd=true
+      //     if(getFrameContent!=undefined){
+      //       getFrameContent.postMessage('userleft',webRtcAddress );
+      //     }
+      //       if (threadExist==undefined) {
+      //         return
+      //       }
+      //       endChat();
+      //       hideAudioAndVidoeBtn()
+      // } else {
+      //   return
+      // }
     }
-    if (feedbackFormOpened) {
-      closeSupport.click()
-      return
-    }
-    endChat()
   }, false);
 
   paperPlane.addEventListener("click", function() {
+    document.getElementById('inputText').focus()
     sendMessage(inputText.value);
   }, false);
 
-
+  // document.getElementById('hereg').addEventListener('click',function(e){
+  //   alert(e)
+  // })
 
 
   function messageDiv(message) {
-
-    console.log('inside messageDiv ',message);
 
     function timeSince(date) {
       t = date;
@@ -2087,31 +2809,40 @@ function createChatDiv() {
 
     function timeWithDate(date) {
       var abc  = date
-      // var date = abc.getDate();
-      // var month = abc.getMonth();
-      // var year = abc.getFullYear();
-
       var hours = abc.getHours();
       var minutes = abc.getMinutes();
       var ampm = hours >= 12 ? 'pm' : 'am';
       hours = hours % 12;
-      hours = hours ? hours : 12; // the hour '0' should be '12'
+      hours = hours ? hours : 12;
       minutes = minutes < 10 ? '0'+minutes : minutes;
       var strTime = hours + ':' + minutes + ' ' + ampm;
-      console.log(strTime);
-      // var dateString = date + "-" +(month + 1) + "-" + year;
-      // return dateString + ', ' + strTime
       return strTime
     }
 
 
-    // message.timeAgo = timeSince(new Date(message.created))
+
+    // setTimeout(function () {
+    //   for (var i = 1; i <= msgCount; i++) {
+    //     console.log(i,msgCount,"***************");
+    //     document.getElementById('attachedFile'+i).addEventListener("click",function(e){
+    //       openModal(e.target.src)
+    //       alert(msgCount);
+    //     },false)
+    //   }
+    // }, 1000);
     message.timeDate = timeWithDate(new Date(message.created))
 
     if (message.attachment) {
+      setTimeout(function () {
+        for (var i = 1; i <= msgCount; i++) {
+          document.getElementById('attachedFile'+i).addEventListener("click",function(e){
+            openModal(e.target.src)
+          },false)
+        }
+      }, 1000);
       if (message.attachmentType=='image') {
-          console.log('image');
-        attachedFile = '<img  src="'+ message.attachment +'" style="width:200px; box-sizing:border-box;">'
+        msgCount++;
+        attachedFile = '<img  id="attachedFile'+msgCount+'" src="'+ message.attachment +'" style="width:200px; box-sizing:border-box;">'
       }else if (message.attachmentType=='instructionImage') {
           console.log('instructionImage');
         attachedFile = '<img  src="'+ message.attachment +'" style="width:200px; box-sizing:border-box;">'
@@ -2126,11 +2857,8 @@ function createChatDiv() {
           console.log('application');
           attachedFile ='<p style="line-height: 1.75; margin:0px 0px 10px; box-sizing:border-box;">  <a style="color:#fff;" href="'+message.attachment+'"> '+message.attachment+' </a></p>'
       }
-      // else if (message.link) {
-      //   console.log('yesssssssss' , message.link);
-      // attachedFile = '<iframe width="100%" height="180" style="box-sizing:border-box;;" src="'+message.link+'" frameborder="0" allowfullscreen></iframe>'
-      // }
     }
+
 
     if (message.logs==null) {
       if (message.message!=null && message.attachmentType!=null) {
@@ -2139,26 +2867,32 @@ function createChatDiv() {
         var msgDiv =attachedFile
       }else {
         if (message.attachment==null) {
-          console.log(message.message.replace(/\n/g,'<br>') , 'FFF');
-          console.log(message.message,'GGGGGGGGGGGGGGGGGGGGGGGGGGGG');
-          var pTag = message.message.includes('www.') || message.message.includes('http') ? '<a href="'+message.message+'"><p style="word-break: break-all !important; font-size:12px; margin:5px 0px; box-sizing:border-box;">'+ message.message +'</p></a>':'<p style="word-break: break-all !important; font-size:12px; margin:5px 0px; box-sizing:border-box;">'+ message.message.replace(/\n/g,'<br>') +'</p>'
+          var str= message.message
+          var expression = /[-a-zA-Z0-9@:%_\+.~#?&//=]{2,256}\.[a-z]{2,4}\b(\/[-a-zA-Z0-9@:%_\+.~#?&//=]*)?/gi;
+          var regex = new RegExp(expression);
+          var res = str.split(' ');
+          var pTag
+          res.forEach((r)=>{
+            if (r.match(regex)) {
+              str=str.replace(r,'<a style="color:'+fontAndIconColor+'" href="'+r+'" target="_blank">'+r+'</a>')
+                pTag='<p style="font-size:14px; margin:5px 0px; box-sizing:border-box;">'+ str +'</p>'
+            }else{
+                 pTag='<p style="font-size:14px; margin:5px 0px; box-sizing:border-box;">'+ str +'</p>'
+            }
+          })
           msgDiv = pTag
         }else {
           msgDiv = attachedFile
         }
-        // var msgDiv = message.attachment!=null ? attachedFile : '<p style="word-break: break-all !important; font-size:12px; margin:5px 0px; box-sizing:border-box;">'+ message.message +'</p>'
       }
     }else {
-      msgDiv = '<p>'+ message.logs + ' at ' +message.timeDate+'</p>'
     }
 
 
-    // console.log(msgDiv , 'msgDivvvvvvvvvvvvvv');
-
     if (message.logs==null) {
       if (!message.sentByAgent) {
-        var msgHtml = '<div style="margin : 0px 0px 15px; box-sizing:border-box;">'+
-                        '<div style=" clear: both; float:right; background-color:'+ windowColor +'; color:#fff;  padding:5px 10px;margin:8px; border-radius:5px; box-sizing:border-box;  letter-spacing:2px;">'+
+        var msgHtml = '<div id="msg'+chat.messages.length+'" style="margin : 0px 0px 15px; box-sizing:border-box;">'+
+                        '<div style=" clear: both; float:right; background-color:'+ windowColor +'; color:'+fontAndIconColor+';  padding:5px 10px;margin:8px; border-radius:20px 0px 20px 20px; box-sizing:border-box;">'+
                           msgDiv+
                         '</div>'+
                         '<div style="clear: both; float:right; padding:0px 10px; font-size:9px">'+ message.timeDate +'</div>'+
@@ -2166,8 +2900,8 @@ function createChatDiv() {
         return msgHtml
 
       }else {
-        var msgHtml = '<div style="margin:0px 0px 10px; box-sizing:border-box;" >'+
-                  '<div style="clear: both; float:left; background-color:#e0e0e0; padding:5px 10px;margin:8px; border-radius:5px; box-sizing:border-box; letter-spacing:2px;">'+
+        var msgHtml = '<div id="msg'+chat.messages.length+'" style="margin:0px 0px 10px; box-sizing:border-box;" >'+
+                  '<div style="clear: both; float:left; background-color:#f6f6f6; padding:5px 10px;margin:8px; border-radius:0px 20px 20px 20px; box-sizing:border-box;">'+
                      msgDiv+
                   '</div> '+
                   '<div style="clear: both; float:left; padding:0px 10px; font-size:9px">'+ message.timeDate +'</div>'+
@@ -2175,129 +2909,62 @@ function createChatDiv() {
         return msgHtml
       }
     }else {
-      var msgHtml = '<div style="margin:0px 0px 10px; box-sizing:border-box;" >'+
-                '<div style="clear: both; text-align:center; box-sizing:border-box; letter-spacing:2px;">'+
-                   msgDiv+
-                '</div> '+
-              '</div> '
-      return msgHtml
+      return ''
     }
-
-
-
-
-    // if (message.msg=='') {
-    //   if (message.img) {
-    //     attachedFile = '<img  src="'+ message.img +'" style="width:200px; box-sizing:border-box;">'
-    //   }else if (message.audio) {
-    //     attachedFile = '<audio style="width:200px; box-sizing:border-box;" src="'+ message.audio +'" controls></audio>'
-    //   }else if (message.video) {
-    //     attachedFile = '<video width="200" height="180" style="box-sizing:border-box;" src="'+ message.video +'" controls></video>'
-    //   }else if (message.doc) {
-    //       attachedFile ='<p style="line-height: 1.75; margin:0px 0px 10px; box-sizing:border-box;">  <a style="color:#fff;" href="'+message.doc+'"> '+message.doc+' </a></p>'
-    //   }else if (message.link) {
-    //     console.log('yesssssssss' , message.link);
-    //   attachedFile = '<iframe width="100%" height="180" style="box-sizing:border-box;;" src="'+message.link+'" frameborder="0" allowfullscreen></iframe>'
-    //   }
-    // }
-    //
-    // var msgDiv = message.msg=='' ? attachedFile : '<p style="word-break: break-all !important; font-size:12px; margin:5px 0px; box-sizing:border-box; ">'+ message.msg +'</p>'
-    //
-    // if (message.sentByMe) {
-    //   var msgHtml = '<div style="margin : 0px 0px 10px; box-sizing:border-box;">'+
-    //                   '<div style=" clear: both; float:right; background-color:'+ windowColor +'; color:#fff;  padding:10px;margin:8px; border-radius:20px 0px 20px 20px; box-sizing:border-box;">'+
-    //                     msgDiv+
-    //                   '</div>'+
-    //                 '</div>'
-    //   return msgHtml
-    //
-    // }else {
-    //   var msgHtml = '<div style="margin:0px 0px 10px; box-sizing:border-box;" >'+
-    //             '<div style="clear: both; float:left; background-color:#e0e0e0; padding:10px;margin:8px; border-radius:0px 20px 20px 20px; box-sizing:border-box;">'+
-    //                msgDiv+
-    //             '</div> '+
-    //           '</div> '
-    //   return msgHtml
-    // }
-
-
-
   }
 
+let currentUrl=window.location.href;
+setTimeout(function () {
+  connection.session.publish(wamp_prefix+'service.support.agent.'+agentPk, [uid , 'CU' , currentUrl] , {}, {
+    acknowledge: true
+  })
+}, 4000);
+
+setInterval(function () {
+  // alert(currentUrl)
+  if(currentUrl!==window.location.href){
+    currentUrl=window.location.href;
+    connection.session.publish(wamp_prefix+'service.support.agent.'+agentPk, [uid , 'CU' , currentUrl] , {}, {
+      acknowledge: true
+    })
+  }
+}, 5000);
 
 
   function pushMessages() {
     for (var i = 0; i < chat.messages.length; i++) {
       var div = document.createElement("div");
-      console.log(chat.messages[i].message);
+      div.setAttribute("id", "herere")
       if (chat.messages[i].message=="first") {
-        // div.innerHTML = '<p>hello</p>'
-        // console.log(div,'divvvvvvvvvvv');
-        console.log(firstMessage);
         firstMessage = firstMessage.replaceAll("&lt;",'<')
         firstMessage = firstMessage.replaceAll("&gt;",">")
+        firstMessage = firstMessage.replaceAll("<a","<a style="+'color:'+windowColor+';text-decoration:none')
+        firstMessage = firstMessage.replaceAll("<li>","<li style='list-style:none'>")
+
           div.innerHTML = '<div style="margin:0px 0px 10px; box-sizing:border-box;" >'+
-                  '<div style="clear: both; float:left; background-color:#e0e0e0; padding:5px 10px;margin:8px; border-radius:5px; box-sizing:border-box; letter-spacing:2px;font-size:12px">'+
+                  '<div style="clear: both; float:left; background-color:#f6f6f6; padding:5px 10px;margin:8px; border-radius:5px; box-sizing:border-box;font-size:14px">'+
                      firstMessage+
                   '</div> '+
                 '</div> '
-
-        console.log(firstMessage);
-        console.log('firstttttttt' , typeof firstMessage);
       }else {
         div.innerHTML = messageDiv(chat.messages[i])
       }
       messageBox.appendChild(div);
+
     }
+    // console.log(document.getElementById('herere').getElementsByTagName("p"),'ffffffffffffffffffffffffff');
+    // var pTags = document.getElementById('herere').getElementsByTagName("p");
+    // var pTags = document.getElementById('herere').firstChild.style.fontSize = "8px"
+    // for (var i = 0; i < pTags.length; i++) {
+    //   console.log(pTags,'inforrrrrrrrrrrrr');
+    //   pTags[i].style.fontSize = "8px;"
+    // }
     scroll();
   }
-
 
   setTimeout(function () {
     pushMessages();
   }, 2000);
-
-
-
-  // function checkChatOpen(){
-  //   chatOpenCookie = getCookie("chatOpenCookie");
-  //   if (chatOpenCookie != "") {
-  //     console.log(chatOpenCookie , 'ALREadyyyyyyyyyyyyyyyy');
-  //     if (chatOpenCookie=='true') {
-  //       chatOpen = true
-  //       if (serviceCount==1) {
-  //         singleService.style.display = "none"
-  //       }
-  //       console.log('opneddd');
-  //       supportCircle.style.display = "none";
-  //       if (device=='xs' || device =='sm') {
-  //         closeSupport.style.display = "none";
-  //         document.getElementsByTagName("BODY")[0].style.overflowY = "hidden";
-  //       }else {
-  //         closeSupport.style.display = "";
-  //       }
-  //       unreadMsgCount = 0;
-  //       chatBox.style.display = "";
-  //       headerChat.style.display = "";
-  //       messageBox.style.display = "";
-  //       footer.style.display = "";
-  //       startConvoBtn.style.display = "none";
-  //       startConversation.style.display = "none";
-  //       headerInit.style.display = "none";
-  //     }else {
-  //       chatOpen = false
-  //       console.log('closed');
-  //     }
-  //   }else {
-  //
-  //   }
-  // }
-  //
-  //
-  // setTimeout (function() {
-  //     checkChatOpen()
-  // },2000)
-
 
   function scroll() {
     setTimeout(function () {
@@ -2306,31 +2973,21 @@ function createChatDiv() {
     }, 200);
   }
 
-
   function onlineAgent() {
-    console.log('in onlineAgent######333333333' , agentPk);
+    console.log('checking for online ' , agentPk);
     if (agentPk) {
-      // setInterval(function () {
-        // status = "O";
-        connection.session.call('service.support.heartbeat.' + agentPk, []).then(
+        connection.session.call(wamp_prefix+'service.support.heartbeat.' + agentPk, []).then(
           function (res) {
-           console.log("Result:", res);
            isAgentOnline = true;
            onlineStatus.innerHTML = 'Online';
+           console.log('online');
          },
          function (err) {
-          console.log("Error:", err);
           isAgentOnline = false;
+          console.log('offline ' , err);
           onlineStatus.innerHTML = 'Away';
         }
        );
-        // connection.session.publish('service.support.agent.'+ agentPk , [uid , status], {}, {
-        //   acknowledge: true
-        // }).
-        // then(function(publication) {
-        //   console.log("check online status");
-        // });
-      // }, 30000);
     }
   }
 
@@ -2341,257 +2998,338 @@ function createChatDiv() {
 
   setInterval(function(){
     onlineAgent();
-  },15000 )
-
+  },10000 )
 
   function spying(inputVal) {
     countOnchange = 0;
-    console.log('values' , inputVal);
-      connection.session.publish('service.support.agent.'+agentPk, [uid , 'T' , inputVal] , {}, {
+    // console.log('values' , inputVal);
+      connection.session.publish(wamp_prefix+'service.support.agent.'+agentPk, [uid , 'T' , inputVal] , {}, {
         acknowledge: true
       }).
       then(function(publication) {
-        console.log("Published" + "service.support.agent."+agentPk);
+        console.log("Published to service.support.agent. "+agentPk+" for spying");
+      },function(){
+        console.log('failed to call service.suuport.agent '+agentPk+' for spying');
       });
   }
 
 
   inputText.addEventListener('keydown', function(evt) {
-    // countOnchange++
-    console.log(evt.keyCode);
-    console.log(this.value);
+
     if (evt.keyCode==32 || evt.keyCode == 8 || evt.keyCode == 13 ) {
       spying(this.value)
     }
-    // if ((countOnchange % 4) == 0) {
-    // }
   });
 
 
+  var getLocationDataFirstApi = function(ipAddress){
 
-  function sendMessage(inptText) {
-
-    if (inptText.length<=0) {
-      return;
-    }
-
-
-    // chat.message.push(inptText)
-    // console.log(chat);
-
-    console.log(inptText,'input');
-
-    console.log(uid);
-    console.log(getCookie("uid"));
-    if (uid!=getCookie("uid")) {
-      uid = getCookie("uid");
-    }
-
-
-    console.log(uid);
-    console.log(chat.messages.length);
-
-
-    var youtubeLink = inptText.includes("yout");
-
-
-
-    // if (youtubeLink) {
-    //   status = "ML";
-    //   link = "https://www.youtube.com/embed/" + inptText.split("v=")[1];
-    //   var message = {msg:"" , link:link ,  sentByMe:true , created: new Date() }
-    //   var dataToSend = JSON.stringify({uid: uid , message: message.link });
-    // }else {
-    //   status = "M";
-    //   var message = {msg:inptText ,  sentByMe:true , created: new Date() }
-    //   var dataToSend = JSON.stringify({uid: uid , message: message.msg });
-    // }
-
-    if (youtubeLink) {
-      status = "ML";
-      link = "https://www.youtube.com/embed/" + inptText.split("v=")[1];
-
-
-      var dataToSend = {uid: uid , message: link, attachmentType:'youtubeLink' , sentByAgent:false , created: new Date() };
-      if (agentPk) {
-        console.log('agent pk is pnline',isAgentOnline);
-        dataToSend.user = agentPk
-        if (!isAgentOnline) {
-          console.log('agetn oflineee');
-          dataToSend.user = null
-        }else {
-          dataToSend.user = agentPk
+    return new Promise(function(resolve,reject){
+      var xhttpIP = new XMLHttpRequest();
+      xhttpIP.onreadystatechange = function() {
+        if (this.readyState == 4 && this.status == 200) {
+          resolve(this.responseText)
+        }else if(this.readyState == 4 && this.status != 200){
+          reject(this.status)
         }
       }
-      var message = dataToSend
-      dataToSend = JSON.stringify(dataToSend)
-    }else {
-      status = "M";
-      // var message = {message:inptText ,  sentByAgent:false , created: new Date() }
-      var dataToSend = {uid: uid , message: inptText , sentByAgent:false , created: new Date() };
-      console.log(agentPk);
-      if (agentPk) {
-        console.log('agent pk is pnline',isAgentOnline);
-        dataToSend.user = agentPk
-        if (!isAgentOnline) {
-          console.log('agetn oflineee');
-          dataToSend.user = null
-        }else {
-          dataToSend.user = agentPk
+      console.log(ipAddress);
+
+      // xhttpIP.open('GET', 'http://api.ipstack.com/43.224.128.150?access_key=f6e584f19ad6fa9080e0434fb46ae508&format=1', true);
+      xhttpIP.open('GET', 'http://api.ipstack.com/'+ipAddress+'?access_key=f6e584f19ad6fa9080e0434fb46ae508&format=1', true);
+      xhttpIP.send();
+    })
+  }
+  var getLocationDataSecondApi =function(ipAddress){
+    return new Promise(function(resolve,reject){
+      var xhttpIP = new XMLHttpRequest();
+      xhttpIP.onreadystatechange = function() {
+        if (this.readyState == 4 && this.status == 200) {
+          resolve(JSON.parse(this.responseText))
+        }else if(this.readyState == 4 && this.status != 200){
+          reject(this.status)
         }
       }
-      var message = dataToSend
-      dataToSend = JSON.stringify(dataToSend)
-    }
-
-
-
-
-    var div = document.createElement("div");
-    div.className = "messageOpacity"
-    div.innerHTML = messageDiv(message)
-    messageBox.appendChild(div);
-    scroll();
-
-    chat.messages.push(message);
-    inputText.value ='';
-
-    setTimeout(function() {
-      console.log(isAgentOnline, ' is agent online..........');
-
-      if (!isAgentOnline) {
-        agentName.innerHTML = nameSupport
-        var div = document.createElement("div");
-        div.id="offlineMessage"
-
-        div.innerHTML =  '<div style="margin:0px 0px 10px; box-sizing:border-box;" >'+
-                          '<div style="clear: both; float:left; background-color:#e0e0e0; padding:10px;margin:8px; border-radius:0px 20px 20px 20px; box-sizing:border-box;">'+
-                          '<p style="line-height: 1.75; margin:0px 0px 10px; word-wrap: break-word; font-size:12px; box-sizing:border-box;">Sorry we are offline. Please email us your query.</p>'+
-                          '<form>'+
-                            '<input id="emailAddr" style="width:100%; margin-bottom:8px; box-sizing:border-box;" name="fname" type="text" placeholder="Email.." >'+
-                             '<textarea style="width:100%; resize:none; box-shadow:none; box-sizing:border-box;" rows="3" placeholder="Type your message here.."></textarea>'+
-                             '<button id="sendEmail" type="button" style="margin-top:10px; border:none; margin-left:38%; padding:8px; border-radius:8px; background-color:#286EFA ; color:#fff; text-transform:none; font-size:11px; cursor:pointer;" >'+
-                               'Submit'+
-                             '</button>'+
-                            '</form>'+
-                          '</div> '+
-                        '</div>'
-        scroll();
-
-        // var sendEmail = document.getElementById('sendEmail');
-        // sendEmail();
-        }
-    }, 4000)
-
-
-    console.log(dataToSend,'data to send');
-    var xhttp = new XMLHttpRequest();
-     xhttp.onreadystatechange = function() {
-       if (this.readyState == 4 && this.status == 201) {
-         console.log('posted successfully');
-       }
-     };
-     xhttp.open('POST', '{{serverAddress}}/api/support/supportChat/', true);
-     xhttp.setRequestHeader("Content-type", "application/json");
-     xhttp.send(dataToSend);
-
-
-     var dataToPublish = [uid , status , message ];
-
-     // setCookie("uidDetails", {}, 365);
-     // details = getCookie("uidDetails");
-     // console.log('********************8',details);
-     // if (details != "") {
-     //    dataToPublish.push(details)
-     // } else {
-     //   dataToPublish.push(false)
-     // }
-
-     if (threadExist==undefined) {
-      var dataToPublish = [uid , status , message , custID ];
-      details = getCookie("uidDetails");
-      if (details != "") {
-        console.log(details);
-         dataToPublish.push(JSON.parse(details))
-      } else {
-        dataToPublish.push(false)
-      }
-
-      var dataToSend = JSON.stringify({uid: uid , company: custID});
-       var xhttp = new XMLHttpRequest();
-        xhttp.onreadystatechange = function() {
-          if (this.readyState == 4 && this.status == 201) {
-            console.log('posted successfully');
-            var data = JSON.parse(this.responseText)
-            threadExist=true
-            console.log(data , 'data$$$$$$$$$$$$$$$$$$$');
-            chatThreadPk = data.pk
-            dataToPublish.push(chatThreadPk)
-            connection.session.publish('service.support.agent', dataToPublish , {}, {
-              acknowledge: true
-            }).
-            then(function(publication) {
-              console.log("Published");
-            });
-          }
-        };
-        xhttp.open('POST', '{{serverAddress}}/api/support/chatThread/', true);
-        xhttp.setRequestHeader("Content-type", "application/json");
-        xhttp.send(dataToSend);
-     }else {
-       console.log('chat threAD EXIST');
-       if (isAgentOnline) {
-         console.log('ONLINE' , agentPk);
-         connection.session.publish('service.support.agent.'+agentPk, dataToPublish , {}, {
-           acknowledge: true
-         }).
-         then(function(publication) {
-           console.log("Published service.support.agent."+agentPk);
-         });
-       }else {
-         console.log('offline send to all');
-         connection.session.publish('service.support.agent', dataToPublish , {}, {
-           acknowledge: true
-         }).
-         then(function(publication) {
-           console.log("Published");
-         });
-       }
-       console.log('chat thread exist');
-
-     }
-
-
+      xhttpIP.open('GET', 'http://ip-api.com/json/'+ipAddress, true);
+      // xhttpIP.open('GET', 'http://ip-api.com/json/43.224.128.150', true);
+      xhttpIP.send();
+    })
+  }
+  var patchLocationToChatThread=function(chatThreadPk,dataToSend){
+      var xhttp = new XMLHttpRequest();
+       xhttp.onreadystatechange = function() {
+         if (this.readyState == 4 && this.status == 200) {
+           console.log(this.responseText);
+         }
+       };
+       xhttp.open('PATCH', '{{serverAddress}}/api/support/chatThread/'+ chatThreadPk + '/', true);
+       xhttp.setRequestHeader("Content-type", "application/json");
+       xhttp.send(JSON.stringify({'location':dataToSend}));
   }
 
-  // inputText.addEventListener("keydown", function (e) {
-  //     if (e.keyCode === 13) {
-  //       if (inputText.value.length>0) {
-  //         sendMessage(inputText.value)
-  //       }
-  //     }
-  // }, false);
+
+  function sendMessage(inptText,is_hidden) {
+      if (is_hidden==undefined) {
+        var is_hidden = false
+      }else {
+        var is_hidden = is_hidden
+      }
+
+      if (inptText.length<=0) {
+        return;
+      }
+
+      if (uid!=getCookie("uid")) {
+        uid = getCookie("uid");
+      }
+
+      var youtubeLink = inptText.includes("yout");
+      if (youtubeLink) {
+        status = "ML";
+        link = "https://www.youtube.com/embed/" + inptText.split("v=")[1];
+        var dataToSend = {uid: uid , message: link, attachmentType:'youtubeLink' , sentByAgent:false , created: new Date() };
+        console.log('is Agent online ',isAgentOnline);
+        if (agentPk) {
+          dataToSend.user = agentPk
+          if (!isAgentOnline) {
+            dataToSend.user = null
+          }else {
+            dataToSend.user = agentPk
+          }
+        }
+        var message = dataToSend
+        // dataToSend = JSON.stringify(dataToSend)
+      }else {
+        status = "M";
+        var dataToSend = {uid: uid , message: inptText , sentByAgent:false , created: new Date() };
+        console.log('is Agent online ',isAgentOnline);
+        if (agentPk) {
+
+          dataToSend.user = agentPk
+          if (!isAgentOnline) {
+
+            dataToSend.user = null
+          }else {
+            dataToSend.user = agentPk
+          }
+        }
+        var message = dataToSend
+      }
+      // alert(is_hidden)
+      if (is_hidden) {
+        dataToSend.is_hidden = true
+        dataToSend = JSON.stringify(dataToSend)
+      }else {
+        dataToSend = JSON.stringify(dataToSend)
+        var div = document.createElement("div");
+        div.className = "messageOpacity"
+        div.innerHTML = messageDiv(message)
+        messageBox.appendChild(div);
+        scroll();
+        chat.messages.push(message);
+        inputText.value ='';
+      }
+
+
+      setTimeout(function() {
+        // console.log(isAgentOnline, ' is agent online..........');
+
+        if (!isAgentOnline) {
+          agentName.innerHTML = nameSupport
+          var div = document.createElement("div");
+          div.id="offlineMessage"
+
+          div.innerHTML =  '<div style="margin:0px 0px 10px; box-sizing:border-box;" >'+
+                            '<div style="clear: both; float:left; background-color:#f6f6f6; padding:10px;margin:8px; border-radius:0px 20px 20px 20px; box-sizing:border-box;">'+
+                            '<p style="line-height: 1.75; margin:0px 0px 10px; word-wrap: break-word; font-size:14px; box-sizing:border-box;">Sorry we are offline. Please email us your query.</p>'+
+                            '<form>'+
+                              '<input id="emailAddr" style="width:100%; margin-bottom:8px; box-sizing:border-box;" name="fname" type="text" placeholder="Email.." >'+
+                               '<textarea style="width:100%; outline:none;resize:none; box-shadow:none; box-sizing:border-box;" rows="3" placeholder="Type your message here.."></textarea>'+
+                               '<button id="sendEmail" type="button" style="margin-top:10px; border:none; margin-left:38%; padding:8px; border-radius:8px; background-color:#286EFA ; color:#fff; text-transform:none; font-size:11px; cursor:pointer;" >'+
+                                 'Submit'+
+                               '</button>'+
+                              '</form>'+
+                            '</div> '+
+                          '</div>'
+          scroll();
+          }
+      }, 4000)
+
+       var xhttp = new XMLHttpRequest();
+       xhttp.onreadystatechange = function() {
+         if (this.readyState == 4 && this.status == 201) {
+           console.log('posted successfully');
+         }
+       };
+       xhttp.open('POST', '{{serverAddress}}/api/support/supportChat/', true);
+       xhttp.setRequestHeader("Content-type", "application/json");
+       xhttp.send(dataToSend);
+       var dataToPublish = [uid , status , message ];
+       if (threadExist==undefined) {
+        var dataToPublish = [uid , status , message , custID ];
+        details = getCookie("uidDetails");
+        if (details != "") {
+          // console.log(details);
+           dataToPublish.push(JSON.parse(details))
+        } else {
+          dataToPublish.push(false)
+        }
+        var dataToSend = JSON.stringify({uid: uid , company: custID});
+         var xhttp = new XMLHttpRequest();
+          xhttp.onreadystatechange = function() {
+            if (this.readyState == 4 && this.status == 201) {
+              console.log('posted successfully',this.responseText);
+              var data = JSON.parse(this.responseText)
+              threadExist=true
+              chatThreadPk = data.pk
+
+              // getLocationDataFirstApi(data.userDeviceIp).then((data)=>{
+              //       console.log(data);
+              //       patchLocationToChatThread(chatThreadPk,data)
+              //
+              // }).catch((reason)=>{
+              //   console.log(reason);
+              //   getLocationDataSecondApi(data.userDeviceIp).then((data)=>{
+              //     let myData=JSON.stringify({
+              //       'city':data.city,
+              //       'country_name':data.country,
+              //       'region_code':data.region,
+              //       'country_code':data.countryCode,
+              //       'zip':data.zip,
+              //       'latitude':data.lat,
+              //       'longitude':data.lon,
+              //     })
+              //     patchLocationToChatThread(chatThreadPk,myData)
+              //   }).catch((err)=>{
+              //     console.log(err);
+              //   })
+              // })
+              dataToPublish.push(chatThreadPk)
+              publishMessageToAll(dataToPublish);
+            }
+          };
+          xhttp.open('POST', '{{serverAddress}}/api/support/chatThread/', true);
+          xhttp.setRequestHeader("Content-type", "application/json");
+          xhttp.send(dataToSend);
+       }else {
+         console.log('chat threAD EXIST');
+         if (isAgentOnline) {
+           console.log('ONLINE' , agentPk);
+           publishMessageToOne(agentPk,dataToPublish)
+         }else {
+           publishMessageToAll(dataToPublish)
+         }
+       }
+
+       // console.log(trySendingAgain);
+       // // var testArray=[]
+       // for (var i = 0; i < trySendingAgain.length; i++) {
+       //   (function(){
+       //     trySendingAgain[i].index = i
+       //     var obj = trySendingAgain[i]
+       //     console.log(trySendingAgain,'before splice');
+       //     trySendingAgain[i].element.addEventListener("click",function(e){
+       //       if(connection.session.isOpen||connection.session!=null){
+       //         alert('there');
+       //         console.log(obj);
+       //         trySendingAgain.splice(obj.index,1)
+       //         publishMessageToOne(agentPk,obj.dataToPublish)
+       //         this.style.opacity = "1";
+       //         console.log(trySendingAgain,'after splice');
+       //       }
+       //     },false)
+       //   }())
+       // }
+       // trySendingAgain=testArray;
+  }
 
   paperClip.addEventListener("click", function() {
     filePicker.click();
   }, false);
 
 
+
+  function publishMessageToAll(dataToPublish){
+    console.log('offline send to all');
+    // console.log(connection.session,this,trySendingAgain)
+    if(connection.session==null||!connection.session.isOpen){
+      var chatArrayLength=chat.messages.length-1;
+      var obj={
+        'element':document.getElementById('msg'+chatArrayLength),
+        'dataToPublish':dataToPublish
+      }
+      disableTextArea()
+      trySendingAgain.push(obj);
+      document.getElementById('msg'+chatArrayLength).style.opacity = "0.5";
+    }
+    else{
+      failedMessages.push(dataToPublish)
+      for (var i = 0; i < failedMessages.length; i++) {
+        connection.session.publish(wamp_prefix+'service.support.agent', failedMessages[i] , {}, {
+          acknowledge: true
+        }).
+        then(function(publication) {
+          console.log("Published to all service.support.agent");
+        },function (error) {
+          failedMessages.push(dataToPublish)
+          console.log('failed to send message to all');
+       })
+      }
+      failedMessages=[]
+    }
+  }
+
+  function publishMessageToOne(MyPk,dataToPublish){
+    console.log('publisshing message');
+    if(connection.session==null||!connection.session.isOpen){
+      var chatArrayLength=chat.messages.length-1;
+      var obj={
+        'element':document.getElementById('msg'+chatArrayLength),
+        'dataToPublish':dataToPublish
+      }
+      disableTextArea()
+      trySendingAgain.push(obj);
+      document.getElementById('msg'+chatArrayLength).style.opacity = "0.5";
+    }
+    else{
+
+      failedMessages.push(dataToPublish)
+      for (var i = 0; i < failedMessages.length; i++) {
+        connection.session.publish(wamp_prefix+'service.support.agent.'+MyPk, failedMessages[i] , {}, {
+          acknowledge: true
+        }).
+        then(function(publication) {
+          console.log("Published service.support.agent."+agentPk);
+        },function (error) {
+          failedMessages.push(dataToPublish)
+          console.log('failed to send message to '+agentPk);
+       })
+      }
+      failedMessages=[]
+    }
+  }
+
+  function disableTextArea(){
+    // connection._transport.close()
+    inputText.disabled = true;
+    inputText.placeholder = "Please Wait. Connecting.. ";
+    paperClip.style.display = "none";
+    paperPlane.style.display = "none";
+  }
+  function enableTextArea(){
+      inputText.disabled = false;
+      inputText.placeholder = "Message...";
+      paperClip.style.display = "";
+      paperPlane.style.display = "";
+  }
+
   function sendFile() {
 
     status = "MF";
-
-
     if (uid!=getCookie("uid")) {
       uid = getCookie("uid");
     }
-
     var file = filePicker;
-    console.log(file.files[0],'typpppppppppppppppppppppp' );
-
-
-    console.log(chat.messages.length);
-
     var fd = new FormData();
     fd.append('uid', uid);
     fd.append('attachment', file.files[0]);
@@ -2606,12 +3344,12 @@ function createChatDiv() {
 
       xhttp.onreadystatechange = function() {
         if (this.readyState == 4 && this.status == 201) {
-          console.log(this.responseText);
+          // console.log(this.responseText);
           var data = JSON.parse(this.responseText)
           filePk = data.pk
 
           var typ = file.files[0].type.split('/')[0]
-          console.log(typ);
+          // console.log(typ);
 
           var fileData = {
             filePk : data.pk,
@@ -2620,10 +3358,10 @@ function createChatDiv() {
 
 
           if (agentPk) {
-            console.log('agent pk is pnline',isAgentOnline);
+            // console.log('agent pk is pnline',isAgentOnline);
             fileData.user = agentPk;
             if (!isAgentOnline) {
-              console.log('agetn oflineee');
+              // console.log('agetn oflineee');
               fileData.user = null
             }else {
               fileData.user = agentPk;
@@ -2636,39 +3374,33 @@ function createChatDiv() {
           scroll();
           chat.messages.push(data);
           filePicker.value = ""
-
           var dataToPublish = [uid , status , fileData];
-
-
           if (threadExist==undefined) {
-
-          var dataToPublish = [uid , status , fileData , custID ];
-          details = getCookie("uidDetails");
-          if (details != "") {
-            console.log(details);
-             dataToPublish.push(JSON.parse(details))
-          } else {
-            dataToPublish.push(false)
-          }
-
-           var dataToSend = JSON.stringify({uid: uid , company: custID});
+            var dataToPublish = [uid , status , fileData , custID ];
+            details = getCookie("uidDetails");
+            if (details != "") {
+              // console.log(details);
+               dataToPublish.push(JSON.parse(details))
+            } else {
+              dataToPublish.push(false)
+            }
+            var dataToSend = JSON.stringify({uid: uid , company: custID});
             var xhttp = new XMLHttpRequest();
              xhttp.onreadystatechange = function() {
                if (this.readyState == 4 && this.status == 201) {
                  console.log('posted successfully');
                  threadExist=true
-                 console.log(data , 'data$$$$$$$$$$$$$$$$$$$');
+                 // console.log(data , 'data$$$$$$$$$$$$$$$$$$$');
                  chatThreadPk = data.pk
                  dataToPublish.push(chatThreadPk)
-
-                 connection.session.publish('service.support.agent', dataToPublish, {}, {
+                 connection.session.publish(wamp_prefix+'service.support.agent', dataToPublish, {}, {
                    acknowledge: true
                  }).
                  then(function(publication) {
-                   console.log("Published");
+                   console.log("Published the media file to all");
+                 },function(){
+                   console.log('failed to send media file to all');
                  });
-
-
                }
              };
              xhttp.open('POST', '{{serverAddress}}/api/support/chatThread/', true);
@@ -2678,54 +3410,30 @@ function createChatDiv() {
             console.log('chat threAD EXIST');
             if (isAgentOnline) {
               console.log('ONLINE' , agentPk);
-              connection.session.publish('service.support.agent.'+agentPk, dataToPublish , {}, {
+              connection.session.publish(wamp_prefix+'service.support.agent.'+agentPk, dataToPublish , {}, {
                 acknowledge: true
               }).
               then(function(publication) {
-                console.log("Published");
+                console.log("Published the media file to "+agentPk);
+              },function(){
+                console.log('failed to send media file to '+agentPk);
               });
             }else {
               console.log('offline send to all');
-              connection.session.publish('service.support.agent', dataToPublish , {}, {
+              connection.session.publish(wamp_prefix+'service.support.agent', dataToPublish , {}, {
                 acknowledge: true
               }).
               then(function(publication) {
-                console.log("Published");
+                console.log("Published the media file to all");
               });
             }
             console.log('chat thread exist');
           }
 
-
-
-
-
-
         }
       };
       xhttp.open('POST', '{{serverAddress}}/api/support/supportChat/', true);
       xhttp.send(fd);
-
-
-      //
-      // if (threadExist==undefined) {
-      //  var dataToSend = JSON.stringify({uid: uid , company: custID});
-      //   var xhttp = new XMLHttpRequest();
-      //    xhttp.onreadystatechange = function() {
-      //      if (this.readyState == 4 && this.status == 201) {
-      //        console.log('posted successfully');
-      //        threadExist=true
-      //        console.log(data , 'data$$$$$$$$$$$$$$$$$$$');
-      //        chatThreadPk = data.pk
-      //      }
-      //    };
-      //    xhttp.open('POST', '{{serverAddress}}/api/support/chatThread/', true);
-      //    xhttp.setRequestHeader("Content-type", "application/json");
-      //    xhttp.send(dataToSend);
-      // }
-
-
-
 
   }
 
@@ -2737,20 +3445,40 @@ function createChatDiv() {
 
   chatCircle.addEventListener("click", openChat , false);
 
+  var chathasOpenedOnce=false;
+  // chatSuggestionBar.style.display="none"
+  var chatSuggestionBar= document.getElementById('chatSuggestionBar')
+  var chatSuggestionBar1= document.getElementById('chatSuggestionBar1')
+
+  setTimeout(function () {
+    // alert(chathasOpenedOnce)
+    if(!chathasOpenedOnce){
+      chatSuggestionBar.style.display="block"
+      chatSuggestionBar1.style.display="block"
+    }
+  }, 10000);
+
+
+  chatSuggestionBar.style.display="none"
+  // console.log(chatSuggestionBar,"&&***************");
+  chatSuggestionBar1.style.display="none"
 
   function openChat() {
-    // welcomeMessage.style.display ="none";
-    // console.log(chatOpen);
-    // console.log('click');
+
+    document.getElementById("sy-main-icon").classList.remove('first_animation');
+    singleService.classList.remove('first_animation');
+
+    chathasOpenedOnce=true;
+    chatSuggestionBar.style.display="none"
+    chatSuggestionBar1.style.display="none"
     chatOpen = !chatOpen
-    // console.log(chatOpen);
     setCookie("chatOpenCookie", chatOpen, 365);
 
     if (chatOpen) {
       supportCircle.style.display = "none";
 
       if (serviceCount==1) {
-        console.log('coming heeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee');
+        // console.log('coming heeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee');
         singleService.style.display = "none";
       }
 
@@ -2759,15 +3487,7 @@ function createChatDiv() {
         messageComposer.style.display = "none";
       }
 
-      console.log('oddddd' , device);
-
-      // if (device=='xs' || device =='sm') {
-      //   closeSupport.style.display = "none";
-      //   document.getElementsByTagName("BODY")[0].style.overflowY = "hidden";
-      // }else {
-      //   closeSupport.style.display = "";
-      //   document.getElementsByTagName("BODY")[0].style.overflowY = "";
-      // }
+      // console.log('oddddd' , device);
 
       if (device=='sm') {
         document.getElementsByTagName("BODY")[0].style.overflowY = "hidden";
@@ -2775,71 +3495,48 @@ function createChatDiv() {
         document.getElementsByTagName("BODY")[0].style.overflowY = "";
       }
       closeSupport.style.display = "";
-      // unreadMsg.style.display = "none";
       unreadMsgCount = 0;
-      // chatIconSvg.style.display = "none"
-      // closeChatSvg.style.display = ""
       chatBox.style.animation = ""
       chatBox.style.display = "block";
-      messageBox.style.animation = "moveInLeft 0.7s"
+      messageBox.style.animation = "moveInLeft 3s ease-out"
       closeSupport.style.animation = "rotateAnti 0.4s"
-      // closeChatSvg.style.animation = "rotateAnti 1s"
     }else {
       document.getElementsByTagName("BODY")[0].style.overflowY = "";
-      // if (unreadMsgCount>0) {
-      //   // unreadMsg.style.display = "";
-      //   unreadMsgCount+=1;
-      //   // unreadMsg.innerHTML = '<span style="color:#286EFA; box-sizing:border-box;" >'+unreadMsgCount+'</span>'
-      // }
-      //
-      // console.log('close chat');
-      // // chatIconSvg.style.display = ""
-      // // closeChatSvg.style.display = "none"
-      // chatBox.style.display = "none";
     }
   }
 
+  ChatWithUs.style.display="none"
+  setTimeout(function () {
+      ChatWithUs.style.display="block"
+  }, 2000);
+
   closeSupport.addEventListener("click", function() {
+    // if(isConfirmedToEnd){
+    //   connection.session.unsubscribe(subs).then(
+    //     function (gone) {
+    //       alert('unsubscrribed')
+    //     },
+    //     function (err) {
+    //       console.log("failed to subscribed: " + err);
+    //     }
+    //   );
+    // }
+    ChatWithUs.style.display=""
 
-    if (videoOpened) {
-
-      if (device=='sm') {
-        videoSection.innerHTML = "";
-        videoSection.style.display = "none";
-        chatBox_content.style.marginTop = "0";
-      }else {
-        chatBox_header.style.borderRadius = "10px 10px 0px 0px"
-        chatBox_footer.style.borderRadius = "0px 0px 10px 10px"
-        // chatBox.style.borderRadius = "10px 10px 10px 10px"
-        var iframeDiv = document.getElementById('iframeDiv')
-        iframeDiv.parentNode.removeChild(iframeDiv);
-      }
-
-      var iFrame = document.getElementById('iFrame1')
-      iFrame.src = '';
-      videoOpened = false
-    }else if (audioOpened) {
-      var iFrame = document.getElementById('iFrame1')
-      iFrame.src = '';
-      audioSection.innerHTML = "";
-      audioSection.style.display = "none";
-      chatBox_content.style.marginTop = "0";
-      audioOpened = false;
-    }
+    endOfConversation();
 
     if (chatOpen) {
       chatOpen = !chatOpen
       setCookie("chatOpenCookie", chatOpen, 365);
-      console.log('coming here.');
+      // console.log('coming here.');
       messageBox.style.animation = ""
-      // supportCircle.style.display = "";
       if (serviceCount==1) {
         supportCircle.style.display = "none";
         singleService.style.display = "";
       }else {
         supportCircle.style.display = "";
       }
-      chatBox.style.animation = "moveInDown 0.4s"
+      chatBox.style.animation = "moveInDown 0.4s ease-out"
       closeSupport.style.display = "none";
       closeSupport.style.animation = "";
       setTimeout(function () {
@@ -2854,16 +3551,15 @@ function createChatDiv() {
     if (chatOpen) {
       chatOpen = !chatOpen
       setCookie("chatOpenCookie", chatOpen, 365);
-      console.log('coming here.');
+      // console.log('coming here.');
       messageBox.style.animation = ""
-      // supportCircle.style.display = "";
       if (serviceCount==1) {
         supportCircle.style.display = "none";
         singleService.style.display = "";
       }else {
         supportCircle.style.display = "";
       }
-      chatBox.style.animation = "moveInDown 0.4s"
+      chatBox.style.animation = "moveInDown 0.4s ease-out"
       closeSupport.style.display = "none";
       closeSupport.style.animation = "";
       setTimeout(function () {
@@ -2874,23 +3570,6 @@ function createChatDiv() {
       }
     }
   } , false);
-
-
-// document.getElementById('inputText').addEventListener('keyup',function(o){
-//     var my=document.getElementsByClassName('chatBox_content')[0]
-//     if(o.scrollHeight>'177'){
-//       console.log('inside');
-//       o.style.overflow='scroll'
-//     }else{
-//       o.style.height = "1px";
-//       o.style.height = (25+o.scrollHeight)+"px";
-//       console.log(o.style.height);
-//         my.style.bottom="9rem";
-//           my.style.bottom=(2.5+o.scrollHeight/10)+"rem";
-//       console.log(my.style.bottom);
-//     }
-// })
-
 
 function lgDevice(x) {
     if (x.matches) {

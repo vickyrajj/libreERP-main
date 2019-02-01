@@ -26,9 +26,11 @@ class serviceSerializer(serializers.ModelSerializer):
     noOfactiveServices = serializers.SerializerMethodField()
     address = addressSerializer(many = False, read_only = True)
     contactPerson = userSearchSerializer(many = True , read_only = True)
+    advisors = userSearchSerializer(many = True , read_only = True)
+
     class Meta:
         model = service
-        fields = ('pk' , 'created' ,'name' , 'user' , 'cin' , 'tin' , 'address' , 'mobile' , 'telephone' , 'logo' , 'about', 'doc', 'web','contactPerson','perms','noOfPrescript','noOfProcess','noOfactiveServices')
+        fields = ('pk' , 'created' ,'name' , 'user' , 'cin' , 'tin' , 'address' , 'mobile' , 'telephone' , 'logo' , 'about', 'doc', 'web','contactPerson','perms','noOfPrescript','noOfProcess','noOfactiveServices','advisors')
 
     def assignValues(self , instance , validated_data):
         print validated_data,self.context['request'].data
@@ -42,6 +44,8 @@ class serviceSerializer(serializers.ModelSerializer):
             instance.telephone = validated_data['telephone']
         if 'logo' in validated_data:
             instance.logo = validated_data['logo']
+        if 'name' in validated_data:
+            instance.name = validated_data['name']
         if 'about' in validated_data:
             instance.about = validated_data['about']
         if 'doc' in validated_data:
@@ -54,6 +58,10 @@ class serviceSerializer(serializers.ModelSerializer):
             instance.contactPerson.clear()
             for person in self.context['request'].data['contactPerson']:
                     instance.contactPerson.add(User.objects.get(pk = int(person)))
+        if 'advisors' in self.context['request'].data:
+            instance.advisors.clear()
+            for person in self.context['request'].data['advisors']:
+                    instance.advisors.add(User.objects.get(pk = int(person)))
         instance.save()
 
     def create(self , validated_data):
@@ -252,3 +260,58 @@ class CompanyHolidaySerializer(serializers.ModelSerializer):
     class Meta:
         model = CompanyHolidays
         fields = ('pk','created','date','typ','name')
+
+class TeamsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Teams
+        fields = ('pk','created','title','quality_check','team_lead','advisors','service')
+    def create(self , validated_data):
+        t = Teams(title = validated_data['title'])
+        t.save()
+
+        if 'quality_check' in  self.context['request'].data:
+            for qc in self.context['request'].data['quality_check']:
+                user = User.objects.get(pk = int(qc))
+                t.quality_check.add(user)
+
+        if 'team_lead' in  self.context['request'].data:
+            for tl in self.context['request'].data['team_lead']:
+                user = User.objects.get(pk = int(tl))
+                t.team_lead.add(user)
+
+        if 'advisors' in  self.context['request'].data:
+            for a in self.context['request'].data['advisors']:
+                user = User.objects.get(pk = int(a))
+                t.advisors.add(user)
+
+        if 'service' in  self.context['request'].data:
+            for s in self.context['request'].data['service']:
+                print s
+                serv = service.objects.get(pk = int(s))
+                t.service.add(serv)
+
+        if 'advisors' in  self.context['request'].data and 'service' in self.context['request'].data:
+            for s in self.context['request'].data['service']:
+                serv = service.objects.get(pk = int(s))
+                serv.advisors.clear()
+                for a in self.context['request'].data['advisors']:
+                    serv.advisors.add(User.objects.get(pk = int(a)))
+                serv.save()
+
+        t.save()
+        return t
+    def update(self, instance, validated_data):
+        for key in ['title', 'quality_check' , 'team_lead', 'advisors' , 'service']:
+            try:
+                setattr(instance , key , validated_data[key])
+            except:
+                pass
+        instance.save()
+        if 'advisors' in  self.context['request'].data and 'service' in self.context['request'].data:
+            for s in self.context['request'].data['service']:
+                serv = service.objects.get(pk = int(s))
+                serv.advisors.clear()
+                for a in self.context['request'].data['advisors']:
+                    serv.advisors.add(User.objects.get(pk = int(a)))
+                serv.save()
+        return instance

@@ -1,19 +1,4 @@
-<div class="row container-fluid">
-  <div class="input-group" style="padding-top:15px;width:100%;" >
-    <input ng-show="{{searchShow}}" type="text" class="form-control" placeholder="Search by {{searchField}}" ng-model = "searchText" ng-enter="updateData()" style="{{views.length==1 ? 'width:100%;' : ''}}">
-    <div class="input-group-btn"  ng-if="views.length > 1">
-      <a ng-repeat = "view in views" class='btn btn-default ' ng-click = "changeView($index)"><i class="fa {{view.icon}}"></i></a>
-      <!-- <a class="btn btn-success dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span class="caret"></span></a>
-      <ul class="dropdown-menu">
-        <li><a href="#">Use in report</a></li>
-        <li><a href="#">Export</a></li>
-        <li><a href="#">Print</a></li>
-        <li role="separator" class="divider"></li>
-        <li><a href="#">Send via email</a></li>
-      </ul> -->
-    </div>
-  </div>
-</div>
+
 <nav>
   <ul class="pagination pull-right">
     <li ng-repeat="num in itemsNumPerView" ng-class="{'active' : itemsNumPerView[$index] == itemsPerView}" ng-click="changeNumView(itemsNumPerView[$index])"><a href="">{{num}}</a></li>
@@ -48,7 +33,25 @@
   <ul class="pagination pull-right" style="margin-right: 10px;" ng-if="canCreate">
     <li ng-click = "create()"><a href="" style="color: #6f6f6f;">New  <i class = "fa fa-plus"></i></a></li>
   </ul>
-  <ul class="pagination">
+  <ul class="pagination" id="genericTableSearch" style="margin-left: 40px;max-width:900px;">
+    <li>
+      <div class="input-group" style="width:100%;" >
+        <input ng-show="{{searchShow}}" type="text" class="form-control" placeholder="Search by {{searchField}}" ng-model = "searchText" ng-enter="updateData()" style="wisth:100%;{{views.length==1 ? 'width:100%;' : ''}}">
+        <div class="input-group-btn"  ng-if="views.length > 1">
+          <a ng-repeat = "view in views" class='btn btn-default ' ng-click = "changeView($index)"><i class="fa {{view.icon}}"></i></a>
+          <!-- <a class="btn btn-success dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span class="caret"></span></a>
+          <ul class="dropdown-menu">
+            <li><a href="#">Use in report</a></li>
+            <li><a href="#">Export</a></li>
+            <li><a href="#">Print</a></li>
+            <li role="separator" class="divider"></li>
+            <li><a href="#">Send via email</a></li>
+          </ul> -->
+        </div>
+      </div>
+    </li>
+  </ul >
+  <ul class="pagination pull-left">
     <li ng-click="loadPrevSetPages()" class="{{pageList.indexOf(1) != -1 ? 'disabled' : ''}}">
       <a href="" aria-label="Previous">
         <span aria-hidden="true">&laquo;</span>

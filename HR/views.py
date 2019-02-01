@@ -16,16 +16,20 @@ from .serializers import *
 from API.permissions import *
 from ERP.models import application, permission , module , CompanyHolidays , service
 from ERP.views import getApps, getModules
+# from ERP.serializers import *
 from django.db.models import Q
 from django.http import JsonResponse
 import random, string
 from django.utils import timezone
 from rest_framework.views import APIView
+import datetime
 from datetime import date,timedelta
 from dateutil.relativedelta import relativedelta
 import calendar
 from rest_framework.response import Response
 from django.contrib.auth.models import User, Group
+from support.models import *
+from django.core import serializers as jsonSerializers
 # from ERP.models import application , permission
 
 
@@ -108,6 +112,7 @@ import json
 
 @csrf_exempt
 def loginView(request):
+    print 'in loginnnnnnnnnnnn'
     if globalSettings.LOGIN_URL != 'login':
         return redirect(reverse(globalSettings.LOGIN_URL))
     authStatus = {'status' : 'default' , 'message' : '' }
@@ -118,7 +123,10 @@ def loginView(request):
         else:
             return redirect(reverse(globalSettings.LOGIN_REDIRECT))
     if request.method == 'POST':
-        print request.POST
+        print request.POST,'***************in post'
+        print request.user,'&&&&&&&&&&&&&&&&&&&&&&&&&&&&7'
+
+
     	usernameOrEmail = request.POST['username']
         otpMode = False
         if 'otp' in request.POST:
@@ -127,6 +135,7 @@ def loginView(request):
             otpMode = True
         else:
             password = request.POST['password']
+
         if '@' in usernameOrEmail and '.' in usernameOrEmail:
             u = User.objects.get(email = usernameOrEmail)
             username = u.username
@@ -134,6 +143,7 @@ def loginView(request):
             username = usernameOrEmail
             try:
                 u = User.objects.get(username = username)
+                # Heartbeat.objects.create(start=timezone.now(),user=u)
             except:
                 statusCode = 404
         if not otpMode:
@@ -218,22 +228,28 @@ def root(request):
 @login_required(login_url = globalSettings.LOGIN_URL)
 def home(request):
     u = request.user
-
-
-    # permissions = permission.objects.filter(user = u)
-    # print '####################################',permissions
-
-
+    if not u.is_superuser:
+        myapps= getApps(u)
+    else:
+        myapps= application.objects.filter(inMenu = True).exclude(Q(name = 'app.reviews') | Q(name='app.uiSettings') | Q(name='app.knowledgeBase') | Q(name='app.sessionHistory') | Q(name='app.timesheets'))
+    myBrand=globalSettings.BRAND_NAME
+    myapps_json = jsonSerializers.serialize('json', myapps)
+    includeAll = False
+    mymodules= getModules(u , includeAll)
+    mymodules_json = jsonSerializers.serialize('json', mymodules)
     if u.is_superuser:
         apps = application.objects.all()
         modules = module.objects.filter(~Q(name='public'))
     else:
         apps = getApps(u)
         modules = getModules(u)
+        if len(permission.objects.filter(user=u,app__name='app.customer.access'))>0:
+            if len(service.objects.filter(contactPerson=u))>0:
+                myBrand=service.objects.filter(contactPerson=u)[0].name
     apps = apps.filter(~Q(name__startswith='configure.' )).filter(~Q(name='app.users')).filter(~Q(name__endswith='.public'))
-    return render(request , 'ngBase.html' , {'wampServer' : globalSettings.WAMP_SERVER, 'webRtcAddress' :  globalSettings.WEBRTC_ADDRESS,  'appsWithJs' : apps.filter(haveJs=True) \
-    ,'appsWithCss' : apps.filter(haveCss=True) , 'modules' : modules , 'useCDN' : globalSettings.USE_CDN , 'BRAND_LOGO' : globalSettings.BRAND_LOGO \
-    ,'BRAND_NAME' :  globalSettings.BRAND_NAME })
+    return render(request , 'ngBase.html' , {'wampServer' : globalSettings.WAMP_SERVER,'wamp_prefix':globalSettings.WAMP_PREFIX, 'webRtcAddress' :  globalSettings.WEBRTC_ADDRESS,  'appsWithJs' : apps.filter(haveJs=True) \
+    ,'appsWithCss' : apps.filter(haveCss=True) , 'modules' : modules , 'useCDN' : globalSettings.USE_CDN , 'BRAND_LOGO' :globalSettings.BRAND_LOGO  \
+    ,'BRAND_NAME' :  myBrand,'myapps':myapps_json,'mymodules':mymodules_json },)
 
 class userProfileViewSet(viewsets.ModelViewSet):
     permission_classes = (permissions.IsAuthenticated,)

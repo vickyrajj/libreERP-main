@@ -1,0 +1,12 @@
+<ul style="list-style: none;padding: 20px;line-height:2">
+  <li>IP address: {{locationInfo.ip}}</li>
+  <li>City: {{locationInfo.city}}</li>
+  <li>Region: {{locationInfo.region_name}}</li>
+  <li>Country: {{locationInfo.country_name}}</li>
+  <li ng-if="locationInfo.location.capital">Capital: {{locationInfo.location.capital}}</li>
+  <li>Zip: {{locationInfo.zip}}</li>
+  <li ng-if="locationInfo.timezone">Timezone: {{locationInfo.timezone}}</li>
+  <li ng-if="locationInfo.location.languages">Languages :
+    <span ng-repeat="lang in locationInfo.location.languages">{{lang.name}} </span>
+  </li>
+</ul>

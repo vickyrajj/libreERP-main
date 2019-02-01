@@ -19,7 +19,7 @@ class userSearchSerializer(serializers.ModelSerializer):
     profile = userProfileLiteSerializer(many=False , read_only=True)
     class Meta:
         model = User
-        fields = ( 'pk', 'username' , 'first_name' , 'last_name' , 'profile' , 'social' , 'designation' )
+        fields = ( 'pk', 'username' , 'first_name' , 'last_name' , 'profile' , 'social' , 'designation','email' )
 
 
 class rankSerializer(serializers.ModelSerializer):
@@ -48,7 +48,7 @@ class userProfileSerializer(serializers.ModelSerializer):
     """ allow all the user """
     class Meta:
         model = profile
-        fields = ( 'pk' , 'mobile' , 'displayPicture' , 'website' , 'prefix' , 'almaMater', 'pgUniversity' , 'docUniversity' ,'email')
+        fields = ( 'pk' , 'mobile' , 'displayPicture' , 'website' , 'prefix' , 'almaMater', 'pgUniversity' , 'docUniversity' ,'email','gender')
         read_only_fields = ('website' , 'prefix' , 'almaMater', 'pgUniversity' , 'docUniversity' , )
 
 class userProfileAdminModeSerializer(serializers.ModelSerializer):
@@ -126,7 +126,10 @@ class userAdminSerializer(serializers.HyperlinkedModelSerializer):
             raise PermissionDenied(detail=None)
         print self.context['request'],'dddddddddddddddd'
         user = User.objects.create(**validated_data)
-        user.email = user.username + '@cioc.co.in'
+        if 'email' in self.context['request'].data:
+            user.email = self.context['request'].data['email']
+        else:
+            user.email = user.username + '@syrow.in'
         password =  self.context['request'].data['password']
         user.set_password(password)
         user.save()

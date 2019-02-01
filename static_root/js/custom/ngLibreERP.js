@@ -1,11 +1,10 @@
-var app = angular.module('app', ['ui.router', 'ui.bootstrap', 'ngSanitize', 'ngAside', 'ngDraggable', 'flash', 'chart.js', 'ngTagsInput', 'ui.tinymce', 'hljs', 'mwl.confirm', 'ngAudio', 'uiSwitch', 'rzModule','angular-web-notification']);
+var app = angular.module('app', ['ui.router','ui.bootstrap', 'ngSanitize', 'ngAside', 'ngDraggable', 'flash', 'chart.js', 'ngTagsInput', 'ui.tinymce', 'hljs', 'mwl.confirm', 'ngAudio', 'uiSwitch', 'rzModule','angular-web-notification','datatables','angularTinycon']);
 
-app.config(function($stateProvider, $urlRouterProvider, $httpProvider, $provide, hljsServiceProvider) {
+app.config(function($stateProvider, $urlRouterProvider, $httpProvider, $provide, hljsServiceProvider,anTinyconProvider) {
   hljsServiceProvider.setOptions({
     // replace tab with 4 spaces
     tabReplace: '    '
   });
-
   // $urlRouterProvider.otherwise('/businessManagement');
   $urlRouterProvider.otherwise('/home');
   $httpProvider.defaults.xsrfCookieName = 'csrftoken';
@@ -15,7 +14,7 @@ app.config(function($stateProvider, $urlRouterProvider, $httpProvider, $provide,
 
 });
 
-app.run(['$rootScope', '$state', '$stateParams', '$permissions', function($rootScope, $state, $stateParams, $permissions) {
+app.run(['$rootScope', '$state', '$stateParams', '$permissions' ,'$custServices', function($rootScope, $state, $stateParams, $permissions,$custServices) {
   $rootScope.$state = $state;
   $rootScope.$stateParams = $stateParams;
   $rootScope.$on("$stateChangeError", console.log.bind(console));
@@ -23,7 +22,7 @@ app.run(['$rootScope', '$state', '$stateParams', '$permissions', function($rootS
 
 
 // Main controller is mainly for the Navbar and also contains some common components such as clipboad etc
-app.controller('main', function($scope, $state, $users, $aside, $http, $timeout, $uibModal, $permissions, ngAudio ,$sce) {
+app.controller('main', function($scope, $state, $users, $aside, $http, $timeout, $uibModal, $permissions, ngAudio ,$sce,anTinycon) {
   $scope.me = $users.get('mySelf');
   $scope.headerUrl = '/static/ngTemplates/header.html',
     $scope.sideMenu = '/static/ngTemplates/sideMenu.html',
@@ -31,106 +30,52 @@ app.controller('main', function($scope, $state, $users, $aside, $http, $timeout,
       main: '#1E88E5',
       highlight: '#04414f'
     };
-    $scope.showw=false;
+
+  $scope.showCustomerIcons=false;
   $scope.dashboardAccess = false;
   $scope.brandLogo = BRAND_LOGO;
+  $scope.brandName = BRAND_NAME;
+
   $timeout(function() {
     $scope.isCustomer = $permissions.myPerms('app.customer.access')
-    console.log($scope.isCustomer);
-    $scope.showw=true;
-  }, 3500);
+    $scope.showCustomerIcons=true;
+  }, 1000);
 
-
-  function setCookie(cname,cvalue,exdays) {
-      var d = new Date();
-      d.setTime(d.getTime() + (exdays*24*60*60*1000));
-      var expires = "expires=" + d.toGMTString();
-      document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
+  function checkingHeartbeat(){
+    $http({
+      method: 'GET',
+      url: '/api/support/heartbeat/?pk=' + $scope.me.pk +'&timesheet=true'
+    }).
+    then(function(response) {
+    }, function(response) {});
   }
 
-  function getCookie(cname) {
-      var name = cname + "=";
-      var decodedCookie = decodeURIComponent(document.cookie);
-      var ca = decodedCookie.split(';');
-      for(var i = 0; i < ca.length; i++) {
-          var c = ca[i];
-          while (c.charAt(0) == ' ') {
-              c = c.substring(1);
-          }
-          if (c.indexOf(name) == 0) {
-              return c.substring(name.length, c.length);
-          }
-      }
-      return "";
-  }
+  checkingHeartbeat()
 
-
-
-$scope.mobileView=false;
-
-setInterval(function(){
-
-  if($(window).width() < 600) {
-    document.getElementById('mainUI').addEventListener('click', function() {
-        if($(window).width() < 600) {
-        $scope.sideMenuVisibility=false
-      }
-
-    })
-
-      $scope.mobileView=true;
-      if(!$scope.sideMenuVisibility)
-        {
-          document.getElementById('navbarTop').style.margin='0%';
-          document.getElementById('mainUIParent').style.width='100%';
-          document.getElementById('sideMenu').style.display='none'
-        }
-  }else{
-      $scope.mobileView=false;
-  }
-},10)
-  // $(window).on('mouseover', function() {
-  //
-  // })
+  setInterval(function () {
+    checkingHeartbeat()
+  }, 20000);
 
 
 $scope.onHover=false;
-console.log($scope.onHover);
-  $scope.sideMenuVisibility = true;
-  // retrive it back
-  var sideMenuVisibility=getCookie("sideMenuVisibility");
-  console.log(getCookie("sideMenuVisibility"))
-  if (sideMenuVisibility == "false") {
-      $scope.sideMenuVisibility=false;
-     } else {
-     $scope.sideMenuVisibility=true;
-  }
+$scope.sideMenuVisibility = false;
 
   $scope.toggleSideMenu = function() {
     $scope.sideMenuVisibility = !$scope.sideMenuVisibility;
-    console.log($scope.sideMenuVisibility);
     if ($scope.sideMenuVisibility === false) {
         sideMenuVisibility='false';
        } else {
        sideMenuVisibility='true';
     }
-    // save it in cookies
-    setCookie('sideMenuVisibility',sideMenuVisibility,30);
-    console.log(getCookie('sideMenuVisibility'))
   }
 
   $permissions.module().
   success(function(response) {
-    // console.log(response);
     $scope.modules = response;
     if ($scope.modules.length == 1) {
-      // console.log($state);
-      // console.log($state.current.name);
       if ($state.current.name.split('.').length == 1) {
-        // $state.go($scope.modules[0].name);
       }
     }
-
   });
 
 
@@ -205,9 +150,7 @@ console.log($scope.onHover);
   }
 
   $scope.$watch('terminal.command.username', function(newValue, oldValue) {
-    console.log(newValue);
     if (typeof newValue != 'undefined') {
-      // $scope.terminal.showCommandOptions = true;
       $scope.addIMWindow($scope.terminal.command.pk);
       $scope.terminal.command.username = '';
       $scope.terminal = {
@@ -215,7 +158,6 @@ console.log($scope.onHover);
         show: false,
         showCommandOptions: false
       };
-
     }
   });
 
@@ -224,20 +166,13 @@ console.log($scope.onHover);
       $scope.terminal.show = false;
       return;
     }
-    // parse the command
-    // possible commands for the calendar app :
-    // 'remind me to ask bill for the report on the project'
-    // arrange a meeting with @team ELMS at 2 pm on alternate working day
-    // todo code review by EOD
     var cmd = $scope.terminal.command;
     if (typeof cmd == 'string' && cmd.startsWith('@')) {
       // user is searching for a user
-
-
-
     }
 
   };
+
 
 
   $scope.$watch('terminal.show', function(newValue, oldValue) {
@@ -258,8 +193,6 @@ console.log($scope.onHover);
       $scope.terminal.show = false;
     }
   }
-
-
 
   settings = {
     theme: $scope.themeObj,
@@ -560,6 +493,7 @@ console.log($scope.onHover);
 
 app.controller('controller.generic.menu', function($scope, $http, $aside, $state, Flash, $users, $filter, $permissions) {
   // settings main page controller
+  alert('in')
 
   var parts = $state.current.name.split('.');
   $scope.moduleName = parts[0];
@@ -570,7 +504,7 @@ app.controller('controller.generic.menu', function($scope, $http, $aside, $state
     // console.log(parts);
     return input.name.replace('app', $scope.moduleName)
   }
-
+  alert('jkj')
   $scope.apps = [];
   $scope.rawApps = [];
 
@@ -637,12 +571,28 @@ app.controller('sideMenu', function($scope, $http, $aside, $state, Flash, $users
     // {icon : 'sticky-note-o' , state : 'home.notes'},
   ]
 
-  var parts = $state.current.name.split('.');
+  $scope.fixedItems = [
+    {icon : 'fa-window-restore' , state : 'home.welcome' , dispName:'Welcome'}
+  ]
 
+  var parts = $state.current.name.split('.');
+  $scope.applicationsArray=[]
+  $scope.modulesArray=[]
   $scope.moduleName = parts[0];
   $scope.appName = parts[1];
-  $scope.rawApps = $permissions.apps();
-  $scope.modules = $permissions.module();
+
+  for (var i = 0; i < MY_APPS.length; i++) {
+    $scope.applicationsArray.push(MY_APPS[i].fields)
+  }
+  for (var i = 0; i < MY_MODULES.length; i++) {
+    $scope.modulesArray.push(MY_MODULES[i].fields)
+  }
+
+  $scope.rawApps = $scope.applicationsArray;
+  // $scope.modules = $permissions.module();
+  // $scope.rawApps = $permissions.apps();
+  $scope.modules =$scope.modulesArray
+
 
   if (typeof $scope.modules.success != 'undefined') {
     $scope.modules.success(function(response) {

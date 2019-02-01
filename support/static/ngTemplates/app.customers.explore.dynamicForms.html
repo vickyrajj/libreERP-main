@@ -1,0 +1,104 @@
+<div class="container-fluid" ng-controller="app.company.explore.dynamicForm">
+  <div class="row" style="margin-top:20px;">
+    <div class="col-md-4">
+      <div class="row">
+        <div class="btn btn-block" style="font-size:18px; background-color:{{newForm.pk?'#e9e9e9':'#009efb;color:#fff'}};" ng-click="resetForm()">
+          Add New Form &nbsp;<i class="fa fa-plus fa-lg"></i>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-8">
+      <h3 style="margin-top:0px;font-size:20px">{{compDetails.name}}</h3>
+      <h5>Contact Person: {{compDetails.contactPerson[0].first_name}} {{compDetails.contactPerson[0].last_name}}</h5>
+    </div>
+  </div>
+    <hr>
+  <div class="row">
+    <div class="col-md-4">
+      <div class="row" style="border-right:solid 2px #e0e0e0;min-height:54vh;position:relative;" ng-if="dynamicForm.length>0">
+        <div class="row container-fluid card" ng-repeat="d in dynamicForm" ng-click="setForm($index)" style="cursor:pointer;margin:10px ;padding:15px; height:80px; border-radius:4px; box-shadow:none; {{newForm.pk==d.pk?'background-color:#009efb ; color:white':'background-color: #e9e9e9 !important;'}}">
+          <div style="font-size:20px;padding:10px;margin-top:-17px;margin-left:-10px;opacity:0.9;margin-bottom:7px"><b>{{d.form_name}}</b></div>
+          <ul style="list-style:none;margin-bottom:-10px;font-size:12px;opacity:0.7;" class="list-inline">
+            <li>Last modified:<b> {{d.updated  | date:'dd-MMM-yyyy'}}</b></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-8">
+      <h4 ng-if="newForm.pk" class="text-center"> Edit Form </h4>
+      <h4 ng-if="!newForm.pk" class="text-center"> New Form </h4>
+      <div class="form-group">
+        <label for="">Form Name:</label>
+        <input type="text" class="form-control" maxlength="25" ng-model="newForm.form_name" id="Form Name" placeholder="Form Name">
+      </div>
+      <div class="form-group">
+        <label for="">Function Name:</label>
+        <input type="text" class="form-control" ng-model="newForm.function_name" id="Function Name" placeholder="Function Name">
+      </div>
+      <div class="form-group">
+        <label for="">Form Description:</label>
+        <input type="text" class="form-control" ng-model="newForm.form_description" id="" placeholder="Description">
+      </div>
+
+      <div class="row"  style="padding:15px 10px;" ng-if="newForm.fields.length>0">
+        <h5 style="padding-left:15px;"> <b>Fields: </b> </h5>
+        <div class="col-md-3" ng-repeat="f in newForm.fields track by $index">
+          <div class="card" style="padding:15px; position:relative;">
+            {{f.field_name}}
+            <i ng-click="deleteDynamicField(f.pk, $index)" style="position:absolute; right:8px; bottom:8px;" class="fa fa-trash"></i>
+          </div>
+        </div>
+      </div>
+
+      <div class="row" ng-if="newForm.pk">
+        <div class="col-md-3">
+          <div class="form-group">
+            <label for="">Field Name</label>
+            <input type="text" class="form-control" ng-model="fieldForm.field_name" id="" placeholder="Field Name">
+          </div>
+        </div>
+        <div class="col-md-2">
+          <div class="form-group">
+            <label for="">Field Type</label>
+            <select class="form-control" ng-model="fieldForm.field_typ" id="sel1">
+              <option>typeahead</option>
+              <option>text</option>
+              <option>dropdown</option>
+            </select>
+          </div>
+        </div>
+        <div class="col-md-3" ng-if="fieldForm.field_typ!='text'">
+          <div class="form-group">
+            <label for="">Field Parameters</label>
+            <input type="text" class="form-control" ng-model="fieldForm.parameters" id="" placeholder="parameters">
+          </div>
+        </div>
+        <div class="col-md-3" ng-if="fieldForm.field_typ=='typeahead'">
+          <div class="form-group">
+            <label for="">Field Key {{fieldForm.field_name}}</label>
+            <input type="text" class="form-control" ng-model="fieldForm.parameters" id="" placeholder="key">
+          </div>
+        </div>
+        <div class="col-md-1">
+          <button type="button" class="btn btn-default pull-right" style="margin-top:24px;" ng-click="addFields()">
+            Add
+          </button>
+        </div>
+      </div>
+
+
+      <div class="row text-center">
+        <div class="form-group">
+          <button ng-if="!newForm.pk" ng-click="saveForm()" type="button" class="btn btn-primary">
+            Create
+          </button>
+          <button ng-if="newForm.pk" ng-click="editDynamicForm(newForm.pk)" type="button" class="btn btn-primary">
+            Save
+          </button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+</div>

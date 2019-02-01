@@ -13,6 +13,8 @@ from django.conf import settings as globalSettings
 import datetime
 from django.contrib.auth.hashers import make_password,check_password
 from django.core.exceptions import SuspiciousOperation
+import requests
+import json
 
 import re
 regex = re.compile('^HTTP_')
@@ -21,7 +23,7 @@ regex = re.compile('^HTTP_')
 class CustomerProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = CustomerProfile
-        fields = ( 'pk' , 'created' , 'service', 'chat' , 'call' , 'email', 'videoAndAudio' , 'vr' , 'windowColor' , 'callBack' , 'ticket','dp' ,'name' , 'supportBubbleColor','userApiKey','firstMessage','iconColor')
+        fields = ( 'pk' , 'created' , 'service', 'chat' , 'call' , 'email', 'video' ,'audio', 'vr' ,'fontColor', 'windowColor' , 'callBack' , 'ticket','dp' ,'name' , 'supportBubbleColor','userApiKey','firstMessage','iconColor','chatIconPosition','chatIconType','is_blink','support_icon')
     def create(self ,  validated_data):
         c = CustomerProfile(**validated_data)
         c.service = service.objects.get(pk=self.context['request'].data['service'])
@@ -40,30 +42,45 @@ class CustomerProfileSerializer(serializers.ModelSerializer):
 class SupportChatSerializer(serializers.ModelSerializer):
     class Meta:
         model = SupportChat
-        fields = ( 'pk' , 'created' , 'uid', 'attachment' ,'user' ,'message' ,'attachmentType','sentByAgent','responseTime','logs' )
+        fields = ( 'pk' , 'created' , 'uid', 'attachment' ,'user' ,'message' ,'attachmentType','sentByAgent','responseTime','logs','delivered' ,'read','is_hidden')
     def create(self ,  validated_data):
         s = SupportChat(**validated_data)
-        lstMsg= SupportChat.objects.latest('created')
+        print s.uid ,'uiddddddd'
+        lstVisMsg = SupportChat.objects.filter(uid = s.uid, sentByAgent = False)
         s.save()
-        responseTime = round((s.created - lstMsg.created).total_seconds()/60.0 , 2)
-        if lstMsg.sentByAgent==False and s.sentByAgent==True:
-            s.responseTime = responseTime
-        s.save()
-        chatThObj = ChatThread.objects.filter(uid=s.uid)
-        if len(chatThObj)>0 and s.sentByAgent==True:
-            print chatThObj[0].firstResponseTime ,'frt'
-            if chatThObj[0].firstResponseTime:
-                print 'frt is already there'
-            else:
-                print 'create frt'
-                chatThObj[0].firstResponseTime = round((s.created - lstMsg.created).total_seconds()/60.0 , 2)
+        if len(SupportChat.objects.all())>0:
+            if len(lstVisMsg) > 0 and s.sentByAgent==True:
+                for m in lstVisMsg:
+                    if m.responseTime:
+                        pass
+                    else:
+                        responseTime = round((s.created - m.created).total_seconds()/60.0 , 2)
+                        m.responseTime = responseTime
+                        m.save()
+                # lstMsg = thisUidMsg[0]
+                # responseTime = round((s.created - lstMsg.created).total_seconds()/60.0 , 2)
+                # if lstMsg.sentByAgent==False and s.sentByAgent==True:
+                #     lstMsg.responseTime = responseTime
+                # lstMsg.save()
+            chatThObj = ChatThread.objects.filter(uid=s.uid)
+            if len(chatThObj)>0:
+                chatThObj[0].lastActivity=s.created
                 chatThObj[0].save()
+            if len(chatThObj)>0 and s.sentByAgent==True and len(lstVisMsg) > 0:
+                print chatThObj[0].firstResponseTime ,'frt'
+                if chatThObj[0].firstResponseTime:
+                    print 'frt is already there'
+                else:
+                    print 'create frt'
+                    chatThObj[0].firstResponseTime = round((s.created - lstVisMsg[0].created).total_seconds()/60.0 , 2)
+                    chatThObj[0].save()
         return s
 
 class VisitorSerializer(serializers.ModelSerializer):
     class Meta:
         model = Visitor
         fields = ( 'pk' , 'created' , 'uid', 'email','name','phoneNumber','notes')
+
 
 class ReviewCommentSerializer(serializers.ModelSerializer):
     class Meta:
@@ -89,7 +106,7 @@ class ChatThreadSerializer(serializers.ModelSerializer):
         model = ChatThread
         fields = ( 'pk' , 'created' , 'uid', 'status' , 'customerRating' , 'customerFeedback' ,
         'company','user','userDevice','userDeviceIp' ,'chatDuration' ,'firstResponseTime',
-        'typ','reviewedOn',"reviewedBy",'closedOn','closedBy','resolvedBy','resolvedOn','archivedOn','archivedBy','escalatedL1On','escalatedL1By','escalatedL2On','escalatedL2By')
+        'typ','reviewedOn',"reviewedBy",'closedOn','closedBy','resolvedBy','resolvedOn','archivedOn','archivedBy','escalatedL1On','escalatedL1By','escalatedL2On','escalatedL2By','location')
     def create(self ,  validated_data):
         c = ChatThread(**validated_data)
         c.company = CustomerProfile.objects.get(pk=int(self.context['request'].data['company']))
@@ -99,6 +116,15 @@ class ChatThreadSerializer(serializers.ModelSerializer):
             c.userDevice = browserHeader.get('USER_AGENT')
         if self.context['request'].META.get('REMOTE_ADDR'):
             c.userDeviceIp = self.context['request'].META.get('REMOTE_ADDR')
+            try:
+                api1=requests.request('GET',"http://api.ipstack.com/"+c.userDeviceIp+"?access_key=f6e584f19ad6fa9080e0434fb46ae508&format=1")
+                # if api1.status_code==200:
+                y=json.dumps(api1.json())
+                c.location=y
+            except:
+                api2=requests.request('GET','http://ip-api.com/json/'+c.userDeviceIp)
+                z=json.dumps(api2.json())
+                c.location=z
         c.save()
         return c
     def update(self ,instance, validated_data):
@@ -143,7 +169,7 @@ class ChatThreadSerializer(serializers.ModelSerializer):
                 instance.escalatedL2By = User.objects.get(pk=int(self.context['request'].user.pk))
                 instance.save()
 
-        for key in ['status' , 'customerRating' , 'customerFeedback' , 'company','user','typ']:
+        for key in ['status' , 'customerRating' , 'customerFeedback' , 'company','user','typ','isLate','location']:
             try:
                 setattr(instance , key , validated_data[key])
             except:
@@ -228,3 +254,13 @@ class CannedResponsesSerializer(serializers.ModelSerializer):
             return c
         else:
             raise PermissionDenied()
+
+class DynamicFormSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = DynamicForm
+        fields = ( 'pk' , 'created','updated' , 'user' ,'company', 'form_name', 'function_name' , 'form_description')
+
+class DynamicFieldSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = DynamicField
+        fields = ( 'pk' , 'created' , 'form' ,'field_typ', 'parameters', 'field_name', 'key', 'is_required')

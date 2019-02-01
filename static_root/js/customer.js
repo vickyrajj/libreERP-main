@@ -191,7 +191,9 @@ app.controller("app.customer.settings", function($scope, $state, $http, $rootSco
     skin: 'lightgray',
     theme: 'modern',
     height: 100,
-    toolbar: 'saveBtn publishBtn cancelBtn headerMode bodyMode | undo redo | bullist numlist | alignleft aligncenter alignright alignjustify | outdent  indent blockquote | bold italic underline | image link',
+    toolbar: false,
+    menubar : false
+
   };
 
 
@@ -220,13 +222,18 @@ app.controller("app.customer.settings", function($scope, $state, $http, $rootSco
     fd.append('callBack', $scope.cpForm.callBack);
     fd.append('chat', $scope.cpForm.chat);
     fd.append('name', $scope.cpForm.name);
-    fd.append('videoAndAudio', $scope.cpForm.videoAndAudio);
+    fd.append('video', $scope.cpForm.video);
+    fd.append('audio', $scope.cpForm.audio);
     fd.append('ticket', $scope.cpForm.ticket);
     fd.append('vr', $scope.cpForm.vr);
     fd.append('service', $scope.cpForm.service);
 
     if ($scope.cpForm.windowColor != '') {
       fd.append('windowColor', $scope.cpForm.windowColor);
+    }
+    if ($scope.cpForm.supportBubbleColor != '') {
+    if ($scope.cpForm.fontColor != '') {
+      fd.append('fontColor', $scope.cpForm.fontColor);
     }
     if ($scope.cpForm.supportBubbleColor != '') {
       fd.append('supportBubbleColor', $scope.cpForm.supportBubbleColor);
@@ -236,6 +243,12 @@ app.controller("app.customer.settings", function($scope, $state, $http, $rootSco
     }
     if ($scope.cpForm.firstMessage != '') {
       fd.append('firstMessage', $scope.cpForm.firstMessage);
+    }
+    if ($scope.cpForm.chatIconPosition != '') {
+      fd.append('chatIconPosition', $scope.cpForm.chatIconPosition);
+    }
+    if ($scope.cpForm.chatIconType != '') {
+      fd.append('isCircleType', $scope.cpForm.chatIconType);
     }
     if ($scope.cpForm.dp && typeof $scope.cpForm.dp != 'string') {
       fd.append('dp', $scope.cpForm.dp);

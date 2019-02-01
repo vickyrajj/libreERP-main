@@ -27,15 +27,21 @@ class CustomerProfile(models.Model):
     callBack = models.BooleanField(default = False)
     ticket = models.BooleanField(default = False)
     email = models.BooleanField(default = False)
-    videoAndAudio = models.BooleanField(default = False)
+    video = models.BooleanField(default = False)
+    audio = models.BooleanField(default = False)
     vr = models.BooleanField(default = False)
     windowColor = models.CharField(max_length = 20 , null = True, default='#000000' )
+    fontColor = models.CharField(max_length = 20 , null = True, default='#000000' )
     dp = models.ImageField(upload_to = getdpPath , null = True)
     name = models.CharField(max_length = 50 , null = True )
     supportBubbleColor = models.CharField(max_length = 20 , null = True ,default='#286EFA')
     iconColor = models.CharField(max_length = 20 , null = True ,default='#FFFFFF')
     userApiKey = models.CharField(max_length = 500 , null = True )
     firstMessage = models.CharField(max_length = 20000 , null = True ,blank=True)
+    chatIconPosition = models.CharField(max_length = 20000 , null = True ,blank=True)
+    chatIconType = models.CharField(max_length = 20000 , null = True ,blank=True)
+    is_blink = models.BooleanField(default = False)
+    support_icon = models.ImageField(upload_to = getdpPath , null = True)
 
 
 class SupportChat(models.Model):
@@ -48,14 +54,27 @@ class SupportChat(models.Model):
     sentByAgent = models.BooleanField(default = False)
     responseTime = models.FloatField(null=True, blank=True)
     logs = models.CharField(max_length = 500 , null = True ,blank = True)
+    delivered = models.BooleanField(default = False)
+    read = models.BooleanField(default = False)
+    is_hidden = models.BooleanField(default = False)
 
 class Visitor(models.Model):
     created = models.DateTimeField(auto_now_add = True)
     uid = models.CharField(max_length = 50 , null = True )
-    email = models.EmailField(null = True)
+    email = models.EmailField(null = True,blank = True)
     name = models.CharField(max_length = 50, null = True , blank = True)
     phoneNumber = models.CharField(max_length = 20, null = True , blank = True)
     notes = models.CharField(max_length = 1000, null = True , blank = True)
+
+
+class Heartbeat(models.Model):
+    start = models.DateTimeField(null = True, blank=True)
+    end = models.DateTimeField(null = True, blank=True)
+    duration = models.FloatField(null=True, blank=True , default=0)
+    day_duration = models.FloatField(null=True, blank=True , default=0)
+    user = models.ForeignKey(User , related_name = 'currentUser' , null = True)
+    created = models.DateField(auto_now_add = True)
+
 
 class ReviewComment(models.Model):
     created = models.DateTimeField(auto_now_add = True)
@@ -75,10 +94,14 @@ CHATTHREAD_STATUS_CHOICES = (
     ('archived' , 'archived'),
     ('escalatedL1' , 'escalatedL1'),
     ('escalatedL2' , 'escalatedL2'),
+    ('missed' , 'missed'),
 )
 
 class ChatThread(models.Model):
     created = models.DateTimeField(auto_now_add = True)
+    lastActivity = models.DateTimeField(null = True, blank=True)
+    isLate = models.BooleanField(default = False)
+    mailSent=models.DateTimeField(null = True, blank=True)
     uid = models.CharField(max_length = 50 , null = True )
     status = models.CharField(choices = CHATTHREAD_STATUS_CHOICES , max_length = 15 , default = 'started')
     customerRating = models.PositiveSmallIntegerField(null = True,blank=True)
@@ -86,6 +109,7 @@ class ChatThread(models.Model):
     company = models.ForeignKey(CustomerProfile , related_name = 'chatThread' , null = False)
     user = models.ForeignKey(User , related_name = 'chatAgentUser' , null = True, blank=True)
     userDevice = models.CharField(max_length = 200 , null = True , blank=True)
+    location = models.CharField(max_length = 5000 , null = True , blank=True)
     userDeviceIp = models.CharField(max_length = 100 , null = True , blank=True)
     chatDuration = models.FloatField(null=True, blank=True , default=0)
     firstResponseTime = models.FloatField(null=True, blank=True)
@@ -133,3 +157,28 @@ class CannedResponses(models.Model):
     created = models.DateTimeField(auto_now_add = True)
     text = models.CharField(max_length = 200 , null = True , blank=True )
     service = models.ForeignKey(service , related_name = 'cannedResponses' , null = True)
+
+
+class DynamicForm(models.Model):
+    created = models.DateTimeField(auto_now_add = True)
+    updated = models.DateTimeField(auto_now=True)
+    user = models.ForeignKey(User , related_name = 'dynamicFormUser' , null = False)
+    company = models.ForeignKey(service , related_name = 'dynamicFormCompany' , null = False)
+    form_name = models.CharField(max_length = 50 , null = True)
+    function_name = models.CharField(max_length = 50 , null = True)
+    form_description = models.CharField(max_length = 500 , null = True)
+
+FIELD_TYP_CHOICES = (
+    ('typeahead' , 'typeahead'),
+    ('text' , 'text'),
+    ('dropdown' , 'dropdown')
+)
+
+class DynamicField(models.Model):
+    created = models.DateTimeField(auto_now_add = True)
+    form = models.ForeignKey(DynamicForm , related_name = 'dynamicField' , null = False)
+    field_typ = models.CharField(choices = FIELD_TYP_CHOICES , max_length = 15 , default = 'typeahead')
+    parameters = models.CharField(max_length = 100 , null = True)
+    field_name = models.CharField(max_length = 50 , null = True)
+    key = models.CharField(max_length = 50 , null = True)
+    is_required = models.BooleanField(default = False)

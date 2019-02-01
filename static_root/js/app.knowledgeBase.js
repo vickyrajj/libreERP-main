@@ -28,7 +28,7 @@ app.controller("businessManagement.customerKnowledgeBase", function($scope, $sta
   $scope.custDetailsPk;
   $http({
     method: 'GET',
-    url: '/api/support/reviewHomeCal/?customer&customerProfilePkList',
+    url: '/api/support/reviewHomeCal/?customer&customerProfilePkList&offset=15&limit=15',
   }).
   then(function(response) {
     console.log(response.data);
@@ -42,6 +42,8 @@ app.controller("businessManagement.customerKnowledgeBase", function($scope, $sta
       console.log($scope.custDocs, 'dddddddddddd');
     });
   });
+
+
 
   $scope.addDoc = function(idx) {
     if (idx == -1) {
@@ -59,6 +61,15 @@ app.controller("businessManagement.customerKnowledgeBase", function($scope, $sta
       $scope.fetchVersions($scope.docForm.pk)
     }
     console.log($scope.docForm);
+  }
+  $scope.addDoc(-1);
+  $scope.showDesc=[]
+
+  $scope.titleDesc=function(index){
+      $scope.showDesc[index]=true
+  }
+  $scope.hidetitleDesc=function(index){
+      $scope.showDesc[index]=false
   }
 
   $scope.saveDoc = function() {

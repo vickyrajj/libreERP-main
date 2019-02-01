@@ -158,11 +158,15 @@ class serviceViewSet(viewsets.ModelViewSet):
     permission_classes = (permissions.AllowAny , )
     serializer_class = serviceSerializer
     filter_backends = [DjangoFilterBackend]
-    filter_fields = ['name','user','contactPerson']
+    filter_fields = ['name','contactPerson','advisors']
     queryset = service.objects.all()
     # def get_queryset(self):
-    #     u = self.request.user
+    #     print self.request.GET,'ffffffff'
+    #
     #     return service.objects.all()
+
+
+
 
 class registerDeviceApi(APIView):
     renderer_classes = (JSONRenderer,)
@@ -254,6 +258,8 @@ class applicationViewSet(viewsets.ModelViewSet):
     filter_backends = [DjangoFilterBackend]
     filter_fields = ['name' , 'module']
     def get_queryset(self):
+        if 'type' in self.request.GET:
+            return application.objects.filter(inMenu = True)
         u = self.request.user
         if not u.is_superuser:
             return getApps(u)
@@ -261,7 +267,7 @@ class applicationViewSet(viewsets.ModelViewSet):
             if 'user' in self.request.GET:
                 return getApps(User.objects.get(username = self.request.GET['user']))
             print 'super Userrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr'
-            return application.objects.filter(inMenu = True).exclude(Q(name = 'app.reviews') | Q(name='app.uiSettings') | Q(name='app.knowledgeBase'))
+            return application.objects.filter(inMenu = True).exclude(Q(name = 'app.reviews') | Q(name='app.uiSettings') | Q(name='app.knowledgeBase') | Q(name='app.sessionHistory') | Q(name='app.timesheets'))
 
 class applicationAdminViewSet(viewsets.ModelViewSet):
     permission_classes = (isAdmin,)
@@ -313,3 +319,10 @@ class CompanyHolidayViewSet(viewsets.ModelViewSet):
     serializer_class = CompanyHolidaySerializer
     filter_backends = [DjangoFilterBackend]
     filter_fields = [ 'name','date']
+
+class TeamsViewSet(viewsets.ModelViewSet):
+    permission_classes = (permissions.IsAuthenticated,)
+    queryset = Teams.objects.all()
+    serializer_class = TeamsSerializer
+    filter_backends = [DjangoFilterBackend]
+    filter_fields = [ 'title']

@@ -107,6 +107,12 @@ app.config(function($stateProvider) {
     //   controller: 'controller.home.myWork'
     // })
 
+    .state('home.welcome', {
+      url: "/welcome",
+      templateUrl: '/static/ngTemplates/app.home.welcome.html',
+      controller: 'module.home.welcome'
+    })
+
     .state('home.manageUsers', {
       url: "/manageUsers",
       templateUrl: '/static/ngTemplates/app.HR.manage.users.html',
@@ -155,11 +161,11 @@ app.config(function($stateProvider) {
         }
       }
     })
-    .state('home.clients', {
-      url: "/clients",
+    .state('home.company', {
+      url: "/company",
       views: {
         "": {
-          templateUrl: '/static/ngTemplates/app.clients.html',
+          templateUrl: '/static/ngTemplates/app.company.html',
           controller: 'businessManagement.customers',
         }
       }
@@ -171,6 +177,43 @@ app.config(function($stateProvider) {
         "": {
           templateUrl: '/static/ngTemplates/app.qualityCheck.html',
           controller: 'businessManagement.reviews',
+        }
+      }
+    })
+
+    .state('home.adminTimesheet', {
+      url: "/adminTimesheet",
+      views: {
+        "": {
+          templateUrl: '/static/ngTemplates/app.adminTimesheet.html',
+          controller: 'businessManagement.adminTimesheet',
+        }
+      }
+    })
+    .state('home.timesheets', {
+      url: "/timesheets",
+      views: {
+        "": {
+          templateUrl: '/static/ngTemplates/app.timesheets.html',
+          controller: 'businessManagement.timesheets',
+        }
+      }
+    })
+    .state('home.activeAdvisors', {
+      url: "/activeAdvisors",
+      views: {
+        "": {
+          templateUrl: '/static/ngTemplates/app.activeAdvisors.html',
+          controller: 'businessManagement.activeAdvisors',
+        }
+      }
+    })
+    .state('home.sessionHistory', {
+      url: "/sessionHistory",
+      views: {
+        "": {
+          templateUrl: '/static/ngTemplates/app.sessionHistory.html',
+          controller: 'businessManagement.sessionHistory',
         }
       }
     })
@@ -331,6 +374,9 @@ app.config(function($stateProvider) {
 
 
 });
+
+app.controller("module.home.welcome", function($scope, $state, $http) {
+})
 
 app.controller("module.home.settings", function($scope, $state, $http) {
 
@@ -622,11 +668,33 @@ app.controller("controller.home", function($scope, $state, $http) {
 
 })
 
-app.controller("controller.home.main", function($scope, $state, $http , $permissions , $timeout) {
+app.controller("controller.home.main", function($scope, $state, $http , $permissions , $timeout,$sce) {
   $scope.sai = 'kiran'
 
+
+  $scope.noOfChatLabels = [];
+  // $scope.series = ['Series A', 'Series B'];
+  $scope.noOfChatData = [];
+  $scope.onClick1 = function (points, evt) {
+    console.log(points, evt);
+  };
+  $scope.datasetOverride = [{ yAxisID: 'y-axis-1' }];
+  $scope.noOfChatOptions = {
+    scales: {
+      yAxes: [
+        {
+          id: 'y-axis-1',
+          type: 'linear',
+          display: true,
+          position: 'left'
+        }
+      ]
+    },
+    legend: { display: true }
+  };
+
   $scope.barlabels = [];
-  $scope.series = ['Series A', 'Series B'];
+  $scope.series = ['Handled Chats', 'Missed chats'];
 
   $scope.barData = [];
   // $scope.colours = ['#72C02C', '#3498DB'];
@@ -649,11 +717,158 @@ app.controller("controller.home.main", function($scope, $state, $http , $permiss
     borderColor: "white"
   }];
 
+  $scope.isCustomerLoaded=false
+  $scope.isAdminLoaded=false
+  // $scope.backgroundImage='static/images/one.svg'
+
+
+  $scope.graphDataLoaded = function (response) {
+    $scope.totalChats = response.data.totalChatCount
+    $scope.missedChats = response.data.missedChatCount
+    $scope.agentChatCount = []
+    $scope.noOfChatData = response.data.graphData
+    $scope.noOfChatLabels = response.data.graphLabels
+
+
+    $scope.avgChatDuration = response.data.avgChatDuration
+    $scope.firstResTimeAvgAll = response.data.firstResTimeAvgAll
+    $scope.avgRatingAll = response.data.avgRatingAll
+    $scope.avgRespTimeAll = response.data.avgRespTimeAll
+    $scope.agentLeaderBoard = response.data.agentLeaderBoard
+
+
+    $scope.changeInChat = response.data.changeInData.changeInChat
+    $scope.changeInMissedChat = response.data.changeInData.changeInMissedChat
+    $scope.changeInAvgChatDur = response.data.changeInData.changeInAvgChatDur
+    $scope.changeInFrtAvg = response.data.changeInData.changeInFrtAvg
+    $scope.changeInRespTimeAvg = response.data.changeInData.changeInRespTimeAvg
+    $scope.changeInAverageRating = response.data.changeInData.changeInAverageRating
+
+    $scope.totalAudioCalls = response.data.totalAudioCalls
+    $scope.totalVideoCalls = response.data.totalVideoCalls
+    $scope.totalChatMessage = response.data.totalChatMessage
+
+
+
+    // let myPErc=$scope.changeInAvgChatDur.percentage/100
+    // let startPoint=$scope.avgChatDuration/(1+myPErc)
+    // console.log(startPoint,"my start point");
+    //
+    // function randomNumbers(min, max) {
+    //   return Math.random() * (max - min) + min;
+    // }
+    // var canvasHeight=220
+    // console.log($scope.avgChatDuration);
+    // var multiplier= canvasHeight/$scope.avgChatDuration;
+    // console.log(multiplier,"multiplier");
+    //     // var points=[{x:0,y:startPoint},{x:100,y:startPoint},{x:150,y:startPoint},{x:200,y:startPoint},{x:300,y:startPoint},{x:400,y:$scope.avgChatDuration}]
+    //     var tempArray=[{x:0,y:startPoint*multiplier}]
+    //
+    //
+    //
+    //     function addPoints(minX,maxX,minY,maxY,times){
+    //       let xVal=tempArray[0].x;
+    //       let yVal=tempArray[0].y;
+    //       for (var i = 1; i < times; i++) {
+    //         xVal+= (Math.random()+.3)*(maxX/times+1)
+    //         yVal=randomNumbers(minY,maxY)
+    //         tempArray.push({x:xVal,y:yVal})
+    //       }
+    //       tempArray.push({x:maxX,y:maxY})
+    //       return tempArray
+    //     }
+    //
+    //
+    //
+    //
+    //     var points =addPoints(0,400,startPoint*multiplier,$scope.avgChatDuration*multiplier,5)
+    //     console.log(points,"my arrayyyyyyyyyyyyyyyyyyyyyyy");
+
+      // setTimeout(function () {
+      //   createPath(points).then(function(data){
+      //     console.log('gereer');
+      //     $http({
+      //       method: 'POST',
+      //       url: '/api/support/createSVG/',
+      //       data: {
+      //         path: data,
+      //         svgWidth:'400',
+      //         svgHeight:'400',
+      //         fill: 'purple',
+      //         color: 'green',
+      //         strokeWidth: '3',
+      //         fileName: 'balram2',
+      //       }
+      //     }).then(function(response) {
+      //       console.log(response.data);
+      //       $scope.myHtml=response.data.path
+      //     })
+      //   })
+      //
+      // }, 15000);
+      // setTimeout(function () {
+      //   createPAth(points)
+      // }, 10000);
+
+  }
+
+
+      // function createPath(points=[]){
+      //   console.log('hererer' ,points);
+      //   return new Promise(function(resolve, reject){
+      //
+      //       let values=" L"
+      //       for (var i = 1; i < points.length-1; i++) {
+      //         let x=points[i].x
+      //         let y=height-points[i].y
+      //          values+=values+x+" "+y+" "
+      //       }
+      //       let height=points[points.length-1].y
+      //       let width=points[points.length-1].x
+      //       myPath="M0 "+height+values+" L"+width+" "+height+" Z";
+      //       resolve(myPath)
+      //   })
+      // }
+
+
+
+    // function createPAth(points){
+    //   let values=""
+    //     for (var i = 1; i < points.length-1; i++) {
+    //       let x=points[i].x
+    //       let y=220-points[i].y
+    //        values+=" L"+x+" "+y+" "
+    //     }
+    //     let height=points[points.length-1].y
+    //     let width=points[points.length-1].x
+    //     myPath="M0 "+height+values+" L"+width+" "+height+" Z";
+    //   $http({
+    //     method: 'POST',
+    //     url: '/api/support/createSVG/',
+    //     data: {
+    //       path: myPath,
+    //       svgWidth:'400',
+    //       svgHeight:'220',
+    //       fill: 'purple',
+    //       color: 'green',
+    //       strokeWidth: '3',
+    //       fileName: 'balram2',
+    //     }
+    //   }).then(function(response) {
+    //     console.log(response.data);
+    //     $scope.myHTML=$sce.trustAsHtml(response.data.path)
+    //   })
+    // }
+
+
+
+
+
   $scope.fetchGraphData = function () {
-    if ($scope.isCustomer) {
+    if ($scope.isAgent) {
       $http({
         method: 'GET',
-        url: '/api/support/reviewHomeCal/?customer&customerProfilePkList',
+        url: '/api/support/reviewHomeCal/?customer&agentComapnyPk',
       }).
       then(function(response) {
         console.log(response.data);
@@ -662,83 +877,81 @@ app.controller("controller.home.main", function($scope, $state, $http , $permiss
         } else {
           id = 0
         }
-        // $http({
-        //   method: 'GET',
-        //   url:  '/api/support/customerProfile/'+response.data[0]+'/',
-        // }).
-        // then(function(response) {
-        //   console.log(response.data);
-        //   $scope.cpForm = response.data
-        // });
         console.log(id, 'customer');
         $http({
           method: 'GET',
-          url: '/api/support/gethomeCal/?perticularUser=' + id,
+          url: '/api/support/gethomeCal/?agent&company=' + id+'&user='+ $scope.me.pk,
         }).
         then(function(response) {
-          console.log(response.data, 'dddddddddddd', typeof response.data);
-          $scope.totalChats = response.data.totalChats
-          $scope.missedChats = response.data.missedChats
-          $scope.agentChatCount = response.data.agentChatCount
-          $scope.barData = response.data.graphData
-
-          $scope.barlabels = response.data.graphLabels
-          console.log($scope.barData);
-          console.log($scope.barlabels);
-          $scope.avgChatDuration = response.data.avgChatDuration
-          $scope.firstResTimeAvgAll = response.data.firstResTimeAvgAll
-          $scope.avgRatingAll = response.data.avgRatingAll
-          $scope.avgRespTimeAll = response.data.avgRespTimeAll
-          $scope.changeInChat = response.data.changeInData.changeInChat
-          $scope.changeInMissedChat = response.data.changeInData.changeInMissedChat
-          $scope.changeInAvgChatDur = response.data.changeInData.changeInAvgChatDur
-          $scope.changeInFrtAvg = response.data.changeInData.changeInFrtAvg
-          $scope.changeInRespTimeAvg = response.data.changeInData.changeInRespTimeAvg
+          $scope.isAgentLoaded=true
+          console.log(response.data,'ffffffffff');
+          $scope.graphDataLoaded(response)
 
         });
       });
 
     }else {
-      $http({
-        method: 'GET',
-        url: '/api/support/gethomeCal/',
-      }).
-      then(function(response) {
-        console.log('adminnnnnnnnnnnnnnn');
-        $scope.totalChats = response.data.totalChats
-        $scope.missedChats = response.data.missedChats
-        $scope.agentChatCount = response.data.agentChatCount
-        $scope.barData = response.data.graphData
-        $scope.barlabels = response.data.graphLabels
-        console.log($scope.barData);
-        console.log($scope.barlabels);
-        $scope.avgChatDuration = response.data.avgChatDuration
-        $scope.agentLeaderBoard = response.data.agentLeaderBoard
-        $scope.avgRatingAll = response.data.avgRatingAll
-        $scope.avgRespTimeAll = response.data.avgRespTimeAll
-        $scope.firstResTimeAvgAll = response.data.firstResTimeAvgAll
-        $scope.changeInChat = response.data.changeInData.changeInChat
-        $scope.changeInMissedChat = response.data.changeInData.changeInMissedChat
-        $scope.changeInAvgChatDur = response.data.changeInData.changeInAvgChatDur
+      if ($scope.isCustomer) {
+        $http({
+          method: 'GET',
+          url: '/api/support/reviewHomeCal/?customer&customerProfilePkList',
+        }).
+        then(function(response) {
+          console.log(response.data);
+          if (response.data.length > 0) {
+            id = response.data[0]
+          } else {
+            id = 0
+          }
+          console.log(id, 'customer');
+          $http({
+            method: 'GET',
+            url: '/api/support/gethomeCal/?client&company=' + id+'&user='+ $scope.me.pk,
+          }).
+          then(function(response) {
+            $scope.isAdminLoaded=true
+            console.log(response.data,'ffffffffff');
+            $scope.graphDataLoaded(response)
+          });
+        });
 
-      });
+
+
+      }else {
+        $http({
+          method: 'GET',
+          url: '/api/support/gethomeCal/',
+        }).
+        then(function(response) {
+          console.log(response.data);
+
+          $scope.isAdminLoaded=true
+          $scope.graphDataLoaded(response)
+        });
+      }
+
+
     }
   }
 
+  $scope.isAgent = false;
   $scope.isCustomer = false;
-
-
   $timeout(function() {
     $scope.isCustomer = $permissions.myPerms('app.customer.access')
+    if ($scope.isCustomer) {
+      $scope.isAgent = false;
+      console.log('client');
+    }else {
+      if ($scope.me.pk == 1) {
+        $scope.isAgent = false;
+        console.log('admin');
+      }else {
+        $scope.isAgent = true;
+        console.log('agent');
+      }
+    }
     $scope.fetchGraphData();
-
-  },500)
-
-
-
-
-
-
+  },2000)
 
 
 

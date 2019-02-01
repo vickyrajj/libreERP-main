@@ -4,7 +4,9 @@
 <html ng-app="app" ng-controller="main" id="main">
   <head>
     <meta charset="utf-8">
-    <title>{{BRAND_NAME}} - ERP</title>
+    <!-- <link rel="icon" type="image/jpg" href="https://www.syrow.com/wp-content/themes/Divi/images/favicon-32x32.png"> -->
+    <link rel="icon" type="image/jpg" href="{{BRAND_LOGO}}">
+    <title>{{BRAND_NAME}} Care</title>
     <meta name="viewport" content="initial-scale=1">
     <!-- stock css libraries -->
 
@@ -14,6 +16,11 @@
       <link rel="stylesheet" href="https://cdn.jsdelivr.net/angular.chartjs/0.8.8/angular-chart.min.css" charset="utf-8">
       <link rel="stylesheet" href="https://cdn.jsdelivr.net/animatecss/3.5.1/animate.min.css" charset="utf-8">
       <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/angularjs-slider/6.4.0/rzslider.min.css" charset="utf-8">
+
+      <link href="https://fonts.googleapis.com/css?family=Raleway" rel="stylesheet">
+      <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.css">
+
+
       <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.9.1/styles/github.min.css"> -->
     {% else %}
       <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}" charset="utf-8">
@@ -21,6 +28,7 @@
       <link rel="stylesheet" href="{% static 'css/angular-chart.min.css' %}" charset="utf-8">
       <link rel="stylesheet" href="{% static 'css/animate.css' %}" charset="utf-8">
       <link rel="stylesheet" href="{% static 'css/rzslider.min.css' %}" charset="utf-8">
+      <link rel="stylesheet" href="{% static 'css/angular-datatables.css' %}" charset="utf-8">
     {% endif %}
     <link rel="stylesheet" href="{% static 'css/githubHighlightJSTheme.min.css' %}" charset="utf-8">
     <link rel="stylesheet" href="{% static 'css/angular-aside.min.css' %}" charset="utf-8">
@@ -96,11 +104,13 @@
 
     <div flash-message="4000" style="position:fixed;top:70px;right:10px;z-index:9999;min-width:300px;"></div>
     {% verbatim %}
-    <div id="sideMenu" style="background:linear-gradient(100deg, #e9dddd 0%, #fff 51%, #fff 75%);width:{{sideMenuVisibility ? '13':'5'}}%;{{mobileView ? 'width:31%': ';'}};min-height:100vh;position:fixed;border-right:solid 2px  var(--themeMain);z-index:100;" class="sideMenuView" ng-include="sideMenu">
+    <div id="sideMenu" style="background:linear-gradient(100deg, #e9dddd 0%, #fff 51%, #fff 75%);width:7rem;min-height:100vh;position:fixed;border-right:solid 2px  var(--themeMain);z-index:100;" class="sideMenuView" ng-include="sideMenu">
     </div>
+    <!-- <div id="sideMenu" style="background:linear-gradient(100deg, #e9dddd 0%, #fff 51%, #fff 75%);width:{{sideMenuVisibility ? '13':'4'}}%;{{mobileView ? 'width:31%': ';'}};min-height:100vh;position:fixed;border-right:solid 2px  var(--themeMain);z-index:100;" class="sideMenuView" ng-include="sideMenu">
+    </div> -->
 
 
-    <div class="col-md-1 mainUIViewParent" id="mainUIParent" style="{{sideMenuVisibility ? 'width:87%': 'width:95%;'}};{{mobileView ? 'width:70%': ';'}}; padding:0px;right:0px;position:absolute;">
+    <div class="col-md-1 mainUIViewParent" id="mainUIParent" style="width:96%;padding:0px;left:7rem;position:absolute;">
     {% endverbatim %}
       <div ng-include="headerUrl"></div>
       <div id="mainUI" class="mainUIView" ui-view ng-if="modules.length>0">
@@ -121,7 +131,6 @@
             justify-content: center;
             align-items: center;
             height: 100vh;
-
             color: rgb(23, 109, 158);
             text-transform: uppercase;
             font-family: -apple-system,
@@ -139,6 +148,7 @@
           body {
             margin: 0;
             padding: 0;
+            /* font-family: 'Muli', sans-serif; */
           }
 
           @keyframes dots {
@@ -187,6 +197,7 @@
       <script src="https://cdnjs.cloudflare.com/ajax/libs/angular-sanitize/1.4.9/angular-sanitize.min.js"></script>
       <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/angular-ui-bootstrap/1.1.2/ui-bootstrap-tpls.min.js"></script> -->
       <script src="https://cdnjs.cloudflare.com/ajax/libs/angular-chart.js/0.8.8/angular-chart.min.js"></script>
+      <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.js"></script>
       <script src="http://cdnjs.cloudflare.com/ajax/libs/fabric.js/1.6.3/fabric.min.js"></script>
       <!-- <script src="https://autobahn.s3.amazonaws.com/autobahnjs/latest/autobahn.min.jgz"></script> -->
       <script src="https://cdnjs.cloudflare.com/ajax/libs/tinymce/4.3.4/tinymce.min.js"></script>
@@ -195,24 +206,28 @@
       <script src="https://cdnjs.cloudflare.com/ajax/libs/angular-audio/1.7.2/angular.audio.min.js"></script>
       <script src="https://cdnjs.cloudflare.com/ajax/libs/angularjs-slider/6.4.0/rzslider.min.js"></script>
 
+
     {% else %}
     <!-- <script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/MathJax.js?config=TeX-MML-AM_CHTML'></script> -->
       <script src="{% static 'js/jquery-2.1.4.min.js' %}"></script>
       <script src="{% static 'js/jquery.cookie-1.4.1.min.js' %}"></script>
+      <script src="{% static 'js/jquery.dataTables.min.js' %}"></script>
       <script src="{% static 'js/bootstrap.min.js' %}"></script>
       <script src="{% static 'js/angular.min.js' %}"></script>
+      <script src="{% static 'js/angular-datatables.min.js' %}"></script>
       <script src="{% static 'js/angular-ui-router.min.js' %}"></script>
       <script src="{% static 'js/angular-sanitize.min.js' %}"></script>
       <script src="{% static 'js/Chart.min.js' %}"></script>
-      <script src="{% static 'js/angular-chart.min.js' %}"></script>
       <script src="{% static 'js/fabric.min.js' %}"></script>
       <script src="{% static 'js/tinymce.min.js' %}"></script>
       <script src="{% static 'js/highlight.min.js' %}"></script>
       <script src="{% static 'js/angular-highlightjs.min.js' %}"></script>
       <script src="{% static 'js/angular.audio.min.js' %}"></script>
       <script src="{% static 'js/rzslider.min.js' %}"></script>
-        <script src="{% static '/js/web-notification.js' %}"></script>
+      <script src="{% static '/js/web-notification.js' %}"></script>
       <script src="{% static '/js/angular-web-notification.js' %}"></script>
+      <script src="{% static 'js/angular-chart.min.js' %}"></script>
+      <script src="{% static 'js/angular-tinycon.js' %}"></script>
 
 
       <!-- <script src="{% static 'js/MathJax.js' %}"></script> -->
@@ -229,13 +244,28 @@
     <script src="{% static 'js/markdown.min.js' %}"></script>
     <script src="{% static 'js/angular-ui-switch.min.js' %}"></script>
     <script src="{% static 'js/jquery.orgchart.min.js' %}"></script>
+
     <!-- <script src="{% static 'js/angular-cookies.js' %}"></script> -->
     <!-- Custom JS files -->
     <script type="text/javascript">
       var wampServer = '{{wampServer}}';
       var wampBindName = "{{user.username}}";
       var webRtcAddress = '{{webRtcAddress}}'
+      var wamp_prefix = '{{wamp_prefix}}'
       var BRAND_LOGO = "{{BRAND_LOGO}}";
+      var BRAND_NAME = "{{BRAND_NAME}}";
+      var xhttp = new XMLHttpRequest();
+      var MY_APPS= {{myapps | safe}};
+      var MY_MODULES= {{mymodules | safe}};
+      // xhttp.onreadystatechange = function() {
+      //     if (this.readyState == 4 && this.status == 200) {
+      //       var data = JSON.parse(this.responseText)
+      //       console.log(data,'777777777777777');
+      //       appps=data
+      //     }
+      //   }
+      //   xhttp.open('GET', '/api/ERP/application/' , true);
+      //   xhttp.send();
     </script>
     <script src="{% static 'js/custom/wampProcessors.js' %}"></script>
     <script src="{% static 'js/custom/nativeJS.js' %}"></script>
@@ -248,6 +278,9 @@
     <script src="{% static 'js/custom/services.js' %}"></script>
     <script src="{% static 'js/chart.funnel.bundled.min.js' %}"></script>
     <script src="{% static 'js/gauge.min.js' %}"></script>
+    <script src="{% static 'js/tinycon.js' %}"></script>
+
+
 
     {% for a in appsWithJs %}
       <script src="{% static '' %}js/{{a.name}}.js"></script>
@@ -255,8 +288,9 @@
     {% for m in modules %}
       <script src="{% static '' %}js/module.{{m.name}}.js"></script>
     {% endfor %}
+    {% for m in myapps %}
 
-
+    {% endfor %}
 
   </body>
 </html>

@@ -4,22 +4,20 @@ var connection = new autobahn.Connection({
 });
 
 var webRtcAddress = webRtcAddress
+var connectionOpened= false;
 
-// "onopen" handler will fire when WAMP session has been established ..
+
 connection.onopen = function(session) {
 
   console.log("session established!");
+   connectionOpened = true;
 
-  // our event handler we will subscribe on our topic
-  //
   function chatResonse(args) {
-    console.log(args);
 
     var status = args[0];
     var msg = args[1];
     var friend = args[2];
     var scope = angular.element(document.getElementById('chatWindow' + friend)).scope();
-    console.log(scope);
     if (typeof scope != 'undefined') {
       scope.$apply(function() {
         if (status == "T" && !scope.$$childHead.isTyping) {
@@ -33,7 +31,6 @@ connection.onopen = function(session) {
         } else if (status == "M") {
           scope.$$childHead.addMessage(msg, args[3])
         } else if (status == "MF") {
-          console.log('attach file');
           scope.$$childHead.addMessage(msg, args[3])
         };
       });
@@ -65,10 +62,8 @@ connection.onopen = function(session) {
   };
 
   processDashboardUpdates = function(args) {
-    console.log(args);
-    var scope = angular.element(document.getElementById('dashboard')).scope();
-    console.log(scope);
 
+    var scope = angular.element(document.getElementById('dashboard')).scope();
     if (typeof scope != 'undefined') {
       scope.$apply(function() {
         scope.refreshDashboard(args[0]);
@@ -77,6 +72,7 @@ connection.onopen = function(session) {
   };
 
 var isfocused=true;
+var hasAccesss=true;
 
   supportChatResponse = function(args) {
     window.onblur = function (){
@@ -85,11 +81,17 @@ var isfocused=true;
     window.onfocus = function (){
     	isfocused=true;
     }
-    console.log(isfocused+' focused');
     var scope = angular.element(document.getElementById('chatTab')).scope();
 
-    // console.log(args);
-    // scope.notii();
+    if (args[3]) {
+      if(scope.myCompanies.indexOf(args[3])<0){
+      hasAccesss=false
+      }
+    }
+    if(!hasAccesss){
+      return
+    }
+
     console.log(args);
 
     function userExist() {
@@ -97,7 +99,6 @@ var isfocused=true;
         if (scope.newUsers[i].uid == args[0]) {
 
           scope.onNotification(scope.newUsers[i].uid,args[2].message);
-          console.log('yes');
           if (args[1] == 'M') {
             scope.sound.play();
             scope.newUsers[i].messages.push(args[2])
@@ -109,18 +110,14 @@ var isfocused=true;
             var xhttp = new XMLHttpRequest();
 
             xhttp.onreadystatechange = function() {
-              console.log(this.readyState, this.status, 'onreadyyyyyyyyyyyyyyyyyy');
               if (this.readyState == 4 && this.status == 200) {
-                console.log(this.responseText);
                 var data = JSON.parse(this.responseText)
-                // attachment = data.attachment
                 scope.newUsers[i].messages.push(data)
               }
             };
 
             xhttp.open('GET', '/api/support/supportChat/' + args[2].filePk + '/', true);
             xhttp.send();
-
 
           } else if (args[1] == 'ML') {
             scope.sound.play();
@@ -144,7 +141,6 @@ var isfocused=true;
       }
       for (var i = 0; i < scope.myUsers.length; i++) {
         if (scope.myUsers[i].uid == args[0]) {
-          console.log('in my userssssss');
           if((!scope.myUsers[i].boxOpen||!isfocused) && args[1]=='M'){
             scope.onNotification(scope.myUsers[i].uid,args[2].message,i);
           }
@@ -156,13 +152,9 @@ var isfocused=true;
           else if((!scope.myUsers[i].boxOpen||!isfocused) && args[1]=='MF'){
             scope.onNotification(scope.myUsers[i].uid,"Media File Receicved",i);
           }
-          console.log('yes');
           if (args[1] == 'M') {
             scope.sound.play();
             scope.myUsers[i].messages.push(args[2])
-            // if (!scope.myUsers[i].boxOpen) {
-            //   scope.myUsers[i].boxOpen = false
-            // }
             scope.myUsers[i].unreadMsg += 1
             scope.myUsers[i].spying.value = ''
             // scope.myUsers[i].messages.push( {msg : args[2].msg, sentByMe:false , created:  args[2].created })
@@ -174,7 +166,6 @@ var isfocused=true;
             xhttp.onreadystatechange = function() {
               // console.log(this.readyState , this.status , 'onreadyyyyyyyyyyyyyyyyyy' );
               if (this.readyState == 4 && this.status == 200) {
-                console.log(this.responseText);
                 var data = JSON.parse(this.responseText)
                 scope.myUsers[i].messages.push(data)
                 scope.myUsers[i].spying.value = ''
@@ -192,6 +183,8 @@ var isfocused=true;
             scope.sound.play();
             args[2].created = new Date();
             scope.myUsers[i].messages.push(args[2])
+            scope.myUsers[i].disableInput=true
+
             scope.myUsers[i].unreadMsg += 1
             scope.myUsers[i].spying.value=''
             //chat closed by user
@@ -206,28 +199,38 @@ var isfocused=true;
             scope.myUsers[i].spying.value=''
             //feedback from user with stars
           }else if (args[1] == 'VCS') {
-            console.log('videossssss');
             scope.sound.play();
             scope.myUsers[i].video = true
             scope.myUsers[i].videoUrl = args[4]
             //this is for video call
           }else if (args[1] == 'VCC') {
-            console.log('video call closed by visitor');
             // scope.myUsers[i].video = false
             //this is for video call closed
           }else if (args[1] == 'AC') {
             scope.sound.play();
             scope.myUsers[i].audio = true
+            scope.myUsers[i].closeIframe = false
             scope.myUsers[i].audioUrl = args[4]
             //this is for audio call
+          }else if(args[1]=='calledToHideVideo'){
+            scope.myUsers[i].isVideoShowing = false
+            scope.myUsers[i].alreadyDone=true
+          }else if(args[1]=='calledToShowVideo'){
+            scope.myUsers[i].isVideoShowing = true
+            scope.myUsers[i].alreadyDone=false
           }
-          console.log('scroll');
+          else if(args[1]=='hideTheIframe'){
+            scope.myUsers[i].closeIframe = true
+          }
+          else if(args[1]=='CustmorClosedTheChat'){
+            scope.myUsers[i].AudioVideoOn = true
+          }else if(args[1]=='CU'){
+            scope.myUsers[i].currentUrl = args[2]
+          }
           setTimeout(function() {
             var id = document.getElementById("scrollArea" + args[0]);
             if (id != null) {
-              console.log(id.scrollHeight);
               id.scrollTop = id.scrollHeight;
-              console.log(id);
             }
           }, 500);
 
@@ -236,10 +239,7 @@ var isfocused=true;
       }
     }
 
-
-
     if (args[1] == 'T') {
-      console.log('typingggggggggg cccccc' , args[0] , args[1] , args[2] );
 
       for (var i = 0; i < scope.myUsers.length; i++) {
         if (scope.myUsers[i].uid == args[0]) {
@@ -249,29 +249,20 @@ var isfocused=true;
           setTimeout(function() {
             var id = document.getElementById("scrollArea" + args[0]);
             if (id != null) {
-              console.log(id.scrollHeight);
               id.scrollTop = id.scrollHeight;
-              console.log(id);
             }
           }, 300);
 
           setTimeout(function (i) {
-            console.log('after time out');
             scope.myUsers[i].spying.isTyping = false
           }, 2500, (i));
-
-
         }
       }
 
-      // console.log(scope.$$childHead.isTyping);
-      // scope.$$childHead.isTyping = true;
       return
     } else if (args[1] == 'R') {
-      console.log('remove this from new user list because someone else have assigned', args[0]);
       for (var i = 0; i < scope.newUsers.length; i++) {
         if (scope.newUsers[i].uid == args[0]) {
-          console.log(scope.newUsers[i].uid, 'yessssssssssssss');
           scope.newUsers.splice(i, 1);
         }
       }
@@ -279,7 +270,6 @@ var isfocused=true;
     }
 
     if (userExist()) {
-      console.log('yesssssssssssss');
 
     } else {
       if(args[1]=='M'){
@@ -291,10 +281,7 @@ var isfocused=true;
           scope.onNotification(args[0],'Audio Coming');
       }
 
-      console.log(args,'hereeeeeeeeeeeeeeeeee');
       if ((args[1] == 'M' || args[1] == 'MF' || args[1] == 'ML') && args[2].user) {
-        console.log(args[2].user ,'ffffffffffffffffffff');
-        console.log('check argssssssss', args[2]);
         return
       }
 
@@ -310,44 +297,21 @@ var isfocused=true;
         chatThreadPk: args[5],
         spying:{value :'' , isTyping : false},
         video:false,
-        videoUrl:''
+        videoUrl:'',
+        audio:false,
+        audioUrl:'',
+        isVideoShowing:true,
+        AudioVideoOn:true,
+        alreadyDone:false,
+        closeIframe:false
       }
-
-      // function createVisitor(email, phoneNumber , name) {
-      //   console.log(email , phoneNumber , name,'sometinhhhhhhhhh###');
-      //   var toPost = JSON.stringify({"email":email , "phoneNumber":phoneNumber , "name":name ,"uid":args[0]})
-      //   console.log(toPost);
-      //   // console.log(typeof toPost);
-      //   var xhttp = new XMLHttpRequest();
-      //    xhttp.onreadystatechange = function() {
-      //      if (this.readyState == 4 && this.status == 201) {
-      //        var data = JSON.parse(this.responseText)
-      //        detail.name = data.name
-      //        detail.email = data.email
-      //      }
-      //    };
-      //    xhttp.open('POST', '/api/support/visitor/', true);
-      //    xhttp.setRequestHeader("Content-type", "application/json");
-      //    xhttp.setRequestHeader("X-CSRFToken", getCookie("csrftoken"));
-      //    xhttp.send(toPost);
-      // }
-
-      console.log(args[4]);
 
       if (args[4]) {
-        console.log(args[4]);
         detail.name = args[4].name
         detail.email = args[4].email
-        // createVisitor(args[4].email , args[4].phoneNumber , args[4].name)
       }
-
-
-
-      console.log('no');
-      console.log(args);
       if (args[1] == 'M') {
         scope.sound.play();
-        console.log(args, 'argssssssssss');
         scope.newUsers.push(detail)
       } else if (args[1] == 'MF') {
         scope.sound.play();
@@ -356,18 +320,13 @@ var isfocused=true;
 
         xhttp.onreadystatechange = function() {
           if (this.readyState == 4 && this.status == 200) {
-            console.log(this.responseText);
             var data = JSON.parse(this.responseText)
-            // attachment = data.attachment
             scope.newUsers.push(detail)
-
           }
         };
 
         xhttp.open('GET', '/api/support/supportChat/' + args[2].filePk + '/', true);
         xhttp.send();
-
-        // return true
       } else if (args[1] == 'ML') {
         scope.sound.play();
         scope.newUsers.push(detail)
@@ -384,35 +343,26 @@ var isfocused=true;
       }
     }
 
-
   };
 
-
-  function checkOnline() {
+   function checkOnline() {
     var scope = angular.element(document.getElementById('chatTab')).scope();
     if (scope) {
-      console.log(scope.myUsers);
-      console.log(scope.newUsers);
       for (var i = 0; i < scope.myUsers.length; i++) {
-        console.log(scope.myUsers[i].uid , 'call');
-        session.call('service.support.heartbeat.' + scope.myUsers[i].uid, []).
+        session.call(wamp_prefix+'service.support.heartbeat.' + scope.myUsers[i].uid, []).
         then((function(i) {
           return function (res) {
-            console.log(res,'res');
             scope.myUsers[i].isOnline = true;
           }
         })(i) , (function(i) {
           return function (err) {
-            console.log(err,'err');
             scope.myUsers[i].isOnline = false;
           }
         })(i))
       }
 
-
       for (var i = 0; i < scope.newUsers.length; i++) {
-        console.log(scope.newUsers[i].uid , 'newwww');
-        session.call('service.support.heartbeat.' + scope.newUsers[i].uid, []).
+        session.call(wamp_prefix+'service.support.heartbeat.' + scope.newUsers[i].uid, []).
         then((function(i) {
           return function (res) {
             scope.newUsers[i].isOnline = true;
@@ -424,114 +374,45 @@ var isfocused=true;
           }
         })(i))
       }
-
-
     }
   }
-
-  function sendBackHeartBeat() {
-    var scope = angular.element(document.getElementById('chatTab')).scope();
-    if (scope) {
-      function heartbeat(args) {
-        if (args[0]=='popup') {
-          console.log(args[2]);
-          alert(args[1]+" has assigned "+ args[2].uid + " uid chat to you!")
-          scope.myUsers.push(args[2]);
-
-          connection.session.publish('service.support.chat.' + args[2].uid, ['AP', scope.me.pk], {}, {
-            acknowledge: true
-          }).
-          then(function(publication) {
-            console.log("Published AP", args[2].uid);
-          });
-
-          var xhttp = new XMLHttpRequest();
-           xhttp.onreadystatechange = function() {
-             if (this.readyState == 4 && this.status == 200) {
-               console.log('chat thread pk changed');
-             }
-           };
-           xhttp.open('PATCH', '/api/support/chatThread/'+ args[2].chatThreadPk + '/', true);
-           xhttp.setRequestHeader("Content-type", "application/json");
-           xhttp.setRequestHeader("X-CSRFToken", getCookie("csrftoken"));
-           xhttp.send(JSON.stringify({user:scope.me.pk}));
-
-
-
-          return
-        }else {
-          console.log('onlieeeeeeeeeeeeeeeeeeeeeeeee');
-          return true
-        }
-      }
-      session.register('service.support.heartbeat.'+scope.me.pk, heartbeat).then(
-        function (res) {
-          console.log("registered to service.support.heartbeat");
-        },
-        function (err) {
-          console.log("failed to registered: ");
-        }
-      );
-      console.log(scope.me.pk);
-    }
-  }
-
-
-
-
-  setTimeout(function() {
-    checkOnline();
-    sendBackHeartBeat();
-  }, 1500);
 
   setInterval(function() {
-    console.log('comin in interval');
     checkOnline();
-  }, 15000)
+  }, 7000)
 
-  function heartbeat() {
-    console.log('coming in heartttt');
-    return scope.me.pk
-  }
-
-
-
-
-
-
-  session.subscribe('service.support.agent', supportChatResponse).then(
+  session.subscribe(wamp_prefix+'service.support.agent', supportChatResponse).then(
     function(sub) {
-      console.log("subscribed to topic 'supportChatResponse'");
+      console.log("registered to topic 'supportChatResponse'");
     },
     function(err) {
-      console.log("failed to subscribed: " + err);
+      console.log("failed to registered: " + err);
     }
   );
 
 setTimeout(function () {
-  var scope = angular.element(document.getElementById('chatTab')).scope();
-  session.subscribe('service.support.agent.'+scope.me.pk, supportChatResponse).then(
+  var scope = angular.element(document.getElementById('main')).scope();
+  session.subscribe(wamp_prefix+'service.support.agent.'+scope.me.pk, supportChatResponse).then(
     function(sub) {
-      console.log("subscribed to topic 'supportChatResponse'");
+      console.log("registered to topic 'supportChatResponse'");
     },
     function(err) {
-      console.log("failed to subscribed: " + err);
+      console.log("failed to registered: " + err);
     }
   );
-}, 1500);
+
+}, 5000);
 
 
-
-
-  session.subscribe('service.chat.' + wampBindName, chatResonse).then(
+  session.subscribe(wamp_prefix+'service.chat.' + wampBindName, chatResonse).then(
     function(sub) {
       console.log("subscribed to topic 'chatResonse'");
     },
     function(err) {
       console.log("failed to subscribed: " + err);
     }
-  );
-  session.subscribe('service.notification.' + wampBindName, processNotification).then(
+   );
+  session.subscribe(wamp_prefix+'service.notification.' + wampBindName, processNotification).then(
     function(sub) {
       console.log("subscribed to topic 'notification'");
     },
@@ -539,7 +420,7 @@ setTimeout(function () {
       console.log("failed to subscribed: " + err);
     }
   );
-  session.subscribe('service.updates.' + wampBindName, processUpdates).then(
+  session.subscribe(wamp_prefix+'service.updates.' + wampBindName, processUpdates).then(
     function(sub) {
       console.log("subscribed to topic 'updates'");
     },
@@ -547,7 +428,7 @@ setTimeout(function () {
       console.log("failed to subscribed: " + err);
     }
   );
-  session.subscribe('service.dashboard.' + wampBindName, processDashboardUpdates).then(
+  session.subscribe(wamp_prefix+'service.dashboard.' + wampBindName, processDashboardUpdates).then(
     // for the various dashboard updates
     function(sub) {
       console.log("subscribed to topic 'dashboard'");
@@ -556,12 +437,8 @@ setTimeout(function () {
       console.log("failed to subscribed: " + err);
     }
   );
-
 };
 
-
-// fired when connection was lost (or could not be established)
-//
 connection.onclose = function(reason, details) {
   console.log("Connection lost: " + reason);
 }
@@ -570,9 +447,7 @@ connection.open();
 function getCookie(cname) {
   var name = cname + "=";
   var decodedCookie = decodeURIComponent(document.cookie);
-  console.log(decodedCookie);
   var ca = decodedCookie.split(';');
-  console.log(ca);
   for(var i = 0; i < ca.length; i++) {
       var c = ca[i];
       while (c.charAt(0) == ' ') {
@@ -584,5 +459,3 @@ function getCookie(cname) {
   }
   return "";
 }
-// console.log(getCookie("csrftoken"));
-// console.log(getCSRFCookie());

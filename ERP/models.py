@@ -118,6 +118,7 @@ class address(models.Model):
     def __unicode__(self):
         return '< street :%s>,<city :%s>,<state :%s>' %(self.street ,self.city, self.state)
 
+
 class service(models.Model): # contains other companies datails
     created = models.DateTimeField(auto_now_add = True)
     name = models.CharField(max_length = 100 , null = False, unique = True)
@@ -132,10 +133,19 @@ class service(models.Model): # contains other companies datails
     web = models.TextField(max_length = 100 , null = True) # image/svg link to the logo
     doc  = models.ForeignKey(media , related_name = 'services' , null = True)
     contactPerson = models.ManyToManyField(User , related_name = 'servicesContactPerson' , blank = True)
+    advisors = models.ManyToManyField(User , related_name = 'servicesAdvisors' , blank = True)
 
 
     def __unicode__(self):
         return '< name :%s>,<user :%s>,<address :%s>' %(self.name ,self.user.username, self.address)
+
+class Teams(models.Model):
+    created = models.DateTimeField(auto_now_add = True)
+    title = models.CharField(max_length = 100 , null = False)
+    quality_check = models.ManyToManyField(User , related_name = 'qc_team' , blank = True)
+    team_lead = models.ManyToManyField(User , related_name = 'tl_team' , blank = True)
+    advisors = models.ManyToManyField(User , related_name = 'advisor_team' , blank = True)
+    service = models.ManyToManyField(service , related_name = 'teams' , blank = True)
 
 HOLIDAY_TYPE_CHOICES = (
     ('national' , 'national'),

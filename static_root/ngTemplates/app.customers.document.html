@@ -8,8 +8,8 @@
           </div>
         </div>
         <div class="col-md-8" style="display:inline">
-          <h3 style="margin-top:0px">Company name : {{compDetails.name}}</h3>
-          <h4>Contact Person: {{compDetails.contactPerson.first_name}} {{compDetails.contactPerson.last_name}}</h4>
+          <h3 style="margin-top:0px;font-size:20px">{{compDetails.name}}</h3>
+          <h5>Contact Person: {{compDetails.contactPerson[0].first_name}} {{compDetails.contactPerson[0].last_name}}</h5>
         </div>
       </div>
       <div class="row" ng-if="custDetails.pk==none">

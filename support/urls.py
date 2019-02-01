@@ -16,17 +16,23 @@ router.register(r'getOfflineMessages' , GetOfflineMessagesViewSet , base_name = 
 router.register(r'documentVersion' , DocumentVersionViewSet , base_name = 'documentVersion')
 router.register(r'companyProcess' , CompanyProcessViewSet , base_name = 'companyProcess')
 router.register(r'cannedResponses' , CannedResponsesViewSet , base_name = 'cannedResponses')
-
-
+router.register(r'dynamicForms' , DynamicFormViewSet , base_name = 'dynamicForms')
+router.register(r'dynamicFields' , DynamicFieldViewSet , base_name = 'dynamicFields')
 
 
 urlpatterns = [
     url(r'^', include(router.urls)),
-    url(r'reviewHomeCal/$' , ReviewFilterCalAPIView.as_view() ),
+    # url(r'reviewHomeChats/$' , ReviewHomeChatsAPIView.as_view() ),
+    url(r'reviewHomeCal/$' , ReviewFilterCalAPIView2.as_view() ),
     url(r'script/chatter/$' , GetChatterScriptAPI.as_view()),
     url(r'getMyUser/$' , GetMyUser.as_view()),
     url(r'getChatHistory/$' , GetChatHistory.as_view()),
-    url(r'gethomeCal/$' , GethomeCal.as_view()),
+    url(r'gethomeCal/$' , GethomeCal2.as_view()),
     url(r'emailChat/$' , EmailChat.as_view()),
+    url(r'streamRecordings/$' , StreamRecordings.as_view()),
+    url(r'emailScript/$' , EmailScript.as_view()),
+    url(r'heartbeat/$' , HeartbeatApi.as_view()),
+    url(r'getChatStatus/$' , getChatStatus.as_view()),
+    url(r'createSVG/$' , CreateSVG.as_view()),
 
 ]

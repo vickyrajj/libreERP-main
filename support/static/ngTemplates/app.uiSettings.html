@@ -1,62 +1,191 @@
-<div class=" bg-white " style="min-height:94vh;overflowY:">
+<div class=" bg-white " style="min-height:94vh">
   <breadcrumb></breadcrumb>
-  <div class="">
-    <div class="col-md-5" style="text-align: center;">
-      <img src="/static/images/colorPatteren.png" alt="" style="width:70%;">
-    </div>
-    <div class="col-md-7" style="border-left:2px solid #F5F5F5">
-      <div class="row" style="padding-bottom:15px;">
-        <div class="col-md-4" style="font-size:15px;">
-          <span><span style="margin-right:5px">1</span> <i class="fa fa-desktop"></i> &nbsp;<span>Window Colour</span> &nbsp;</span>
-        </div>
-        <div class="col-md-8">
-            <input style="position:static; left:0px; opacity:1;" type="color" ng-model="cpForm.windowColor">
-        </div>
-      </div>
-      <div class="row" style="padding-bottom:15px;">
-        <div class="col-md-4" style="font-size:15px;">
-          <span ><span style="margin-right:5px">2</span><i class="fa fa-gg-circle"></i> &nbsp;<span>SupportBubble Colour</span> &nbsp;</span>
-        </div>
-        <div class="col-md-8">
-            <input style="position:static; left:0px; opacity:1;" type="color" ng-model="cpForm.supportBubbleColor">
-        </div>
-      </div>
-      <div class="row" style="padding-bottom:15px;">
-        <div class="col-md-4" style="font-size:15px;">
-          <span ><span style="margin-right:5px">3</span><i class="fa fa-info-circle"></i> &nbsp;<span>Icon Colour</span> &nbsp;</span>
-        </div>
-        <div class="col-md-8">
-            <input style="position:static; left:0px; opacity:1;" type="color" ng-model="cpForm.iconColor">
-        </div>
-      </div>
-      <div class="row" style="padding-bottom:15px;">
-        <div class="col-md-4" style="font-size:15px;">
-          <span ><span style="margin-right:5px">4</span><i class="fa  fa-picture-o"></i> &nbsp;<span>Picture</span></span>
-        </div>
-        <div class="col-md-8">
-            <input type="file" file-model="cpForm.dp">
-        </div>
-      </div>
-      <div class="row" style="padding-bottom:15px;">
-        <div class="col-md-4" style="font-size:15px;">
-          <span ><span style="margin-right:5px">5</span><i class="fa fa-user"></i> &nbsp;<span>Name</span></span>
-        </div>
-        <div class="col-md-8">
-          <input class="form-control" type="text" ng-model="cpForm.name">
-        </div>
-      </div>
-      <div class="row" style="padding-bottom:15px;">
-        <div class="col-md-4" style="font-size:15px;">
-          <span ><span style="margin-right:5px">6</span><i class="fa fa-commenting-o"></i> &nbsp;<span>First Message</span></span>
-        </div>
-        <div class="col-md-8">
-          <textarea ui-tinymce="tinymceOptions" ng-model="cpForm.firstMessage"></textarea>
-        </div>
-      </div>
-      <div class="row justify-content-center" style="">
-        <button type="button" class="btn btn-primary " ng-click="saveCustomerProfile()">Save</button>
-      </div>
+    <div class="container-fluid">
 
-  </div>
-  </div>
+    <uib-tabset>
+
+      <!-- ===============================================Browse====================================================== -->
+        <uib-tab active="ui" >
+          <uib-tab-heading>
+            UI
+          </uib-tab-heading>
+          <div class="row" style="padding-top:15px">
+            <div class="col-md-5" style="text-align: center; border-right:2px solid #F5F5F5">
+              <img src="/static/images/colorPatteren.png" alt="" style="width:70%;">
+            </div>
+            <div class="col-md-7">
+              <div class="row" style="padding-bottom:15px;">
+                <div class="col-md-4" style="font-size:15px;">
+                  <span><span style="margin-right:5px">1</span> <i class="fa fa-desktop"></i> &nbsp;<span>Window Colour</span> &nbsp;</span>
+                </div>
+                <div class="col-md-8">
+                    <input style="position:static; left:0px; opacity:1;" type="color" ng-model="cpForm.windowColor">
+                </div>
+              </div>
+              <div class="row" style="padding-bottom:15px;">
+                <div class="col-md-4" style="font-size:15px;">
+                  <span ><span style="margin-right:5px">2</span><i class="fa fa-gg-circle"></i> &nbsp;<span>SupportBubble Colour</span> &nbsp;</span>
+                </div>
+                <div class="col-md-8">
+                    <input style="position:static; left:0px; opacity:1;" type="color" ng-model="cpForm.supportBubbleColor">
+                </div>
+              </div>
+              <div class="row" style="padding-bottom:15px;">
+                <div class="col-md-4" style="font-size:15px;">
+                  <span ><span style="margin-right:5px">3</span><i class="fa fa-info-circle"></i> &nbsp;<span>Icon Colour</span> &nbsp;</span>
+                </div>
+                <div class="col-md-8">
+                    <input style="position:static; left:0px; opacity:1;" type="color" ng-model="cpForm.iconColor">
+                </div>
+              </div>
+              <div class="row" style="padding-bottom:15px;">
+                <div class="col-md-4" style="font-size:15px;">
+                  <span ><span style="margin-right:5px">4</span><i class="fa  fa-picture-o"></i> &nbsp;<span>Picture</span></span>
+                </div>
+                <div class="col-md-8">
+                    <input type="file" file-model="cpForm.dp">
+                </div>
+              </div>
+              <div class="row" style="padding-bottom:15px;">
+                <div class="col-md-4" style="font-size:15px;">
+                  <span ><span style="margin-right:5px">5</span><i class="fa fa-user"></i> &nbsp;<span>Name</span></span>
+                </div>
+                <div class="col-md-8">
+                  <input class="form-control" type="text" ng-model="cpForm.name">
+                </div>
+              </div>
+              <div class="row" style="padding-bottom:15px;">
+                <div class="col-md-4" style="font-size:15px;">
+                  <span ><span style="margin-right:5px">6</span><i class="fa fa-commenting-o"></i> &nbsp;<span>First Message</span></span>
+                </div>
+                <div class="col-md-8">
+                  <textarea ui-tinymce="tinymceOptions" ng-model="cpForm.firstMessage"></textarea>
+                </div>
+              </div>
+              <div class="row" style="padding-bottom:15px;">
+                <div class="col-md-4" style="font-size:15px;">
+                  <span ><span style="margin-right:5px">7</span><i class="fa fa-compass"></i> &nbsp;<span>Select Button Type</span></span>
+                </div>
+                <div class="col-md-8">
+                  <input type="radio" ng-model="cpForm.chatIconType" value="Circle">
+                    <span>
+                      <span style="border:2px solid #e0e0e0;padding:2px 3px 2px 7px;border-radius:50%;background:{{cpForm.supportBubbleColor}};color:{{cpForm.fontColor}}">
+                        <i class="fa fa-whatsapp" aria-hidden="true"></i>
+                      </span>
+                    </span> &nbsp;
+                  <input type="radio" ng-model="cpForm.chatIconType" value="Box">
+                  <span>
+                    <span style="border:2px solid #e0e0e0;padding:2px 5px;background:{{cpForm.supportBubbleColor}};color:{{cpForm.fontColor}}">
+                      Chat With Us <i class="fa fa-whatsapp" aria-hidden="true"></i>
+                    </span>
+                  </span>
+                </div>
+              </div>
+              <div class="row" style="padding-bottom:15px;">
+                <div class="col-md-4" style="font-size:15px;">
+                  <span ><span style="margin-right:5px">8</span><i class="fa fa-object-group"></i> &nbsp;<span>Desktop Button Position</span></span>
+                </div>
+                <div class="col-md-8">
+                  <input ng-if="cpForm.chatIconType=='Box'" type="radio" ng-model="cpForm.chatIconPosition" value="left-center">&nbsp;
+                    <span style="display:inline-block;margin-bottom:-7px" ng-if="cpForm.chatIconType=='Box'">
+                      <div style="border:2px solid #e0e0e0;width:30px;height:30px;position:relative">
+                        <span style="position: absolute;top:40%;background:black;border-radius:50%;width:7px;height:7px"></span>
+                      </div>
+                    </span> &nbsp;
+                    <input type="radio" ng-model="cpForm.chatIconPosition" value="right-center" ng-if="cpForm.chatIconType=='Box'">&nbsp;
+                    <span style="display:inline-block; margin-bottom:-7px" ng-if="cpForm.chatIconType=='Box'">
+                      <div style="border:2px solid #e0e0e0;width:30px;height:30px;position:relative">
+                        <span style="position: absolute;top:40%;right:0px;background:black;border-radius:50%;width:7px;height:7px"></span>
+                      </div>
+                    </span> &nbsp;
+                    <input type="radio" ng-model="cpForm.chatIconPosition" value="left-bottom">&nbsp;
+                    <span style="display:inline-block ;margin-bottom:-7px">
+                      <div style="border:2px solid #e0e0e0;width:30px;height:30px;position:relative">
+                        <span style="position: absolute;bottom:0%;background:black;border-radius:50%;width:7px;height:7px"></span>
+                      </div>
+                    </span> &nbsp;
+                      <input type="radio" ng-model="cpForm.chatIconPosition" value="right-bottom">&nbsp;
+                    <span style="display:inline-block;margin-bottom:-7px">
+                      <div style="border:2px solid #e0e0e0;width:30px;height:30px;position:relative">
+                        <span style="position: absolute;bottom:0%;right: 0px;background:black;border-radius:50%;width:7px;height:7px"></span>
+                      </div>
+                    </span>
+                </div>
+              </div>
+              <div class="row justify-content-center" style="">
+                <button type="button" class="btn btn-primary " ng-click="saveCustomerProfile()">Save</button>
+              </div>
+
+            </div>
+          </div>
+
+
+        </uib-tab>
+
+        <uib-tab active="prescripts" >
+          <uib-tab-heading>
+            Prescripts
+          </uib-tab-heading>
+
+          <div class="container-fluid" ng-controller="settings.customerPrescripts">
+              <div class="row" style="padding:15px;">
+                <div class="col-md-3" >
+                  <div class="row" ng-repeat="s in services" style="border-bottom: 1px solid #e0e0e0; cursor:pointer; padding:0px 10px; {{s.pk == activeService.pk?'background-color:#e0e0e0;':''}}" ng-click="setActiveService(s)">
+                    <h4 style="font-weight: 500;">{{s.name}}</h4>
+                    <h5 style="font-weight: 500;">No of Prescipts: {{s.noOfPrescript}}</h5>
+                  </div>
+                </div>
+                <div class="col-md-9">
+
+
+                  <div class="row" style="padding:15px;">
+                    <div ng-if="prescriptPerm" class="col-md-8 col-md-offset-2">
+                      <form>
+                        <div class="form-group">
+                          <label ng-if="prescriptForm.pk">Edit Prescipt:</label>
+                          <label ng-if="!prescriptForm.pk">Create New Prescipt:</label>
+                        </div>
+                        <div class="input-group">
+                          <input type="text" class="form-control" ng-model="prescriptForm.text" placeholder="Type your prescript here..">
+                          <span class="input-group-addon" style="cursor:pointer" ng-click="savePrescript()"> <span>{{prescriptForm.pk ? 'Save':'Add'}}</span> </span>
+                        </div>
+                      </form>
+                    </div>
+                  </div>
+
+                  <div class="row " style="padding-top:25px;">
+                    <div class="col-md-8 col-md-offset-2">
+                      <div ng-repeat="p in prescripts" style="margin-bottom:15px;">
+                        <div class="card" style="background-color:var(--headerNavbarHighlight); color:white; padding:15px; border-radius:10px;" ng-mouseover="p.display=true" ng-mouseleave="p.display=false">
+                          <div class="row">
+                            <div class="col-md-10">
+                              <span>{{p.text}}</span>
+                            </div>
+                            <div class="col-md-1">
+                              <span ng-if="p.display && prescriptPerm" class="pull-right" style="cursor:pointer;" ng-click="deletePrescript(p.pk , $index)"  > <i class="fa fa-trash fa-lg" title="Delete"></i> </span>
+                            </div>
+                            <div class="col-md-1">
+                              <span ng-if="p.display && prescriptPerm" class="pull-right" style="cursor:pointer;" ng-click="editPrescript(p)"  > <i class="fa fa-edit fa-lg" title="Edit"></i> </span>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+
+              </div>
+          </div>
+
+        </uib-tab>
+
+      </uib-tabset>
+
+    </div>
+
+
+
+
+
 </div>

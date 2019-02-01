@@ -1,36 +1,36 @@
-<div class=" bg-white" style="min-height:93vh;">
+<div class="" style="min-height:94vh;background-color:#f0f0f0;overflow-x:hidden">
 
-  <breadcrumb></breadcrumb>
+  <breadcrumb ></breadcrumb>
 
   <div style="">
-    <div class="row" style="margin:0px 10px;">
+    <div class="row">
+
       <div class="col-md-12">
-        <div class="row">
+          <!-- <div class="" ng-click="addDoc(-1)" style="font-size:18px ;background:white ;padding:10px 0px;text-align:center;margin-top:-15px">
+          Knowledge Base
+          </div> -->
+
           <div class="col-md-3">
-            <div class="btn btn-block" ng-click="addDoc(-1)" style="font-size:18px ; {{docForm!=none&&docForm.title.length==0? 'background-color:#009efb; color:white':'background-color: #e9e9e9 !important;'   }}">
-              Add Document &nbsp;<i class="fa fa-plus fa-lg"></i>
+            <div class="btn btn-block btn-success" ng-click="addDoc(-1)" style="font-size:18px ;color:white;{{docForm!=none&&docForm.title.length==0? 'box-shadow: 1px 1px 1px #181818':'' }}">
+              Add Document &nbsp;
+              <!-- <i style="padding-top:5px;" class="fa fa-plus fa-md"></i> -->
             </div>
-          </div>
-        </div>
-        <hr style="margin:5px 0px">
-        <div class="row" style="">
-          <div class="col-md-3">
-            <div class="row" style="border-right:solid 2px #e0e0e0;min-height:54vh;position:relative;" ng-if="custDocs.length>0||docForm!=none">
-              <div class="row container-fluid card" ng-repeat="doc in custDocs" ng-click="addDoc($index)" style="cursor:pointer;margin:10px ;padding:15px; height:80px; border-radius:4px; box-shadow:none; {{docForm.pk==doc.pk?'background-color:#009efb ; color:white':'background-color: #e9e9e9 !important;'}}">
-                <div style="font-size:20px;padding:10px;margin-top:-17px;margin-left:-10px;opacity:0.9;margin-bottom:7px"><b>{{doc.title}}</b></div>
-                <ul style="list-style:none;margin-bottom:-10px;font-size:12px;opacity:0.7;" class="list-inline">
-                  <li>Last modified:<b> {{doc.updated  | date:'dd-MMM-yyyy'}}</b></li>
+            <div class="" style="min-height:40vh;position:relative;" ng-if="custDocs.length>0||docForm!=none">
+              <div  ng-mouseover="titleDesc($index)" ng-mouseleave="hidetitleDesc($index)" class="" ng-repeat="doc in custDocs" ng-click="addDoc($index)" style="cursor:pointer;margin-top:10px ;padding:5px; {{docForm.pk==doc.pk?'border-bottom:2px solid #009efb ;':'border-bottom:2px solid #e9e9e9 !important;'}}">
+                <div ng-if="!showDesc[$index]" style="font-size:15px;">{{doc.title}}</div>
+                <ul ng-if="showDesc[$index]" style="list-style:none;margin-bottom:0px;font-size:13px;opacity:0.7" class="list-inline">
+                  <li>Last modified: {{doc.updated  | date:'dd-MMM-yyyy'}}</li>
                   <li ng-if="doc.process.text">Process:<b> {{doc.process.text}}</b></li>
                   <li>Versions:<b> {{doc.version_count}}</b></li>
                 </ul>
               </div>
             </div>
           </div>
-          <div class="col-md-9" style="padding-left:35px" ng-if="docForm!=none">
-            <div class="row text-center">
+          <div class="col-md-9" style="background:white;border:1px solid #e9e9e9;padding:15px;width:74%" ng-if="docForm!=none">
+            <div class="text-center">
               <h4>{{docForm.pk!=none?'Edit':'Create'}} Document <span ng-if="docForm.pk!=none">- {{docForm.title}}</span></h4>
             </div>
-            <div class="row">
+            <div class="">
               <div class="form-group">
                 <label>Title</label>
                 <input type="text " class="form-control" ng-model="docForm.title">
@@ -42,22 +42,22 @@
                     <textarea ui-tinymce="tinymceOptions" ng-model="docForm.text"></textarea>
                   </div>
                 </div>
-                <div class="col-md-3" ng-if="docForm.text!=null" style="padding:15px;" >
+                <div class="col-md-3" ng-if="docForm.text!=null" style="margin:25px;" >
                   <uib-tabset>
                     <uib-tab>
                       <uib-tab-heading>
                         Article
                       </uib-tab-heading>
-                      <div>
-                        <div class="row">
-                          <label>Process:</label>
+
+                        <div class="" style="margin-top:5px;color:#676e6c">
+                          <label >Process:</label>
                           <input type="text" class="form-control" ng-model="docForm.process" uib-typeahead="process as process.text for process in processSearch($viewValue)" />
                         </div>
-                        <div class="row">
+                        <div class="" style="margin-top:5px;color:#676e6c">
                           <label>Article Owner</label>
                           <input type="text" class="form-control" ng-model="docForm.articleOwner" uib-typeahead="user as user.username for user in userSearch($viewValue)" />
                         </div>
-                      </div>
+
                     </uib-tab>
                     <uib-tab>
                       <uib-tab-heading>
@@ -100,7 +100,7 @@
               </div>
             </div>
           </div>
-        </div>
+
       </div>
     </div>
 

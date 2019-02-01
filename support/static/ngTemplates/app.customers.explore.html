@@ -1,6 +1,6 @@
 <div ng-controller="businessManagement.customers.explore" style="padding-top:20px;">
   <div class="col-md-12">
-    <div class="col-md-8" style="border-right:solid 2px #eeeeee;min-height:82vh;position:relative;">
+    <div class="col-md-8" style="border-right:solid 2px #eeeeee;min-height:82vh;position:relative;overflow-x:hidden">
       <div class="row text-center">
         <h2><i class="fa fa-building-o"></i> &nbsp;{{compDetails.name}}</h2>
         <h4 ng-if="compDetails.web.length>0"><i class="fa fa-globe"></i> &nbsp;<a href="{{compDetails.web}}" target="_blank">{{compDetails.web}}</a></h4>
@@ -12,9 +12,8 @@
           <span ng-if="compDetails.cin.length>0"><strong>CIN : </strong>{{compDetails.cin}}<br></span>
           <span ng-if="compDetails.tin.length>0"><strong>TIN : </strong>{{compDetails.tin}}<br></span>
         </div>
-        <div class="col-sm-4">
+        <div class="col-sm-4" style="padding: 15px;margin: 10px;float: right;">
           <span class="btn btn-primary pull-right" ng-if="custDetails.chat" ng-click="openChartPopoup(compDetails)">Generate Script</span>
-
         </div>
 
 
@@ -72,12 +71,13 @@
       </div>
     </div>
       </div>
-
-      <!-- <div class="row" style="margin-top:10px;" ng-if="compDetails.contactPerson.pk!=none">
+      <!-- <div style="margin-top:10px" class="col-md-8">
+        <users-Field data="myAdvisors" url="/api/HR/users/" col="4" label="Advisors"></users-Field>
       </div> -->
+
     </div>
     <div class="col-md-4">
-      <span class="text-center"><h3>Supports</h3></span>
+      <!-- <span class="text-center"><h3>Supports</h3></span> -->
       <div class="row" ng-if="custDetails.supportBubbleColor.length>0" style="padding-left:10px">
         <div class="col-md-6">
           <h4><i class="fa fa-gg-circle"></i> &nbsp; SupportBubble Colour</h4>
@@ -106,15 +106,25 @@
         </div>
         <br>
       </div>
+      <div class="row" ng-if="custDetails.fontColor.length>0" style="padding-left:10px">
+        <div class="col-md-6">
+          <h4><i class="fa fa-font"></i> &nbsp; Font Colour</h4>
+        </div>
+        <div class="col-md-3" style="border:1px solid #eee; background-color:{{custDetails.fontColor}};margin-top:10px">
+          <h3> </h3>
+        </div>
+        <br>
+      </div>
 
       <div class="row" style="padding-left:25px">
-        <h4><i class="fa fa-comment-o"></i> &nbsp; Chat &nbsp;<i class="fa {{custDetails.chat?'fa-check':'fa-times'}}" style="color:{{custDetails.chat?'green':'red'}}"></i>&nbsp;&nbsp;&nbsp;&nbsp;</h4><br>
-        <h4><i class="fa fa-phone"></i> &nbsp; Call &nbsp;<i class="fa {{custDetails.call?'fa-check':'fa-times'}}" style="color:{{custDetails.call?'green':'red'}}"></i></i></h4><br>
-        <h4><i class="fa fa-envelope"></i> &nbsp; Email &nbsp;<i class="fa {{custDetails.email?'fa-check':'fa-times'}}" style="color:{{custDetails.email?'green':'red'}}"></i></i></h4><br>
-        <h4><i class="fa fa-video-camera"></i> &nbsp; Video&Audio &nbsp;<i class="fa {{custDetails.videoAndAudio?'fa-check':'fa-times'}}" style="color:{{custDetails.videoAndAudio?'green':'red'}}"></i></i></h4><br>
-        <h4><i class="fa fa-bar-chart-o"></i> &nbsp; VR &nbsp;<i class="fa {{custDetails.vr?'fa-check':'fa-times'}}" style="color:{{custDetails.vr?'green':'red'}}"></i></i></h4><br>
-        <h4><i class="fa fa-phone"></i> &nbsp; Call Back &nbsp;<i class="fa {{custDetails.callBack?'fa-check':'fa-times'}}" style="color:{{custDetails.callBack?'green':'red'}}"></i></i></h4><br>
-        <h4><i class="fa fa-ticket"></i> &nbsp; Ticket &nbsp;<i class="fa {{custDetails.ticket?'fa-check':'fa-times'}}" style="color:{{custDetails.ticket?'green':'red'}}"></i></i></h4><br>
+        <h4><i class="fa fa-comment-o"></i> &nbsp; Chat &nbsp;<i class="fa {{custDetails.chat?'fa-check':'fa-times'}}" style="color:{{custDetails.chat?'green':'red'}}"></i></h4><br>
+        <h4><i class="fa fa-phone"></i> &nbsp; Call &nbsp;<i class="fa {{custDetails.call?'fa-check':'fa-times'}}" style="color:{{custDetails.call?'green':'red'}}"></i></h4><br>
+        <h4><i class="fa fa-envelope"></i> &nbsp; Email &nbsp;<i class="fa {{custDetails.email?'fa-check':'fa-times'}}" style="color:{{custDetails.email?'green':'red'}}"></i></h4><br>
+        <h4><i class="fa fa-video-camera"></i> &nbsp; Video &nbsp;<i class="fa {{custDetails.video?'fa-check':'fa-times'}}" style="color:{{custDetails.video?'green':'red'}}"></i></h4><br>
+        <h4><i class="fa fa-headphones"></i> &nbsp; Audio &nbsp;<i class="fa {{custDetails.audio?'fa-check':'fa-times'}}" style="color:{{custDetails.audio?'green':'red'}}"></i></h4><br>
+        <h4><i class="fa fa-bar-chart-o"></i> &nbsp; VR &nbsp;<i class="fa {{custDetails.vr?'fa-check':'fa-times'}}" style="color:{{custDetails.vr?'green':'red'}}"></i></h4><br>
+        <h4><i class="fa fa-phone"></i> &nbsp; Call Back &nbsp;<i class="fa {{custDetails.callBack?'fa-check':'fa-times'}}" style="color:{{custDetails.callBack?'green':'red'}}"></i></h4><br>
+        <h4><i class="fa fa-ticket"></i> &nbsp; Ticket &nbsp;<i class="fa {{custDetails.ticket?'fa-check':'fa-times'}}" style="color:{{custDetails.ticket?'green':'red'}}"></i></h4><br>
         <div class="row" ng-if="custDetails.name.length>0" style="padding-left:10px">
           <div class="col-md-4">
             <h4><i class="fa fa-desktop"></i> &nbsp; Name </h4>

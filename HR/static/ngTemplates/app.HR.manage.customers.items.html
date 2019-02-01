@@ -1,7 +1,7 @@
 <div class="col col-md-3 animated fadeIn" style="margin-bottom:15px;">
   <div class="container-fluid">
     <div class="row">
-      <div class="container-fluid card" style="padding-bottom:0px;">
+      <div class="container-fluid card" style="padding-bottom:0px;" ng-click="rowActionClicked('editCustomer')">
         <div class="row" style="border-bottom: 1px solid #dedede;">
           <div class="col-md-4" style="padding:0px;">
             <img style="width: 100%;height:100%;" class="img" ng-if="data.profile.displayPicture != null" ng-src="{{data.profile.displayPicture}}">
@@ -13,11 +13,11 @@
             </div>
           </div>
           <div class="col-md-1" style="position:relative;display:block;">
-            <div class="row" style="padding-top:30px" >
+            <!-- <div class="row" style="padding-top:30px" >
                 <i class="fa fa-pencil fa-lg" style="cursor:pointer;" ng-click="rowActionClicked('editCustomer')" ></i>
-            </div>
+            </div> -->
             <div class="row"style="padding-top:20px" >
-                <i mwl-confirm title="Confirm" message="Are you sure?" confirm-text="Yes <i class='fa fa-check'></i>" cancel-text="No" on-confirm="rowActionClicked('deleteCustomer')" confirm-button-type="default" cancel-button-type="default" class="fa fa-trash fa-lg" style="cursor:pointer;" ></i>
+                <i ng-click="$event.stopPropagation()" mwl-confirm title="Confirm" message="Are you sure?" confirm-text="Yes <i class='fa fa-check'></i>" cancel-text="No" on-confirm="rowActionClicked('deleteCustomer')" confirm-button-type="default" cancel-button-type="default" class="fa fa-trash fa-lg" style="cursor:pointer;" ></i>
 
                   <!-- <button type="button" class="btn btn-success" mwl-confirm title="Confirm" message="Are you sure?" confirm-text="Yes <i class='fa fa-check'></i>" cancel-text="No" on-confirm="save('approve')" confirm-button-type="default" cancel-button-type="default" style="position:relative;top:30px;right:-15px;cursor:pointer;">Approve</button> -->
 

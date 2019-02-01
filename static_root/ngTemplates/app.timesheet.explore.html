@@ -1,0 +1,48 @@
+<div ng-controller="businessManagement.timesheet.explore" style="padding-top:20px;">
+
+  <div class="container-fluid">
+    <div class="col-sm-3">
+      <div class="form-group">
+        <label> Select Date </label>
+        <div class="input-group removeGradientBtn">
+          <input type="text" class="form-control" show-weeks="false" uib-datepicker-popup="dd-MMMM-yyyy" ng-model="form1.date" is-open="status.opened" />
+          <span class="input-group-btn">
+            <button type="button" class="btn btn-default" ng-click="status.opened = true;"><i class="glyphicon glyphicon-calendar"></i></button>
+          </span>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-sm-2">
+      <div class="btn-group" style="padding-top:25px;">
+        <button type="button" class="btn btn-primary" ng-click="filterCall()">
+          <strong>Filter</strong>
+        </button>
+        <!-- <button type="button" class="btn btn-default" ng-click="download()" ng-if="reviewData.length>0">
+          Download <i class="fa fa-download"></i>
+        </button> -->
+      </div>
+    </div>
+  </div>
+
+
+  <div class="row">
+    <div class="col-md-4" style="padding-left:10px;padding-right:10px;" ng-repeat="data in fullInfo">
+      <!-- {{data[0].numOfComments}} {{data[0].statusChat}} -->
+      <div class="container-fluid card" style="padding-bottom:0px">
+        <div class="row container-fluid" style="height:170px; opacity:0.9;letter-spacing:0.6px; {{data[0].user_id==null ? 'background-color: #fc000033':''}}; {{data[0].statusChat=='closed'?'background-color: #16e61133':'' }}">
+          <div class="col-md-12">
+            <!-- {{data[0]}} <br> -->
+            <h5 style="font-weight:501">Agent Name : {{data[0].user_id | getName}}</h5>
+            <span class="pull-right">Date: {{data[0].created}}</span>
+            <h5>Total Heartbeats:{{data.length}}</h5>
+            <div ng-repeat="val in data">
+              <span><b>Start</b>:{{val.start|getTime}}</span>
+               <span class="pull-right"><b>End</b>: {{val.end|getTime}}</span>
+            </div>
+          </div>
+      </div>
+    </div>
+
+  </div>
+</div>

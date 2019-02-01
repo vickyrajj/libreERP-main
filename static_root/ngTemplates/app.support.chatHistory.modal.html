@@ -23,7 +23,7 @@
             <span style="font-size:22px">{{chat.chatList[0].uid}}</span>
             <div class="row" ng-repeat="msg in chat.chatList track by $index">
               <div class="row container-fluid" style="float:{{msg.sentByAgent ? 'right; background-color:#dba4ae; ':'left; background-color:#72b3d4;'}} padding:10px;margin:8px;border-radius:{{msg.sentByAgent ? '20px 0px 20px 20px':'0px 20px 20px 20px'}};">
-              <p id="p{{$index}}" ng-if="msg.message.length>0 && msg.attachmentType != 'youtubeLink'" style="word-break: break-all !important;" >{{msg.message}}</p>
+              <p id="search{{chat.chatList[0].uid}}{{$index}}" ng-if="msg.message.length>0 && msg.attachmentType != 'youtubeLink'" style="word-break: break-all !important;" >{{msg.message}}</p>
                <img ng-if="msg.attachmentType == 'image'" ng-src="{{msg.file}}" style="width:250px;">
                <video ng-if="msg.attachmentType == 'video'" width="280" height="240" ng-src="{{msg.file}}" controls></video>
                <audio ng-if="msg.attachmentType == 'audio'" ng-src="{{msg.file}}" controls></audio>
@@ -39,7 +39,7 @@
             </div>
           </div>
           <div class="col-md-4">
-            <span class="text-center" style="font-size:20px">Agents Involved This Chat</span>
+            <span class="text-center" style="font-size:20px">Agents Involved</span>
             <ul>
               <li ng-repeat="agent in chat.agentList">{{agent | getName}}</li>
             </ul>

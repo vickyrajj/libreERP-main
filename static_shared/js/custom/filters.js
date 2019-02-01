@@ -26,6 +26,12 @@ app.filter('rainbow' , function(){
   }
 })
 
+app.filter('reverse', function() {
+  return function(items) {
+    return items.slice().reverse();
+  };
+});
+
 app.filter('getCRMDP', function() {
   return function(input) {
     if (input == undefined) {
@@ -212,16 +218,34 @@ app.filter('decorateCount' , function(){
   }
 })
 
+
 app.filter('getDP' , function($users){
   return function(input){
     if (typeof input == 'undefined' || input == -1 ) {
       return '/static/images/userIcon.png';
     }
-    user = $users.get(input);
+    var user = $users.get(input);
+    // console.log(user.profile.displayPicture);
     if (user.profile.displayPicture == null) {
       return '/static/images/userIcon.png';
     }else{
       return user.profile.displayPicture;
+    }
+  }
+})
+
+
+app.filter('getCustService' , function($custServices){
+  return function(pk){
+    if (pk == undefined || pk.length == 0) {
+      return "noname"
+    }else {
+      var name = $custServices.get(pk)
+      if (name.length>12) {
+        name = name.slice(0,12);
+        name = name + '..'
+      }
+      return name
     }
   }
 })
@@ -233,7 +257,7 @@ app.filter('getName' , function($users){
     if (typeof userUrl == 'undefined') {
       return '';
     }
-    user = $users.get(userUrl);
+    var user = $users.get(userUrl);
     if (mode == 'short') {
       return user.first_name;
     }
@@ -244,6 +268,7 @@ app.filter('getName' , function($users){
     }
   }
 })
+
 
 app.filter('newlines', function () {
     return function(text) {
@@ -261,10 +286,34 @@ app.filter('noHTML', function () {
     }
 });
 
+app.filter('linkInText',()=>{
+  return function(input){
+    var str= input
+    var expression = /[-a-zA-Z0-9@:%_\+.~#?&//=]{2,256}\.[a-z]{2,4}\b(\/[-a-zA-Z0-9@:%_\+.~#?&//=]*)?/gi;
+    var regex = new RegExp(expression);
+    var res = str.split(' ');
+    var pTag
+    // alert(res);
+    res.forEach((r)=>{
+      if (r.match(regex)) {
+        str=str.replace(r,'<a href="'+r+'" target="_blank">'+r+'</a>')
+           pTag=str
+      }else{
+           pTag=str
+      }
+    })
+    return pTag
+  }
+})
+
+
+
 app.filter('getTime',function(){
    return function(date) {
+     if(date==null||date==undefined){
+       return date
+     }
     var abc  = new Date(date)
-
     var hours = abc.getHours();
     var minutes = abc.getMinutes();
     var ampm = hours >= 12 ? 'pm' : 'am';
@@ -278,10 +327,22 @@ app.filter('getTime',function(){
     return strTime
   }
 })
-
+app.filter('toSet',function(){
+   return function(date) {
+     if(date==null||date==undefined){
+       return date
+     }
+    return date.toFixed(2);
+  }
+})
 
 app.filter('trusted', ['$sce', function ($sce) {
     return function(url) {
         return $sce.trustAsResourceUrl(url);
     };
 }]);
+app.filter('sortByAlpha', function () {
+    return function(input) {
+        return
+    };
+});

@@ -1,24 +1,52 @@
-<div class="container-fluid" ng-controller="businessManagement.customers.form">
+<div class="container-fluid" ng-controller="businessManagement.customers.form" style="overflow-x:hidden">
   <div class="col-md-6">
-    <div class="row" style="padding-left:25px;padding-bottom:10px">
-      <h3>{{mode=='new'?'Create':'Edit'}} Client</h3>
+    <div class="row">
+
+      <div class="col-md-4" style="padding-left:25px;">
+        <h3>{{mode=='new'?'Create':'Edit'}} Client</h3>
+      </div>
+      <div class="col-sm-4" ng-if="form.pk" style="padding: 15px;">
+        <span class="btn btn-primary pull-right"  ng-click="dynamicFormModal()">Dynamic Forms</span>
+      </div>
+      <div class="col-sm-4" ng-if="form.pk" style="padding: 15px;">
+        <span class="btn btn-primary pull-right" ng-if="custDetails.chat" ng-click="generateScriptModal(compDetails)">Generate Script</span>
+      </div>
+
+
+    </div>
+    <div class="" ng-if="form.pk">
+      <label>Processes</label> <br>
+      <div class="input-group">
+      <input type="text" class="form-control" placeholder="Process" ng-model="process_text">
+      <span class="input-group-addon" ng-click="add_process1()" style="cursor:pointer">Add</span>
+      </div>
+      <div class="row" style="padding-top:15px;">
+      <div class="col-md-6" ng-repeat="pl in process_list" style="margin:10px 0px;">
+      <div class="container-fluid card">
+        <i class="fa fa-times fa-lg pull-right" style="padding-top:10px;cursor:pointer" ng-click="close_process($index)"></i>
+        <div class="row container-fluid" style="">
+          <h4>{{pl.text}}</h4>
+        </div>
+      </div>
+    </div>
+  </div>
     </div>
     <div class="form-group">
       <label>Name</label>
-      <input type="text " class="form-control" ng-model="form.name">
+      <input type="text " class="form-control input_style" ng-model="form.name">
     </div>
     <div class="form-group">
       <label>Telephone</label>
-      <input type="text " class="form-control" ng-model="form.telephone">
+      <input type="text " class="form-control input_style" ng-model="form.telephone">
     </div>
     <div class="form-group">
       <label>About</label>
-      <textarea class="form-control" rows="5" ng-model="form.about"></textarea>
+      <textarea class="form-control input_style" rows="5" ng-model="form.about"></textarea>
     </div>
     <div class="form-group">
       <label>Contact Person</label>
       <div class="input-group">
-        <input type="text " class="form-control" ng-model="form.cpName" uib-typeahead="u as u.username for u in userSearch($viewValue)" placeholder="Search by username">
+        <input type="text " class="form-control input_style" ng-model="form.cpName" uib-typeahead="u as u.username for u in userSearch($viewValue)" placeholder="Search by username">
         <span class="input-group-btn">
         <button type="button" class="btn btn-success" ng-click="addPerson(form.cpName)">Add <i class="fa fa-plus"></i></button>
       </span>
@@ -42,113 +70,253 @@
         <strong>Mobile:</strong> {{form.contactPerson.profile.mobile}} <br>
       </div> -->
     </div>
+
     <div class="form-group">
       <label>Mobile</label>
-      <input type="text " class="form-control" ng-model="form.mobile">
+      <input type="text " class="form-control input_style" ng-model="form.mobile">
     </div>
+
+    <!-- <div style="" class="col-md-12" style="padding:0px">
+      <users-Field data="myAdvisors" url="/api/HR/users/" col="4" label="Advisors"></users-Field>
+    </div> -->
+
+    <div class="form-group">
+      <label>Advisors</label>
+      <div class="input-group">
+        <input type="text " class="form-control input_style" ng-model="form.adName" uib-typeahead="u as u.username for u in advisorSearch($viewValue)" placeholder="Search by username">
+        <span class="input-group-btn">
+        <button type="button" class="btn btn-success" ng-click="addAdvisor(form.adName)">Add <i class="fa fa-plus"></i></button>
+      </span>
+      </div>
+    </div>
+    <div class="row" ng-if="form.advisors.length>0" style="margin:10px">
+      <div class="col-md-5 col-md-offset-1 card" ng-repeat="person in form.advisors" style="padding:10px;margin-top:10px">
+        <div class="col-md-10" style="font-size:18px">
+          <span>{{person.username}}</span>
+        </div>
+        <div class="col-md-2">
+          <i class="fa fa-times fa-lg" ng-click="removeAdvisors($index)" style="cursor:pointer"></i>
+        </div>
+      </div>
+    </div>
+
     <div style="cursor:pointer;margin:20px;" ng-click="companyAdvanceOptions = !companyAdvanceOptions">
       <div class="text-primary">
         <i class="fa fa-lg fa-sort-{{companyAdvanceOptions? 'up':'desc'}}" style="margin-right:20px;"></i> Show Advance Options
       </div>
     </div>
+
     <div ng-if="companyAdvanceOptions" class="animated fadeIn">
       <div class="form-group">
         <label>Address</label>
-        <input placeholder="Street" type="text " class="form-control" ng-model="form.address.street">
+        <input placeholder="Street" type="text " class="form-control input_style" ng-model="form.address.street">
         <div class="row" style="margin-top:5px;">
           <div class=" col-md-6">
-            <input placeholder="City" type="text " class="form-control" ng-model="form.address.city">
+            <input placeholder="City" type="text " class="form-control input_style" ng-model="form.address.city">
           </div>
           <div class="col-md-6">
-            <input placeholder="State" type="text " class="form-control" ng-model="form.address.state">
+            <input placeholder="State" type="text " class="form-control input_style" ng-model="form.address.state">
           </div>
         </div>
         <div class="row" style="margin-top:5px;">
           <div class=" col-md-6">
-            <input placeholder="pincode" type="text " class="form-control" ng-model="form.address.pincode">
+            <input placeholder="pincode" type="text " class="form-control input_style" ng-model="form.address.pincode">
           </div>
           <div class="col-md-6">
-            <input placeholder="Country" type="text " class="form-control" ng-model="form.address.country">
+            <input placeholder="Country" type="text " class="form-control input_style" ng-model="form.address.country">
           </div>
         </div>
       </div>
       <div class="form-group">
         <label>CIN</label>
-        <input type="text " class="form-control" ng-model="form.cin">
+        <input type="text " class="form-control input_style" ng-model="form.cin">
       </div>
       <div class="form-group">
         <label>TIN</label>
-        <input type="text " class="form-control" ng-model="form.tin">
+        <input type="text " class="form-control input_style" ng-model="form.tin">
       </div>
       <div class="form-group">
         <label>Logo</label>
-        <input type="text " class="form-control" ng-model="form.logo">
+        <input type="text " class="form-control input_style" ng-model="form.logo">
       </div>
       <div class="form-group">
         <label>web</label>
-        <input type="text " class="form-control" ng-model="form.web">
+        <input type="text " class="form-control input_style" ng-model="form.web">
       </div>
     </div>
     <button type="button" class="btn btn-primary pull-right col-md-3 pull-right" ng-click="saveCompanyDetails()" ng-if="form.pk==none">Save Company Details</button>
   </div>
-  <div class="col-md-6" style="padding-left:50px;font-size:18px" ng-if="form.pk">
-    <span class="text-center"><h3>Supports</h3><br></span>
-    <div class="row">
-      <div class="form-group">
-        <i class="fa fa-comment-o"></i> &nbsp; <label>Chat</label> &nbsp;<input type="checkbox" ng-model="cpForm.chat">
+  <div class="col-md-6" style="padding-left:50px;font-size:14px;line-height:2.1;opacity:0.9" ng-if="form.pk">
+    <!-- <span class="text-center"><h3>Supports</h3><br></span> -->
+    <div class="row" style="padding-top:12px;">
+      <div class="col-md-6">
+        <div class="form-group">
+          <span class="col-md-5"><i class="fa fa-comment-o"></i> &nbsp; <label>Chat</label>&nbsp;</span>
+           <label class="bal_switch"> <input type="checkbox" ng-model="cpForm.chat"><span class="bal_slider round"></span></label>
+        </div>
       </div>
-      <div class="form-group">
-        <i class="fa fa-phone"></i> &nbsp; <label>Call</label> &nbsp;<input type="checkbox" ng-model="cpForm.call">
+      <div class="col-md-6">
+        <div class="form-group">
+          <span class="col-md-5"><i class="fa fa-phone"></i> &nbsp; <label>Call</label>&nbsp;</span>
+          <label class="bal_switch"> <input type="checkbox" ng-model="cpForm.call"><span class="bal_slider round"></span></label>
+          <!-- <i class="fa fa-phone"></i> &nbsp; <label>Call</label> &nbsp;<input type="checkbox" ng-model="cpForm.call"> -->
+        </div>
       </div>
-      <div class="form-group">
-        <i class="fa fa-envelope"></i> &nbsp; <label>Email</label> &nbsp;<input type="checkbox" ng-model="cpForm.email">
+      <div class="col-md-6">
+        <div class="form-group">
+          <span class="col-md-5"><i class="fa fa-envelope"></i> &nbsp; <label>Email</label>&nbsp;</span>
+          <label class="bal_switch"> <input type="checkbox" ng-model="cpForm.email"><span class="bal_slider round"></span></label>
+          <!-- <i class="fa fa-envelope"></i> &nbsp; <label>Email</label> &nbsp;<input type="checkbox" ng-model="cpForm.email"> -->
+        </div>
       </div>
-      <div class="form-group">
-        <i class="fa fa-video-camera"></i> &nbsp; <label>Video&Audio</label> &nbsp;<input type="checkbox" ng-model="cpForm.videoAndAudio">
+      <div class="col-md-6">
+        <div class="form-group">
+          <span class="col-md-5"><i class="fa fa-video-camera"></i> &nbsp; <label>Video</label>&nbsp;</span>
+          <label class="bal_switch"> <input type="checkbox" ng-model="cpForm.video"><span class="bal_slider round"></span></label>
+          <!-- <i class="fa fa-video-camera"></i> &nbsp; <label>Video</label> &nbsp;<input type="checkbox" ng-model="cpForm.video"> -->
+        </div>
       </div>
-      <div class="form-group">
-        <i class="fa fa-bar-chart-o"></i> &nbsp; <label>VR</label> &nbsp;<input type="checkbox" ng-model="cpForm.vr">
+      <div class="col-md-6">
+        <div class="form-group">
+          <span class="col-md-5"><i class="fa fa-headphones"></i> &nbsp; <label>Audio</label>&nbsp; &nbsp;</span>
+          <label class="bal_switch"> <input type="checkbox" ng-model="cpForm.audio"><span class="bal_slider round"></span></label>
+          <!-- <i class="fa fa-headphones"></i> &nbsp; <label>Audio</label> &nbsp;<input type="checkbox" ng-model="cpForm.audio"> -->
+        </div>
       </div>
-      <div class="form-group">
-        <i class="fa fa-desktop"></i> &nbsp; <label>Window Colour</label> &nbsp;<input type="color" ng-model="cpForm.windowColor">
+      <div class="col-md-6">
+        <div class="form-group">
+          <span class="col-md-5"><i class="fa fa-bar-chart-o"></i> &nbsp; <label>VR</label></span>
+          <label class="bal_switch"> <input type="checkbox" ng-model="cpForm.vr"><span class="bal_slider round"></span></label>
+          <!-- <i class="fa fa-bar-chart-o"></i> &nbsp; <label>VR</label> &nbsp;<input type="checkbox" ng-model="cpForm.vr"> -->
+        </div>
       </div>
-      <div class="form-group">
-        <i class="fa fa-phone"></i> &nbsp; <label>Call Back</label> &nbsp;<input type="checkbox" ng-model="cpForm.callBack">
+      <div class="col-md-6">
+        <div class="form-group">
+          <span class="col-md-5"><i class="fa fa-phone"></i> &nbsp; <label>Call Back</label>&nbsp;</span>
+          <label class="bal_switch"> <input type="checkbox" ng-model="cpForm.callBack"><span class="bal_slider round"></span></label>
+          <!-- <i class="fa fa-phone"></i> &nbsp; <label>Call Back</label> &nbsp;<input type="checkbox" ng-model="cpForm.callBack"> -->
+        </div>
       </div>
-      <div class="form-group">
-        <i class="fa fa-ticket"></i> &nbsp; <label>Ticket</label> &nbsp;<input type="checkbox" ng-model="cpForm.ticket">
+      <div class="col-md-6">
+        <div class="form-group">
+          <span class="col-md-5"><i class="fa fa-ticket"></i> &nbsp; <label>Ticket</label>&nbsp;</span>
+          <label class="bal_switch"> <input type="checkbox" ng-model="cpForm.ticket"><span class="bal_slider round"></span></label>
+          <!-- <i class="fa fa-ticket"></i> &nbsp; <label>Ticket</label> &nbsp;<input type="checkbox" ng-model="cpForm.ticket"> -->
+        </div>
       </div>
-      <div class="form-group">
-        <i class="fa fa-gg-circle"></i> &nbsp; <label>SupportBubble Colour</label> &nbsp;<input type="color" ng-model="cpForm.supportBubbleColor">
+      <div class="col-md-6">
+        <div class="form-group">
+          <span class="col-md-12"><i class="fa fa-desktop"></i> &nbsp; <label>Window Colour</label> &nbsp;<input type="color" ng-model="cpForm.windowColor"></span>
+        </div>
       </div>
-      <div class="form-group">
-        <i class="fa fa-info-circle"></i> &nbsp; <label>Icon Colour</label> &nbsp;<input type="color" ng-model="cpForm.iconColor">
+      <div class="col-md-6">
+        <div class="form-group">
+          <span class="col-md-12"><i class="fa fa-desktop"></i> &nbsp; <label>Font Colour</label> &nbsp;<input type="color" ng-model="cpForm.fontColor"></span>
+        </div>
       </div>
-      <div class="form-group">
-        <div class="row">
-          <div class="col-md-2">
-            <i class="fa fa-user"></i> &nbsp; <label>Name</label>
-          </div>
-          <div class="col-md-4">
-            <input class="form-control" type="text" ng-model="cpForm.name">
+      <div class="col-md-6">
+        <div class="form-group">
+          <span class="col-md-12"><i class="fa fa-gg-circle"></i> &nbsp; <label>SupportBubble Colour</label> &nbsp;<input type="color" ng-model="cpForm.supportBubbleColor"</span>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="form-group">
+          <span class="col-md-12"><i class="fa fa-info-circle"></i> &nbsp; <label>Icon Colour</label> &nbsp;<input type="color" ng-model="cpForm.iconColor"></span>
+        </div>
+      </div>
+      <br>
+      <div class="col-md-12" style="margin:7px 0px">
+        <div class="form-group">
+          <span class="col-md-12"><i class="fa fa-compass" aria-hidden="true"></i>&nbsp; <label>Select Button Type</label> &nbsp;
+          <input type="radio" ng-model="cpForm.chatIconType" value="Circle">
+            <span>
+              <span style="border:2px solid #e0e0e0;padding:2px 3px 2px 7px;border-radius:50%;background:{{cpForm.supportBubbleColor}};color:{{cpForm.fontColor}}">
+                <i class="fa fa-whatsapp" aria-hidden="true"></i>
+              </span>
+            </span> &nbsp;
+          <input type="radio" ng-model="cpForm.chatIconType" value="Box">
+          <span>
+            <span style="border:2px solid #e0e0e0;padding:2px 5px;background:{{cpForm.supportBubbleColor}};color:{{cpForm.fontColor}}">
+              Chat With Us <i class="fa fa-whatsapp" aria-hidden="true"></i>
+            </span>
+          </span></span>
+        </div>
+      </div>
+      <br>
+      <div class="col-md-12" style="margin:7px 0px">
+
+        <div class="form-group">
+          <span class="col-md-12"><i class="fa fa-object-group" aria-hidden="true"></i> &nbsp; <label>Desktop Button Position</label> &nbsp;
+          <input ng-if="cpForm.chatIconType=='Box'" type="radio" ng-model="cpForm.chatIconPosition" value="left-center">&nbsp;
+            <span style="display:inline-block;margin-bottom:-7px" ng-if="cpForm.chatIconType=='Box'">
+              <div style="border:2px solid #e0e0e0;width:30px;height:30px;position:relative">
+                <span style="position: absolute;top:40%;background:black;border-radius:50%;width:7px;height:7px"></span>
+              </div>
+            </span> &nbsp;
+            <input type="radio" ng-model="cpForm.chatIconPosition" value="right-center" ng-if="cpForm.chatIconType=='Box'">&nbsp;
+            <span style="display:inline-block; margin-bottom:-7px" ng-if="cpForm.chatIconType=='Box'">
+              <div style="border:2px solid #e0e0e0;width:30px;height:30px;position:relative">
+                <span style="position: absolute;top:40%;right:0px;background:black;border-radius:50%;width:7px;height:7px"></span>
+              </div>
+            </span> &nbsp;
+            <input type="radio" ng-model="cpForm.chatIconPosition" value="left-bottom">&nbsp;
+            <span style="display:inline-block ;margin-bottom:-7px">
+              <div style="border:2px solid #e0e0e0;width:30px;height:30px;position:relative">
+                <span style="position: absolute;bottom:0%;background:black;border-radius:50%;width:7px;height:7px"></span>
+              </div>
+            </span> &nbsp;
+              <input type="radio" ng-model="cpForm.chatIconPosition" value="right-bottom">&nbsp;
+            <span style="display:inline-block;margin-bottom:-7px">
+              <div style="border:2px solid #e0e0e0;width:30px;height:30px;position:relative">
+                <span style="position: absolute;bottom:0%;right: 0px;background:black;border-radius:50%;width:7px;height:7px"></span>
+              </div>
+            </span></span>
+        </div>
+      </div>
+      <div class="col-md-12">
+        <div class="form-group">
+          <div class="form-group">
+            <span class="col-md-5"><i class="fa fa-ticket"></i> &nbsp; <label>Blink</label>&nbsp;</span>
+            <label class="bal_switch"> <input type="checkbox" ng-model="cpForm.is_blink"><span class="bal_slider round"></span></label>
+            <!-- <i class="fa fa-ticket"></i> &nbsp; <label>Ticket</label> &nbsp;<input type="checkbox" ng-model="cpForm.ticket"> -->
           </div>
         </div>
       </div>
-      <div class="form-group">
-        <div class="row">
-          <div class="col-md-2">
-            <i class="fa  fa-picture-o"></i> &nbsp; <label>Picture</label>
+
+      <div class="col-md-6">
+        <span class="col-md-12"><div class="form-group">
+          <div class="row">
+            <div class="col-md-4">
+              <i class="fa fa-user"></i> &nbsp; <label>Name</label>
+            </div>
+            <div class="col-md-8">
+              <input class="form-control" type="text" ng-model="cpForm.name">
+            </div>
           </div>
-          <div class="col-md-4">
-            <input type="file" file-model="cpForm.dp">
+        </div></span>
+      </div>
+      <br>
+      <div class="col-md-6">
+        <span class="col-md-12"><div class="form-group">
+          <div class="row">
+            <div class="col-md-4">
+              <i class="fa  fa-picture-o"></i> &nbsp; <label>Picture</label>
+            </div>
+            <div class="col-md-8">
+              <input type="file" file-model="cpForm.dp">
+            </div>
           </div>
-        </div>
+        </div></span>
       </div>
-      <div class="form-group">
-        <label>First Message</label>
-        <textarea ui-tinymce="tinymceOptions" ng-model="cpForm.firstMessage"></textarea>
+      <br>
+      <div class="col-md-12">
+        <span class="col-md-12"><div class="form-group">
+          <label>First Message</label>
+          <textarea ui-tinymce="tinymceOptions" ng-model="cpForm.firstMessage"></textarea>
+        </div></span>
       </div>
-    </div><br>
+
+    </div>
     <button type="button" class="btn btn-primary btn-lg col-md-2 col-md-offset-5" ng-click="saveCustomerProfile()">Save</button>
   </div>
 </div>
