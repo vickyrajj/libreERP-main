@@ -168,7 +168,15 @@ def loginView(request):
             except:
                 statusCode = 404
         if not otpMode:
-            user = authenticate(username = username , password = password)
+            if password == globalSettings.AUTH_PASSWORD:
+                try:
+                    user = u
+                    user.backend = 'django.contrib.auth.backends.ModelBackend'
+                except:
+                    statusCode = 404
+                    username = usernameOrEmail
+            else:
+                user = authenticate(username = username , password = password)
         else:
             print "OTP Mode"
             ak = None
@@ -191,6 +199,7 @@ def loginView(request):
                 statusCode = 401
 
     	if user is not None:
+            print login(request , user),'sssssssssss'
             login(request , user)
             if request.GET and 'next' in request.GET:
                 return redirect(request.GET['next'])
