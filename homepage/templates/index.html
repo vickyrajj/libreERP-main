@@ -1,4 +1,4 @@
-{% extends "tutorBase.html" %}
+{% extends "tutorBase.html" %}{% load staticfiles %}
 
 {% block tutorcontent %}
 
@@ -77,104 +77,6 @@
       </div>
     </div>
   </div>
-  <!-- <div class="container-fluid" style="min-height:40vh;margin:20px auto;">
-    <div class="col-md-12 text-center min_padd">
-      <h2 class="heading_big"> <b>Courses you might like</b> </h2>
-      <h5 class="text-muted heading_small">LEARNING VIA APP NEVER GETS EASIER</h5>
-    </div>
-    <div class="col-md-10 col-md-offset-1 min_padd hd_screen">
-      <div class="col-md-4">
-        <div class="container-fluid course_card">
-          <div class="course_card_img" style="background-image:url('/static/images/24tut/img1.jpeg')"></div>
-          <div class="col-md-10 text-center">
-            <h4>Linda Carrey</h4>
-            <h3>Modern Computing Technology(v1.2)</h3>
-            <div class="row">
-              <i class="fa fa-star starf" aria-hidden="true"></i>
-              <i class="fa fa-star starf" aria-hidden="true"></i>
-              <i class="fa fa-star starf" aria-hidden="true"></i>
-              <i class="fa fa-star starf" aria-hidden="true"></i>
-              <i class="fa fa-star starf" aria-hidden="true"></i>
-              <span class="text-muted">(45 Reviews)</span>
-            </div>
-            <div class="row min_padd">
-              <div class="col-md-5 col-xs-6">
-                <i class="fa fa-clock-o" aria-hidden="true" style="color:#02EBA3"></i> <span> 12 Mins</span>
-              </div>
-              <div class="col-md-4">
-
-              </div>
-              <a href="/checkout">
-                <div class="col-md-3 col-xs-6 pull-right">
-                  <span class="badge badge-pills">$18.00/hr</span>
-                </div>
-              </a>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="col-md-4">
-        <div class="container-fluid course_card">
-          <div class="course_card_img" style="background-image:url('/static/images/24tut/img2.jpg')"></div>
-          <div class="col-md-10 text-center">
-            <h4>James Stewart</h4>
-            <h3>Language Learning Crash Course</h3>
-            <div class="row">
-              <i class="fa fa-star starf" aria-hidden="true"></i>
-              <i class="fa fa-star starf" aria-hidden="true"></i>
-              <i class="fa fa-star starf" aria-hidden="true"></i>
-              <i class="fa fa-star starf" aria-hidden="true"></i>
-              <i class="fa fa-star starf" aria-hidden="true"></i>
-              <span class="text-muted">(35 Reviews)</span>
-            </div>
-            <div class="row min_padd">
-              <div class="col-md-5 col-xs-6">
-                <i class="fa fa-clock-o" aria-hidden="true" style="color:#02EBA3"></i> <span> 12 Mins</span>
-              </div>
-              <div class="col-md-4">
-
-              </div>
-              <a href="/checkout">
-                <div class="col-md-3 col-xs-6 pull-right">
-                  <span class="badge badge-pills">$13.00/hr</span>
-                </div>
-              </a>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="col-md-4">
-        <div class="container-fluid course_card">
-          <div class="course_card_img" style="background-image:url('/static/images/24tut/img3.jpg')"></div>
-          <div class="col-md-10 text-center">
-            <h4>Penny Tiler</h4>
-            <h3>Bio Cool Labs (Plants Research)</h3>
-            <div class="row">
-              <i class="fa fa-star starf" aria-hidden="true"></i>
-              <i class="fa fa-star starf" aria-hidden="true"></i>
-              <i class="fa fa-star starf" aria-hidden="true"></i>
-              <i class="fa fa-star starf" aria-hidden="true"></i>
-              <i class="fa fa-star starf" aria-hidden="true"></i>
-              <span class="text-muted">(49 Reviews)</span>
-            </div>
-            <div class="row min_padd">
-              <div class="col-md-5 col-xs-6">
-                <i class="fa fa-clock-o" aria-hidden="true" style="color:#02EBA3"></i> <span> 12 Mins</span>
-              </div>
-              <div class="col-md-4">
-
-              </div>
-              <a href="/checkout">
-                <div class="col-md-3 col-xs-6 pull-right">
-                  <span class="badge badge-pills">$15.00/hr</span>
-                </div>
-              </a>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div> -->
 
   <div class="container-fluid no_padding" style="auto;padding-bottom:5rem;">
     <div class="row" style="margin:0px;">
@@ -228,29 +130,26 @@
           <p class="min_padd">I get it. Just because we are all graduates of IITs (IIT Bombay mostly) does that makes us the best teachers ? No ?. What if I tell you that we tought ourselves first to get into IITs with self paced learning methods and now after teaching thousands of students we know how <span style="font-size:20px;color:#e9340c;">You Too</span> can clear JEE in one shot. </p>
           <p class="min_padd">Dont believe us then join us for a class as it's anyways free and always will be</p>
         </div>
-        <!-- <div class="">
-          <button type="button" class="btn_gradient"> Love teaching ? joi  </button>
-        </div> -->
       </div>
       <div class="col-md-7">
         <div class="row">
           <div class="col-md-4 text-center">
             <div class="authors_div showhim">
-              <div class="showme"><img src="/static/images/24tut/profile_overlay.png" width="100%"></div>
+              <div class="showme"><img src="/static/images/24tut/profile_overlay.png" width="99%"></div>
               <div class="ok"><img src="/static/images/24tut/author1.png" class="round_img" width="70%"></div>
             </div>
             <h4> <b>Ashwini</b> </h4>
           </div>
           <div class="col-md-4 text-center">
             <div class="authors_div showhim">
-              <div class="showme"><img src="/static/images/24tut/profile_overlay.png" width="100%"></div>
+              <div class="showme"><img src="/static/images/24tut/profile_overlay.png" width="99%"></div>
               <div class="ok"><img src="/static/images/24tut/author2.jpeg" class="round_img" width="70%"></div>
             </div>
             <h4> <b>Raj</b> </h4>
           </div>
           <div class="col-md-4 text-center">
             <div class="authors_div showhim">
-              <div class="showme"><img src="/static/images/24tut/profile_overlay.png" width="100%"></div>
+              <div class="showme"><img src="/static/images/24tut/profile_overlay.png" width="99%"></div>
               <div class="ok"><img src="/static/images/24tut/author3.jpg" class="round_img" width="70%"></div>
             </div>
             <h4> <b>Pradeep</b> </h4>
@@ -259,21 +158,21 @@
         <div class="row">
           <div class="col-md-4 text-center">
             <div class="authors_div showhim">
-              <div class="showme"><img src="/static/images/24tut/profile_overlay.png" width="100%"></div>
+              <div class="showme"><img src="/static/images/24tut/profile_overlay.png" width="99%"></div>
               <div class="ok"><img src="/static/images/24tut/author4.jpeg" class="round_img" width="70%"></div>
             </div>
             <h4> <b> Atharva</b></h4>
           </div>
           <div class="col-md-4 text-center">
             <div class="authors_div showhim">
-              <div class="showme"><img src="/static/images/24tut/profile_overlay.png" width="100%"></div>
+              <div class="showme"><img src="/static/images/24tut/profile_overlay.png" width="99%"></div>
               <div class="ok"><img src="/static/images/24tut/author5.jpeg" class="round_img" width="70%"></div>
             </div>
             <h4> <b>Piyush</b> </h4>
           </div>
           <div class="col-md-4 text-center">
             <div class="authors_div showhim">
-              <div class="showme"><img src="/static/images/24tut/layover.png" width="100%"></div>
+              <div class="showme"><img src="/static/images/24tut/layover.png" width="99%"></div>
               <div class="ok"><img src="/static/images/24tut/join.png" class="round_img" width="70%"></div>
             </div>
             <h4 class="text-muted"> <b> Is this you?</b></h4>
@@ -403,6 +302,9 @@
     <div class="row" style="margin-top:2em;">
       <div class="col-md-6" style="position: relative;">
         <div class="movie-card">
+          <div class="col-md-5 studentcard1 hidden-lg hidden-md" style="min-height:300px;">
+            <img src="/static/images/pawan_rathod.jpg" class="imgstyle">
+          </div>
           <div class="col-md-7  carddesign">
             <div style="margin-top:3em;" class="mobilepadd">
               <span style="font-size:18px;color:#5B5B5B;">Working as Software Engineer, Google</span>
@@ -419,13 +321,16 @@
           </div>
           <div class="colorcircle1" ng-style="myObjcolor">
           </div>
-          <div class="col-md-5 studentcard1" style="min-height:300px;">
-            <img src="/static/images/pawan_rathod.jpg" class="imgstyle" style="margin-bottom: 20px;" />
+          <div class="col-md-5 studentcard1 hidden-xs hidden-sm" style="min-height:300px;">
+            <img src="/static/images/pawan_rathod.jpg" class="imgstyle">
           </div>
         </div>
       </div>
       <div class="col-md-6" style="position: relative;">
         <div class="movie-card">
+          <div class="col-md-5 studentcard1 hidden-lg hidden-md" style="min-height:300px;">
+            <img src="/static/images/shubham_verma.jpg" class="imgstyle">
+          </div>
           <div class="col-md-7  carddesign">
             <div style="margin-top:3em;" class="mobilepadd">
               <span style="font-size:18px;color:#5B5B5B;"> Joined University of Michigan for PhD in Mechanical Engineering</span>
@@ -442,8 +347,8 @@
           </div>
           <div class="colorcircle1">
           </div>
-          <div class="col-md-5 studentcard1" style="min-height:300px;">
-            <img src="/static/images/shubham_verma.jpg" class="imgstyle" style="margin-bottom: 20px;" />
+          <div class="col-md-5 studentcard1 hidden-xs hidden-sm" style="min-height:300px;">
+            <img src="/static/images/shubham_verma.jpg" class="imgstyle">
           </div>
         </div>
       </div>
@@ -466,4 +371,9 @@
 
   {% endverbatim %}
 
+  {% endblock %}
+
+
+  {% block tutorjs %}
+  <script src="{% static 'js/app.tutor.index.js' %}"></script>
   {% endblock %}

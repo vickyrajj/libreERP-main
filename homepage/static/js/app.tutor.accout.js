@@ -1,335 +1,16 @@
-var app = angular.module('app', [ 'ui.bootstrap']);
-// $scope, $state, $users, $stateParams, $http, $timeout, $uibModal , $sce,$rootScope
+var app = angular.module('app', [ 'ui.bootstrap', 'flash', 'ngAside','uiSwitch']);
 
-
-app.config(function($httpProvider) {
+app.config(function( $httpProvider) {
   $httpProvider.defaults.xsrfCookieName = 'csrftoken';
   $httpProvider.defaults.xsrfHeaderName = 'X-CSRFToken';
   $httpProvider.defaults.withCredentials = true;
 })
 
-
 app.controller('main', function($scope, $http, $interval) {
-  // $scope.me = $users.get('mySelf');
-  $scope.crmBannerID = 1;
 
-  $scope.device = {
-    name: ''
-  }
+})
 
-  function lgDevice(x) {
-    if (x.matches) {
-      $scope.device.name = 'large'
-    }
-  }
-
-  function smDevice(x) {
-    if (x.matches) {
-      $scope.device.name = 'small'
-    }
-  }
-
-  function elgDevice(x) {
-    if (x.matches) {
-      $scope.device.name = 'extralarge'
-    }
-  }
-
-
-  var sm = window.matchMedia("(max-width: 600px)")
-  smDevice(sm) // Call listener function at run time
-  sm.addListener(smDevice) // Attach listener function on state changes
-
-  var lg = window.matchMedia("(min-width: 601px) and (max-width: 1400px) ")
-  lgDevice(lg)
-  lg.addListener(lgDevice)
-
-  var elg = window.matchMedia("(min-width: 1401px)")
-  elgDevice(elg)
-  elg.addListener(elgDevice)
-
-
-  $scope.mainBannerImages = []
-  $scope.bannerID = 0;
-  $scope.typings = ["Online tutoring", "24x7 online help", "CBSE Preparation", "IIT JEE Preparation", "AIPMT Preparation"]
-  $scope.typeIndex = 0;
-  $scope.videoLink = '';
-
-  $scope.videoLink = $sce.trustAsResourceUrl('https://www.youtube.com/embed/JC-Dpwb-Sk8');
-
-  $interval(function() {
-
-    $scope.typeIndex += 1;
-    if ($scope.typeIndex == $scope.typings.length) {
-      $scope.typeIndex = 0;
-    }
-
-  }, 5000)
-
-  $interval(function() {
-    $scope.bannerID += 1;
-    if ($scope.bannerID == $scope.mainBannerImages.length) {
-      $scope.bannerID = 0;
-    }
-  }, 2000)
-
-  $interval(function() {
-    $scope.crmBannerID += 1;
-    if ($scope.crmBannerID == 12) {
-      $scope.crmBannerID = 1;
-    }
-  }, 1000)
-
-
-  $scope.onHover = function(val) {
-    document.getElementById('owltext' + val).classList.add('changingFont')
-    document.getElementById('owlpoint' + val).classList.add('changingColor')
-  }
-  $scope.offHover = function(val) {
-    document.getElementById('owltext' + val).classList.remove('changingFont')
-    document.getElementById('owlpoint' + val).classList.remove('changingColor')
-  }
-
-  $scope.active = null
-  $scope.drop = function(val) {
-    if (val == 0) {
-      if ($scope.active == 0) {
-        $scope.active = null
-      } else {
-        $scope.active = 0
-      }
-    } else if (val == 1) {
-      if ($scope.active == 1) {
-        $scope.active = null
-      } else {
-        $scope.active = 1
-      }
-    } else if (val == 2) {
-      if ($scope.active == 2) {
-        $scope.active = null
-      } else {
-        $scope.active = 2
-      }
-
-    } else {
-      if ($scope.active == 3) {
-        $scope.active = null
-      } else {
-        $scope.active = 3
-      }
-    }
-  }
-
-  $scope.playVideo = function() {
-
-    $uibModal.open({
-      templateUrl: '/static/ngTemplates/app.homepage.player.html',
-      size: 'md',
-      backdrop: true,
-
-      controller: function($scope, $uibModalInstance) {
-        $scope.close = function() {
-          $uibModalInstance.dismiss('cancel');
-        }
-        $scope.pauseOrPlay = function(ele) {
-          var video = angular.element(ele.srcElement);
-          video[0].pause(); // video.play()
-        }
-      },
-    })
-
-  }
-
-  $scope.signin = function() {
-    console.log('-------------innnnnnnnnnnn');
-    $uibModal.open({
-      templateUrl: '/static/ngTemplates/app.homepage.signin.html',
-      size: 'lg',
-      backdrop: false,
-      controller: function($scope, $uibModalInstance, $timeout, Flash) {
-        $scope.form = {
-          number: '',
-          otp: '',
-          otpmode: false,
-          errorMessage: '',
-          errorType: 'default'
-        }
-        $scope.loginFunction = function() {
-          console.log($scope.form);
-          if (!$scope.form.otpmode) {
-            if ($scope.form.number.length != 10) {
-              $scope.form.errorMessage = 'Enter Valid Mobile Number'
-              $scope.form.errorType = 'danger'
-              return
-            } else {
-              $scope.form.errorMessage = ''
-              $scope.form.errorType = 'default'
-            }
-            $http({
-              method: 'POST',
-              url: '/generateOTP',
-              data: {
-                'id': $scope.form.number
-              }
-            }).
-            then(function(response) {
-              console.log(response.data);
-              $scope.form.otpmode = true
-            }, function(err) {
-              if (err.status == 404) {
-                $http({
-                  method: 'POST',
-                  url: '/api/homepage/registration/',
-                  data: {
-                    mobile: $scope.form.number
-                  }
-                }).
-                then(function(response) {
-                  console.log(response.data);
-                  $scope.form.errorMessage = 'You Have No Account , We Are Creating New Account For You'
-                  $scope.form.errorType = 'warning'
-                  $scope.form.otpmode = true
-                  $scope.form.token = response.data.token
-                }).catch(function(err) {
-                  $scope.form.errorMessage = 'Invalid Data'
-                  $scope.form.errorType = 'danger'
-                })
-              } else if (err.status == 400) {
-                $scope.form.errorMessage = 'No Account'
-                $scope.form.errorType = 'danger'
-              } else if (err.status == 500) {
-                $scope.form.errorMessage = 'Error While Sending OTP'
-                $scope.form.errorType = 'danger'
-              }
-            });
-          } else {
-            console.log('enter otp mode');
-            if ($scope.form.token != undefined) {
-              var toSend = {
-                mobile: $scope.form.number,
-                mobileOTP: $scope.form.otp,
-                token: $scope.form.token
-              }
-            } else {
-              var toSend = {
-                mobile: $scope.form.number,
-                mobileOTP: $scope.form.otp
-              }
-            }
-            $http({
-              method: 'POST',
-              url: '/registerLite',
-              data: toSend
-            }).
-            then(function(response) {
-              console.log('Registered');
-              window.location.href = "/";
-            })
-          }
-        }
-        $scope.close = function() {
-          $uibModalInstance.dismiss('cancel');
-        }
-
-        $scope.slideDown = function() {
-          $timeout(function() {
-            console.log("sliding down");
-            var element = document.getElementsByClassName('signup_modal');
-            element[0].scrollIntoView({
-              block: "end"
-            });
-          }, 1000)
-        }
-
-      },
-    })
-  }
-
-});
-
-app.controller('startexam', function($scope, $http, $timeout, $interval, $uibModal) {
-
-
-
-  $http({
-    method: 'GET',
-    url: '/api/LMS/paperhistory/?user=' + user + '&paper=' + ques,
-  }).then(function(response) {
-    $scope.data = response.data.length;
-    $scope.paper = ques.split('-').join('')
-    $scope.url = "/" + blog + "/" + $scope.paper + "/practice/";
-
-  })
-
-  $scope.startexam = function() {
-
-
-    $uibModal.open({
-      templateUrl: '/static/ngTemplates/startexam.html',
-      size: 'md',
-      backdrop: true,
-      resolve: {
-        blogobj: function() {
-          return blog;
-        },
-        quesobj: function() {
-          return ques;
-        },
-        user: function() {
-          return user;
-        },
-        paper: function() {
-          return paper;
-        }
-
-      },
-      controller: function($scope, $uibModalInstance, blogobj, quesobj, user, paper) {
-
-        $scope.paper = quesobj.split('-').join('')
-        $scope.url = "/" + blogobj + "/" + $scope.paper + "/practice/";
-        $scope.closeModal = function() {
-          $uibModalInstance.close()
-        }
-        $scope.next = function() {
-          $http({
-            method: 'GET',
-            url: '/api/LMS/answer/?user=' + user + '&paper=' + paper,
-          }).
-          then(function(response) {
-            $scope.answers = []
-            for (var i = 0; i < response.data.length; i++) {
-              $scope.answers.push(response.data[i].pk)
-            }
-            for (var i = 0; i < $scope.answers.length; i++) {
-              $http({
-                method: 'DELETE',
-                url: '/api/LMS/answer/' + $scope.answers[i] + '/'
-              }).
-              then(function(response) {
-              })
-            }
-          })
-        }
-      },
-    })
-
-  }
-
-
-});
-
-app.controller('testimonials', function($scope, $state, $http, $timeout, $interval, $uibModal, $stateParams, $sce) {
-
-  $scope.myObj = {
-    "background-color": "#DDF6FB",
-  }
-  $scope.myObjcolor = {
-    "background-color": "#E5E7FC",
-  }
-
-});
-
-app.controller('accountController', function($scope, $state, $http, $timeout, $interval, $uibModal, $stateParams, $sce, Flash, $users, $aside) {
+app.controller('accountController', function($scope, $http, $timeout, $interval, $uibModal, Flash, $aside) {
 
   console.log('account Controller');
 
@@ -549,10 +230,21 @@ app.controller('accountController', function($scope, $state, $http, $timeout, $i
       templateUrl: '/static/ngTemplates/app.tutor.addSession.form.html',
       size: 'md',
       backdrop: false,
-      controller: function($scope, $uibModalInstance, $users) {
+      controller: function($scope, $uibModalInstance) {
         $scope.tutorsOnline = [];
-        $scope.me = $users.get('mySelf');
-        console.log($scope.me);
+        // $scope.me = $users.get('mySelf');
+        $scope.me = {}
+        $http({
+          method: 'GET',
+          url: '/api/HR/users/?mode=mySelf&format=json'
+        }).
+        then(function(response) {
+          console.log('res', response.data);
+          if (response.data.length == 1) {
+            $scope.me = response.data[0]
+          }
+          console.log($scope.me);
+        })
         $scope.form = {
           subject: null,
           topic: null,

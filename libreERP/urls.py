@@ -8,8 +8,8 @@ from homepage.views import index
 # from homepage.views import blog,blogDetails,news,team, career ,policy ,terms ,refund , contacts , registration , desclaimer
 # from ERP.views import serviceRegistration , dynamicTemplates, courses , coursesContent , ncert , mockTestView
 from HR.views import loginView , logoutView , home , registerView , tokenAuthentication , root, generateOTP, documentView,registrationLite
-from homepage.views import blog,blogAnotherView,blogDetails,news,team, career ,policy ,terms ,refund , contacts , registration , desclaimer ,aboutUs ,contactUs,desclaimer,policy,terms,refund,testimonials,account
-from ERP.views import serviceRegistration , dynamicTemplates , ncert , mockTestView , testResultsView
+from homepage.views import blog,blogAnotherView,blogDetails, career ,policy ,terms ,refund  , desclaimer ,aboutUs ,contactUs,desclaimer,policy,terms,refund,testimonials,account
+from ERP.views import serviceRegistration , dynamicTemplates , mockTestView , testResultsView
 from tutor.views import studentHome , tutorHome
 from ERP.views import PaymentResponse, renderedStatic
 from django.contrib.sitemaps.views import sitemap
@@ -44,23 +44,12 @@ urlpatterns = [
     url(r'^generateOTP', generateOTP, name="generateOTP"),
     url(r'^documents', documentView , name ='document'),
     url(r'^blog/$', blogAnotherView , name ='blog'),
-    url(r'^news', news , name ='news'),
-    url(r'^team', team , name ='team'),
-    # url(r'^career', career , name ='career'),
-    # url(r'^policy', policy , name ='policy'),
-    # url(r'^desclaimer', desclaimer , name ='desclaimer'),
-    # url(r'^terms', terms , name ='terms'),
-    # url(r'^refund', refund , name ='refund'),
-    url(r'^contacts', contacts , name ='contacts'),
     url(r'^studentHome', studentHome , name ='studentHome'),
     url(r'^tutorHome', tutorHome , name ='tutorHome'),
     url(r'^paymentResponse', PaymentResponse , name ='paymentResponse'),
     url(r'^sitemap\.xml$', sitemap, {'sitemaps': sitemaps}, name='django.contrib.sitemaps.views.sitemap'),
     url(r'^ngTemplates/(?P<filename>[\w|\W]+)', renderedStatic , name ='renderedStatic'),
     url(r'^dynamicTemplates/(?P<filename>[\w|\W]+).html', dynamicTemplates , name ='dynamicTemplates'),
-    # url(r'^courses/(?P<page>[\w|\W]+)', coursesContent , name ='coursesContent'),
-    # url(r'^courses/$', courses , name ='courses'),
-    url(r'^ncert/', ncert , name ='ncert'),
     # url(r'^mock-test/(?P<testID>[\w|\W]+)', mockTestView , name ='mockTest'),
     url(r'^testresults/',testResultsView , name ='testResultsView'),
     url(r'^about/',aboutUs , name ='aboutUs'),

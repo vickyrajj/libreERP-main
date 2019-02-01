@@ -41,13 +41,13 @@ def contactUs(request):
     subobjs = Subject.objects.all().order_by('level')
     return render(request, 'contact.html', {"subobj":subobjs,'seoDetails':{'title':globalSettings.SEO_TITLE,'description':globalSettings.SEO_DESCRIPTION,'image':globalSettings.SEO_IMG,'width':globalSettings.SEO_IMG_WIDTH,'height':globalSettings.SEO_IMG_HEIGHT}})
 
-
 def testimonials(request):
     subobjs = Subject.objects.all().order_by('level')
     return render(request, 'testimonials.html', {"subobj":subobjs,'seoDetails':{'title':globalSettings.SEO_TITLE,'description':globalSettings.SEO_DESCRIPTION,'image':globalSettings.SEO_IMG,'width':globalSettings.SEO_IMG_WIDTH,'height':globalSettings.SEO_IMG_HEIGHT}})
 
 def account(request):
     try:
+        subobjs = Subject.objects.all().order_by('level')
         userObj = request.user
         userProfile = userObj.tutors24Profile
         userProf = userObj.profile
@@ -64,14 +64,15 @@ def account(request):
         userProf = None
         balanceForm = {"minutes1" : 0 , "minutes2" : 0 , "hours1" : 0, "hours2" : 0}
 
-    return render(request, 'account.html', {"userObj":userObj, "userProfile":userProfile, "userProf":userProf,"balanceForm":balanceForm})
+    return render(request, 'account.html', {"userObj":userObj, "userProfile":userProfile, "userProf":userProf,"balanceForm":balanceForm, "subobj":subobjs})
 
 
 
 
 def blogDetails(request, blogname):
     print '*****************blognameeee',blogname
-    data = {"home": False,"brandLogo" : globalSettings.BRAND_LOGO , "brandLogoInverted": globalSettings.BRAND_LOGO_INVERT , 'seoDetails':{'title':globalSettings.SEO_TITLE,'description':globalSettings.SEO_DESCRIPTION,'image':globalSettings.SEO_IMG,'width':globalSettings.SEO_IMG_WIDTH,'height':globalSettings.SEO_IMG_HEIGHT}}
+    subobjs = Subject.objects.all().order_by('level')
+    data = {"home": False,"brandLogo" : globalSettings.BRAND_LOGO ,"subobj":subobjs, "brandLogoInverted": globalSettings.BRAND_LOGO_INVERT , 'seoDetails':{'title':globalSettings.SEO_TITLE,'description':globalSettings.SEO_DESCRIPTION,'image':globalSettings.SEO_IMG,'width':globalSettings.SEO_IMG_WIDTH,'height':globalSettings.SEO_IMG_HEIGHT}}
     if blogname.startswith('class-') :
         print blogname,'-------------------'
         subPart = None
@@ -87,7 +88,6 @@ def blogDetails(request, blogname):
         courseobjs = Course.objects.filter(topic__subject__pk=sub.pk, urlSuffix__isnull = False)
         booklen = len(Book.objects.filter(subject__pk=sub.pk))
         bookobjs = Book.objects.filter(subject__pk=sub.pk)
-        subobjs = Subject.objects.all().order_by('level')
         noteobj = Note.objects.filter(subject__pk=sub.pk)
         refbookobjs = BookCourseMap.objects.filter(book__subject__pk=sub.pk)
         refbooklen = len(refbookobjs)
@@ -112,7 +112,6 @@ def blogDetails(request, blogname):
         if subPart == 'notes':
             pass
         data['courseobj'] = courseobjs
-        data['subobj'] = subobjs
         data['level'] = level
         data['title'] = title
         data['subPart'] = subPart
@@ -199,7 +198,6 @@ def blogDetails(request, blogname):
             pass
         # this section is for books pages
         blogobj = blogPost.objects.get(shortUrl=blogname)
-        subobjs = Subject.objects.all().order_by('level')
         print "got blog post"  , blogobj
         if blogobj.title:
             data['seoDetails']['title'] = blogobj.title
@@ -243,7 +241,10 @@ def blogDetails(request, blogname):
             course = Course.objects.get(pk=blogobj.header)
             tutorpk = course.instructor.pk
             tutordetail = Tutors24Profile.objects.filter(user__pk= tutorpk)[0]
-            detail = tutordetail.detail.split("||")
+            if tutordetail.detail:
+                detail = tutordetail.detail.split("||")
+            else:
+                detail = []
             data['course'] = course
             data['detail'] = detail
             return render(request, 'homepageCourses.html', data)
@@ -388,14 +389,6 @@ def blogAnotherView(request):
 
     return render(request,"blog.html" , {"home" : False,'pages':pages ,"subobj":subobjs,"firstSection":firstSection , "second_sec1":second_sec1 , "second_sec2":second_sec2 , "thirdSection":thirdSection,"recentBlogs":recentBlogs })
 
-def news(request):
-    subobjs = Subject.objects.all().order_by('level')
-    return render(request,"newssection.html" , {"home" : False ,"subobj":subobjs, "brandLogo" : globalSettings.BRAND_LOGO , "brandLogoInverted": globalSettings.BRAND_LOGO_INVERT})
-
-def team(request):
-    subobjs = Subject.objects.all().order_by('level')
-    return render(request,"team.html" , {"home" : False , "subobj":subobjs,"brandLogo" : globalSettings.BRAND_LOGO , "brandLogoInverted": globalSettings.BRAND_LOGO_INVERT})
-
 def career(request):
     subobjs = Subject.objects.all().order_by('level')
     return render(request,"career.html" , {"home" : False , "subobj":subobjs,"brandLogo" : globalSettings.BRAND_LOGO , "brandLogoInverted": globalSettings.BRAND_LOGO_INVERT,'seoDetails':{'title':globalSettings.SEO_TITLE,'description':globalSettings.SEO_DESCRIPTION,'image':globalSettings.SEO_IMG,'width':globalSettings.SEO_IMG_WIDTH,'height':globalSettings.SEO_IMG_HEIGHT}})
@@ -412,22 +405,12 @@ def refund(request):
     subobjs = Subject.objects.all().order_by('level')
     return render(request,"refund.html" , {"home" : False ,"subobj":subobjs, "brandName" : globalSettings.BRAND_NAME , "brandLogo" : globalSettings.BRAND_LOGO , "brandLogoInverted": globalSettings.BRAND_LOGO_INVERT,'seoDetails':{'title':globalSettings.SEO_TITLE,'description':globalSettings.SEO_DESCRIPTION,'image':globalSettings.SEO_IMG,'width':globalSettings.SEO_IMG_WIDTH,'height':globalSettings.SEO_IMG_HEIGHT}})
 
-def contacts(request):
-    subobjs = Subject.objects.all().order_by('level')
-    return render(request,"contacts.html" , {"home" : False , "subobj":subobjs,"brandLogo" : globalSettings.BRAND_LOGO , "brandLogoInverted": globalSettings.BRAND_LOGO_INVERT})
-
-
 def desclaimer(request):
     subobjs = Subject.objects.all().order_by('level')
     return render(request,"desclaimer.html" , {"home" : False , "subobj":subobjs,"brandLogo" : globalSettings.BRAND_LOGO , "brandLogoInverted": globalSettings.BRAND_LOGO_INVERT,'seoDetails':{'title':globalSettings.SEO_TITLE,'description':globalSettings.SEO_DESCRIPTION,'image':globalSettings.SEO_IMG,'width':globalSettings.SEO_IMG_WIDTH,'height':globalSettings.SEO_IMG_HEIGHT}})
 
 
-def registration(request):
-    subobjs = Subject.objects.all().order_by('level')
-    return render(request,"registration.html" , {"home" : False , "subobj":subobjs,"brandLogo" : globalSettings.BRAND_LOGO , "brandLogoInverted": globalSettings.BRAND_LOGO_INVERT})
-
-
-class RegistrationViewSet(viewsets.ModelViewSet):
-    permission_classes = (permissions.AllowAny,)
-    serializer_class = RegistrationSerializer
-    queryset = Registration.objects.all()
+# class RegistrationViewSet(viewsets.ModelViewSet):
+#     permission_classes = (permissions.AllowAny,)
+#     serializer_class = RegistrationSerializer
+#     queryset = Registration.objects.all()
