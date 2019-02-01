@@ -2,16 +2,15 @@
   <div style="min-height:83vh;margin-top:0px;padding:0px;border-left: 1px solid #eeeeee; border-right: 1px solid #eeeeee; background-color: white;border-bottom:2px solid #eeeeee " class="container-fluid">
     <div class="container-fluid" style="padding:0px;border-bottom:1px solid #eeeeee;height: 110px;">
       <div class="row" style="padding:2px;margin:0px;border-bottom: 1px dotted grey;background-color:#eee">
-        <div class="">
-          <div class="col-md-offset-1 col-md-2" style="padding:0px">
+          <div class="col-md-2" style="padding:0px">
             <div class=" btn-sm btn-block" style="border-radius:0px !important;text-align: center;" type="button" name="button" ng-click="knowledgeBase(data.companyPk)"><i class="fa fa-book" style="font-size:20px;" aria-hidden="true"></i>
             </div>
           </div>
-          <div class="col-md-2" style="padding:0px">
+          <div class="col-md-4" style="padding:0px">
             <div class=" btn-sm btn-block" type="button" style="border-radius:0px !important;padding:5px 0px;text-align: center;" name="button" mwl-confirm title="Transfer Chat" message="Are you sure?" data-placement="bottom" confirm-text="Yes <i class='fa fa-check'></i>" cancel-text="No" on-confirm="chatTransfer(data.uid,data.chatThreadPk)"
               confirm-button-type="default" cancel-button-type="default"><i style="font-size:20px" class="fa fa-user-o" aria-hidden="true"></i>
-              <i style="font-size:12px" class="fa fa-exchange" aria-hidden="true"></i>
-              <i style="font-size:20px" class="fa fa-user" aria-hidden="true"></i>
+              <i style="font-size:1.2rem" class="fa fa-exchange" aria-hidden="true"></i>
+              <i style="font-size:2rem" class="fa fa-user" aria-hidden="true"></i>
             </div>
           </div>
           <div class="col-md-2" style="padding:0px">
@@ -22,38 +21,43 @@
             <span ng-if="closed" style="font-size:18px;color:red">Chat Closed</span>
           </div>
           <div class="col-md-2 " style="padding:0px;font-size:20px;text-align:center;border-radius:1px">
-
             <i class="fa fa-pencil " style="cursor:pointer;" aria-hidden="true" ng-click="editUserDetails(data.uid)" title="Edit Details"></i>
           </div>
           <div class="col-md-2 " style="padding:0px;font-size:20px;text-align:center;border-radius:1px">
-
             <i class="fa fa-cog " style="cursor:pointer;" aria-hidden="true" ng-click="openDynamicFuncModal(data.uid)" title="Edit Details"></i>
           </div>
-        </div>
+
       </div>
-      <div class="row" style="padding:5px; position:relative;">
-        <div class="col-md-9" style="padding-right:0px;">
+      <div class="row" style="position:relative;padding-right:15px;padding-left:5px">
+        <div class="col-md-8" style="padding-right:0px;">
           <i class="fa fa-circle" aria-hidden="true" style="color:{{data.isOnline ? '#37a508':'#ff0022'}}"></i>
-           <span style="font-size:15px; cursor:default;" ng-mouseover="showCompanyName = true" ng-mouseleave="showCompanyName = false">{{data.uid}}</span>
-           <div style="font-size:13px;">{{companyName}}</div>
+           <span style="font-size:1.5rem; cursor:default;" ng-mouseover="showCompanyName = true" ng-mouseleave="showCompanyName = false">{{data.uid}}</span>
+           <div style="font-size:1.3rem;">{{companyName}}</div>
            <!-- <span class="custom_tool_tip" ng-if="showCompanyName"> {{companyName}} </span> -->
           <div >
-            <span ng-if="data.name" class="text-muted" style="font-size:15px;">{{data.name}} </span>
-            <span ng-if="data.email" class="text-muted" style="font-size:10px;" >({{data.email}})</span>
+            <span ng-if="data.name" class="text-muted" style="font-size:1.5rem;">{{data.name}} </span>
+            <span ng-if="data.email" class="text-muted" style="font-size:1rem;" >({{data.email}})</span>
           </div>
         </div>
-        <div class="col-md-1">
-            <i ng-show="chatHistBtn" class="fa fa-eye pull-right " aria-hidden="true" style="cursor:pointer; font-size:20px; padding:4px 5px;" ng-click="getChatHistory(data.email)" title="Chat History"></i>
-        </div>
-        <div class="col-md-1" style="padding:4px 0px" ng-click="showCountryDetails()">
-          <!-- {{location.location.country_flag}} -->
-          <img style="width:20px" ng-src="{{location.flag}}" alt="">
-        </div>
-        <div class="col-md-1">
-            <i class="fa fa-times pull-right " aria-hidden="true" style="cursor:pointer; font-size:20px; padding:4px 5px;" ng-click="closeChatBox(index)"></i>
+        <div class="col-md-4">
+          <div class="row">
+            <div  class="col-md-3" style="margin:5px">
+                <i ng-show="chatHistBtn" class="fa fa-eye" aria-hidden="true" style="cursor:pointer; font-size:2rem; " ng-click="getChatHistory(data.email)" title="Chat History"></i>
+            </div>
+            <div class="col-md-3" ng-click="showCountryDetails()" style="padding:.5rem">
+              <!-- {{location.location.country_flag}} -->
+              <img ng-show="location.flag" style="width:2rem" ng-src="{{location.flag}}" alt="">
+              <!-- <img style="width:2rem" src="https://cdn.pixabay.com/photo/2017/07/04/13/37/blue-wings-2471094_960_720.png" alt=""> -->
+            </div>
+            <div class="col-md-3" style="padding:.5rem">
+                <i class="fa fa-times " aria-hidden="true" style="cursor:pointer; font-size:2rem;" ng-click="closeChatBox(index)"></i>
+            </div>
+
+          </div>
         </div>
       </div>
     </div>
+
 
     <div ng-if="data.video&&!data.closeIframe" class="container-fluid" style="{{data.isVideoShowing&&isVisitorVideoShowing?'height:20vh':'height:2.8vh'}} ;transition:.5s; padding:0px;" ng-init="setHeight()">
       <i style="position:absolute; right:10px; top:105px; color:#fff; cursor:pointer;" ng-click="captureImage()" class="fa fa-camera fa-lg" aria-hidden="true"></i>

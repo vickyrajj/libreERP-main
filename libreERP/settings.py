@@ -25,7 +25,9 @@ DEFAULT_APPS_ON_REGISTER = ['app.ecommerce' , 'app.ecommerce.orders' , 'app.ecom
 
 ON_REGISTRATION_SUCCESS_REDIRECT = '/ERP' # when signup using google the user will be redirected to this url
 
-SITE_ADDRESS = 'https://app.syrow.com' # the url prefix of the site
+SITE_ADDRESS = 'http://127.0.0.1:8080' # the url prefix of the site
+WEBRTC_ADDRESS = 'http://localhost:1111'
+WAMP_PREFIX = 'syrow.'
 
 ROOT_APP = 'index' # the default app
 ECOMMERCE_APP = {
@@ -59,7 +61,8 @@ DEBUG = True
 
 
 
-ALLOWED_HOSTS = ['192.168.1.106', 'syrow.cioc.in', 'app.syrow.com', '127.0.0.1', '192.168.0.105', '192.168.0.105' ,'172.20.10.8', '192.168.1.113' ,'192.168.1.109' , '192.168.1.110' , '192.168.0.7','192.168.1.115' ,'192.168.1.121']
+ALLOWED_HOSTS = ['192.168.1.112', 'cioc.co.in', 'localhost', '127.0.0.1', '192.168.0.105', '192.168.0.105' ,'172.20.10.8', '192.168.1.113' ,'192.168.1.109' , '192.168.1.110' , '192.168.0.7','192.168.1.117' ,'192.168.1.121','192.168.1.124']
+
 
 LOGIN_REDIRECT = 'ERP' # the url to which the user will be redirected once successfully loggedin
 # Options are : ERP , ecommerce , blogs , corporate
@@ -71,9 +74,8 @@ USE_CDN = False # when turned on the application will use the cndjs.com and othe
 # Application definition
 BRAND_NAME = 'Syrow'
 
-BRAND_LOGO = '/static/images/Syrow_brand.png'
+BRAND_LOGO = '/static/images/cioc_icon.svg'
 BRAND_LOGO_INVERT = '/static/images/24_tutors_icon_invert.svg'
-WEBRTC_ADDRESS = 'https://socket.syrow.com'
 
 SMS_API_PREFIX = "http://sms.azmobia.com/http-api.php?username=CIOC&password=cioc567&senderid=CIOCPL&route=1&"
 
@@ -211,23 +213,23 @@ AUTHENTICATION_BACKENDS = (
 # Database
 # https://docs.djangoproject.com/en/1.8/ref/settings/#databases
 
-#DATABASES = {
-#    'default': {
-#        'ENGINE': 'django.db.backends.sqlite3',
-#        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-#    }
-#}
-
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'syrow',
-        'USER': 'django',
-        'PASSWORD': 'password',
-        'HOST': '127.0.0.1',   # Or an IP Address that your DB is hosted on
-        'PORT': '3306',
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
     }
 }
+
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.mysql',
+#         'NAME': 'cioc_main',
+#         'USER': 'cioc_main',
+#         'PASSWORD': '8@8sxS$O}CaP',
+#         'HOST': '97.74.232.81',   # Or an IP Address that your DB is hosted on
+#         'PORT': '3306',
+#     }
+# }
 
 
 # AUTH_PROFILE_MODULE = 'HR.userProfile'
@@ -244,16 +246,16 @@ USE_L10N = True
 
 USE_TZ = True
 
-EMAIL_HOST_SUFFIX = 'syrow.in'
+EMAIL_HOST_SUFFIX = 'cioc.in'
 
-EMAIL_HOST = 'syrow.in'
-EMAIL_HOST_USER = 'noreply@syrow.in'
-EMAIL_HOST_PASSWORD = 'wqR3qQisrl'
+EMAIL_HOST = 'email.cioc.in'
+EMAIL_HOST_USER = 'testmail@cioc.in'
+EMAIL_HOST_PASSWORD = 'Titan@1234'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 # EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
-DEFAULT_FROM_EMAIL = 'noreply@syrow.in'
+DEFAULT_FROM_EMAIL = 'testmail@cioc.in'
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.8/howto/static-files/
 
@@ -290,5 +292,3 @@ REST_FRAMEWORK = {
 
 # WAMP_SERVER = 'pradeepyadav.net'
 WAMP_SERVER = 'wss://ws.syrow.com:443/ws'
-WAMP_PREFIX='uniqueKey.'
-
