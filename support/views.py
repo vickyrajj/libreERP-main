@@ -38,6 +38,7 @@ from django.template.loader import render_to_string, get_template
 from django.core.mail import send_mail, EmailMessage
 from django.utils import timezone
 import re
+import ast
 regex = re.compile('^HTTP_')
 
 BLOCK_SIZE = 16
@@ -74,6 +75,10 @@ class SupportChatViewSet(viewsets.ModelViewSet):
             supChatObj = supChatObj.filter(is_hidden = False)
         if 'visitorReq' in self.request.GET:
             supChatObj = supChatObj.filter(is_hidden = False)
+        if 'unDelMsg' in self.request.GET:
+            values=[int(i) for i in ast.literal_eval(self.request.GET['values'])]
+            print values , type(values)
+            return SupportChat.objects.filter(pk__in=values)
         if 'user__isnull' in self.request.GET:
             return SupportChat.objects.filter(user__isnull=True)
         if 'uid' in self.request.GET:
@@ -1193,3 +1198,10 @@ class EmailScript(APIView):
         msg.content_subtype = 'html'
         msg.send()
         return Response({}, status = status.HTTP_200_OK)
+
+class MessageCheck(APIView):
+    renderer_classes = (JSONRenderer,)
+    def get(self , request , format = None):
+        sObj = list(SupportChat.objects.filter(uid = request.GET['uid'],pk__gt=request.GET['pk']).values_list('pk',flat=True))
+        print sObj,"printtttttttttttttttttttttttttttttttt"
+        return Response({"data":sObj}, status = status.HTTP_200_OK)

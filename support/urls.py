@@ -36,5 +36,6 @@ urlpatterns = [
     url(r'heartbeat/$' , HeartbeatApi.as_view()),
     url(r'getChatStatus/$' , getChatStatus.as_view()),
     url(r'createSVG/$' , CreateSVG.as_view()),
+    url(r'messageCheck/$' , MessageCheck.as_view()),
 
 ]

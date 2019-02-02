@@ -3186,72 +3186,53 @@ createActivity()
           scroll();
           }
       }, 4000)
-
+       var dataToPublish = [uid , status , message ];
        var xhttp = new XMLHttpRequest();
        xhttp.onreadystatechange = function() {
          if (this.readyState == 4 && this.status == 201) {
            console.log('posted successfully');
+           console.log(dataToPublish);
+           dataToPublish[2].pk=JSON.parse(this.responseText).pk
+           if (threadExist==undefined) {
+            let dataToPublish = [uid , status , message , custID ];
+            details = getCookie("uidDetails");
+            if (details != "") {
+              // console.log(details);
+               dataToPublish.push(JSON.parse(details))
+            } else {
+              dataToPublish.push(false)
+            }
+            var dataToSend = JSON.stringify({uid: uid , company: custID});
+             var xhttp = new XMLHttpRequest();
+              xhttp.onreadystatechange = function() {
+                if (this.readyState == 4 && this.status == 201) {
+                  console.log('posted successfully',this.responseText);
+                  var data = JSON.parse(this.responseText)
+                  threadExist=true
+                  chatThreadPk = data.pk
+                  dataToPublish.push(chatThreadPk)
+                  publishMessageToAll(dataToPublish);
+                }
+              };
+              xhttp.open('POST', '{{serverAddress}}/api/support/chatThread/', true);
+              xhttp.setRequestHeader("Content-type", "application/json");
+              xhttp.send(dataToSend);
+             }else {
+               console.log('chat threAD EXIST');
+               if (isAgentOnline) {
+                 console.log('ONLINE' , agentPk);
+                 publishMessageToOne(agentPk,dataToPublish)
+               }else {
+                 publishMessageToAll(dataToPublish)
+               }
+             }
          }
        };
        xhttp.open('POST', '{{serverAddress}}/api/support/supportChat/', true);
        xhttp.setRequestHeader("Content-type", "application/json");
        xhttp.send(dataToSend);
-       var dataToPublish = [uid , status , message ];
-       if (threadExist==undefined) {
-        var dataToPublish = [uid , status , message , custID ];
-        details = getCookie("uidDetails");
-        if (details != "") {
-          // console.log(details);
-           dataToPublish.push(JSON.parse(details))
-        } else {
-          dataToPublish.push(false)
-        }
-        var dataToSend = JSON.stringify({uid: uid , company: custID});
-         var xhttp = new XMLHttpRequest();
-          xhttp.onreadystatechange = function() {
-            if (this.readyState == 4 && this.status == 201) {
-              console.log('posted successfully',this.responseText);
-              var data = JSON.parse(this.responseText)
-              threadExist=true
-              chatThreadPk = data.pk
 
-              // getLocationDataFirstApi(data.userDeviceIp).then((data)=>{
-              //       console.log(data);
-              //       patchLocationToChatThread(chatThreadPk,data)
-              //
-              // }).catch((reason)=>{
-              //   console.log(reason);
-              //   getLocationDataSecondApi(data.userDeviceIp).then((data)=>{
-              //     let myData=JSON.stringify({
-              //       'city':data.city,
-              //       'country_name':data.country,
-              //       'region_code':data.region,
-              //       'country_code':data.countryCode,
-              //       'zip':data.zip,
-              //       'latitude':data.lat,
-              //       'longitude':data.lon,
-              //     })
-              //     patchLocationToChatThread(chatThreadPk,myData)
-              //   }).catch((err)=>{
-              //     console.log(err);
-              //   })
-              // })
-              dataToPublish.push(chatThreadPk)
-              publishMessageToAll(dataToPublish);
-            }
-          };
-          xhttp.open('POST', '{{serverAddress}}/api/support/chatThread/', true);
-          xhttp.setRequestHeader("Content-type", "application/json");
-          xhttp.send(dataToSend);
-       }else {
-         console.log('chat threAD EXIST');
-         if (isAgentOnline) {
-           console.log('ONLINE' , agentPk);
-           publishMessageToOne(agentPk,dataToPublish)
-         }else {
-           publishMessageToAll(dataToPublish)
-         }
-       }
+
 
        // console.log(trySendingAgain);
        // // var testArray=[]

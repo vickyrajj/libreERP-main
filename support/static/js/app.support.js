@@ -245,6 +245,41 @@ app.controller("businessManagement.support", function($scope, $state, $users, $s
 
   }, 1000*60*1);
 
+
+  setInterval(function () {
+
+    for (let i = 0; i < $scope.myUsers.length; i++) {
+      console.log($scope.myUsers[i],"******");
+      // console.log($scope.myUsers[i].messages[$scope.myUsers[i].messages.length-1].pk);
+      if($scope.myUsers[i].messages.length>0){
+        let lastMsgPk=$scope.myUsers[i].messages[$scope.myUsers[i].messages.length-1].pk;
+        console.log(lastMsgPk);
+        $http({
+          method: 'GET',
+          url: '/api/support/messageCheck/?uid=' + $scope.myUsers[i].uid+'&pk='+lastMsgPk,
+        }).
+        then(function(response) {
+          console.log(response.data.data);
+          // response.data.data.push(111)
+          console.log(JSON.stringify(response.data.data));
+          // console.log(response.data.data);
+          if(response.data.data.length>0){
+            $http({
+              method: 'GET',
+              url: '/api/support/supportChat/?unDelMsg&values='+JSON.stringify(response.data.data),
+            }).
+            then(function(response) {
+              console.log(response.data,"hererere");
+              $scope.myUsers[i].messages=$scope.myUsers[i].messages.concat(response.data)
+            });
+          }
+        });
+      }
+
+    }
+
+  }, 5000);
+
   $scope.myCompanies = [];
   function fetchUsers() {
     if (connectionOpened) {
