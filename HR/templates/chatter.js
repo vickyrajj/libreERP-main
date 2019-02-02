@@ -992,7 +992,7 @@ function createChatDiv() {
 
                   '<div id="singleService" style="background: '+supportBubbleColor+' !important; color:'+iconColor+';cursor:pointer" class="sy-circle first_animation '+sy_circle_class+'">'+
                     '<span id="singleServiceText" style="background: '+supportBubbleColor+' !important; color:'+iconColor+' ;display:none; transition: .5s;opacity:0" class="sy-text '+sy_text_class+'  "></span>'+
-                    '<span id="chatSuggestionBar1" style="background: '+supportBubbleColor+' !important; color:'+iconColor+';font-size:13px !important;display:flex !important" class="sy-text-Suggested '+sy_firsttext_class+'"><img style="width:28px;display:inline;border-radius:50%;" src="'+dpSupport+'"/><span>'+firstMessage+'</span></span>'+
+                    '<span id="chatSuggestionBar1" style="background: '+supportBubbleColor+' !important; color:'+iconColor+';font-size:13px !important;display:flex !important" class="sy-text-Suggested '+sy_firsttext_class+'"><img style="width:28px;height:28px;display:inline;border-radius:50%;" src="'+dpSupport+'"/><span>'+firstMessage+'</span></span>'+
                     '<span id="singleServiceFont" class="SyrowFont font-SyrowCallBack sy-md-2 sy-ops"></span></a>'+
                   '</div>'+
               '</div>'+
