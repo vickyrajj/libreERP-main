@@ -216,7 +216,12 @@ def blogDetails(request, blogname):
             data['seoDetails']['description'] = blogobj.description
         if blogobj.ogimage:
             data['seoDetails']['image'] = blogobj.ogimage.url
-            w, h = get_image_dimensions(blogobj.ogimage.file)
+            try:
+                w, h = get_image_dimensions(blogobj.ogimage.file)
+            except:
+                data['seoDetails']['image'] = globalSettings.SEO_IMG
+                w = globalSettings.SEO_IMG_WIDTH
+                h = globalSettings.SEO_IMG_HEIGHT
             print w,h
             data['seoDetails']['width'] = w
             data['seoDetails']['height'] = h
