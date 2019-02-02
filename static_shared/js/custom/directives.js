@@ -1329,11 +1329,11 @@ app.directive('chatBox', function() {
       $scope.setHeight = function() {
         // console.log('Here');
         if ($scope.data.audio) {
-          $scope.msgDivHeight = 66
+          $scope.msgDivHeight = 61
         } else if ($scope.data.video) {
-          $scope.msgDivHeight = 51
+          $scope.msgDivHeight = 46
         } else {
-          $scope.msgDivHeight = 71
+          $scope.msgDivHeight = 66
         }
         console.log($scope.msgDivHeight);
       }

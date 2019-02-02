@@ -1067,7 +1067,7 @@ class getChatStatus(APIView):
         changeStatus=False;
         chatT= ChatThread.objects.filter(uid=uid)[0]
         compPk=chatT.company.pk
-        if 'sendMail' in request.GET:
+        if 'sendMail' in request.GET and chatT.lastActivity:
             diff=timezone.now()-chatT.lastActivity
             diffInMin = diff.total_seconds()/60
             if diffInMin>10 and chatT.status=='started' and chatT.mailSent is None:
