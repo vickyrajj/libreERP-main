@@ -27,6 +27,7 @@ import sys, traceback
 import random
 from django.core.files.images import get_image_dimensions
 from tutor.models import Tutors24Profile
+import datetime
 
 
 def index(request):
@@ -74,7 +75,7 @@ def blogDetails(request, blogname):
     subobjs = Subject.objects.all().order_by('level')
     data = {"home": False,"brandLogo" : globalSettings.BRAND_LOGO ,"subobj":subobjs, "brandLogoInverted": globalSettings.BRAND_LOGO_INVERT , 'seoDetails':{'title':globalSettings.SEO_TITLE,'description':globalSettings.SEO_DESCRIPTION,'image':globalSettings.SEO_IMG,'width':globalSettings.SEO_IMG_WIDTH,'height':globalSettings.SEO_IMG_HEIGHT}}
     if blogname.startswith('class-') :
-        print blogname,'-------------------'
+        print blogname,'-------------------',datetime.datetime.today().year
         subPart = None
         if '/' in blogname:
             prts = blogname.split('/')
@@ -90,6 +91,7 @@ def blogDetails(request, blogname):
         bookobjs = Book.objects.filter(subject__pk=sub.pk)
         noteobj = Note.objects.filter(subject__pk=sub.pk)
         refbookobjs = BookCourseMap.objects.filter(book__subject__pk=sub.pk)
+        subTopics = Topic.objects.filter(subject=sub)
         refbooklen = len(refbookobjs)
         noteslen = len(noteobj)
         r = lambda: random.randint(150,250)
@@ -122,9 +124,11 @@ def blogDetails(request, blogname):
         data['refbooklen'] = refbooklen
         data['color'] = color
         data['noteslen'] = noteslen
-        data['created'] = sub.created
+        # data['created'] = sub.created
+        data['subject'] = sub
+        data['subTopics'] = subTopics
         if sub.title:
-            data['seoDetails']['title'] = sub.title
+            data['seoDetails']['title'] =  'CBSE Class ' + str(sub.level) +' ' + str(sub.title) + ' Online Course [{0}]'.format(datetime.datetime.today().year)
         if sub.description:
             data['seoDetails']['description'] = sub.description
         if sub.dp:
@@ -417,7 +421,7 @@ def desclaimer(request):
     return render(request,"desclaimer.html" , {"home" : False , "subobj":subobjs,"brandLogo" : globalSettings.BRAND_LOGO , "brandLogoInverted": globalSettings.BRAND_LOGO_INVERT,'seoDetails':{'title':globalSettings.SEO_TITLE,'description':globalSettings.SEO_DESCRIPTION,'image':globalSettings.SEO_IMG,'width':globalSettings.SEO_IMG_WIDTH,'height':globalSettings.SEO_IMG_HEIGHT}})
 
 
-# class RegistrationViewSet(viewsets.ModelViewSet):
-#     permission_classes = (permissions.AllowAny,)
-#     serializer_class = RegistrationSerializer
-#     queryset = Registration.objects.all()
+class RegistrationViewSet(viewsets.ModelViewSet):
+    permission_classes = (permissions.AllowAny,)
+    serializer_class = RegistrationSerializer
+    queryset = Registration.objects.all()

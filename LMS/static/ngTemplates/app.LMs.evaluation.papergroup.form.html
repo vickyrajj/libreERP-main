@@ -14,7 +14,7 @@
       </div>
       <div class="form-group">
         <label>Subject</label>
-        <input uib-typeahead="sub as sub.title for sub in subjectSearch($viewValue)" ng-model="paperGroupForm.subject" type="text" class="form-control" placeholder="Search By Subject Title" ng-disabled="paperGroupForm.pk">
+        <input uib-typeahead="sub as (sub.title +'- Class ' + sub.level) for sub in subjectSearch($viewValue)" ng-model="paperGroupForm.subject" type="text" class="form-control" placeholder="Search By Subject Title" ng-disabled="paperGroupForm.pk">
       </div>
       <br>
       <h3 align="center">SEO related data</h3>

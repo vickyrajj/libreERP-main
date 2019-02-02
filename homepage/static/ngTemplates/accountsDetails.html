@@ -74,6 +74,11 @@
             <span ng-click="viewSession($index)" style="cursor:pointer"><i class="fa fa-info-circle"></i></span>
           </div>
         </div>
+        <div class="row" ng-if="userSessions.length==0">
+          <div class="col-md-12 text-center text-muted">
+            <h3>You have not taken any session yet! Click on start a session to connect to your Tutor </h3>
+          </div>
+        </div>
         <div class="row" ng-if="showMore">
           <div class="col-md-7 col-sm-offset-5">
             <button type="button" class="btn_gradient" ng-click="getUsersessions()" style="margin:0px;padding:7px;border-radius:20px">Show More</button>
@@ -85,7 +90,8 @@
       <div class="row container-fluid" style="margin:8px 10px;">
         <div class="row text-center">
           <div style="padding-top:50px">
-            <img ng-src={{me.profile.displayPicture}} alt="" style="height:150px;width:150px; border-radius:50%;">
+            <span ng-if="me.profile.displayPicture"><img ng-src={{me.profile.displayPicture}} alt="" style="height:150px;width:150px; border-radius:50%;"></span>
+            <span ng-if="me.profile.displayPicture==null"><img src="/static/images/userIcon.png" alt="" style="height:150px;width:150px; border-radius:50%;"></span>
           </div>
         </div>
         <div class="row text-center">

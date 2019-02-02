@@ -200,6 +200,9 @@ app.controller("home.LMS.configure.form", function($scope, $state, $users, $stat
     $scope.form = {
       title: '',
       description: '',
+      seoTitle:'',
+      subject:'',
+      syllabus:'',
       dp: emptyFile,
       level: 0,
       author: '',
@@ -539,7 +542,6 @@ app.controller("home.LMS.configure.form", function($scope, $state, $users, $stat
     }
     toSend.append('title', $scope.form.title)
     toSend.append('description', $scope.form.description)
-    toSend.append('seoTitle',$scope.form.seoTitle)
 
 
     if ($scope.mode == 'subject') {
@@ -577,6 +579,10 @@ app.controller("home.LMS.configure.form", function($scope, $state, $users, $stat
         return;
       }
       toSend.append('subject', $scope.form.subject.pk)
+      toSend.append('seoTitle',$scope.form.seoTitle)
+      if ($scope.form.syllabus != null && $scope.form.syllabus.length>0) {
+        toSend.append('syllabus',$scope.form.syllabus)
+      }
     }
 
     $http({

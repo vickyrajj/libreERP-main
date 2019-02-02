@@ -1,6 +1,6 @@
 <div class="container-fluid" ng-controller="home.LMS.configure.form">
 
-  <div class="row">
+  <div class="row" style="margin-top:5px">
     <div class="col-md-1" style="border-right:solid 2px #eeeeee;padding-top:30px;min-height:50vh;">
       <div class="row text-center" ng-click="mode='subject'" style="{{mode == 'subject' ? 'background:#eeeeee;': ''}}padding:20px;cursor:pointer;" ng-show="subjectShow">
         Subject
@@ -37,6 +37,12 @@
         Save
       </button>
     </div>
+    <div class="col-md-6" ng-if="mode == 'topic'">
+      <div class="form-group" ng-init="tinymceOptions.height=300">
+        <label>Syllabus</label>
+        <textarea ui-tinymce="tinymceOptions" ng-model="form.syllabus"></textarea>
+      </div>
+    </div>
 
     <div class="col-md-5" ng-if="mode == 'subject'">
       <div class="form-group">
@@ -60,6 +66,7 @@
         Save
       </button>
     </div>
+
     <div class="col-md-5" ng-if="mode == 'book' && hideBook == 'no'">
       <div class="form-group">
         <label>Title</label>

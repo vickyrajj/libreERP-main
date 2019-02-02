@@ -29,7 +29,7 @@ class TopicSerializer(serializers.ModelSerializer):
     subject = SubjectSerializer(many = False , read_only = True)
     class Meta:
         model = Topic
-        fields = ('pk' , 'created' , 'subject', 'title' , 'description' , 'seoTitle' )
+        fields = ('pk' , 'created' , 'subject', 'title' , 'description' , 'seoTitle' ,'syllabus')
 
     def create(self , validated_data):
         print 'came here'
@@ -59,6 +59,17 @@ class BookSerializer(serializers.ModelSerializer):
         b.subject = Subject.objects.get(pk = self.context['request'].data['subject'])
         b.save()
         return b
+
+    def update(self , instance , validated_data):
+        for key in ['title' , 'description', 'dp', 'author', 'ISSN'  , 'volume', 'version', 'license'  ]:
+            try:
+                setattr(instance , key , validated_data[key])
+            except:
+                pass
+        if 'subject' in self.context['request'].data:
+            instance.subject = Subject.objects.get(pk =self.context['request'].data['subject'])
+        instance.save()
+        return instance
 
 class QPartSerializer(serializers.ModelSerializer):
     class Meta:
