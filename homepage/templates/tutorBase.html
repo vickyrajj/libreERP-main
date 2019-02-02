@@ -26,8 +26,7 @@
 <link rel="icon" href="/static/images/tutor.ico" type="image/gif" sizes="16x16">
 
 {% endblock %} {% block specific_css %}
-<link href="{% static 'css/homepage.css' %}" rel="stylesheet">
-
+<link rel="stylesheet" href="{% static 'css/homepage.css' %}" rel="stylesheet">
 
 {% endblock %} {% block header %}
 {% include "header.html" %}
@@ -38,6 +37,7 @@
   {% block tutorcontent %}{% endblock %}
 
   <div class="container-fluid"style="padding:0px;">
+    <div flash-message="4000" style="position:fixed;top:70px;right:10px;z-index:9999;min-width:300px;"></div>
     {% endblock %} {% block footer %}
     {% include "footer.html" %}
   </div>
@@ -46,28 +46,14 @@
 
 {% endblock %}{% block specific_js %}
 <script src="{% static 'js/angular.min.js' %}"></script>
-<script src="{% static 'js/angular-bootstrap-confirm.min.js' %}"></script>
 <script src="{% static 'js/ui-bootstrap-tpls-0.14.3.min.js' %}"></script>
-<script src="{% static 'js/angular-sanitize.min.js' %}"></script>
-<script src="{% static 'js/angular-ui-router.min.js' %}"></script>
 <script src="{% static 'js/js.cookie.min.js' %}"></script>
-<script src="{% static 'js/tinymce.min.js' %}"></script>
-<script src="{% static 'js/angular-flash.js' %}"></script>
-<script src="{% static 'js/angular-aside.min.js' %}"></script>
-<script src="{% static 'js/owl.carousel.min.js' %}"></script>
-<script src="{% static 'js/app.homepage.main.js' %}"></script>
-<script src="{% static 'js/angular-owl-carousel-2.js' %}"></script>
-<script src="{% static 'js/datetimepicker.js' %}"></script>
-<script src="{% static 'js/angular-ui-switch.min.js' %}"></script>
-<script src="{% static 'js/angular-flash.js' %}"></script>
-<script src="{% static 'js/custom/nativeJS.js' %}"></script>
-<script src="{% static 'js/custom/filters.js' %}"></script>
-<script src="{% static 'js/custom/services.js' %}"></script>
-<script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/MathJax.js?config=TeX-MML-AM_CHTML'></script>
-<script type="text/x-mathjax-config">
+<script src="{% static 'js/app.tutor.common.js' %}"></script>
+<!-- <script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/MathJax.js?config=TeX-MML-AM_CHTML'></script> -->
+<!-- <script type="text/x-mathjax-config">
   MathJax.Hub.Config({ tex2jax: {inlineMath: [['$','$']]} });
-</script>
-
+</script> -->
+{% block tutorjs %}{% endblock %}
 <script>
   document.addEventListener('DOMContentLoaded', function() {
     console.log('document - DOMContentLoaded - capture'); // 2nd

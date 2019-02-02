@@ -15,7 +15,7 @@ from url_filter.integrations.drf import DjangoFilterBackend
 from .serializers import *
 from API.permissions import *
 from ERP.models import application, permission , module
-from homepage.models import Registration
+# from homepage.models import Registration
 from ERP.views import getApps, getModules
 from django.db.models import Q
 from django.http import JsonResponse
@@ -342,9 +342,9 @@ class rankViewSet(viewsets.ModelViewSet):
     queryset = rank.objects.all()
     serializer_class = rankSerializer
 
-class payrollViewSet(viewsets.ModelViewSet):
-    permission_classes = (permissions.IsAuthenticated,)
-    queryset = payroll.objects.all()
-    serializer_class = payrollSerializer
-    filter_backends = [DjangoFilterBackend]
-    filter_fields = ['user' ]
+# class payrollViewSet(viewsets.ModelViewSet):
+#     permission_classes = (permissions.IsAuthenticated,)
+#     queryset = payroll.objects.all()
+#     serializer_class = payrollSerializer
+#     filter_backends = [DjangoFilterBackend]
+#     filter_fields = ['user' ]

@@ -216,13 +216,14 @@ class PaperSerializer(serializers.ModelSerializer):
     def update(self , instance , validated_data):
         # for i in instance.questions.all():
         #     instance.questions.remove(i)
-        instance.questions.clear()
-        for i in self.context['request'].data['questions']:
-            i['ques']=Question.objects.get(id=i['ques'])
-            pq = PaperQues(**i)
-            pq.user = self.context['request'].user
-            pq.save()
-            instance.questions.add(pq)
+        if 'questions' in self.context['request'].data:
+            instance.questions.clear()
+            for i in self.context['request'].data['questions']:
+                i['ques']=Question.objects.get(id=i['ques'])
+                pq = PaperQues(**i)
+                pq.user = self.context['request'].user
+                pq.save()
+                instance.questions.add(pq)
         if 'name' in self.context['request'].data:
             instance.name = self.context['request'].data['name']
         if 'group' in self.context['request'].data:
@@ -241,8 +242,14 @@ class PaperattemptHistorySerializer(serializers.ModelSerializer):
     paper = PaperSerializer(many = False , read_only = True)
     class Meta:
         model = PaperattemptHistory
-        fields = ('pk' , 'created' , 'paper','mark'  )
+        fields = ('pk' , 'created' , 'paper','mark','attempted','notattempted','reviewed','notview'  )
         read_only_fields = ('user', )
+    def create(self , validated_data):
+        ph = PaperattemptHistory(**validated_data)
+        ph.user = self.context['request'].user
+        ph.paper = Paper.objects.get(pk = self.context['request'].data['paper'])
+        ph.save()
+        return ph
 
 class AnswerSerializer(serializers.ModelSerializer):
     # subject = SubjectSerializer(many = False , read_only = True)
@@ -316,7 +323,7 @@ class CourseSerializer(serializers.ModelSerializer):
     topic = TopicSerializer(many = False , read_only = True)
     class Meta:
         model = Course
-        fields = ('pk' , 'created' , 'updated', 'topic', 'enrollmentStatus', 'instructor' , 'TAs' , 'user' , 'description' , 'title' , 'enrollments' ,'dp', 'studyMaterials')
+        fields = ('pk' , 'created' , 'updated', 'topic', 'enrollmentStatus', 'instructor' , 'TAs' , 'user' , 'description' , 'title' , 'enrollments' ,'dp', 'studyMaterials','urlSuffix')
         read_only_fields = ('user', 'TAs')
     def create(self , validated_data):
         c = Course(**validated_data)
@@ -329,7 +336,7 @@ class CourseSerializer(serializers.ModelSerializer):
         c.save()
         return c
     def update(self , instance , validated_data):
-        for key in ['enrollmentStatus', 'description' , 'title' , 'enrollments' , 'studyMaterials','user','dp']:
+        for key in ['enrollmentStatus', 'description' , 'title' , 'enrollments' , 'studyMaterials','user','dp','urlSuffix']:
             try:
                 setattr(instance , key , validated_data[key])
             except:
@@ -340,8 +347,9 @@ class CourseSerializer(serializers.ModelSerializer):
         if 'instructor' in self.context['request'].data:
             instance.instructor = User.objects.get(pk =self.context['request'].data['instructor'])
 
-        for u in self.context['request'].data['TAs'].split(','):
-            instance.TAs.add(User.objects.get(pk = int(u)))
+        if 'TAs' in self.context['request'].data:
+            for u in self.context['request'].data['TAs'].split(','):
+                instance.TAs.add(User.objects.get(pk = int(u)))
 
         instance.save()
         return instance

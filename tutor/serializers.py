@@ -8,30 +8,39 @@ from HR.models import profile
 from LMS.models import Subject,Topic
 from PIL import Image
 
+class userProfileLiteSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = profile
+        fields = ('displayPicture' , 'prefix','mobile' )
+
+class userLiteSerializer(serializers.ModelSerializer):
+    profile = userProfileLiteSerializer(many=False , read_only=True)
+    class Meta:
+        model = User
+        fields = ( 'pk','email', 'username' , 'first_name' , 'last_name' , 'profile')
 
 class Tutors24ProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = Tutors24Profile
-        fields = ('pk','user','created','updated','school','schoolName','standard','street','city','pinCode','state','country','balance' , 'typ' ,'parentEmail' , 'parentMobile')
+        fields = ('pk','user','created','updated','school','schoolName','standard','street','city','pinCode','state','country','balance' , 'typ' ,'parentEmail' , 'parentMobile','detail')
         read_only_fields=('user','balance' , 'typ')
 
     def update(self ,instance, validated_data):
-        # print 'updatingggggggggggggggggggggggggggggg'
-        # print validated_data
-        # print self.context['request'].data['mobile'],self.context['request'].data['gender']
-        for key in ['school','schoolName','standard','street','city','pinCode','state','country' , 'parentEmail' , 'parentMobile']:
+        print validated_data
+        for key in ['school','schoolName','standard','street','city','pinCode','state','country' , 'parentEmail' , 'parentMobile' ,'typ','detail']:
             try:
                 setattr(instance , key , validated_data[key])
             except:
                 pass
+        if 'typ' in self.context['request'].data:
+            instance.typ = str(self.context['request'].data['typ'])
         instance.save()
-        # print self.context['request'].user.pk
         hrobj = profile.objects.get(user_id=self.context['request'].user.pk)
-        # print hrobj.email
-        hrobj.mobile = self.context['request'].data['mobile']
-        hrobj.gender = self.context['request'].data['gender']
+        if 'mobile' in self.context['request'].data:
+            hrobj.mobile = self.context['request'].data['mobile']
+        if 'gender' in self.context['request'].data:
+            hrobj.gender = self.context['request'].data['gender']
         hrobj.save()
-
         return instance
 
 class SubjectLiteSerializer(serializers.ModelSerializer):
@@ -49,6 +58,8 @@ from django.core.exceptions import PermissionDenied
 class tutors24SessionSerializer(serializers.ModelSerializer):
     subject = SubjectLiteSerializer(many = False , read_only = True)
     topic = TopicLiteSerializer(many = False , read_only = True)
+    student = userLiteSerializer(many = False , read_only = True)
+    tutor = userLiteSerializer(many = False , read_only = True)
     class Meta:
         model = Session
         fields = ('pk','created','updated','student','tutor','start','end','attachments','initialQuestion','subject','topic','minutes' , 'idle','ratings','ratingComments','started')
@@ -85,6 +96,7 @@ class tutors24TransactionSerializer(serializers.ModelSerializer):
         # read_only_fields=('user','balance' , 'typ')
 
 class tutors24MessageSerializer(serializers.ModelSerializer):
+    sender = userLiteSerializer(many = False , read_only = True)
     class Meta:
         model = Message
         fields = ('pk','created','updated','session','sender','msg','attachment')

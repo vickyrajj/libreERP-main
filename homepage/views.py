@@ -26,6 +26,7 @@ from LMS.models import *
 import sys, traceback
 import random
 from django.core.files.images import get_image_dimensions
+from tutor.models import Tutors24Profile
 
 
 def index(request):
@@ -40,42 +41,38 @@ def contactUs(request):
     subobjs = Subject.objects.all().order_by('level')
     return render(request, 'contact.html', {"subobj":subobjs,'seoDetails':{'title':globalSettings.SEO_TITLE,'description':globalSettings.SEO_DESCRIPTION,'image':globalSettings.SEO_IMG,'width':globalSettings.SEO_IMG_WIDTH,'height':globalSettings.SEO_IMG_HEIGHT}})
 
-
 def testimonials(request):
     subobjs = Subject.objects.all().order_by('level')
     return render(request, 'testimonials.html', {"subobj":subobjs,'seoDetails':{'title':globalSettings.SEO_TITLE,'description':globalSettings.SEO_DESCRIPTION,'image':globalSettings.SEO_IMG,'width':globalSettings.SEO_IMG_WIDTH,'height':globalSettings.SEO_IMG_HEIGHT}})
 
 def account(request):
     try:
+        subobjs = Subject.objects.all().order_by('level')
         userObj = request.user
         userProfile = userObj.tutors24Profile
         userProf = userObj.profile
-
         balanceForm = {"minutes1" : 0 , "minutes2" : 0 , "hours1" : 0, "hours2" : 0}
-
         minutes = userProfile.balance % 60
         hours = int(userProfile.balance/60)
-
         balanceForm['minutes1'] = int(minutes/10)
         balanceForm['minutes2'] = minutes % 10
-
         balanceForm['hours1'] = int(hours/10)
         balanceForm['hours2'] = hours % 10
-
     except:
         userObj = None
         userProfile = None
         userProf = None
         balanceForm = {"minutes1" : 0 , "minutes2" : 0 , "hours1" : 0, "hours2" : 0}
 
-    return render(request, 'account.html', {"userObj":userObj, "userProfile":userProfile, "userProf":userProf,"balanceForm":balanceForm})
+    return render(request, 'account.html', {"userObj":userObj, "userProfile":userProfile, "userProf":userProf,"balanceForm":balanceForm, "subobj":subobjs})
 
 
 
 
 def blogDetails(request, blogname):
     print '*****************blognameeee',blogname
-    data = {"home": False,"brandLogo" : globalSettings.BRAND_LOGO , "brandLogoInverted": globalSettings.BRAND_LOGO_INVERT , 'seoDetails':{'title':globalSettings.SEO_TITLE,'description':globalSettings.SEO_DESCRIPTION,'image':globalSettings.SEO_IMG,'width':globalSettings.SEO_IMG_WIDTH,'height':globalSettings.SEO_IMG_HEIGHT}}
+    subobjs = Subject.objects.all().order_by('level')
+    data = {"home": False,"brandLogo" : globalSettings.BRAND_LOGO ,"subobj":subobjs, "brandLogoInverted": globalSettings.BRAND_LOGO_INVERT , 'seoDetails':{'title':globalSettings.SEO_TITLE,'description':globalSettings.SEO_DESCRIPTION,'image':globalSettings.SEO_IMG,'width':globalSettings.SEO_IMG_WIDTH,'height':globalSettings.SEO_IMG_HEIGHT}}
     if blogname.startswith('class-') :
         print blogname,'-------------------'
         subPart = None
@@ -88,18 +85,17 @@ def blogDetails(request, blogname):
         sub = Subject.objects.get(title = title,level = int(level))
         print sub.pk
         print level,title,"------------hhhhh"
-        courseobjs = Course.objects.filter(topic__subject__pk=sub.pk)
+        courseobjs = Course.objects.filter(topic__subject__pk=sub.pk, urlSuffix__isnull = False)
         booklen = len(Book.objects.filter(subject__pk=sub.pk))
         bookobjs = Book.objects.filter(subject__pk=sub.pk)
-        subobjs = Subject.objects.all().order_by('level')
         noteobj = Note.objects.filter(subject__pk=sub.pk)
         refbookobjs = BookCourseMap.objects.filter(book__subject__pk=sub.pk)
         refbooklen = len(refbookobjs)
         noteslen = len(noteobj)
         r = lambda: random.randint(150,250)
         color = ('#%02X%02X%02X' % (r(),r(),r()))
-        for i in refbookobjs:
-            color = ('#%02X%02X%02X' % (r(),r(),r()))
+        # for i in refbookobjs:
+        #     color = ('#%02X%02X%02X' % (r(),r(),r()))
         books = []
         videoCourse = []
         forum = []
@@ -116,7 +112,6 @@ def blogDetails(request, blogname):
         if subPart == 'notes':
             pass
         data['courseobj'] = courseobjs
-        data['subobj'] = subobjs
         data['level'] = level
         data['title'] = title
         data['subPart'] = subPart
@@ -147,9 +142,69 @@ def blogDetails(request, blogname):
             data['seoDetails']['height'] = h
         return render(request, 'courses.html', data )
     try:
+        try:
+            prts = []
+            blogobj = None
+            htmlName = None
+            if '/' in blogname:
+                prts = blogname.split('/')
+
+            print prts,'partsssssssssssssssss'
+
+            if len(prts) == 0:
+                blogname = blogname
+                blogobj = blogPost.objects.get(shortUrl=blogname)
+                groupObj = PaperGroup.objects.get(pk=int(blogobj.header))
+                papersList = Paper.objects.filter(group=groupObj)
+                data['blogobj'] = blogobj
+                data['groupObj'] = groupObj
+                data['papersList'] = papersList
+                print groupObj,blogobj,papersList
+                htmlName = 'questionPapersList.html'
+
+            elif len(prts) == 2:
+                blogname = prts[0]
+                quesTitle = prts[1]
+                quesTitle = str(quesTitle).split("-with-answers")[0].replace('-',' ')
+                print quesTitle,'titleeeeeee'
+                blogobj = blogPost.objects.get(shortUrl=blogname)
+                quesobj = Paper.objects.get(name__iexact=quesTitle)
+                data['blogobj'] = blogobj
+                data['quesobj'] = quesobj
+                data['blogurl'] = blogobj.shortUrl
+                data['quesurl'] = quesobj.name
+                data['user'] = request.user.pk
+                data['paper'] = quesobj.pk
+                print request.user.pk,quesobj
+                htmlName = 'paperSolutions.html'
+
+            elif len(prts) == 3:
+                blogname = prts[0]
+                quesTitle = prts[1]
+                quesTitle = str(quesTitle).replace('-',' ')
+                print quesTitle,'titleeeeeee'
+                blogobj = blogPost.objects.get(shortUrl=blogname)
+                quesobj = Paper.objects.get(name__iexact=quesTitle)
+                print quesobj,quesobj.pk
+                data['id'] = quesobj.pk
+                data['user'] = quesobj.user.pk
+                print data['user'] ,'userrrrr'
+                htmlName = 'exam.html'
+            if blogobj.title:
+                data['seoDetails']['title'] = blogobj.title
+            if blogobj.description:
+                data['seoDetails']['description'] = blogobj.description
+            if blogobj.ogimage:
+                data['seoDetails']['image'] = blogobj.ogimage.url
+                w, h = get_image_dimensions(blogobj.ogimage.file)
+                print w,h
+                data['seoDetails']['width'] = w
+                data['seoDetails']['height'] = h
+            return render(request, htmlName, data)
+        except:
+            pass
         # this section is for books pages
         blogobj = blogPost.objects.get(shortUrl=blogname)
-        subobjs = Subject.objects.all().order_by('level')
         print "got blog post"  , blogobj
         if blogobj.title:
             data['seoDetails']['title'] = blogobj.title
@@ -191,7 +246,14 @@ def blogDetails(request, blogname):
             return render(request, 'book.html', data)
         elif blogobj.contentType == 'course':
             course = Course.objects.get(pk=blogobj.header)
+            tutorpk = course.instructor.pk
+            tutordetail = Tutors24Profile.objects.filter(user__pk= tutorpk)[0]
+            if tutordetail.detail:
+                detail = tutordetail.detail.split("||")
+            else:
+                detail = []
             data['course'] = course
+            data['detail'] = detail
             return render(request, 'homepageCourses.html', data)
 
     except:
@@ -253,13 +315,15 @@ def blogDetails(request, blogname):
             data['seoDetails']['title'] = sectionobj.title
         if sectionobj.description:
             data['seoDetails']['description'] = sectionobj.description
+        else:
+            data['seoDetails']['description'] = sectionobj.book.description
         data['bot'] = {'prev':prev,'nxt':nxt,'prevobj':prevobj,'nxtvobj':nxtvobj}
 
         return render(request, 'bookContent.html', data)
 
 
 def blog(request):
-    blogObj = blogPost.objects.filter(contentType='article').order_by('-created')
+    blogObj = blogPost.objects.filter(contentType='article',state='published').order_by('-created')
     pagesize = 6
     try:
         page = int(request.GET.get('page', 1))
@@ -293,7 +357,7 @@ def blogAnotherView(request):
     print 'ininnnnnnnnnnnnnnnnnnn bloggssss main'
     subobjs = Subject.objects.all().order_by('level')
     print subobjs,'----------------got objectss ssss'
-    allBlogs = list(blogPost.objects.filter(contentType='article').order_by('-created').values())
+    allBlogs = list(blogPost.objects.filter(contentType='article',state='published').order_by('-created').values())
     pagesize = 13
     try:
         page = int(request.GET.get('page', 1))
@@ -332,14 +396,6 @@ def blogAnotherView(request):
 
     return render(request,"blog.html" , {"home" : False,'pages':pages ,"subobj":subobjs,"firstSection":firstSection , "second_sec1":second_sec1 , "second_sec2":second_sec2 , "thirdSection":thirdSection,"recentBlogs":recentBlogs })
 
-def news(request):
-    subobjs = Subject.objects.all().order_by('level')
-    return render(request,"newssection.html" , {"home" : False ,"subobj":subobjs, "brandLogo" : globalSettings.BRAND_LOGO , "brandLogoInverted": globalSettings.BRAND_LOGO_INVERT})
-
-def team(request):
-    subobjs = Subject.objects.all().order_by('level')
-    return render(request,"team.html" , {"home" : False , "subobj":subobjs,"brandLogo" : globalSettings.BRAND_LOGO , "brandLogoInverted": globalSettings.BRAND_LOGO_INVERT})
-
 def career(request):
     subobjs = Subject.objects.all().order_by('level')
     return render(request,"career.html" , {"home" : False , "subobj":subobjs,"brandLogo" : globalSettings.BRAND_LOGO , "brandLogoInverted": globalSettings.BRAND_LOGO_INVERT,'seoDetails':{'title':globalSettings.SEO_TITLE,'description':globalSettings.SEO_DESCRIPTION,'image':globalSettings.SEO_IMG,'width':globalSettings.SEO_IMG_WIDTH,'height':globalSettings.SEO_IMG_HEIGHT}})
@@ -356,22 +412,12 @@ def refund(request):
     subobjs = Subject.objects.all().order_by('level')
     return render(request,"refund.html" , {"home" : False ,"subobj":subobjs, "brandName" : globalSettings.BRAND_NAME , "brandLogo" : globalSettings.BRAND_LOGO , "brandLogoInverted": globalSettings.BRAND_LOGO_INVERT,'seoDetails':{'title':globalSettings.SEO_TITLE,'description':globalSettings.SEO_DESCRIPTION,'image':globalSettings.SEO_IMG,'width':globalSettings.SEO_IMG_WIDTH,'height':globalSettings.SEO_IMG_HEIGHT}})
 
-def contacts(request):
-    subobjs = Subject.objects.all().order_by('level')
-    return render(request,"contacts.html" , {"home" : False , "subobj":subobjs,"brandLogo" : globalSettings.BRAND_LOGO , "brandLogoInverted": globalSettings.BRAND_LOGO_INVERT})
-
-
 def desclaimer(request):
     subobjs = Subject.objects.all().order_by('level')
     return render(request,"desclaimer.html" , {"home" : False , "subobj":subobjs,"brandLogo" : globalSettings.BRAND_LOGO , "brandLogoInverted": globalSettings.BRAND_LOGO_INVERT,'seoDetails':{'title':globalSettings.SEO_TITLE,'description':globalSettings.SEO_DESCRIPTION,'image':globalSettings.SEO_IMG,'width':globalSettings.SEO_IMG_WIDTH,'height':globalSettings.SEO_IMG_HEIGHT}})
 
 
-def registration(request):
-    subobjs = Subject.objects.all().order_by('level')
-    return render(request,"registration.html" , {"home" : False , "subobj":subobjs,"brandLogo" : globalSettings.BRAND_LOGO , "brandLogoInverted": globalSettings.BRAND_LOGO_INVERT})
-
-
-class RegistrationViewSet(viewsets.ModelViewSet):
-    permission_classes = (permissions.AllowAny,)
-    serializer_class = RegistrationSerializer
-    queryset = Registration.objects.all()
+# class RegistrationViewSet(viewsets.ModelViewSet):
+#     permission_classes = (permissions.AllowAny,)
+#     serializer_class = RegistrationSerializer
+#     queryset = Registration.objects.all()

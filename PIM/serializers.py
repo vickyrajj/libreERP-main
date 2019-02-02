@@ -145,6 +145,22 @@ class blogSerializer(serializers.ModelSerializer):
                 b.tags.add(blogCategory.objects.get(pk = tag))
         b.save()
         return b
+    def update(self , instance , validated_data):
+        for key in ['public', 'source' , 'sourceFormat' , 'title' , 'header' , 'state' , 'contentType' , 'shortUrl' , 'ogimageUrl' , 'ogimage' , 'description', 'tagsCSV','section' , 'author']:
+            try:
+                setattr(instance , key , validated_data[key])
+            except:
+                pass
+        blogUsers = list(instance.users.all().values_list('pk',flat=True))
+        if self.context['request'].user.pk not in blogUsers:
+            print 'adding usersssssss'
+            instance.users.add(self.context['request'].user)
+        if 'tags' in self.context['request'].data:
+            print 'changing tagsssssss'
+            for tag in self.context['request'].data['tags']:
+                instance.tags.add(blogCategory.objects.get(pk = tag))
+        instance.save()
+        return instance
 
 
 class notebookSerializer(serializers.ModelSerializer):

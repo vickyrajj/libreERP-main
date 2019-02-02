@@ -87,12 +87,14 @@ def dynamicTemplates(request , filename):
 #     return render(request, 'courses.html', {"typ" : page,"courseobj":courseobj,"subobj":subobj,"notesobj":notesobj})
 
 def mockTestView(request ,testID):
-    # testID=1;
     return render(request, 'exam.html', {'id':testID})
 
 def testResultsView(request ):
-    # testID=1;
-    return render(request, 'examResults.html', {})
+    user = request.user
+    print user,user.pk
+    userRecentPaper = PaperattemptHistory.objects.filter(user=user).last()
+    print userRecentPaper,userRecentPaper.paper
+    return render(request, 'examResults.html', {'id':userRecentPaper.paper.pk,'user':user.pk})
 
 # def coursesContent(request , page):
 #     print page,'-------------------'

@@ -2,19 +2,24 @@
 
 {% block examcontent %}
 
-{% verbatim %}
+<script type="text/javascript">
+  var QUESID = '{{id}}';
+  var USERID = '{{user}}';
+</script>
 
+{% verbatim %}
 <div class="container-fluid" ng-controller="examresults">
+
   <h2 class="text-center"  ><b>Exam Summary</b></h2>
   <div class="row" style="padding-top: 2em;">
     <div class="col-md-offset-1 col-md-3" style="margin-top:2em;">
-      <span style="font-size:18px;"><b>Total No of Questions:</b></span><span style="font-size:18px;"><b>&nbsp;{{summary.attempt+summary.notattempt+summary.reviewed+summary.notview}}</b></span>
+      <span style="font-size:18px;"><b>Total No of Questions:</b></span><span style="font-size:18px;"><b>&nbsp;{{totalques}}</b></span>
     </div>
     <div class=" col-md-2">
       <table>
         <tr>
           <td>
-            <div class="answered"><span class="numberalign1"><b>{{arr.includes(summary.attempt)?'0'+summary.attempt:summary.attempt}}</b></span></div>
+            <div class="answered"><span class="numberalign1"><b>{{arr.includes(attemptresult)?'0'+attemptresult:attemptresult}}</b></span></div>
           </td>
           <td style="padding: 2em 0 0 1em;"><span class="aligntotext" style="font-size:18px;"> Attempted</span> </td>
         </tr>
@@ -24,7 +29,7 @@
       <table>
         <tr>
           <td>
-            <div class="notanswered"><span class="numberalign1"><b>{{arr.includes(summary.notattempt)?'0'+summary.notattempt:summary.notattempt}}</b></span></div>
+            <div class="notanswered"><span class="numberalign1"><b>{{arr.includes(notattemptresult)?'0'+notattemptresult:notattemptresult}}</b></span></div>
           </td>
           <td style="padding: 2em 0 0 1em;"><span class="aligntotext" style="font-size:18px;">Not Attempted</span> </td>
         </tr>
@@ -34,7 +39,7 @@
       <table>
         <tr>
           <td>
-            <div class="reviewed"><span class="numberalign1"><b>{{arr.includes(summary.reviewed)?'0'+summary.reviewed:summary.reviewed}}</b></span></div>
+            <div class="reviewed"><span class="numberalign1"><b>{{arr.includes(reviewresult)?'0'+reviewresult:reviewresult}}</b></span></div>
           </td>
           <td style="padding: 1.2em 0 0 0em;"><span class="aligntotext" style="font-size:18px;">Reviewed</span> </td>
         </tr>
@@ -44,7 +49,7 @@
       <table>
         <tr>
           <td>
-            <div class="notview"><span class="numberalign1"><b>{{arr.includes(summary.notview)?'0'+summary.notview:summary.notview}}</b></span></div>
+            <div class="notview"><span class="numberalign1"><b>{{arr.includes(notviewresult)?'0'+notviewresult:notviewresult}}</b></span></div>
           </td>
           <td style="padding: 1.2em 0 0 0em;"><span class="aligntotext" style="font-size:18px;"> Not Visited</span> </td>
         </tr>
@@ -53,15 +58,15 @@
   </div>
   <div class="container text-center">
     <div class="row">
-      <div style="margin-top:2em;text-align:center;">
-        <div ng-repeat="a in scorecard" style="display:inline-block;box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);border-radius: 10px;" class="adjustwidth">
+      <div style="margin-top:4em;text-align:center;">
+        <div ng-repeat="a in subtitle" style="display:inline-block;box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);border-radius: 10px;" class="adjustwidth">
           <div style="padding: 0.3em 0em;background-color:#25B5E9;border-top-left-radius: 10px;border-top-right-radius: 10px;color:#fff; text-align:left;">
             <div class="row">
               <div class="col-md-9">
-                <span style="font-size:20px;padding:0.4em;text-align:left;" class="leftalign"><b>{{a.subject}}</b></span>
+                <span style="font-size:20px;padding:0.4em;text-align:left;" class="leftalign"><b>{{a.title}}</b></span>
               </div>
               <div class="col-md-3">
-                <span style="font-size:20px;padding:0.4em;text-align:right;margin-right: 1em;"><b>1/{{a.testquestions.length}}</b></span>
+                <span style="font-size:20px;padding:0.4em;text-align:right;margin-right: 1em;"><b>{{a.correct?a.correct:'0'}}/{{subcount[$index].count}}</b></span>
               </div>
             </div>
           </div>
@@ -69,73 +74,28 @@
             <table style="width:100%">
               <tr style="font-size:17px;">
                 <td style="text-align: left;">Total No Questions</td>
-                <td>{{a.testquestions.length}}</td>
+                <td>{{subcount[$index].count}}</td>
               </tr>
               <tr style="font-size:17px;margin-top:1em;">
-                <td style="text-align: left;">Attempted</td>
-                <td>{{exam.attempted[$index]}}</td>
+                <td style="text-align: left;">Correct Answers</td>
+                <td>{{a.correct?a.correct:'0'}}</td>
               </tr>
               <tr style="font-size:17px;margin-top:1em;">
-                <td style="text-align: left;">Not Answered</td>
-                <td>{{exam.notattempt[$index]}}</td>
-              </tr>
-              <tr style="font-size:17px;margin-top:1em;">
-                <td style="text-align: left;">Not Visited</td>
-                <td>{{exam.notview[$index]}}</td>
-              </tr>
-              <tr style="font-size:17px;margin-top:1em;">
-                <td style="text-align: left;">Review Later</td>
-                <td>{{exam.review[$index]}}</td>
+                <td style="text-align: left;">Incorrect Answers</td>
+                <td>{{subcount[$index].count-a.correct}}</td>
               </tr>
             </table>
-            <!-- <div style="display:inline-block;box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);min-height:5em;border-radius: 10px;" class="adjustwidth">
-            <div style="background-color:#25B5E9;min-height:3em;border-top-left-radius: 10px;border-top-right-radius: 10px;">
-              <span style="font-size:20px;color:#fff;padding:0.4em;position:absolute;" class="leftalign"><b>{{a.subject}}</b></span>
-            </div>
-            <div style="padding: 1em;">
-              <table style="width:100%">
-                <tr style="font-size:17px;">
-                  <td style="text-align: left;">Total No Questions</td>
-                  <td>{{summary.attempt+summary.notattempt+summary.reviewed+summary.notview}}</td>
-                </tr>
-                <tr style="font-size:17px;margin-top:1em;">
-                  <td style="text-align: left;">Attempted</td>
-                  <td>{{summary.attempt}}</td>
-                </tr>
-                <tr style="font-size:17px;margin-top:1em;">
-                  <td style="text-align: left;">Not Answered</td>
-                  <td>{{summary.notattempt}}</td>
-                </tr>
-                <tr style="font-size:17px;margin-top:1em;">
-                  <td style="text-align: left;">Not Visited</td>
-                  <td>{{summary.notview}}</td>
-                </tr>
-                <tr style="font-size:17px;margin-top:1em;">
-                  <td style="text-align: left;">Review Later</td>
-                  <td>{{summary.reviewed}}</td>
-                </tr>
-              </table>
-            </div>
-          </div> -->
           </div>
         </div>
       </div>
     </div>
-    <div style="margin-top:2em;text-align:center;">
+    <div style="margin-top:4em;text-align:center;">
       <div class="container text-center" style="height:500px;">
-        <!-- <div class="col-md-offset-3 col-md-6" style="margin-top:2em;">
-          <canvas id="pie" class="chart chart-pie" chart-data="data" chart-labels="labels" chart-colours="colors">
-          </canvas> -->
-        <!-- <canvas class="chart chart-line" chart-data="data" chart-labels="labels" chart-series="series" chart-options="options" chart-dataset-override="datasetOverride" chart-click="onClick" style="display:block;width:500px;height:400px;">
-          </canvas> -->
-        <!-- </div> -->
-        <div ng-repeat="a in scorecard" style="display:inline-block;" class="adjustwidth">
-          <span style="font-size:20px;padding:0.4em;" class="leftalign"><b>{{a.subject}}</b></span>
-          <canvas id="pie" class="chart chart-pie" chart-data="[exam.attempted[$index],exam.notattempt[$index],exam.notview[$index],exam.review[$index]]" chart-labels="labels1" chart-colours="colors" style="margin-top:1em;">
+        <div ng-repeat="a in subtitle" style="display:inline-block;" class="adjustwidth">
+          <span style="font-size:20px;padding:0.4em;" class="leftalign"><b>{{a.title}}</b></span>
+          <canvas id="pie" class="chart chart-pie" chart-data="[a.correct?a.correct:'0',a.incorrect?a.incorrect:'0']" chart-labels="labels1" chart-colours="colors" style="margin-top:1em;">
           </canvas>
         </div>
-        <!-- <button class="btnaction1" style="min-width:10%;" ng-click=""><b>View Score</b></button> -->
-
       </div>
     </div>
   </div>

@@ -1,0 +1,45 @@
+<div class="modal-header bg-aqua text-center" style="padding:0px;padding-top:15px;font-size:20px">
+  <div class="col-md-1" style="font-size:35px;padding:0px;margin-top:-10px">
+    <span ng-click="cancel()" style="cursor:pointer"><i class="fa fa-arrow-circle-left"></i></span>
+  </div>
+  <div class="col-md-3">
+    <p><b>Subject :</b> {{sessionData.subject.title}}</p>
+  </div>
+  <div class="col-md-3">
+    <p><b>Topic :</b> {{sessionData.topic.title}}</p>
+  </div>
+  <div class="col-md-3">
+    <p><b>Tutor :</b> {{sessionData.tutor.first_name}} <span ng-if="sessionData.tutor.last_name">{{sessionData.tutor.last_name}}</span></p>
+  </div>
+  <div class="col-md-2">
+    <p><b>Duration :</b> {{sessionData.duration}}</p>
+  </div>
+</div>
+<div class="modal-body">
+  <div class="container-fluid">
+    <div class="col-md-8">
+      <img class="img-responsive" ng-src="{{sessionData.attachments}}" alt="Attchments" style="width:150px;height:150px" ng-if="sessionData.attachments">
+    </div>
+    <div class="col-md-4" style="border-left:2px solid #eee">
+      <div ng-repeat="message in chatData">
+        <div class="row" ng-if="message.sender.pk!=sessionData.userPk">
+          <div class="col-xs-2">
+            <span ng-if="message.sender.profile.displayPicture"><img class="img-responsive img-circle" ng-src="{{message.sender.profile.displayPicture}}" alt="You" style="position:relative;margin-left:5px;width:40px;height:40px"></span>
+            <span ng-if="message.sender.profile.displayPicture==null"><img class="img-responsive img-circle" src="/static/images/userIcon.png" alt="You" style="position:relative;margin-left:5px;width:40px;height:40px"> </span>
+          </div>
+          <div class="col-xs-8" style="padding-left:0px;"> <p style="word-wrap: break-word;margin-bottom: 10px;background: white;border-radius: 4px;padding: 10px;border-style: solid;border-color: #89ccae;border-width: 1px;border-bottom-left-radius:40px"><span ng-if="message.msg">{{message.msg}}</span><span ng-if="message.attachment"><a href="{{message.attachment}}"><i class="fa fa-paperclip"></i></a></span></p>
+          </div>
+        </div>
+        <!-- // for the bubble with sender picture is on the left -->
+        <div class="row" ng-if="message.sender.pk==sessionData.userPk">
+          <div class="col-xs-8 col-xs-offset-2 text-right" style="padding-right:0px;"> <p style="word-wrap: break-word;margin-bottom: 10px;background: white;border-radius: 4px;padding: 10px;border-style: solid;border-color: #89ccae;border-width: 1px;border-bottom-right-radius:40px"><span ng-if="message.msg">{{message.msg}}</span><span ng-if="message.attachment"><a href="{{message.attachment}}"><i class="fa fa-paperclip"></i></a></span></p>
+          </div>
+          <div class="col-xs-2">
+            <span ng-if="message.sender.profile.displayPicture"><img class="img-responsive img-circle" ng-src="{{message.sender.profile.displayPicture}}" alt="Other User" style="position:relative;margin-left:5px;width:40px;height:40px"></span>
+            <span ng-if="message.sender.profile.displayPicture==null"><img class="img-responsive img-circle" src="/static/images/userIcon.png" alt="Other User" style="position:relative;margin-left:5px;width:40px;height:40px"> </span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

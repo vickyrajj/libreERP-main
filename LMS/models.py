@@ -200,6 +200,10 @@ class PaperattemptHistory(models.Model):
     paper = models.ForeignKey(Paper , null = False , related_name='paperAttempted')
     user = models.ForeignKey(User , null = False , related_name='attemptedUser')
     mark = models.FloatField(default=0)
+    reviewed=models.PositiveIntegerField(default= 0)
+    attempted=models.PositiveIntegerField(default= 0)
+    notattempted=models.PositiveIntegerField(default= 0)
+    notview=models.PositiveIntegerField(default= 0)
 
 
 CORRECTION_CHOICES = (
@@ -250,6 +254,7 @@ class Course(models.Model):
     user = models.ForeignKey(User , related_name='courseCreated' , null = False)
     description = models.TextField(max_length=2000 , null = False)
     dp = models.FileField(upload_to = getCourseDPAttachmentPath , null = True)
+    urlSuffix = models.CharField(max_length = 100 , null = True)
 
 class Enrollment(models.Model):
     created = models.DateTimeField(auto_now_add = True)

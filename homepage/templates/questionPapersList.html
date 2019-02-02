@@ -1,31 +1,64 @@
-{% extends "tutorBook.html" %}
+{% extends "tutorBase.html" %}}{% load staticfiles %}
 
-
-{% block bookcontent %}
+{% block tutorcontent %}
 
 <div class="container-fluid" style="padding-top:40px;">
+  <style>
+    .nohover:hover {
+      text-decoration: none;
+    }
+    .groupname{
+      margin:1em;
+      width:30%;
+    }
+    .groupwrap{
+       display: flex;
+       justify-content: center;
+       align-items: center;
+    }
+  </style>
+  <style media="screen and (max-width:768px)">
+    .groupname{
+      width: 100%;
+      margin:1em 0;
+    }
+    .groupwrap{
+       display: block;
+    }
+  </style>
   <div class="col-md-12">
     <div class="row" style="margin-top:1em;">
-      <div class="col-md-6 col-xs-12">
-        <div style="display:inline-block;">
-          <h1 class="heading_medium">{{groupObj.title}}</h1>
+      <div class="col-md-12 col-xs-12">
+        <div>
+          <h1 class="heading_medium text-center">{{groupObj.title}}</h1>
         </div>
       </div>
     </div>
     <div class="row">
-      <div class="col-md-12">
-        <h3>Description</h3>
-        <p>{{groupObj.description}}</p>
+      <div class="col-md-12 text-center">
+        <h3>{{groupObj.description}}</h3>
       </div>
     </div>
   </div>
   <hr>
-  {% for quespaper in papersList %}
-  <div class="col-md-3">
-    <div class="col-md-12 well">
-      <a href="/{{blogobj.shortUrl}}/{{quespaper.name.split|join:'-'}}-with-answers/">{{quespaper.name}}</a>
+  <div class="col-md-12">
+    <div class="row">
+
+      <div class="textcenter groupwrap" style="margin:1em 0 ;margin: 2em;">
+        {% for quespaper in papersList %}
+        <div class="well text-center groupname" >
+          <a class="nohover" href="/{{blogobj.shortUrl}}/{{quespaper.name.split|join:'-'}}-with-answers/"><b style="font-size:20px;color:#000;">{{quespaper.name}}</b></a>
+        </div>
+
+        {% endfor %}
+      </div>
+
     </div>
+
   </div>
-  {% endfor %}
 </div>
+{% endblock %}
+
+{% block tutorjs %}
+<script src="{% static 'js/app.tutor.home.main.js' %}"></script>
 {% endblock %}
