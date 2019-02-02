@@ -2888,9 +2888,9 @@ function addExitConfirmation() {
           res.forEach((r)=>{
             if (r.match(regex)) {
               str=str.replace(r,'<a style="color:'+fontAndIconColor+'" href="'+r+'" target="_blank">'+r+'</a>')
-                pTag='<p style="font-size:14px !important; margin:5px 0px !important; box-sizing:border-box !important; text-align:start !important;">'+ str +'</p>'
+                pTag='<p style="font-size:14px !important; margin:5px 0px !important; box-sizing:border-box !important; text-align:start !important;word-wrap: break-word !important; white-space: pre-wrap;">'+ str +'</p>'
             }else{
-                 pTag='<p style="font-size:14px !important; margin:5px 0px !important; box-sizing:border-box !important; text-align:start !important;">'+ str +'</p>'
+                 pTag='<p style="font-size:14px !important; margin:5px 0px !important; box-sizing:border-box !important; text-align:start !important;word-wrap: break-word !important; white-space: pre-wrap;">'+ str +'</p>'
             }
           })
           msgDiv = pTag

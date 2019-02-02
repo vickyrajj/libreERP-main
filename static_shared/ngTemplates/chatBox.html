@@ -84,7 +84,7 @@
 
         <div class="row container-fluid">
           <div ng-if="!message.logs" style="float:{{message.sentByAgent ? 'right; background-color:#E4E5E9; ':'left; background-color:#DDF7C8;'}} padding:10px;margin:8px;border-radius:{{message.sentByAgent ? '20px 0px 20px 20px':'0px 20px 20px 20px'}}; {{message.is_hidden ? 'background-color:#5252e3 !important; color:#fff;!important':''}} ">
-            <p ng-if="message.message.length>0 && message.attachmentType!='youtubeLink'" style="word-wrap: break-word; !important; white-space: pre-wrap; "> <span ng-bind-html="(message.message | linkInText)"></span></p>
+            <p ng-if="message.message.length>0 && message.attachmentType!='youtubeLink'" style="word-wrap: break-word !important; white-space: pre-wrap; "> <span ng-bind-html="(message.message | linkInText)"></span></p>
             <img ng-if="message.attachmentType == 'image' ||message.attachmentType == 'instructionImage'" ng-src="{{message.attachment}}" ng-click="imageClicked(message.attachment)" style="width:100%;">
             <video ng-if="message.attachmentType == 'video'" width="280" height="240" ng-src="{{message.attachment}}" controls></video>
             <audio ng-if="message.attachmentType == 'audio'" ng-src="{{message.attachment}}" controls></audio>
