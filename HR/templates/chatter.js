@@ -799,6 +799,36 @@ document.addEventListener("DOMContentLoaded", function(event) {
       return uid
     }
 
+    setInterval(function () {
+      console.log('hererererer');
+      let xhttp = new XMLHttpRequest();
+      xhttp.onreadystatechange = function() {
+          if (this.readyState == 4 && this.status == 200) {
+            var data = JSON.parse(this.responseText)
+            console.log(data.data);
+
+            if(data.data.length>0){
+
+              let xhttp = new XMLHttpRequest();
+              xhttp.onreadystatechange = function() {
+                  if (this.readyState == 4 && this.status == 200) {
+                    var data = JSON.parse(this.responseText)
+                    console.log(data);
+                    // chat.messages=chat.messages.concat(response.data)
+                  }
+              };
+              xhttp.open('GET', '{{serverAddress}}/api/support/supportChat/?unDelMsg&values='+JSON.stringify(data.data)  , true);
+              xhttp.send();
+
+            }
+          }
+      };
+      let lastMsgPk=chat.messages[chat.messages.length-1].pk
+      console.log(lastMsgPk,uid);
+      xhttp.open('GET', '{{serverAddress}}/api/support/messageCheck/?uid=' + uid+'&pk='+lastMsgPk  , true);
+      xhttp.send();
+    }, 5000);
+
 
     function createCookieDetail(args) {
       // console.log('create deleteeeeeeeeeeeeeeeeeeeeeee');

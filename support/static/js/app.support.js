@@ -259,10 +259,7 @@ app.controller("businessManagement.support", function($scope, $state, $users, $s
           url: '/api/support/messageCheck/?uid=' + $scope.myUsers[i].uid+'&pk='+lastMsgPk,
         }).
         then(function(response) {
-          console.log(response.data.data);
-          // response.data.data.push(111)
           console.log(JSON.stringify(response.data.data));
-          // console.log(response.data.data);
           if(response.data.data.length>0){
             $http({
               method: 'GET',

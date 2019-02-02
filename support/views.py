@@ -1201,6 +1201,7 @@ class EmailScript(APIView):
 
 class MessageCheck(APIView):
     renderer_classes = (JSONRenderer,)
+    permission_classes=(permissions.AllowAny,)
     def get(self , request , format = None):
         sObj = list(SupportChat.objects.filter(uid = request.GET['uid'],pk__gt=request.GET['pk']).values_list('pk',flat=True))
         print sObj,"printtttttttttttttttttttttttttttttttt"
