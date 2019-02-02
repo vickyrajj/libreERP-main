@@ -4,12 +4,6 @@ app.controller('main', function($scope, $rootScope, $http, $timeout, $interval, 
     MathJax.Hub.Queue(["Typeset", MathJax.Hub]);
   }
 
-
-  $scope.signin = function() {
-    $rootScope.$broadcast('opensignInPopup', {});
-    console.log("called broadcast");
-  }
-
   $scope.menu = false;
   $scope.show_menu = function() {
     console.log('clickedddddd');
@@ -56,8 +50,8 @@ app.controller('main', function($scope, $rootScope, $http, $timeout, $interval, 
   }, 2000);
 
 
-  $scope.signin = function() {
-    $rootScope.$broadcast('opensignInPopup', {});
+  $scope.signin = function(loggedIn) {
+    $rootScope.$broadcast('opensignInPopup', loggedIn);
   }
 
   $scope.displ = false;
