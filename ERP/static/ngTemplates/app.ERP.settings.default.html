@@ -1,15 +1,3 @@
-<!-- <div class="shaddowed card bg-white " style="position:relative;min-height:95vh;">
-  <div class="container-fluid" style="padding:0px;">
-    <breadcrumb></breadcrumb>
-    <p style="text-align:center;padding-top:200px;">
-      <i class="fa fa-search-plus fa-5x"></i>
-      <i class="fa fa-cogs fa-5x "></i>
-      <br>
-      <h3 class="text-muted" style="text-align:center;"> Settings default page {{sai}}</h3>
-    </p>
-  </div>
-</div> -->
-
 <div class="shaddowed card bg-white " style="position:relative;min-height:95vh;">
   <div class="container-fluid" style="padding:0px;">
     <breadcrumb></breadcrumb>
@@ -36,7 +24,7 @@
                 <span ng-if="blog.contentType=='book'"><i class="fa fa-book fa-lg"></i></span><span ng-if="blog.contentType=='article'"><i class="fa fa-newspaper-o fa-lg"></i></span><span ng-if="blog.contentType=='course'"><i class="fa fa-laptop fa-lg"></i></span><span ng-if="blog.contentType=='paperGroup'"><i class="fa fa-file-pdf-o fa-lg"></i></span> &nbsp;{{blog.contentType|humanize}}</th>
               <td>{{blog.title}}</td>
               <td>{{blog.description}}</td>
-              <td> <a target="_blank" href="/{{blog.shortUrl}}/"></a> </td>
+              <td> <a target="_blank" href="/{{blog.shortUrl}}/">{{blog.shortUrl}}</a> </td>
               <td><span ng-if="blog.ogimage"><img ng-src="{{blog.ogimage}}" alt="Article Image" style="height:70px;width:70px"></span><span ng-if="blog.ogimageUrl&&blog.ogimageUrl!='null'"><a href="{{blog.ogimageUrl}}" target="_blank">{{blog.ogimageUrl}}</a></span></td>
               <td><i class="fa fa-pencil fa-2x" ng-click="editObject('blog',$index,'#dbda97')" style="cursor:pointer"></i></td>
             </tr>
@@ -61,7 +49,7 @@
               <td>Class {{sub.level}}</td>
               <td>{{sub.title}}</td>
               <td>{{sub.description}}</td>
-              <td> <a href="/class-{{sub.level}}-{{sub.title}}/" target="_blank"></a> </td>
+              <td> <a href="/class-{{sub.level}}-{{sub.title}}/" target="_blank">class-{{sub.level}}-{{sub.title}}</a> </td>
               <td><span ng-if="sub.dp"><img ng-src="{{sub.dp}}" alt="Subject DP" style="height:70px;width:70px"></span></td>
               <td><i class="fa fa-pencil fa-2x" ng-click="editObject('subject',$index,'#c7e79f')" style="cursor:pointer"></i></td>
             </tr>
@@ -83,7 +71,7 @@
             <tr ng-repeat="sec in SectionData">
               <td>{{sec.seoTitle}}</td>
               <td>{{sec.description}}</td>
-              <td> <a href="/{{sec.shortUrl}}/" target="_blank"></a> </td>
+              <td> <a href="/{{sec.shortUrl}}/" target="_blank">{{sec.shortUrl}}</a> </td>
               <td><i class="fa fa-pencil fa-2x" ng-click="editObject('section',$index,'#e7b89f')" style="cursor:pointer"></i></td>
             </tr>
           </tbody>
@@ -105,7 +93,7 @@
             <tr ng-repeat="notes in notesData">
               <td>{{notes.title}}</td>
               <td>{{notes.description}}</td>
-              <td> <a href="/{{notes.urlSuffix}}/" target="_blank"></a> </td>
+              <td> <a href="/{{notes.urlSuffix}}/" target="_blank">{{notes.urlSuffix}}</a> </td>
               <td><span ng-if="notes.image"><img ng-src="{{notes.image}}" alt="Subject DP" style="height:70px;width:70px"></span></td>
               <td><i class="fa fa-pencil fa-2x" ng-click="editObject('notes',$index,'#9fe7df')" style="cursor:pointer"></i></td>
             </tr>
