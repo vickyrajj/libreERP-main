@@ -205,6 +205,19 @@ app.controller("businessManagement.support", function($scope, $state, $users, $s
         })
     })
   }
+  var getFirstMessage = function(companyPk){
+    return new Promise(function(resolve,reject){
+      $http({
+          method: 'GET',
+          url: '/api/support/customerProfile/pk=' + companyPk,
+        }).then(function(response){
+          console.log(response.data,'888888888888888888');
+          resolve(response.data)
+        }).catch((err)=>{
+          reject(err)
+        })
+    })
+  }
 
 
 
@@ -215,7 +228,6 @@ app.controller("businessManagement.support", function($scope, $state, $users, $s
         url: '/api/support/getChatStatus/?checkStatus&uid=' + $scope.newUsers[i].uid,
       }).
       then(function(response) {
-        console.log(response.data);
         if(response.data.changeStatus){
           getCompDetails(response.data.companyPk).then((data)=>{
             $scope.sendMailsToContact(data.contactP,$scope.newUsers[i].uid)
@@ -234,7 +246,6 @@ app.controller("businessManagement.support", function($scope, $state, $users, $s
         url: '/api/support/getChatStatus/?sendMail&uid=' + $scope.myUsers[i].uid,
       }).
       then(function(response) {
-        console.log(response.data,'myUsers');
         if(response.data.sendMail){
           getCompDetails(response.data.companyPk).then((data)=>{
             $scope.sendMailsToContact(data.contactP,$scope.myUsers[i].uid)
@@ -249,33 +260,26 @@ app.controller("businessManagement.support", function($scope, $state, $users, $s
   setInterval(function () {
 
     for (let i = 0; i < $scope.myUsers.length; i++) {
-      console.log($scope.myUsers[i],"******");
-      // console.log($scope.myUsers[i].messages[$scope.myUsers[i].messages.length-1].pk);
       if($scope.myUsers[i].messages.length>0){
         let lastMsgPk=$scope.myUsers[i].messages[$scope.myUsers[i].messages.length-1].pk;
-        console.log(lastMsgPk);
         $http({
           method: 'GET',
           url: '/api/support/messageCheck/?uid=' + $scope.myUsers[i].uid+'&pk='+lastMsgPk,
         }).
         then(function(response) {
-          console.log(JSON.stringify(response.data.data));
           if(response.data.data.length>0){
             $http({
               method: 'GET',
               url: '/api/support/supportChat/?unDelMsg&values='+JSON.stringify(response.data.data),
             }).
             then(function(response) {
-              console.log(response.data,"hererere");
               $scope.myUsers[i].messages=$scope.myUsers[i].messages.concat(response.data)
             });
           }
         });
       }
-
     }
-
-  }, 5000);
+  }, 10000);
 
   $scope.myCompanies = [];
   function fetchUsers() {

@@ -777,13 +777,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
 
       setTimeout(function(){
         // console.log('inside timeooutttttttttttttt');
-        var div = document.createElement("div");
-        console.log(message,'message');
-        div.innerHTML = messageDiv(message)
-        messageBox.appendChild(div);
-        scroll();
-        chat.messages.push(message);
-        notification.play();
+        addMessages(message)
       }, 1500);
 
 
@@ -792,39 +786,43 @@ document.addEventListener("DOMContentLoaded", function(event) {
 
     uid = getCookie("uid");
 
+    function addMessages(message){
+      var div = document.createElement("div");
+      console.log(message,'message');
+      div.innerHTML = messageDiv(message)
+      messageBox.appendChild(div);
+      scroll();
+      chat.messages.push(message);
+      notification.play();
+    }
+
 
     function heartbeat() {
       console.log("coming hrere and im sending "+uid);
-      // var isOnline = true
       return uid
     }
 
     setInterval(function () {
-      console.log('hererererer');
       let xhttp = new XMLHttpRequest();
       xhttp.onreadystatechange = function() {
           if (this.readyState == 4 && this.status == 200) {
             var data = JSON.parse(this.responseText)
-            console.log(data.data);
-
             if(data.data.length>0){
-
               let xhttp = new XMLHttpRequest();
               xhttp.onreadystatechange = function() {
                   if (this.readyState == 4 && this.status == 200) {
                     var data = JSON.parse(this.responseText)
-                    console.log(data);
-                    // chat.messages=chat.messages.concat(response.data)
+                    for (var i = 0; i < data.length; i++) {
+                      addMessages(data[i])
+                    }
                   }
               };
               xhttp.open('GET', '{{serverAddress}}/api/support/supportChat/?unDelMsg&values='+JSON.stringify(data.data)  , true);
               xhttp.send();
-
             }
           }
       };
       let lastMsgPk=chat.messages[chat.messages.length-1].pk
-      console.log(lastMsgPk,uid);
       xhttp.open('GET', '{{serverAddress}}/api/support/messageCheck/?uid=' + uid+'&pk='+lastMsgPk  , true);
       xhttp.send();
     }, 5000);
@@ -994,7 +992,7 @@ function createChatDiv() {
 
                   '<div id="singleService" style="background: '+supportBubbleColor+' !important; color:'+iconColor+';cursor:pointer" class="sy-circle first_animation '+sy_circle_class+'">'+
                     '<span id="singleServiceText" style="background: '+supportBubbleColor+' !important; color:'+iconColor+' ;display:none; transition: .5s;opacity:0" class="sy-text '+sy_text_class+'  "></span>'+
-                    '<span id="chatSuggestionBar1" style="display:none;background: '+supportBubbleColor+' !important; color:'+iconColor+';font-size:13px !important;" class="sy-text-Suggested '+sy_firsttext_class+'">'+firstMessage+'</span>'+
+                    '<span id="chatSuggestionBar1" style="background: '+supportBubbleColor+' !important; color:'+iconColor+';font-size:13px !important;display:flex !important" class="sy-text-Suggested '+sy_firsttext_class+'"><img style="width:28px;display:inline;border-radius:50%;" src='+dpSupport+'/><span>'+firstMessage+'</span></span>'+
                     '<span id="singleServiceFont" class="SyrowFont font-SyrowCallBack sy-md-2 sy-ops"></span></a>'+
                   '</div>'+
               '</div>'+
@@ -1562,10 +1560,10 @@ function createChatDiv() {
               right: 70px;\
             }\
               .sy-firsttext-left {\
-              left: 110px;\
+              left: 90px;\
             }\
               .sy-firsttext-right {\
-              right: 110px;\
+              right: 90px;\
             }\
               .sy-text-Suggested {\
               position: fixed;\
@@ -1575,7 +1573,7 @@ function createChatDiv() {
               font-family: Verdana, Arial, sans-serif;\
               font-size: 13px !important;\
               max-width:300px;\
-              bottom:25px;\
+              bottom:30px;\
               animation:chatSuggestionBar 3s\
             }\
               .sy-circle a, .sy-circle a:visited, .sy-circle a:active, .sy-circle a:hover, .sy-circle a:link {\
@@ -1725,11 +1723,11 @@ function createChatDiv() {
           }\
               .sy-circle-right {\
                 bottom: 20px;\
-                right: 40px;\
+                right: 25px;\
           }\
               .sy-circle-left {\
                 bottom: 20px;\
-                left: 40px;\
+                left: 25px;\
           }\
           @keyframes modalBox{\
         	0%{\
@@ -1771,13 +1769,13 @@ function createChatDiv() {
           }\
           @keyframes blink{\
           0%{\
-              box-shadow:0px 0px 0px #5B8DE8;\
+              box-shadow:0px 0px 0px "+supportBubbleColor+";\
             }\
             50%{\
-              box-shadow:2px 0px 30px #5B8DE8\
+              box-shadow:2px 0px 30px "+supportBubbleColor+"\
             }\
             100%{\
-              box-shadow:0px 0px 0px #5B8DE8\
+              box-shadow:0px 0px 0px "+supportBubbleColor+"\
             }\
           }\
           @keyframes chatSuggestionBar{\
@@ -1791,7 +1789,7 @@ function createChatDiv() {
           	}\
           }\
           .typingBox{\
-            display:none;z-index:11111111111111111111111111111;position:absolute;bottom:81px;font-size:15px !important;padding:5px;background-color:#f6f6f6;color:#000;border-radius: 0px 20px 20px 20px;left:0px;\
+            display:none;z-index:11111111111111111111111111111;position:absolute;bottom:81px;font-size:13px !important;padding:3px;background-color:#f6f6f6;color:#000;border-radius: 0px 20px 20px 20px;left:0px;\
           }\
             @media only screen and (max-width: 600px) {\
               .chatdiv-right {\
@@ -2918,9 +2916,9 @@ function addExitConfirmation() {
           res.forEach((r)=>{
             if (r.match(regex)) {
               str=str.replace(r,'<a style="color:'+fontAndIconColor+'" href="'+r+'" target="_blank">'+r+'</a>')
-                pTag='<p style="font-size:14px !important; margin:5px 0px !important; box-sizing:border-box !important; text-align:start !important;word-wrap: break-word !important; white-space: pre-wrap;">'+ str +'</p>'
+                pTag='<p style="font-size:14px !important; margin:5px 0px !important;width:100%; box-sizing:border-box !important; text-align:start !important;word-wrap: break-word !important; white-space: pre-wrap;">'+ str +'</p>'
             }else{
-                 pTag='<p style="font-size:14px !important; margin:5px 0px !important; box-sizing:border-box !important; text-align:start !important;word-wrap: break-word !important; white-space: pre-wrap;">'+ str +'</p>'
+                 pTag='<p style="font-size:14px !important; margin:5px 0px !important; box-sizing:border-box !important;width:100%; text-align:start !important;word-wrap: break-word !important; white-space: pre-wrap;">'+ str +'</p>'
             }
           })
           msgDiv = pTag
@@ -2935,7 +2933,7 @@ function addExitConfirmation() {
     if (message.logs==null) {
       if (!message.sentByAgent) {
         var msgHtml = '<div id="msg'+chat.messages.length+'" style="margin : 0px 0px 15px; box-sizing:border-box;">'+
-                        '<div style=" clear: both; float:right; background-color:'+ windowColor +'; color:'+fontAndIconColor+';  padding:5px 10px;margin:8px; border-radius:20px 0px 20px 20px; box-sizing:border-box;">'+
+                        '<div style=" clear: both; float:right; background-color:'+ windowColor +'; color:'+fontAndIconColor+';  padding:5px 10px;margin:8px;max-width:100%; border-radius:20px 0px 20px 20px; box-sizing:border-box;">'+
                           msgDiv+
                         '</div>'+
                         '<div style="clear: both; float:right; padding:0px 10px; font-size:9px !important;">'+ message.timeDate +'</div>'+
@@ -2944,7 +2942,7 @@ function addExitConfirmation() {
 
       }else {
         var msgHtml = '<div id="msg'+chat.messages.length+'" style="margin:0px 0px 10px; box-sizing:border-box;" >'+
-                  '<div style="clear: both; float:left; background-color:#f6f6f6; padding:5px 10px;margin:8px; border-radius:0px 20px 20px 20px; box-sizing:border-box;">'+
+                  '<div style="clear: both; float:left; background-color:#f6f6f6; padding:5px 10px;margin:8px; border-radius:0px 20px 20px 20px; box-sizing:border-box;max-width:100%;">'+
                      msgDiv+
                   '</div> '+
                   '<div style="clear: both; float:left; padding:0px 10px; font-size:9px !important;">'+ message.timeDate +'</div>'+
@@ -3084,39 +3082,7 @@ createActivity()
   });
 
 
-  var getLocationDataFirstApi = function(ipAddress){
 
-    return new Promise(function(resolve,reject){
-      var xhttpIP = new XMLHttpRequest();
-      xhttpIP.onreadystatechange = function() {
-        if (this.readyState == 4 && this.status == 200) {
-          resolve(this.responseText)
-        }else if(this.readyState == 4 && this.status != 200){
-          reject(this.status)
-        }
-      }
-      console.log(ipAddress);
-
-      // xhttpIP.open('GET', 'http://api.ipstack.com/43.224.128.150?access_key=f6e584f19ad6fa9080e0434fb46ae508&format=1', true);
-      xhttpIP.open('GET', 'http://api.ipstack.com/'+ipAddress+'?access_key=f6e584f19ad6fa9080e0434fb46ae508&format=1', true);
-      xhttpIP.send();
-    })
-  }
-  var getLocationDataSecondApi =function(ipAddress){
-    return new Promise(function(resolve,reject){
-      var xhttpIP = new XMLHttpRequest();
-      xhttpIP.onreadystatechange = function() {
-        if (this.readyState == 4 && this.status == 200) {
-          resolve(JSON.parse(this.responseText))
-        }else if(this.readyState == 4 && this.status != 200){
-          reject(this.status)
-        }
-      }
-      xhttpIP.open('GET', 'http://ip-api.com/json/'+ipAddress, true);
-      // xhttpIP.open('GET', 'http://ip-api.com/json/43.224.128.150', true);
-      xhttpIP.send();
-    })
-  }
   var patchLocationToChatThread=function(chatThreadPk,dataToSend){
       var xhttp = new XMLHttpRequest();
        xhttp.onreadystatechange = function() {
@@ -3131,6 +3097,7 @@ createActivity()
 
 
   function sendMessage(inptText,is_hidden) {
+
       if (is_hidden==undefined) {
         var is_hidden = false
       }else {
@@ -3496,14 +3463,13 @@ createActivity()
   setTimeout(function () {
     // alert(chathasOpenedOnce)
     if(!chathasOpenedOnce){
-      chatSuggestionBar.style.display="block"
-      chatSuggestionBar1.style.display="block"
+      chatSuggestionBar.style.display="flex"
+      chatSuggestionBar1.style.display="flex"
     }
   }, 10000);
 
 
   chatSuggestionBar.style.display="none"
-  // console.log(chatSuggestionBar,"&&***************");
   chatSuggestionBar1.style.display="none"
 
   function openChat() {

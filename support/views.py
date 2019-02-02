@@ -101,9 +101,10 @@ class GetMyUser(APIView):
             serviceObj=list(service.objects.filter(pk = custP[0].service.pk).values_list('contactPerson',flat=True))
             serviceName=list(service.objects.filter(pk = custP[0].service.pk).values_list('name',flat=True))
             servicePk=list(service.objects.filter(pk = custP[0].service.pk).values_list('pk',flat=True))
+            firstMsg=list(CustomerProfile.objects.filter(pk=request.GET['getCompanyDetails']).values_list('firstMessage',flat=True))
 
 
-            return Response({'cDetails':serviceName,'contactP':serviceObj,'servicePk':servicePk}, status=status.HTTP_200_OK)
+            return Response({'cDetails':serviceName,'contactP':serviceObj,'servicePk':servicePk,'firstMsg':firstMsg}, status=status.HTTP_200_OK)
         if 'allAgents' in request.GET:
             print '%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%'
             allAgents = list(User.objects.exclude(pk=self.request.user.pk).values_list('pk',flat=True))

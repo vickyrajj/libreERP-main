@@ -1226,19 +1226,25 @@ app.directive('chatBox', function() {
       //
       // }
 
-      for (var i = 0; i < $scope.data.messages.length; i++) {
-        if (!$scope.data.messages[i].read) {
-          $http({
-            method: 'PATCH',
-            url: '/api/support/supportChat/' + $scope.data.messages[i].pk + '/',
-            data: {
-              read: true
-            }
-          }).then(function(response) {
-            $scope.data.messages[i].read = true
-          })
-        }
-      }
+      // for (var i = 0; i < $scope.data.messages.length; i++) {
+      //   if (!$scope.data.messages[i].read) {
+      //     $http({
+      //       method: 'PATCH',
+      //       url: '/api/support/supportChat/' + $scope.data.messages[i].pk + '/',
+      //       data: {
+      //         read: true
+      //       }
+      //     }).then(function(response) {
+      //       $scope.data.messages[i].read = true
+      //     })
+      //   }
+      // }
+
+      function extractContent(myText) {
+        var span = document.createElement('span');
+        span.innerHTML = myText;
+        return span.textContent || span.innerText;
+      };
 
       $http({
         method: 'GET',
@@ -1248,6 +1254,9 @@ app.directive('chatBox', function() {
         $scope.companyName = response.data.cDetails[0]
         $scope.compContactPersons = response.data.contactP
         $scope.companyPk = response.data.servicePk
+        console.log(response.data.firstMsg);
+
+        $scope.data.messages.unshift({'message':extractContent(response.data.firstMsg[0])})
       })
 
       $http({
@@ -1326,6 +1335,8 @@ app.directive('chatBox', function() {
       })
 
 
+
+
       $scope.setHeight = function() {
         // console.log('Here');
         if ($scope.data.audio) {
@@ -1335,7 +1346,6 @@ app.directive('chatBox', function() {
         } else {
           $scope.msgDivHeight = 66
         }
-        console.log($scope.msgDivHeight);
       }
 
       $scope.setHeight()
@@ -1377,7 +1387,6 @@ app.directive('chatBox', function() {
       $scope.isTyping = false;
       $scope.chatHistBtn = false;
       $scope.chatHistory = []
-      console.log('adsd', $scope.data);
 
       $scope.takeSnapshot = function(imageUrl) {
         $uibModal.open({
@@ -2221,10 +2230,14 @@ app.directive('chatBox', function() {
           resolve: {
             locationData: function() {
               return $scope.location;
+            },
+            urlData:function(){
+              return $scope.data
             }
           },
-          controller: function($scope, locationData, $users, $uibModalInstance, Flash) {
+          controller: function($scope, locationData,urlData, $users, $uibModalInstance, Flash) {
             $scope.locationInfo = locationData
+            $scope.urlData=urlData
           },
         }).result.then(function() {
 
