@@ -32,7 +32,7 @@
           <table>
             <tr>
               <td style="width:35%;"><img src="/static/images/BooksStack.png" class="img-responsive img-circle" style="height:70px;width:70px;" /></td>
-              <td><span style="font-size:20px;"><b>{{title}}</b></span><br /><span style="color: #9E9E9E">Adden On {{created|date:"Y-M-d"}}</span></td>
+              <td><span style="font-size:20px;"><b>{{title}}</b></span><br /><span style="color: #9E9E9E">Adden On {{subject.created|date:"Y-M-d"}}</span></td>
             </tr>
           </table>
         </div>
@@ -58,6 +58,7 @@
           </table>
         </div>
       </div>
+
       <!-- <div class="row" style="margin-top:2em;">
         <div class="col-md-6">
           <table class="alignintable">
@@ -110,6 +111,28 @@
         </div>
       </div>
     </div>
+    {% if not subPart %}
+    <div class="row" style="margin-top:2em;font-size:15px">
+      <div class="col-md-8 col-md-offset-2">
+        <span>{{subject.description}}</span>
+      </div>
+    </div>
+    <div class="container" style="padding-bottom:15px;">
+      <div class="col-md-8 col-md-offset-2">
+        {% for topic in subTopics %}
+        <div class="headblock" style="font-size:20px;margin-top:1em;padding:4px 14px">
+          <b>{{topic.title}}</b>
+        </div>
+        <div class="container-fluid" style="margin-top:15px;">
+          <div class="col-md-12">
+            <b>{{topic.description}}</b>
+            {{topic.syllabus|safe}}
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+    {% endif %}
     {% if not subPart %}
     <div class="container-fluid" style="margin-top:20px;">
       <div class="col-md-8 col-md-offset-2">

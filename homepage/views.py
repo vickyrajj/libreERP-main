@@ -90,6 +90,7 @@ def blogDetails(request, blogname):
         bookobjs = Book.objects.filter(subject__pk=sub.pk)
         noteobj = Note.objects.filter(subject__pk=sub.pk)
         refbookobjs = BookCourseMap.objects.filter(book__subject__pk=sub.pk)
+        subTopics = Topic.objects.filter(subject=sub)
         refbooklen = len(refbookobjs)
         noteslen = len(noteobj)
         r = lambda: random.randint(150,250)
@@ -122,7 +123,9 @@ def blogDetails(request, blogname):
         data['refbooklen'] = refbooklen
         data['color'] = color
         data['noteslen'] = noteslen
-        data['created'] = sub.created
+        # data['created'] = sub.created
+        data['subject'] = sub
+        data['subTopics'] = subTopics
         if sub.title:
             data['seoDetails']['title'] = sub.title
         if sub.description:
