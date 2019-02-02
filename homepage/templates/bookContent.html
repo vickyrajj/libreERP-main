@@ -125,8 +125,10 @@
           </p>
           <div class="row" style="padding-left:30px;width:90%;">
             {% for qp in q.quesParts.all %}
+            {% if qp.mode == 'text' %}
             <p class="qes">{{qp.txt | safe}}</p>
-            {% if qp.image != null %}
+            {% endif %}
+            {% if qp.mode != 'text' %}
             <img src="/media/{{qp.image}}" alt="">
             {% endif %}
             {% endfor %}
@@ -134,10 +136,10 @@
           <h5 class="text-primary" style="padding-top: 10px;padding-bottom: 10px;padding-left:15px"><strong>Solution :</strong> </h5>
           <div class="col-md-10" style="padding-left:30px;width:90%; word-wrap: break-word; ">
             {% for sp in q.solutionParts.all %}
-            {% if sp.txt != None %}
+            {% if sp.mode == 'text' %}
             <p class="qes">{{sp.txt | safe}}</p>
             {% endif %}
-            {% if sp.image != null %}
+            {% if sp.mode != 'text' %}
             <img src="/media/{{sp.image}}" alt="">
             {% endif %}
 
