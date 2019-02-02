@@ -963,7 +963,7 @@ function createChatDiv() {
                   '<div id="supportCircle">'+
                       '<div style="background: '+supportBubbleColor+' !important; color:'+iconColor+';cursor:pointer" class="sy-circle first_animation '+sy_circle_class+'" id="sy-main-icon">'+
                           '<span id="Syrow24hSupportText" style="background: '+supportBubbleColor+' !important; color:'+iconColor+'" class="sy-text '+sy_firsttext_class+'">24 Hours Support</span>'+
-                          '<span id="chatSuggestionBar" style="display:none;background:'+supportBubbleColor+' !important; color:'+iconColor+'" class="sy-text-Suggested '+sy_firsttext_class+'">'+firstMessage+'</span>'+
+                          '<span id="chatSuggestionBar" style="display:none;background:'+supportBubbleColor+' !important; color:'+iconColor+'" class="sy-text-Suggested '+sy_firsttext_class+'"><img style="width:35px;height:35px;display:inline;border-radius:50%;margin:3px;margin-right:10px" src="'+dpSupport+'"/>'+firstMessage+'</span>'+
                           '<span id="24Icon" class="SyrowFont sy-md-1 sy-ops"><img id="supportDp" src="'+support_icon+'" style="width:40px !important; height:40px important; border-radius:50% !important;"></img> </span>'+
                           '<div  id="sy-sub-icons">'+
                               '<div style="background: '+supportBubbleColor+' !important; color:'+iconColor+';cursor:pointer" id="callCircle" class="sy-circle '+sy_circle_class+'">'+
@@ -992,7 +992,7 @@ function createChatDiv() {
 
                   '<div id="singleService" style="background: '+supportBubbleColor+' !important; color:'+iconColor+';cursor:pointer" class="sy-circle first_animation '+sy_circle_class+'">'+
                     '<span id="singleServiceText" style="background: '+supportBubbleColor+' !important; color:'+iconColor+' ;display:none; transition: .5s;opacity:0" class="sy-text '+sy_text_class+'  "></span>'+
-                    '<span id="chatSuggestionBar1" style="background: '+supportBubbleColor+' !important; color:'+iconColor+';font-size:13px !important;display:flex !important" class="sy-text-Suggested '+sy_firsttext_class+'"><img style="width:35px;height:35px;display:inline;border-radius:50%;" src="'+dpSupport+'"/><span>'+firstMessage+'</span></span>'+
+                    '<span id="chatSuggestionBar1" style="background: '+supportBubbleColor+' !important; color:'+iconColor+';font-size:13px !important;display:flex !important" class="sy-text-Suggested '+sy_firsttext_class+'"><img style="width:35px;height:35px;display:inline;border-radius:50%;margin:3px;margin-right:10px" src="'+dpSupport+'"/><span>'+firstMessage+'</span></span>'+
                     '<span id="singleServiceFont" class="SyrowFont font-SyrowCallBack sy-md-2 sy-ops"></span></a>'+
                   '</div>'+
               '</div>'+
@@ -1544,7 +1544,7 @@ function createChatDiv() {
               .sy-text {\
               position: fixed;\
               margin-top: 15px;\
-              border-radius: 15px;\
+              border-radius: 17px;\
               padding: 4px 8px;\
               font-family: Verdana, Arial, sans-serif;\
               font-size: 14px !important;\
@@ -1569,7 +1569,7 @@ function createChatDiv() {
               position: fixed;\
               margin-top: 13px;\
               border-radius: 15px;\
-              padding: 0px 8px 0px 0px;\
+              padding: 2px 8px 0px 0px;\
               font-family: Verdana, Arial, sans-serif;\
               font-size: 13px !important;\
               max-width:300px;\
