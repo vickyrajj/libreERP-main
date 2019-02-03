@@ -1,0 +1,21 @@
+<div class="modal-header text-center bg-red" >
+  <h4 style="margin:0px">Edit Topic {{topic.title}}</h4>
+</div>
+<div class="modal-body">
+
+  <div class="form-group">
+    <label>Description</label>
+    <textarea name="name" class="form-control" rows="8" cols="80" ng-model="topic.description"></textarea>
+  </div>
+
+  <div class="form-group">
+    <label>Syllabus</label>
+    <textarea ui-tinymce="tinymceOptions" ng-model="topic.syllabus"></textarea>
+  </div>
+
+  <button type="button" class="btn btn-default" ng-click="save()">
+    Save
+  </button>
+
+
+</div>

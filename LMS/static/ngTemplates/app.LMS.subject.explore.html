@@ -24,12 +24,13 @@
           <div class="form-group">
             <h4 style="text-align:center">Topics </h4> <hr>
           </div>
-          <div class="row" ng-repeat = " t in form.topicList">
+          <div class="row card" ng-repeat = " t in form.topicList" style="margin-bottom:20px;">
             <div class="col-md-11">
-              <div class="well well-sm">
-                <label>Title : </label> {{t.title}} <br>
-                <label>Description : </label> {{t.description}} <br>
-              </div>
+              <label>Title : </label> {{t.title}} <br>
+              <label>Description : </label> {{t.description}} <br>
+            </div>
+            <div class="col-md-1">
+              <i class="fa fa-pencil" ng-click="editTopic(t)" style="cursor:pointer;"></i>
             </div>
           </div>
         </div>
