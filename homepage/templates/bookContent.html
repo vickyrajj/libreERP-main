@@ -83,7 +83,7 @@
       <div class="" style="overflow: hidden;width:99%;">
         <ul class="list-unstyled q_list" style="height: 97vh;overflow: auto;width: 126%;overflow-x:hidden;">
           {% for q in questions %}
-          <li ng-click="toTheTop({{forloop.counter}})"><span class="q_no">q{{ forloop.counter }}</span>
+          <li ng-click="toTheTop({{forloop.counter}})"><span class="q_no">Q{{ forloop.counter }}</span>
             {% endfor %}
           </li>
         </ul>
@@ -134,7 +134,7 @@
             {% endfor %}
           </div>
           <h5 class="text-primary" style="padding-top: 10px;padding-bottom: 10px;padding-left:15px"><strong>Solution :</strong> </h5>
-          <div class="col-md-10" style="padding-left:30px;width:90%; word-wrap: break-word; ">
+          <div class="col-md-10" style="padding-left:30px;width:100%; word-wrap: break-word;overflow-x: auto; ">
             {% for sp in q.solutionParts.all %}
             {% if sp.mode == 'text' %}
             <p class="qes">{{sp.txt | safe}}</p>
