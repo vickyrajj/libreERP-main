@@ -159,7 +159,7 @@ def blogDetails(request, blogname):
                 blogname = prts[0]
                 quesTitle = prts[1]
                 quesTitle = str(quesTitle).split("-with-answers")[0].replace('-',' ')
-                print quesTitle,'titleeeeeee'
+                print quesTitle,'titleeeeeee----------------'
                 blogobj = blogPost.objects.get(shortUrl=blogname)
                 quesobj = Paper.objects.get(name__iexact=quesTitle)
                 data['blogobj'] = blogobj
@@ -168,7 +168,7 @@ def blogDetails(request, blogname):
                 data['quesurl'] = quesobj.name
                 data['user'] = request.user.pk
                 data['paper'] = quesobj.pk
-                print request.user.pk,quesobj
+                print request.user.pk,quesobj,'paperrrrrrrrr'
                 htmlName = 'paperSolutions.html'
 
             elif len(prts) == 3:
