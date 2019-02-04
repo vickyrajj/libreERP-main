@@ -40,6 +40,8 @@ def getNoteSectionPath(instance , filename ):
 def getHomeworkPath(instance , filename ):
     return 'lms/homework/%s_%s' % (str(time()).replace('.', '_'), filename)
 
+def getForumAttachmentPath(instance , filename ):
+    return 'lms/forum/%s_%s' % (str(time()).replace('.', '_'), filename)
 
 
 
@@ -409,3 +411,19 @@ class Homework(models.Model):
     paper = models.ForeignKey(Paper , null = True , related_name="homeworkPaper")
     pdf = models.FileField(upload_to = getHomeworkPath , null = True)
     comment = models.TextField(null = True)
+
+
+class ForumThread(models.Model):
+    created = models.DateTimeField(auto_now_add = True)
+    updated = models.DateField(auto_now=True)
+    page = models.CharField(max_length = 100 , null = True)
+    txt =  models.TextField(null = True)
+    attachment = models.FileField(upload_to = getForumAttachmentPath , null = True)
+    user = models.ForeignKey(User , null = True , related_name='forumUser')
+    verified = models.BooleanField(default = False)
+
+class ForumComment(models.Model):
+    created = models.DateTimeField(auto_now_add = True)
+    page = models.ForeignKey(ForumThread , null = True , related_name='forumthread')
+    txt =  models.TextField(null = True)
+    user = models.ForeignKey(User , null = True , related_name='commentedUser')

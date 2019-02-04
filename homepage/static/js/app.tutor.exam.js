@@ -515,7 +515,6 @@ app.controller('examresults', function($scope, $http, $timeout, $interval, $uibM
       $scope.subtitle.push({
         title: $scope.sublist[i],
         ques: [],
-        incorrect:0,
       })
     }
     $scope.getanswers = function() {
@@ -528,7 +527,7 @@ app.controller('examresults', function($scope, $http, $timeout, $interval, $uibM
             for (var j = 0; j < $scope.subtitle.length; j++) {
               if ($scope.subtitle[j].title == response.data[i].question.topic.subject.title) {
                 $scope.subtitle[j].ques.push(response.data[i])
-              
+
               }
             }
           }

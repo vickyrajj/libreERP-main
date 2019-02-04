@@ -5,7 +5,7 @@ from rest_framework.exceptions import *
 from .models import *
 from PIM.models import blogPost
 import random, string
-from HR.serializers import userSearchSerializer
+from HR.serializers import userSearchSerializer,userSerializer
 from PIM.serializers import blogSerializer
 
 # class TopicLiteSerializer(serializers.ModelSerializer):
@@ -467,3 +467,22 @@ class HomeworkSerializer(serializers.ModelSerializer):
             p.paper = paper
         p.save()
         return p
+
+class ForumThreadSerializer(serializers.ModelSerializer):
+    user = userSearchSerializer(many = False , read_only = True)
+    class Meta:
+        model = ForumThread
+        fields = ('pk' , 'created' , 'updated', 'page', 'txt', 'attachment','user','verified')
+
+        def create(self , validated_data):
+            f = ForumThread(**validated_data)
+            if 'user' in  self.context['request'].data:
+                user = userSearch.objects.get(pk = self.context['request'].data['user'])
+                f.user = user
+            f.save()
+            return f
+
+class ForumCommentSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ForumComment
+        fields = ('pk' , 'created' , 'page', 'txt','user')
