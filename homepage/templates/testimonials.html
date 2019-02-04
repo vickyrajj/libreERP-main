@@ -185,5 +185,7 @@
 
 
 {% block tutorjs %}
-<script src="{% static 'js/app.tutor.home.main.js' %}"></script>
+<script type="text/javascript">
+  {% include "app.tutor.common.js" %}
+</script>
 {% endblock %}

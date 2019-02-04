@@ -1,22 +1,33 @@
 document.addEventListener("DOMContentLoaded", function(event) {
+  // function toggleNavbar() {
+  //   console.log('-----------in -----nav');
+  //   var nav = document.getElementById("myNavbar");
+  //   if (nav.style.display === "block") {
+  //     nav.style.display = "none";
+  //   } else {
+  //     nav.style.display = "block";
+  //   }
+  // }
 
   var courses_list = document.getElementById('courses_list')
-   courses_list.style.display = 'none';
+  courses_list.style.display = 'none';
 
-   courses_list.addEventListener("mouseover", mouseOver);
-   courses_list.addEventListener("mouseout", mouseOut);
+  courses_list.addEventListener("mouseover", mouseOver);
+  courses_list.addEventListener("mouseout", mouseOut);
 
 
-   document.getElementById("courses").addEventListener("mouseover", mouseOver);
-   document.getElementById("courses").addEventListener("mouseout", mouseOut);
-   function mouseOver() {
-     courses_list.style.display = "block";
-   }
-   function mouseOut() {
-     courses_list.style.display = "none";
-   }
+  document.getElementById("courses").addEventListener("mouseover", mouseOver);
+  document.getElementById("courses").addEventListener("mouseout", mouseOut);
 
- });
+  function mouseOver() {
+    courses_list.style.display = "block";
+  }
+
+  function mouseOut() {
+    courses_list.style.display = "none";
+  }
+
+});
 
 
 // var app = angular.module('app', ['ui.bootstrap']);

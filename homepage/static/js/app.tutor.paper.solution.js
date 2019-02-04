@@ -1,4 +1,9 @@
-app.controller('main', function($scope, $http, $interval) {})
+app.controller('main', function($scope, $http, $interval,$rootScope) {
+  console.log('in mainnnn');
+  $scope.signin = function(loggedIn) {
+    $rootScope.$broadcast('opensignInPopup', loggedIn);
+  }
+})
 
 
 
@@ -7,11 +12,12 @@ app.controller('startexam', function($scope, $http, $timeout, $interval, $uibMod
   $scope.initiateMath = function() {
     MathJax.Hub.Queue(["Typeset", MathJax.Hub]);
   }
-
+  console.log(user,ques,paper);
   $http({
     method: 'GET',
-    url: '/api/LMS/paperhistory/?user=' + user + '&paper=' + ques,
+    url: '/api/LMS/paperhistory/?user=' + user + '&paper=' + paper,
   }).then(function(response) {
+    console.log(response.data);
     $scope.data = response.data.length;
     $scope.paper = ques.split('-').join('')
     $scope.url = "/" + blog + "/" + $scope.paper + "/practice/";
@@ -19,6 +25,17 @@ app.controller('startexam', function($scope, $http, $timeout, $interval, $uibMod
   })
 
   $scope.startexam = function() {
+    if ($scope.data==0) {
+      $http({
+        method: 'GET',
+        url: '/api/LMS/answer/?user=' + user + '&paper=' + paper+'&deleteAll',
+      }).
+      then(function(response) {
+        console.log(response.data);
+        window.location.href = $scope.url
+      })
+    }
+
 
 
     $uibModal.open({
@@ -26,45 +43,25 @@ app.controller('startexam', function($scope, $http, $timeout, $interval, $uibMod
       size: 'md',
       backdrop: true,
       resolve: {
-        blogobj: function() {
-          return blog;
-        },
-        quesobj: function() {
-          return ques;
-        },
-        user: function() {
-          return user;
-        },
-        paper: function() {
-          return paper;
+        url: function() {
+          return $scope.url;
         }
 
       },
-      controller: function($scope, $uibModalInstance, blogobj, quesobj, user, paper) {
-
-        $scope.paper = quesobj.split('-').join('')
-        $scope.url = "/" + blogobj + "/" + $scope.paper + "/practice/";
+      controller: function($scope, $uibModalInstance, url) {
+        $scope.url = url
         $scope.closeModal = function() {
           $uibModalInstance.close()
         }
+
         $scope.next = function() {
           $http({
             method: 'GET',
-            url: '/api/LMS/answer/?user=' + user + '&paper=' + paper,
+            url: '/api/LMS/answer/?user=' + user + '&paper=' + paper+'&deleteAll',
           }).
           then(function(response) {
-            $scope.answers = []
-            for (var i = 0; i < response.data.length; i++) {
-              $scope.answers.push(response.data[i].pk)
-            }
-            for (var i = 0; i < $scope.answers.length; i++) {
-              $http({
-                method: 'DELETE',
-                url: '/api/LMS/answer/' + $scope.answers[i] + '/'
-              }).
-              then(function(response) {
-              })
-            }
+            console.log(response.data);
+            window.location.href = $scope.url
           })
         }
       },

@@ -151,9 +151,14 @@ class PaperattemptHistory(viewsets.ModelViewSet):
 class AnswerViewSet(viewsets.ModelViewSet):
     permission_classes = (permissions.IsAuthenticated, isAdmin, )
     serializer_class = AnswerSerializer
-    queryset = Answer.objects.all()
+    # queryset = Answer.objects.all()
     filter_backends = [DjangoFilterBackend]
     filter_fields = ['user','paper']
+    def get_queryset(self):
+        if 'deleteAll' in self.request.GET:
+            answersObj = Answer.objects.filter(user=int(self.request.GET['user']),paper=int(self.request.GET['paper'])).delete()
+            return Answer.objects.none()
+        return Answer.objects.all()
 
 class CourseViewSet(viewsets.ModelViewSet):
     permission_classes = (permissions.IsAuthenticated, isAdmin, )

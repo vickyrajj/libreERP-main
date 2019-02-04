@@ -155,18 +155,21 @@ def blogDetails(request, blogname):
             if '/' in blogname:
                 prts = blogname.split('/')
 
-            print prts,'partsssssssssssssssss'
+            print len(prts),'partsssssssssssssssss'
 
             if len(prts) == 0:
                 blogname = blogname
                 blogobj = blogPost.objects.get(shortUrl=blogname)
-                groupObj = PaperGroup.objects.get(pk=int(blogobj.header))
-                papersList = Paper.objects.filter(group=groupObj)
-                data['blogobj'] = blogobj
-                data['groupObj'] = groupObj
-                data['papersList'] = papersList
-                print groupObj,blogobj,papersList
-                htmlName = 'questionPapersList.html'
+                if blogobj.contentType == 'paperGroup':
+                    groupObj = PaperGroup.objects.get(pk=int(blogobj.header))
+                    papersList = Paper.objects.filter(group=groupObj)
+                    data['blogobj'] = blogobj
+                    data['groupObj'] = groupObj
+                    data['papersList'] = papersList
+                    print groupObj,blogobj,papersList
+                    htmlName = 'questionPapersList.html'
+                else:
+                    print 1/0
 
             elif len(prts) == 2:
                 blogname = prts[0]
@@ -174,15 +177,17 @@ def blogDetails(request, blogname):
                 quesTitle = str(quesTitle).split("-with-answers")[0].replace('-',' ')
                 print quesTitle,'titleeeeeee----------------'
                 blogobj = blogPost.objects.get(shortUrl=blogname)
-                quesobj = Paper.objects.get(name__iexact=quesTitle)
-                data['blogobj'] = blogobj
-                data['quesobj'] = quesobj
-                data['blogurl'] = blogobj.shortUrl
-                data['quesurl'] = quesobj.name
-                data['user'] = request.user.pk
-                data['paper'] = quesobj.pk
-                print request.user.pk,quesobj,'paperrrrrrrrr'
-                htmlName = 'paperSolutions.html'
+                if blogobj.contentType == 'paperGroup':
+                    quesobj = Paper.objects.get(name__iexact=quesTitle)
+                    data['blogobj'] = blogobj
+                    data['quesobj'] = quesobj
+                    data['blogurl'] = blogobj.shortUrl
+                    data['quesurl'] = quesobj.name
+                    data['user'] = request.user.pk
+                    data['paper'] = quesobj.pk
+                    htmlName = 'paperSolutions.html'
+                else:
+                    print 1/0
 
             elif len(prts) == 3:
                 blogname = prts[0]
@@ -190,24 +195,31 @@ def blogDetails(request, blogname):
                 quesTitle = str(quesTitle).replace('-',' ')
                 print quesTitle,'titleeeeeee'
                 blogobj = blogPost.objects.get(shortUrl=blogname)
-                quesobj = Paper.objects.get(name__iexact=quesTitle)
-                print quesobj,quesobj.pk
-                data['id'] = quesobj.pk
-                data['user'] = quesobj.user.pk
-                print data['user'] ,'userrrrr'
-                htmlName = 'exam.html'
+                if blogobj.contentType == 'paperGroup':
+                    quesobj = Paper.objects.get(name__iexact=quesTitle)
+                    data['id'] = quesobj.pk
+                    data['user'] = quesobj.user.pk
+                    print data['user'] ,'userrrrr'
+                    htmlName = 'exam.html'
+                else:
+                    print 1/0
             if blogobj.title:
                 data['seoDetails']['title'] = blogobj.title
             if blogobj.description:
                 data['seoDetails']['description'] = blogobj.description
             if blogobj.ogimage:
-                data['seoDetails']['image'] = blogobj.ogimage.url
-                w, h = get_image_dimensions(blogobj.ogimage.file)
-                print w,h
-                data['seoDetails']['width'] = w
-                data['seoDetails']['height'] = h
+                try:
+                    data['seoDetails']['image'] = blogobj.ogimage.url
+                    w, h = get_image_dimensions(blogobj.ogimage.file)
+                    print w,h,'width,heighttttttttt'
+                    data['seoDetails']['width'] = w
+                    data['seoDetails']['height'] = h
+                except:
+                    pass
+            print htmlName,'html pageeeeeeeeeee'
             return render(request, htmlName, data)
         except:
+            print 'paper group error'
             pass
         # this section is for books pages
         blogobj = blogPost.objects.get(shortUrl=blogname)

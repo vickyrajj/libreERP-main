@@ -95,20 +95,20 @@
                 </div>
               </div>
 
-              <div class="accordionItem close">
+              <div class="accordionItem unopen">
                 <h3 class="accordionItemHeading"><span class=""> 02. State Board Preperations</span><i class="fa fa-plus"></i></h3>
                 <div class="accordionItemContent">
                   <span>Its tough, we know and thats why we do the hardwork in translating difficult concepts into smaller and easy to understand portions.</span>
                 </div>
               </div>
 
-              <div class="accordionItem close">
+              <div class="accordionItem unopen">
                 <h3 class="accordionItemHeading"><span class=""> 03.IIT JEE Mains </span><i class="fa fa-plus"></i></h3>
                 <div class="accordionItemContent">
                   <span>If you want to join top companies or start your own company then the choice is obvious for an Engineering degree. But dont just be sure but be super sure about your Preparations with 24tutors best in class teaching methods and strategy</span>
                 </div>
               </div>
-              <div class="accordionItem close">
+              <div class="accordionItem unopen">
                 <h3 class="accordionItemHeading"><span class=""> 04. IIT JEE Advance </span><i class="fa fa-plus"></i></h3>
                 <div class="accordionItemContent">
                   <span> You get freedom, fame and trust in you when you graduate from an IIT. Make it to IIT in first attempt with our super simple 1 year course for Free. Yes! its free and it will always be</span>
@@ -400,9 +400,9 @@ ng-click="drop(3)"
   function toggleItem() {
     var itemClass = this.parentNode.className;
     for (i = 0; i < accItem.length; i++) {
-      accItem[i].className = 'accordionItem close';
+      accItem[i].className = 'accordionItem unopen';
     }
-    if (itemClass == 'accordionItem close') {
+    if (itemClass == 'accordionItem unopen') {
       this.parentNode.className = 'accordionItem open';
     }
   }

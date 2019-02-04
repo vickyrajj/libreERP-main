@@ -1,7 +1,21 @@
-{% extends "tutorBook.html" %}
+{% extends "tutorBook.html" %}{% load staticfiles %}
 
 {% block content %}
 <div class="container-fluid" style="padding-left:0;padding-right:0;">
+
+  <script type="text/javascript">
+    function toQuestion(id) {
+      console.log(id, '-------clickedddddddd');
+      var elmnt = document.getElementById("q" + id);
+      elmnt.scrollIntoView();
+      var menu = document.getElementById('menu')
+       menu.style.display = 'none';
+    }
+    function show_menu(){
+      var menu = document.getElementById('menu')
+       menu.style.display = 'block';
+    }
+  </script>
 
   <style media="screen">
     nav{
@@ -49,8 +63,9 @@
   <div class="col-md-1 q_div hidden-xs hidden-sm">
     <div class="" style="overflow: hidden;width:99%;">
       <ul class="list-unstyled q_list" style="height: 97vh;overflow: auto;width: 150%;overflow-x:hidden;">
+        <!-- for desktops -->
         {% for q in questions %}
-        <li ng-click="toTheTop({{forloop.counter}})"><span class="q_no">Q{{ forloop.counter }}</span>
+        <li onclick="toQuestion({{ forloop.counter }})"><span class="q_no">Q{{ forloop.counter }}</span>
           {% endfor %}
         </li>
       </ul>
@@ -58,8 +73,8 @@
   </div>
 
 
-  <div class="col-sm-12">
-    <div class="col-sm-6 pull-right menu_list_div hidden-md hidden-lg" ng-show="menu">
+  <div class="col-sm-12" id="menu">
+    <div class="col-sm-6 pull-right menu_list_div hidden-md hidden-lg">
       <div class="logoeffect">
         <a href="/"> <img src="/static/images/24tut/white24.png" width="70%"></a>
       </div>
@@ -78,13 +93,13 @@
         </ul>
       </div>
     </div>
-    <div class="col-sm-2 menu_q_div hidden-md hidden-lg" ng-show="menu">
+    <div class="col-sm-2 menu_q_div hidden-md hidden-lg">
       <div class="" style="overflow: hidden;width:99%;">
         <ul class="list-unstyled q_list" style="height: 97vh;overflow: auto;width: 126%;overflow-x:hidden;">
           {% for q in questions %}
-          <li ng-click="toTheTop({{forloop.counter}})"><span class="q_no">Q{{ forloop.counter }}</span>
-            {% endfor %}
+          <li onclick="toQuestion({{ forloop.counter }})"><span class="q_no">Q{{ forloop.counter }}</span>
           </li>
+          {% endfor %}
         </ul>
       </div>
     </div>
@@ -101,7 +116,7 @@
             <i class="fa fa-user" aria-hidden="true" style="position:fixed;top:13px;right:70px;font-size:30px;color:#eee;cursor:pointer;"></i>
           </div>
         </a>
-        <button type="button" class="btn btn-default pull-right show_menu" id="flybtn1" ng-click="show_menu()">
+        <button type="button" class="btn btn-default pull-right show_menu" id="flybtn1" onclick="show_menu()">
           <i class="fa fa-bars" aria-hidden="true"></i>
         </button>
       </div>
@@ -114,7 +129,7 @@
         <h2>{{book.title}}</h2>
         <h3>-{{book.author}}</h3>
       </div>
-      <a class="btn btn-primary pull-right sign_btn"  href="/signin/">sign in</a>
+      <a class="btn btn-primary pull-right sign_btn" href="/signin/">sign in</a>
     </div>
     <div class="col-md-12 q_main_div">
       <div class="container-fluid q_container" ng-init="initiateMath()">
@@ -153,5 +168,10 @@
   </div>
 
 </div>
+
+{% endblock %}
+
+
+{% block tutorjs %}
 
 {% endblock %}

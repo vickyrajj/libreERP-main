@@ -205,6 +205,7 @@ class PaperattemptHistory(models.Model):
     attempted=models.PositiveIntegerField(default= 0)
     notattempted=models.PositiveIntegerField(default= 0)
     notview=models.PositiveIntegerField(default= 0)
+    sessionTime = models.CharField(null = True , max_length = 200)
 
 
 CORRECTION_CHOICES = (

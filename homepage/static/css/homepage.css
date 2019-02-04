@@ -167,7 +167,7 @@ a, u {
   padding-left: 20px;
 }
 
-.close .accordionItemContent {
+.unopen .accordionItemContent {
   height: 0px;
   transition: height 1s ease-out;
   transform: scaleY(0);
@@ -2833,6 +2833,9 @@ hr {
   /* mobile display size starts here.... */
   .header_nav {
     float: left !important;
+  }
+  .navbar-collapse{
+  border-color: #030303 !important;  
   }
 
   /* courses */

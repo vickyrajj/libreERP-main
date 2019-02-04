@@ -35,7 +35,7 @@ app.controller('exam', function($scope, $http, $timeout, $interval, $uibModal, $
   $scope.data = {
     paperid: ''
   }
-
+  $scope.timecount = []
   $http({
     method: 'GET',
     url: '/api/LMS/paper/' + $scope.quesId + '/'
@@ -124,7 +124,7 @@ app.controller('exam', function($scope, $http, $timeout, $interval, $uibModal, $
 
         }
       }
-      
+
     }
     for (var i = 0; i < $scope.subquestions.length; i++) {
       $scope.selections.push({
@@ -295,9 +295,10 @@ app.controller('exam', function($scope, $http, $timeout, $interval, $uibModal, $
       }
       $scope.answerlist()
       $scope.callmodal = function() {
+
+        $scope.spend = function() {
         $scope.timecount = []
-        $scope.spend = function(){
-          console.log($scope.subquestions,'questionsss');
+          console.log($scope.subquestions, 'questionsss');
           for (var i = 0; i < $scope.subquestions.length; i++) {
             $scope.timecount.push({
               sub: $scope.subquestions[i].subname,
@@ -306,7 +307,7 @@ app.controller('exam', function($scope, $http, $timeout, $interval, $uibModal, $
             for (var j = 0; j < $scope.subquestions[i].ques.length; j++) {
               $scope.timer += $scope.subquestions[i].ques[j].timer
             }
-              $scope.timecount[i].timer = $scope.timer
+            $scope.timecount[i].timer = $scope.timer
           }
           return $scope.timecount;
         }
@@ -363,13 +364,14 @@ app.controller('exam', function($scope, $http, $timeout, $interval, $uibModal, $
             total: function() {
               return $scope.total;
             },
-            spend:function(){
+            spend: function() {
               return $scope.spend();
             }
           },
 
           controller: function($scope, questions, $uibModalInstance, answerlist, userId, paperId, total, spend) {
-console.log(spend,'spensddd');
+            console.log(spend, 'spensddd');
+            $scope.timeDetails = spend
             $scope.questions = questions
             $scope.attempted = 0;
             $scope.notAnswered = 0;
@@ -392,8 +394,12 @@ console.log(spend,'spensddd');
               }
 
             }
+            $scope.closeModal = function() {
+              $uibModalInstance.dismiss('cancel');
+            }
             $scope.arr = [1, 2, 3, 4, 5, 6, 7, 8, 9, 0]
             $scope.submit = function() {
+              console.log(JSON.stringify($scope.timeDetails), 'time counttttttt',$scope.timeDetails);
               $http({
                 method: 'POST',
                 url: '/api/LMS/paperhistory/',
@@ -405,20 +411,24 @@ console.log(spend,'spensddd');
                   notattempted: $scope.notAnswered,
                   reviewed: $scope.reviewed,
                   notview: $scope.notview,
-
+                  sessionTime: JSON.stringify($scope.timeDetails)
                 }
               }).then(function(response) {
-
+                console.log(response.data);
+                $uibModalInstance.dismiss(response.data);
               });
-              $uibModalInstance.close();
-
-            }
-            $scope.closeModal = function() {
-              $uibModalInstance.dismiss();
             }
 
           },
-        })
+        }).result.then(function() {
+
+        }, function(reason) {
+
+          if (reason.pk) {
+            window.location.href='/testresults/'
+          }
+
+        });
       }
     }
   };
@@ -454,12 +464,19 @@ app.controller('examresults', function($scope, $http, $timeout, $interval, $uibM
     method: 'GET',
     url: '/api/LMS/paperhistory/?user=' + $scope.userId + '&paper=' + $scope.quesId
   }).then(function(response) {
+    console.log(response.data);
     $scope.marks = response.data[response.data.length - 1].mark
     $scope.attemptresult = response.data[response.data.length - 1].attempted
     $scope.notattemptresult = response.data[response.data.length - 1].notattempted
     $scope.reviewresult = response.data[response.data.length - 1].reviewed
     $scope.notviewresult = response.data[response.data.length - 1].notview
     $scope.totalques = $scope.attemptresult + $scope.notattemptresult + $scope.reviewresult + $scope.notviewresult
+    if (response.data[response.data.length - 1].sessionTime) {
+      $scope.timecount = JSON.parse(response.data[response.data.length - 1].sessionTime);
+      console.log($scope.timecount,'timerrrrrrrrr');
+    }else {
+      $scope.timecount = []
+    }
 
   });
   $scope.sublist = []
@@ -497,7 +514,8 @@ app.controller('examresults', function($scope, $http, $timeout, $interval, $uibM
     for (var i = 0; i < $scope.sublist.length; i++) {
       $scope.subtitle.push({
         title: $scope.sublist[i],
-        ques: []
+        ques: [],
+        incorrect:0,
       })
     }
     $scope.getanswers = function() {
@@ -510,6 +528,7 @@ app.controller('examresults', function($scope, $http, $timeout, $interval, $uibM
             for (var j = 0; j < $scope.subtitle.length; j++) {
               if ($scope.subtitle[j].title == response.data[i].question.topic.subject.title) {
                 $scope.subtitle[j].ques.push(response.data[i])
+              
               }
             }
           }
@@ -520,7 +539,7 @@ app.controller('examresults', function($scope, $http, $timeout, $interval, $uibM
     $scope.getanswers()
     $scope.genreteresults = function() {
       $scope.marks = 0;
-      $scope.incorrect = 0;
+      $scope.incorrect =0 ;
       $scope.correct = 0;
 
       for (var i = 0; i < $scope.subtitle.length; i++) {
@@ -542,8 +561,13 @@ app.controller('examresults', function($scope, $http, $timeout, $interval, $uibM
               $scope.subtitle[i].correct = $scope.correct
             }
           }
+        }else{
+
+
+
         }
       }
+      console.log($scope.subtitle,'kkkkkk');
       $scope.total = 0;
       for (var i = 0; i < $scope.subtitle.length; i++) {
         $scope.total += $scope.subtitle[i].mark
