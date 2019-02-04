@@ -1885,6 +1885,16 @@ app.directive('chatBox', function() {
           return
         });
         $scope.closeChatBox(indx, $scope.data.myUserIndex)
+        $http({
+          method: 'POST',
+          url: '/api/support/sendFeedBackRequest/',
+          data: {
+            id: $scope.data.uid,
+            chatThreadPk : chatThreadPk,
+          }
+        }).
+        then(function(response) {
+        });
       }
 
       $scope.closeChatBox = function(indx, myUserIndex) {
