@@ -2830,6 +2830,11 @@ hr {
 } */
 @media only screen and (max-width:768px) {
 
+
+  .other_chap {
+    width: 100%;
+  }
+
   /* mobile display size starts here.... */
   .header_nav {
     float: left !important;
@@ -3590,14 +3595,14 @@ hr {
     left: 0;
     z-index: 50;
     color: #fff;
-    width: 80%;
+    /* width: 80%; */
   }
 
   .menu_q_div {
     background-image: linear-gradient(-179deg, #0b2674, #edae2c);
     /* background-color: #223657; */
     height: 100%;
-    width: 80px;
+    /* width: 80px; */
     padding-top: 20px;
     position: fixed;
     z-index: 50;
