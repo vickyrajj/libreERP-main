@@ -1,4 +1,4 @@
-<nav class="navbar navbar-default navbar-fixed-top" style="background-color:#222222;border:0px solid #222222;min-height:50px;" ng-hide="$state.includes('chapter')">
+<nav class="navbar navbar-default navbar-fixed-top" style="background-color:#222222;border:0px solid #222222;min-height:50px;">
   <div class="container">
     {% verbatim %}
     <div class="navbar-header" style="padding-top:7px;">
@@ -11,10 +11,10 @@
       </div>
     </div>
     <div class="collapse navbar-collapse" id="myNavbar" uib-collapse="!toggleNavbar">
-      <ul class="nav navbar-nav header_nav {{device.name=='small'?'pull-left':'pull-right'}}">
+      <ul class="nav navbar-nav header_nav">
         <li class="header_element">
-          <a href="" ng-mouseleave="show[0]=false" ng-mouseover="show[0]=true" class="nav_ele"> Courses</a>
-          <ul ng-mouseleave="keepshow[0]=false" ng-click="keepshow[0] = false; toggleNavbar = false;" ng-mouseover="keepshow[0]=true" ng-show="show[0]||keepshow[0]" class="container_box" style="min-width:200px">
+          <a href="#"  class="nav_ele" id="courses"> Courses</a>
+          <ul id="courses_list" class="container_box" style="min-width:200px">
             {% endverbatim %}
             {% for c in subobj %}
             <li><a href="/class-{{c.level}}-{{c.title}}/">Class {{c.level}} {{c.title}}</a></li>
@@ -52,7 +52,8 @@
             <a href="/account/" class="nav_ele">{{request.user.get_username}} </a>
           {% endif %}
           {% if  not request.user.is_authenticated %}
-            <a style="cursor:pointer;" ng-click="signin()" class="nav_ele"> Sign in</a>
+            <a style="cursor:pointer;" href="/signin/" class="nav_ele"> Sign in</a>
+            <!--  ng-click="signin()" -->
           {% endif %}
         </li>
 

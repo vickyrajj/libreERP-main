@@ -38,6 +38,10 @@ def aboutUs(request):
     subobjs = Subject.objects.all().order_by('level')
     return render(request, 'aboutUs.html', {"subobj":subobjs,'seoDetails':{'title':globalSettings.SEO_TITLE,'description':globalSettings.SEO_DESCRIPTION,'image':globalSettings.SEO_IMG,'width':globalSettings.SEO_IMG_WIDTH,'height':globalSettings.SEO_IMG_HEIGHT}})
 
+def signin(request):
+    subobjs = Subject.objects.all().order_by('level')
+    return render(request, 'signin.html', {"subobj":subobjs,'seoDetails':{'title':globalSettings.SEO_TITLE,'description':globalSettings.SEO_DESCRIPTION,'image':globalSettings.SEO_IMG,'width':globalSettings.SEO_IMG_WIDTH,'height':globalSettings.SEO_IMG_HEIGHT}})
+
 def contactUs(request):
     subobjs = Subject.objects.all().order_by('level')
     return render(request, 'contact.html', {"subobj":subobjs,'seoDetails':{'title':globalSettings.SEO_TITLE,'description':globalSettings.SEO_DESCRIPTION,'image':globalSettings.SEO_IMG,'width':globalSettings.SEO_IMG_WIDTH,'height':globalSettings.SEO_IMG_HEIGHT}})
@@ -66,8 +70,6 @@ def account(request):
         balanceForm = {"minutes1" : 0 , "minutes2" : 0 , "hours1" : 0, "hours2" : 0}
 
     return render(request, 'account.html', {"userObj":userObj, "userProfile":userProfile, "userProf":userProf,"balanceForm":balanceForm, "subobj":subobjs})
-
-
 
 
 def blogDetails(request, blogname):

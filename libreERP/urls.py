@@ -8,7 +8,7 @@ from homepage.views import index
 # from homepage.views import blog,blogDetails,news,team, career ,policy ,terms ,refund , contacts , registration , desclaimer
 # from ERP.views import serviceRegistration , dynamicTemplates, courses , coursesContent , ncert , mockTestView
 from HR.views import loginView , logoutView , home , registerView , tokenAuthentication , root, generateOTP, documentView,registrationLite
-from homepage.views import blog,blogAnotherView,blogDetails, career ,policy ,terms ,refund  , desclaimer ,aboutUs ,contactUs,desclaimer,policy,terms,refund,testimonials,account
+from homepage.views import blog,blogAnotherView,blogDetails, career ,policy ,terms ,refund  , desclaimer ,aboutUs, signin,contactUs,desclaimer,policy,terms,refund,testimonials,account
 from ERP.views import serviceRegistration , dynamicTemplates , mockTestView , testResultsView
 from tutor.views import studentHome , tutorHome
 from ERP.views import PaymentResponse, renderedStatic
@@ -53,6 +53,7 @@ urlpatterns = [
     # url(r'^mock-test/(?P<testID>[\w|\W]+)', mockTestView , name ='mockTest'),
     url(r'^testresults/',testResultsView , name ='testResultsView'),
     url(r'^about/',aboutUs , name ='aboutUs'),
+    url(r'^signin/',signin , name ='signin'),
     url(r'^contact/',contactUs , name ='contactUs'),
     url(r'^career/',career , name ='career'),
     url(r'^desclaimer/',desclaimer , name ='desclaimer'),

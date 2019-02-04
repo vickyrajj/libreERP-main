@@ -133,20 +133,70 @@ a, u {
   position: relative;
 }
 
-.coll12 {
-  min-height: 60px;
-  visibility: visible;
-  opacity: 1;
-  overflow: hidden;
-  transition: all 0.5s ease;
+.accordionWrapper {
+  float: left;
+  width: 80%;
+  box-sizing: border-box;
 }
 
-.coll11 {
+.accordionItem {
+  float: left;
+  display: block;
+  width: 100%;
+  opacity: 1;
+  position: relative;
+}
+.accordionItem i {
+  text-align: right;
+  margin-left: 30%;
+  right: 40px;
+  top: 18px;
+  font-size: 20px;
+  position: absolute;
+}
+
+.accordionItemHeading {
+  cursor: pointer;
+  margin: 0px 0px 10px 0px;
+  padding: 10px;
+  background: #1c1c1c;
+  color: #fff;
+  width: 100%;
+  border-top-left-radius: 35px;
+  padding: 15px;
+  padding-left: 20px;
+}
+
+.close .accordionItemContent {
   height: 0px;
-  visibility: hidden;
-  opacity: 0;
-  overflow: hidden;
-  transition: all 0.5s ease;
+  transition: height 1s ease-out;
+  transform: scaleY(0);
+  float: left;
+  display: block;
+}
+
+.open .accordionItemContent {
+  padding: 20px;
+  background-color: transparent;
+  width: 100%;
+  margin: 0px 0px 10px 0px;
+  display: block;
+  transform: scaleY(1);
+  transform-origin: top;
+  transition: transform 0.4s ease;
+}
+
+.open .accordionItemHeading {
+  margin: 0px;
+  border-top-left-radius: 3px;
+  border-top-right-radius: 3px;
+  border-bottom-right-radius: 0px;
+  border-bottom-left-radius: 0px;
+  background-image: linear-gradient(90deg, #02EBA3, #6A7EF1, #873be7);
+  color: #fff;
+  border-top-left-radius: 35px;
+  padding: 15px;
+  padding-left: 20px;
 }
 
 .container_box {
@@ -191,6 +241,10 @@ a, u {
 
 .container_box>li:hover a {
   color: #fff !important;
+}
+
+.header_nav {
+  float: right !important;
 }
 
 .header_nav>li>a {
@@ -307,40 +361,6 @@ a, u {
 .list_head {
   margin-right: auto;
   display: block;
-}
-
-.list_body {
-  max-width: 80%;
-  margin-left: auto;
-  margin-right: auto;
-  margin-bottom: 10px;
-}
-
-.list {
-  display: block;
-  background-color: #222222;
-  color: #fff;
-  border-radius: 7px;
-  border-top-left-radius: 35px;
-  min-height: 60px;
-  margin-bottom: 8px;
-  padding-top: 1.2em;
-  position: relative;
-  cursor: pointer;
-}
-
-.list_title {
-  font-size: 1.5em;
-  padding: 1em;
-}
-
-.sym_plus {
-  text-align: right;
-  margin-left: 30%;
-  position: absolute;
-  right: 40px;
-  top: 18px;
-  font-size: 20px;
 }
 
 .img {
@@ -654,10 +674,6 @@ a, u {
   background-color: #02EBA3;
   width: 95px;
   height: 3.8px;
-}
-
-.divcolor {
-  background-image: linear-gradient(90deg, #02EBA3, #6A7EF1, #873be7);
 }
 
 .links {
@@ -2353,6 +2369,10 @@ hr {
   color: #42C1F3;
 }
 
+.for_mob {
+  padding-left: 40px;
+}
+
 /* exams css properties */
 /* for normal screens ends here.... */
 @media only screen and (device-width: 1352px) and (device-height: 641px) {
@@ -2811,6 +2831,10 @@ hr {
 @media only screen and (max-width:768px) {
 
   /* mobile display size starts here.... */
+  .header_nav {
+    float: left !important;
+  }
+
   /* courses */
   .noteImage {
     width: 100%;
@@ -3236,7 +3260,7 @@ hr {
   }
 
   .home_header {
-    min-height: 80vh;
+    min-height: 90vh;
     background-size: cover;
     background-repeat: no-repeat;
   }
@@ -3478,7 +3502,7 @@ hr {
   }
 
   .lo_marg {
-    margin-left: -6%;
+    margin: 0px;
   }
 
   .ph_div {
@@ -3503,6 +3527,7 @@ hr {
 
   .cancel_btn {
     position: fixed;
+    left: 0;
     bottom: 0;
     width: 100%;
     min-height: 35px;
@@ -3517,6 +3542,12 @@ hr {
 
   .signup_modal {
     padding: 0px;
+    padding-top: 20px;
+  }
+
+  .for_mob {
+    padding-left: 0px;
+    margin-left: 15px;
   }
 
   .for_mob h1 {
