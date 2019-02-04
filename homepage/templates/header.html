@@ -14,7 +14,7 @@
       <ul class="nav navbar-nav header_nav {{device.name=='small'?'pull-left':'pull-right'}}">
         <li class="header_element">
           <a href="" ng-mouseleave="show[0]=false" ng-mouseover="show[0]=true" class="nav_ele"> Courses</a>
-          <ul ng-mouseleave="keepshow[0]=false" ng-click="keepshow[0] = false; toggleNavbar = false;" ng-mouseover="keepshow[0]=true" ng-show="show[0]||keepshow[0]" class="container_box">
+          <ul ng-mouseleave="keepshow[0]=false" ng-click="keepshow[0] = false; toggleNavbar = false;" ng-mouseover="keepshow[0]=true" ng-show="show[0]||keepshow[0]" class="container_box" style="min-width:200px">
             {% endverbatim %}
             {% for c in subobj %}
             <li><a href="/class-{{c.level}}-{{c.title}}/">Class {{c.level}} {{c.title}}</a></li>

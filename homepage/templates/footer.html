@@ -7,7 +7,12 @@
       <h1 class="heading_big">Start a Journey. Enroll Now</h1>
       <h5 class="heading_small">Learn SOMETHING WHEREEVER YOU ARE</h5>
       <div class="foot_btn">
+        {% if not request.user.is_authenticated %}
         <button type="button" class="btn_gradient " ng-click="signin()">Join a Course Now</button>
+        {% endif %}
+        {% if request.user.is_authenticated %}
+        <button type="button" class="btn_gradient " ng-click="signin(true)">Start A Session Now</button>
+        {% endif %}
       </div>
     </div>
   </div>
@@ -32,6 +37,7 @@
         <ul class="list-unstyled">
           <h4 class="text-muted"><b>NCERT Solutions</b></h4>
           <li><a href="/ncert-solutions-class-12-maths/">NCERT Class 12 Maths Solutions</a></li>
+          <li><a href="/cbse-class-11-maths-ncert-solutions/">NCERT Class 11 Maths Solutions</a></li>
         </ul>
       </div>
       <div class="nc_links col-md-3">
@@ -42,7 +48,8 @@
       <div class="nc_links col-md-3">
         <ul class="list-unstyled">
           <h4 class="text-muted"><b>Text Book Solutions</b></h4>
-          <li><a href="/hc-verma-solutions/">HC Verma Solutions</a></li>
+          <li><a href="/hc-verma-solutions/">HC Verma Volume 1 Solutions</a></li>
+          <li><a href="/hc-verma-part-2-solutions/">HC Verma Volume 2 Solutions</a></li>
         </ul>
       </div>
     </div>
@@ -58,17 +65,17 @@
 
           <!-- <li><a href="">Tutors</a></li> -->
           <!-- <li><a href="">Quiz & Tests </a></li> -->
-          <li><a href="/testimonials">Our Testimonials </a></li>
+          <li><a href="/testimonials/">Our Testimonials </a></li>
         </ul>
       </div>
       <div class="col-md-4 col-sm-6 footer">
         <ul class="folist">
           <h4 class="text-muted">Company</h4>
-          <li><a href="/about">About US</a></li>
+          <li><a href="/about/">About US</a></li>
           <!-- <li><a href="">Talk To Us</a></li> -->
-          <li><a href="/contact">Contact Us </a></li>
+          <li><a href="/contact/">Contact Us </a></li>
           <!-- <li><a href="">Help</a></li> -->
-          <li><a href="/career">Careers</a></li>
+          <li><a href="/career/">Careers</a></li>
 
         </ul>
       </div>
@@ -77,7 +84,7 @@
           <h4 class="text-muted"> Contact US</h4>
           <li><i class="fa fa-map-marker text-muted" aria-hidden="true"></i> <span> <b> Address:</b> </span> <span class="text-muted"> Bangalore,KA,India</span> </li>
           <li> <i class="fa fa-phone text-muted" aria-hidden="true"></i><span> <b> Phone:</b> </span> <span class="text-muted"> +9182373488</span> </li>
-          <li><i class="fa fa-envelope text-muted" aria-hidden="true"></i> <span> <b> Email:</b> </span> <span class="text-muted"> info@24tutors.in</span> </li>
+          <li><i class="fa fa-envelope text-muted" aria-hidden="true"></i> <span> <b> Email:</b> </span> <span class="text-muted"> gethelp@24tutors.com</span> </li>
         </ul>
       </div>
     </div>

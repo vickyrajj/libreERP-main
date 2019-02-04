@@ -1,0 +1,99 @@
+<div class="modal-header text-center" style="background-color:{{clr}}">
+  <h4 style="margin:0px">Edit {{typ|humanize}} Details</h4>
+</div>
+<div class="modal-body">
+  <div class="container-fluid">
+    <div class="col-md-12" ng-if="typ=='blog'">
+      <div class="form-group">
+        <label>Title</label>
+        <input type="text" ng-model="formData.title" class="form-control" placeholder="Title">
+      </div>
+      <div class="form-group">
+        <label>Description</label>
+        <textarea type="text" ng-model="formData.description" class="form-control" col="80" placeholder="Description" rows="10"></textarea>
+      </div>
+      <div class="form-group">
+        <label>URL</label>
+        <input type="text" ng-model="formData.shortUrl" class="form-control" ng-disabled="formData.shortUrl">
+      </div>
+      <div class="form-group">
+        <label>OG Image</label>
+        <input type="file" file-model="formData.ogimage">
+      </div>
+      <div class="row text-center">
+        OR
+      </div>
+      <div class="form-group">
+        <label>OG Image url</label>
+        <input type="text" class="form-control" ng-model="formData.ogimageUrl">
+      </div>
+      <div class="col-md-12 text-center">
+        <span class="btn btn-success" ng-click="saveBlog()">Save</span>
+      </div>
+    </div>
+    <div class="col-md-12" ng-if="typ=='subject'">
+      <div class="form-group">
+        <label>Description</label>
+        <textarea type="text" ng-model="formData.description" class="form-control" col="80" placeholder="Description" rows="10"></textarea>
+      </div>
+      <div class="form-group">
+        <label>DP</label>
+        <input type="file" file-model="formData.dp">
+      </div>
+      <div class="col-md-12 text-center">
+        <span class="btn btn-success" ng-click="saveSubject()">Save</span>
+      </div>
+    </div>
+    <div class="col-md-12" ng-if="typ=='section'">
+      <div class="form-group">
+        <label>Title</label>
+        <input type="text" ng-model="formData.seoTitle" class="form-control" placeholder="Title">
+      </div>
+      <div class="form-group">
+        <label>Description</label>
+        <textarea type="text" ng-model="formData.description" class="form-control" col="80" placeholder="Description" rows="10"></textarea>
+      </div>
+      <div class="form-group">
+        <label>URL</label>
+        <input type="text" ng-model="formData.shortUrl" class="form-control" ng-disabled="formData.shortUrl">
+      </div>
+      <div class="col-md-12 text-center">
+        <span class="btn btn-success" ng-click="saveSection()">Save</span>
+      </div>
+    </div>
+    <div class="col-md-12" ng-if="typ=='notes'">
+      <div class="form-group">
+        <label>Title</label>
+        <input type="text" ng-model="formData.title" class="form-control" placeholder="Title">
+      </div>
+      <div class="form-group">
+        <label>Description</label>
+        <textarea type="text" ng-model="formData.description" class="form-control" col="80" placeholder="Description" rows="10"></textarea>
+      </div>
+      <div class="form-group">
+        <label>URL</label>
+        <input type="text" ng-model="formData.urlSuffix" class="form-control" ng-disabled="formData.urlSuffix">
+      </div>
+      <div class="form-group">
+        <label>Image</label>
+        <input type="file" file-model="formData.image">
+      </div>
+      <div class="col-md-12 text-center">
+        <span class="btn btn-success" ng-click="saveNotes()">Save</span>
+      </div>
+    </div>
+    <div class="col-md-12" ng-if="typ=='paper'">
+      <div class="form-group">
+        <label>Title</label>
+        <input type="text" ng-model="formData.name" class="form-control" placeholder="Title">
+      </div>
+      <div class="form-group">
+        <label>Description</label>
+        <textarea type="text" ng-model="formData.description" class="form-control" col="80" placeholder="Description" rows="10"></textarea>
+      </div>
+      <div class="col-md-12 text-center">
+        <span class="btn btn-success" ng-click="savePaper()">Save</span>
+      </div>
+    </div>
+  </div>
+</div>

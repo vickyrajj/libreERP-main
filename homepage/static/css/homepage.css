@@ -2032,7 +2032,7 @@ hr {
   background-size: 100%;
   min-height: 20vh;
   color: white;
-  background-image: url('https://epsilonai.com/static/images/blue_waves.jpg');
+  background-image: url('/static/images/24tut/blue_waves.jpg');
 }
 
 .video_card {
@@ -3226,8 +3226,8 @@ hr {
   /*  enroll page ends*/
   .container_box {
     font-size: 12px !important;
-    top: 10px !important;
-    left: 130px !important;
+    top: 0px !important;
+    left: 95px !important;
     width: 100% !important;
   }
 

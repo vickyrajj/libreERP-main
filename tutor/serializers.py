@@ -8,6 +8,16 @@ from HR.models import profile
 from LMS.models import Subject,Topic
 from PIL import Image
 
+class userProfileLiteSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = profile
+        fields = ('displayPicture' , 'prefix','mobile' )
+
+class userLiteSerializer(serializers.ModelSerializer):
+    profile = userProfileLiteSerializer(many=False , read_only=True)
+    class Meta:
+        model = User
+        fields = ( 'pk','email', 'username' , 'first_name' , 'last_name' , 'profile')
 
 class Tutors24ProfileSerializer(serializers.ModelSerializer):
     class Meta:
@@ -48,6 +58,8 @@ from django.core.exceptions import PermissionDenied
 class tutors24SessionSerializer(serializers.ModelSerializer):
     subject = SubjectLiteSerializer(many = False , read_only = True)
     topic = TopicLiteSerializer(many = False , read_only = True)
+    student = userLiteSerializer(many = False , read_only = True)
+    tutor = userLiteSerializer(many = False , read_only = True)
     class Meta:
         model = Session
         fields = ('pk','created','updated','student','tutor','start','end','attachments','initialQuestion','subject','topic','minutes' , 'idle','ratings','ratingComments','started')
@@ -84,6 +96,7 @@ class tutors24TransactionSerializer(serializers.ModelSerializer):
         # read_only_fields=('user','balance' , 'typ')
 
 class tutors24MessageSerializer(serializers.ModelSerializer):
+    sender = userLiteSerializer(many = False , read_only = True)
     class Meta:
         model = Message
         fields = ('pk','created','updated','session','sender','msg','attachment')

@@ -68,7 +68,6 @@ app.controller("home.LMS.configure", function($scope, $state, $users, $statePara
         then(function(response) {
           $scope.subjectData.topicList = response.data
         })
-
         console.log({
           title: title + $scope.data.tableData[i].title,
           cancel: true,
@@ -200,6 +199,9 @@ app.controller("home.LMS.configure.form", function($scope, $state, $users, $stat
     $scope.form = {
       title: '',
       description: '',
+      seoTitle:'',
+      subject:'',
+      syllabus:'',
       dp: emptyFile,
       level: 0,
       author: '',
@@ -211,6 +213,30 @@ app.controller("home.LMS.configure.form", function($scope, $state, $users, $stat
     }
   }
   $scope.resetForm();
+
+  $scope.editTopic = function(t) {
+    $uibModal.open({
+      templateUrl: '/static/ngTemplates/app.tutor.topic.form.html',
+      size: 'md',
+      backdrop: true,
+      resolve : {
+        topic : function() {
+          return t
+        }
+      },
+      controller: function($scope, $http , topic) {
+        $scope.topic = topic;
+        $scope.save =function() {
+          $http({method : 'PATCH' , url : '/api/LMS/topic/'  + $scope.topic.pk + '/' , data : {description : $scope.topic.description , syllabus : $scope.topic.syllabus}}).
+          then(function(response) {
+            Flash.create('success' , 'Saved');
+          })
+        }
+
+
+      }
+    })
+  }
 
   $scope.addSection = function(index, position) {
     console.log('section clickeddddddddddddddddddddddd');
@@ -539,7 +565,6 @@ app.controller("home.LMS.configure.form", function($scope, $state, $users, $stat
     }
     toSend.append('title', $scope.form.title)
     toSend.append('description', $scope.form.description)
-    toSend.append('seoTitle',$scope.form.seoTitle)
 
 
     if ($scope.mode == 'subject') {
@@ -577,6 +602,10 @@ app.controller("home.LMS.configure.form", function($scope, $state, $users, $stat
         return;
       }
       toSend.append('subject', $scope.form.subject.pk)
+      toSend.append('seoTitle',$scope.form.seoTitle)
+      if ($scope.form.syllabus != null && $scope.form.syllabus.length>0) {
+        toSend.append('syllabus',$scope.form.syllabus)
+      }
     }
 
     $http({

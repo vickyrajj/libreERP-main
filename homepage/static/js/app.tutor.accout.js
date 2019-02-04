@@ -120,7 +120,7 @@ app.controller('accountController', function($scope, $http, $timeout, $interval,
         $scope.sessionData = sessionData
         $http({
           method: 'GET',
-          url: '/api/tutors/tutors24Message/?session=' + $scope.sessionData.pk + '/'
+          url: '/api/tutors/tutors24Message/?session=' + $scope.sessionData.pk
         }).
         then(function(response) {
           console.log(response.data, 'message Data');

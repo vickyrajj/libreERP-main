@@ -1,7 +1,6 @@
 {% extends "tutorBook.html" %}
 
 {% block content %}
-<title>{{book.title}} {{sectionobj.title}} pdf</title>
 <div class="container-fluid" style="padding-left:0;padding-right:0;">
 
   <style media="screen">
@@ -83,7 +82,7 @@
       <div class="" style="overflow: hidden;width:99%;">
         <ul class="list-unstyled q_list" style="height: 97vh;overflow: auto;width: 126%;overflow-x:hidden;">
           {% for q in questions %}
-          <li ng-click="toTheTop({{forloop.counter}})"><span class="q_no">q{{ forloop.counter }}</span>
+          <li ng-click="toTheTop({{forloop.counter}})"><span class="q_no">Q{{ forloop.counter }}</span>
             {% endfor %}
           </li>
         </ul>
@@ -125,19 +124,21 @@
           </p>
           <div class="row" style="padding-left:30px;width:90%;">
             {% for qp in q.quesParts.all %}
+            {% if qp.mode == 'text' %}
             <p class="qes">{{qp.txt | safe}}</p>
-            {% if qp.image != null %}
+            {% endif %}
+            {% if qp.mode != 'text' %}
             <img src="/media/{{qp.image}}" alt="">
             {% endif %}
             {% endfor %}
           </div>
           <h5 class="text-primary" style="padding-top: 10px;padding-bottom: 10px;padding-left:15px"><strong>Solution :</strong> </h5>
-          <div class="col-md-10" style="padding-left:30px;width:90%; word-wrap: break-word; ">
+          <div class="col-md-10" style="padding-left:30px;width:100%; word-wrap: break-word;overflow-x: auto; ">
             {% for sp in q.solutionParts.all %}
-            {% if sp.txt != None %}
+            {% if sp.mode == 'text' %}
             <p class="qes">{{sp.txt | safe}}</p>
             {% endif %}
-            {% if sp.image != null %}
+            {% if sp.mode != 'text' %}
             <img src="/media/{{sp.image}}" alt="">
             {% endif %}
 

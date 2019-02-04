@@ -65,13 +65,18 @@
             <p> <b> Topic :</b> {{sess.topic.title}}</p>
           </div>
           <div class="col-md-3">
-            <p> <b> Tutor :</b> {{sess.tutor}}</p>
+            <p> <b> Tutor :</b> {{sess.tutor.first_name}} <span ng-if="sessionData.tutor.last_name">{{sess.tutor.last_name}}</span></p>
           </div>
           <div class="col-md-2" style="padding-right:0px">
             <p> <b> Duration :</b> {{sess.duration}}</p>
           </div>
           <div class="col-md-1 text-right" style="font-size:25px;padding:0px;padding-right:10px;margin-bottom:-16px;margin-top:-3px;">
             <span ng-click="viewSession($index)" style="cursor:pointer"><i class="fa fa-info-circle"></i></span>
+          </div>
+        </div>
+        <div class="row" ng-if="userSessions.length==0">
+          <div class="col-md-12 text-center text-muted">
+            <h3>You have not taken any session yet! Click on start a session to connect to your Tutor </h3>
           </div>
         </div>
         <div class="row" ng-if="showMore">
@@ -85,11 +90,12 @@
       <div class="row container-fluid" style="margin:8px 10px;">
         <div class="row text-center">
           <div style="padding-top:50px">
-            <img ng-src={{me.profile.displayPicture}} alt="" style="height:150px;width:150px; border-radius:50%;">
+            <span ng-if="me.profile.displayPicture"><img ng-src={{me.profile.displayPicture}} alt="" style="height:150px;width:150px; border-radius:50%;"></span>
+            <span ng-if="me.profile.displayPicture==null"><img src="/static/images/userIcon.png" alt="" style="height:150px;width:150px; border-radius:50%;"></span>
           </div>
         </div>
         <div class="row text-center">
-          <p style="font-size:20px; font-weight:700; color: #414142; margin:10px 0px;">{{me.first_name}}</p>
+          <p style="font-size:20px; font-weight:700; color: #414142; margin:10px 0px;">{{me.first_name}} <span ng-if="me.last_name">{{me.last_name}}</span></p>
         </div>
         <div class="row">
           <div class="col-md-12">
