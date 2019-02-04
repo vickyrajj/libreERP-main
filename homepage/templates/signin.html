@@ -1,4 +1,4 @@
-{% extends "tutorBase.html" %}{% load staticfiles %}
+{% extends "tutor.angular.apps.html" %}
 
 {% block tutorcontent %}
 <style media="screen">
@@ -65,11 +65,4 @@
 
 
 {% endverbatim %}
-{% endblock %}
-
-{% block tutorjs %}
-<script src="{% static 'js/app.tutor.signin.js' %}"></script>
-<script type="text/javascript">
-  {% include "app.tutor.common.js" %}
-</script>
 {% endblock %}

@@ -2835,7 +2835,7 @@ hr {
     float: left !important;
   }
   .navbar-collapse{
-  border-color: #030303 !important;  
+  border-color: #030303 !important;
   }
 
   /* courses */
@@ -3686,6 +3686,26 @@ hr {
 
   .pay_card img {
     width: 55px;
+  }
+  .accordionWrapper{
+    width: 100%;
+  }
+
+  .accordionItemHeading{
+    font-size:18px !important;
+    font-weight: bold;
+    width: 100%;
+  }
+  .accordionItemHeading i{
+    font-size:16px !important;
+    font-weight: bold;
+    right: 20px;
+    top: 20px;
+  }
+
+  .list_container{
+    padding:0px;
+    width: 100%;
   }
 
   /* mobile screen size ends here.... */
