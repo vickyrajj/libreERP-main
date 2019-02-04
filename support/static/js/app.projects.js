@@ -1573,12 +1573,10 @@ app.controller("businessManagement.projects.service.view", function($scope, $sta
           data: $scope.inventory,
         }).
         then(function(response) {
-          Flash.create('success', 'Saved');
-
+            Flash.create('success', 'Saved');
         })
       }
-
-      Flash.create('success', 'Saved');
+      // Flash.create('success', 'Saved');
       $scope.form.status = response.data.status
       $scope.updateStatus()
       $scope.fetchMaterial()

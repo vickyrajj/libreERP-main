@@ -68,7 +68,7 @@ app.controller("businessManagement.masterSheet", function($scope, $state, $users
     searchField: 'part_no',
     fields: ['part_no', 'weight', 'price', 'description_2', 'description_1', 'gst','customs_no','custom','replaced','bar_code'],
     checkbox: false,
-    deletable:true,
+    deletable:false,
     canCreate : true,
     multiselectOptions: multiselectOptions,
     editorTemplate:'/static/ngTemplates/app.masterSheet.newProduct.html',
