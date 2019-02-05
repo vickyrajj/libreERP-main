@@ -481,7 +481,31 @@ function checkVisitorDetails() {
   var visitorDetails = getCookie("uidDetails");
   if (visitorDetails != "") {
     visitorDetails = JSON.parse(visitorDetails)
-    setVisitorDetails(visitorDetails.name, visitorDetails.email, visitorDetails.phoneNumber)
+    // setVisitorDetails(visitorDetails.name, visitorDetails.email, visitorDetails.phoneNumber)
+    var uid = getCookie("uid");
+    if (uid!="") {
+      var xhttp = new XMLHttpRequest();
+      xhttp.onreadystatechange = function() {
+          if (this.readyState == 4 && this.status == 200) {
+            var data = JSON.parse(this.responseText)
+            if (data.length==0) {
+              var xhttp = new XMLHttpRequest();
+               xhttp.onreadystatechange = function() {
+                 if (this.readyState == 4 && this.status == 201) {
+                   console.log('posted successfully');
+                 }
+               };
+               xhttp.open('POST', '{{serverAddress}}/api/support/visitor/', true);
+               xhttp.setRequestHeader("Content-type", "application/json");
+               xhttp.send(JSON.stringify({uid:uid,name:visitorDetails.name,email:visitorDetails.email,phoneNumber:visitorDetails.phoneNumber}));
+            }
+          }
+      };
+      xhttp.open('GET', '{{serverAddress}}/api/support/visitor/?uid='+uid  , true);
+      xhttp.send();
+    }
+
+
   }
 }
 
@@ -2474,6 +2498,39 @@ var myformrating;
     }, 2000);
 
 
+    var visitorDetails = getCookie("uidDetails");
+    if (visitorDetails != "") {
+      visitorDetails = JSON.parse(visitorDetails)
+      // setVisitorDetails(visitorDetails.name, visitorDetails.email, visitorDetails.phoneNumber)
+      var uid = getCookie("uid");
+      if (uid!="") {
+        var xhttp = new XMLHttpRequest();
+        xhttp.onreadystatechange = function() {
+            if (this.readyState == 4 && this.status == 200) {
+              var data = JSON.parse(this.responseText)
+              if (data.length==0) {
+                var xhttp = new XMLHttpRequest();
+                 xhttp.onreadystatechange = function() {
+                   if (this.readyState == 4 && this.status == 201) {
+                     console.log('posted successfully');
+                   }
+                 };
+                 xhttp.open('POST', '{{serverAddress}}/api/support/visitor/', true);
+                 xhttp.setRequestHeader("Content-type", "application/json");
+                 xhttp.send(JSON.stringify({uid:uid,name:visitorDetails.name,email:visitorDetails.email,phoneNumber:visitorDetails.phoneNumber}));
+              }
+            }
+        };
+        xhttp.open('GET', '{{serverAddress}}/api/support/visitor/?uid='+uid  , true);
+        xhttp.send();
+      }
+
+
+    }
+
+    
+
+
 
     feedbackFormOpened = false
     feedbackFormSubmitted = false
@@ -3042,19 +3099,27 @@ function addExitConfirmation() {
 
 let currentUrl=window.location.href;
 setTimeout(function () {
-  connection.session.publish(wamp_prefix+'service.support.agent.'+agentPk, [uid , 'CU' , currentUrl] , {}, {
-    acknowledge: true
-  })
-}, 4000);
-
-setInterval(function () {
-  // alert(currentUrl)
-  if(currentUrl!==window.location.href){
-    currentUrl=window.location.href;
+  console.log(agentPk);
+  if (agentPk) {
     connection.session.publish(wamp_prefix+'service.support.agent.'+agentPk, [uid , 'CU' , currentUrl] , {}, {
       acknowledge: true
     })
   }
+
+}, 4000);
+
+setInterval(function () {
+  // alert(currentUrl)
+  console.log(agentPk);
+  if (agentPk) {
+    if(currentUrl!==window.location.href){
+      currentUrl=window.location.href;
+      connection.session.publish(wamp_prefix+'service.support.agent.'+agentPk, [uid , 'CU' , currentUrl] , {}, {
+        acknowledge: true
+      })
+    }
+  }
+
 }, 5000);
 
 
