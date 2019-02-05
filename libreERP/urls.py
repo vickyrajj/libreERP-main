@@ -8,7 +8,7 @@ from support.views import getChatterScript
 from homepage.views import blog,blogDetails,news,team, career ,policy ,terms ,refund , contacts , registration,index,crmHome,customerLoginView , customerHomeView
 
 from ERP.views import serviceRegistration
-
+from support.views import feedBackPage
 app_name="libreERP"
 
 urlpatterns = [
@@ -40,6 +40,7 @@ urlpatterns = [
     url(r'^customer/login', customerLoginView , name ='customerLogin'),
     url(r'^customer/home/', customerHomeView , name ='customerhome'),
     url(r'^script/(?P<fileName>[\w|\W]+)', getChatterScript , name ='getChatterScript'),
+    url(r'^feedBack/', feedBackPage , name ='feedBack'),
 ]
 
 if settings.DEBUG:

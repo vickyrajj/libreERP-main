@@ -54,6 +54,9 @@ from .models import *
 
 # Create your views here.
 
+def feedBackPage(request):
+    return render(request,'app.feedBack.html')
+
 class CustomerProfileViewSet(viewsets.ModelViewSet):
     permission_classes = (permissions.AllowAny,)
     serializer_class = CustomerProfileSerializer
@@ -1211,3 +1214,47 @@ class MessageCheck(APIView):
         sObj = list(SupportChat.objects.filter(uid = request.GET['uid'],pk__gt=request.GET['pk']).values_list('pk',flat=True))
         print sObj,"printtttttttttttttttttttttttttttttttt"
         return Response({"data":sObj}, status = status.HTTP_200_OK)
+
+class SendFeedBackRequest(APIView):
+    renderer_classes = (JSONRenderer,)
+    permission_classes=(permissions.AllowAny,)
+    def post(self , request , format = None):
+        if 'key' in request.data:
+            print len(request.data['key']) , request.data['key'],'aaaaaaaaaaa'
+            threadId = decrypt(request.data['key'], "cioc")
+            chatDetails = ChatThread.objects.get(uid=threadId)
+            chatDetails.customerRating = request.data['customerRating']
+            chatDetails.customerFeedback = request.data['customerFeedback']
+            chatDetails.save()
+        else:
+            chatData = ChatThread.objects.get(pk = request.data['chatThreadPk'])
+            encryptedKey = encrypt(request.data['id'], "cioc")
+            link = globalSettings.SITE_ADDRESS + '/feedBack/?id=' + str(encryptedKey)
+            if chatData.customerRating is None and chatData.customerFeedback is None:
+                try:
+                    visitor = Visitor.objects.get(uid = request.data['id'])
+                    try:
+                        msg = "Your feedback is important for us"
+                        emailAddr = [visitor.email]
+                        ctx = {
+                            'heading' : "Feedback Form",
+                            'msg' : msg,
+                            'details': 'Please click on the below link to submit your feedback',
+                            'link' : link
+                        }
+                        email_body = get_template('app.feedbackEmail.html').render(ctx)
+                        msg = EmailMessage("Feedback Form" , email_body, to= emailAddr)
+                        msg.content_subtype = 'html'
+                        msg.send()
+                    except:
+                        pass
+                    try:
+                        phone = visitor.phoneNumber
+                        text = "Please click on the below link to submit your feedback " + link
+                        url = globalSettings.SMS_API_PREFIX + 'number=%s&message=%s'%(phone , text )
+                        requests.get(url)
+                    except:
+                        pass
+                except:
+                    pass
+        return Response(status = status.HTTP_200_OK)
