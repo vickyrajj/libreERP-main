@@ -6,6 +6,7 @@
   <li ng-if="locationInfo.location.capital">Capital: {{locationInfo.location.capital}}</li>
   <li>Zip: {{locationInfo.zip}}</li>
   <li ng-if="locationInfo.timezone">Timezone: {{locationInfo.timezone}}</li>
+  <li ng-if="chatThreadData.created">Date : {{chatThreadData.created | date:'dd MMM yyyy, hh:mm a' }}</li>
   <li ng-if="locationInfo.location.languages">Languages :
     <span ng-repeat="lang in locationInfo.location.languages">{{lang.name}} </span>
   </li>

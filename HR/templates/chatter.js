@@ -477,6 +477,16 @@ function fetchThread(uid) {
 }
 
 
+function checkVisitorDetails() {
+  var visitorDetails = getCookie("uidDetails");
+  if (visitorDetails != "") {
+    visitorDetails = JSON.parse(visitorDetails)
+    setVisitorDetails(visitorDetails.name, visitorDetails.email, visitorDetails.phoneNumber)
+  }
+}
+
+
+
 
 var threadExist
 var threadResponse
@@ -494,7 +504,7 @@ function addCustomMessage() {
 
 
 function setVisitorDetails(name , phoneNumber , email) {
-  // console.log('coming in chatter', name , phoneNumber , email);
+  console.log('coming in chatter', name , phoneNumber , email);
 
   detail = getCookie("uidDetails");
   if (detail != "") {
@@ -1278,6 +1288,7 @@ function createChatDiv() {
     uid = getCookie("uid");
     if (uid != "") {
         fetchThread(uid);
+        checkVisitorDetails(uid)
     } else {
         // uid = custID +'$'+custName+'$'+broswer.charAt(0)
         uid = new Date().getTime()
@@ -2971,7 +2982,7 @@ function addExitConfirmation() {
         attachedFile = '<video width="200" height="180" style="box-sizing:border-box;" src="'+ message.attachment +'" controls></video>'
       }else if (message.attachmentType=='application') {
           console.log('application');
-          attachedFile ='<p style="line-height: 1.75; margin:0px 0px 10px; box-sizing:border-box;">  <a style="color:#000;" href="'+message.attachment+'"> '+message.attachment+' </a></p>'
+          attachedFile ='<p style="font-size:14px !important; margin:5px 0px !important;width:100%; line-height: 1.75; box-sizing:border-box;">  <a target="_blank" style="color:#3961ea;" href="'+message.attachment+'"> '+message.attachment+' </a></p>'
       }
     }
 
@@ -2984,13 +2995,13 @@ function addExitConfirmation() {
       }else {
         if (message.attachment==null) {
           var str= message.message
-          var expression = /[-a-zA-Z0-9@:%_\+.~#?&//=]{2,256}\.[a-z]{2,4}\b(\/[-a-zA-Z0-9@:%_\+.~#?&//=]*)?/gi;
+          var expression = /(?:(?:https?|ftp|file):\/\/|www\.|ftp\.)(?:\([-A-Z0-9+&@#\/%=~_|$?!:,.]*\)|[-A-Z0-9+&@#\/%=~_|$?!:,.])*(?:\([-A-Z0-9+&@#\/%=~_|$?!:,.]*\)|[A-Z0-9+&@#\/%=~_|$])/igm;
           var regex = new RegExp(expression);
           var res = str.split(' ');
           var pTag
           res.forEach((r)=>{
             if (r.match(regex)) {
-              str=str.replace(r,'<a style="color:#5b5bf6" href="'+r+'" target="_blank">'+r+'</a>')
+              str=str.replace(r,'<a style="color:#3961ea" href="'+r+'" target="_blank">'+r+'</a>')
                 pTag='<p style="font-size:14px !important; margin:5px 0px !important;width:100%; box-sizing:border-box !important; text-align:start !important;word-wrap: break-word !important; white-space: pre-wrap;">'+ str +'</p>'
             }else{
                  pTag='<p style="font-size:14px !important; margin:5px 0px !important; box-sizing:border-box !important;width:100%; text-align:start !important;word-wrap: break-word !important; white-space: pre-wrap;">'+ str +'</p>'
@@ -3008,7 +3019,7 @@ function addExitConfirmation() {
     if (message.logs==null) {
       if (!message.sentByAgent) {
         var msgHtml = '<div id="msg'+chat.messages.length+'" style="margin : 0px 0px 15px; box-sizing:border-box;">'+
-                        '<div style=" clear: both; float:right; background-color:'+ windowColor +'; color:'+fontAndIconColor+';  padding:5px 10px;margin:8px;max-width:100%; border-radius:20px 0px 20px 20px; box-sizing:border-box;">'+
+                        '<div style=" clear: both; float:right; background-color:'+ windowColor +'; color:'+fontAndIconColor+';  padding:5px 10px;margin:8px;max-width:94%; border-radius:20px 0px 20px 20px; box-sizing:border-box; ">'+
                           msgDiv+
                         '</div>'+
                         '<div style="clear: both; float:right; padding:0px 10px; font-size:9px !important;">'+ message.timeDate +'</div>'+
@@ -3017,7 +3028,7 @@ function addExitConfirmation() {
 
       }else {
         var msgHtml = '<div id="msg'+chat.messages.length+'" style="margin:0px 0px 10px; box-sizing:border-box;" >'+
-                  '<div style="clear: both; float:left; background-color:#f6f6f6; padding:5px 10px;margin:8px; border-radius:0px 20px 20px 20px; box-sizing:border-box;max-width:100%;">'+
+                  '<div style="clear: both; float:left; background-color:#f6f6f6; padding:5px 10px;margin:8px; border-radius:0px 20px 20px 20px; box-sizing:border-box;max-width:94%;">'+
                      msgDiv+
                   '</div> '+
                   '<div style="clear: both; float:left; padding:0px 10px; font-size:9px !important;">'+ message.timeDate +'</div>'+

@@ -18,40 +18,46 @@
           <table style="border-collapse:collapse;max-width:600px" width="100%" cellspacing="0" cellpadding="0" border="0" align="center">
             <tbody>
               <tr>
-                <td style="width:100%; padding: 20px 0;font-family:'Open Sans',Verdana, Arial, Helvetica,s ans-serif; font-size: 22px; color: #000;" valign="top" align="center">&lt;Company Name&gt;</td>
+                <td style="width:100%; padding: 20px 0;font-family:'Open Sans',Verdana, Arial, Helvetica,s ans-serif; font-size: 22px; color: #000;" valign="top" align="center"> {{companyName}} </td>
               </tr>
               <tr>
-                <td style="background: #fff; padding: 40px; text-align: center; border-radius: 10px;"><strong>Chat on {{started}} <br>
-at {{started}} (UTC Time)</strong>
+                <td style="background: #fff; padding: 40px; text-align: center; border-radius: 10px;"><strong>Chat on {{started | date:"M d, Y"}} <br>
+at {{started | date:"H:i a"}} (UTC Time)</strong>
                   <p style="font-family:'Open Sans',Verdana, Arial, Helvetica,sans-serif; font-size: 15px; color: #000; text-align: left; line-height: 25px; margin:0 0 0 15px;padding:0;"><br></p>
-                  <table style="font-size: 13px;">
+                  <table style="font-size: 13px; text-align:start;">
                     <tbody>
                       <tr>
-                        <td valign="top" nowrap=""><i>[03:07]</i></td>
-                        <td><i>Intro Message</i>:<br> {{introMessage}}</td>
+                        <td valign="top" nowrap=""><i>[{{started | date:"H:i a"}}]</i></td>
+                        <td><i>Intro Message</i>:<br> {{introMessage | safe}}</td>
                       </tr>
 
-                      {% for a in allChats %} {% if a.message != None %} {% if a.sentByAgent %}
+                      {% for a in allChats %}
+                      {% if a.message != None %}
+                      {% if a.sentByAgent %}
                       <tr>
-                        <td valign="top" nowrap=""><i>[{{a.created}}]</i></td>
+                        <td valign="top" nowrap=""><i>[{{a.created | date:"H:i a"}}]</i></td>
                         <td><i>Syrow</i>:<br> {{a.message}} </td>
                       </tr>
                       {% else %}
                       <tr>
-                        <td valign="top" nowrap=""><i>[{{a.created}}]</i></td>
+                        <td valign="top" nowrap=""><i>[{{a.created | date:"H:i a"}}]</i></td>
                         <td><i>{{a.uid}}</i>:<br> {{a.message}} </td>
                       </tr>
-                      {% endif %} {% else %} {% if a.sentByAgent %}
+                      {% endif %}
+                      {% else %}
+                      {% if a.sentByAgent %}
                       <tr>
-                        <td valign="top" nowrap=""><i>[{{a.created}}]</i></td>
+                        <td valign="top" nowrap=""><i>[{{a.created | date:"H:i a"}}]</i></td>
                         <td><i>Syrow</i>:<br>  <a href="{{a.attachment}}" target="_blank">{{a.attachment}}</a> </td>
                       </tr>
                       {% else %}
                       <tr>
-                        <td valign="top" nowrap=""><i>[{{a.created}}]</i></td>
+                        <td valign="top" nowrap=""><i>[{{a.created | date:"H:i a"}}]</i></td>
                         <td><i>{{a.uid}}</i>:<br> <a href="{{a.attachment}}" target="_blank">{{a.attachment}}</a> </td>
                       </tr>
-                      {% endif %} {% endif %} {% endfor %}
+                      {% endif %}
+                      {% endif %}
+                      {% endfor %}
                     </tbody>
                   </table>
                   <hr>

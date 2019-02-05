@@ -9,7 +9,7 @@
       <img style="width:5rem" ng-if="msgData.user_id" src="{{msgData.user_id | getDP}}" alt="">
       <span class="btn btn-primary" ng-click="showChart()" style="float:right">Change Status</span>
       <div class="" style="display:inline-block">
-        <p ng-if="" style="font-size:16px;font-weight:700">{{msgData.user_id | getName}}</p>
+        <p style="font-size:16px;font-weight:700">{{msgData.user_id | getName}}</p>
       </div>
     </div>
 
@@ -30,8 +30,10 @@
       </div>
       <div class="col-md-6">
         <p ng-if="msgData.customerRating"><strong><i class="fa fa-star fa-md" aria-hidden="true"></i> </strong>{{msgData.customerRating}} </p>
+        <p><strong>Company : </strong>{{myChatThreadData.companyName}}</p>
         <p ng-if="visitorDetails.email"><strong>Visitor's Email : </strong>{{visitorDetails.email}}</p>
         <p ng-if="visitorDetails.name"><strong>Visitor's Name : </strong>{{visitorDetails.name}}</p>
+        <p ><strong>Visitor's Uid : </strong>{{myChatThreadData.uid}}</p>
         <p ng-if="msgData.location.city"><i class="fa fa-globe" aria-hidden="true"></i> {{msgData.location.city}} , {{msgData.location.country_name}}</p>
       </div>
 

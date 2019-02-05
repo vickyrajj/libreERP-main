@@ -1246,17 +1246,18 @@ app.directive('chatBox', function() {
         return span.textContent || span.innerText;
       };
 
+      console.log($scope.data.companyPk,'yesssssssssssssssssssssssssssssssssssssssss');
+      $scope.data.messages = []
+
       $http({
         method: 'GET',
         url: '/api/support/getMyUser/?getCompanyDetails=' + $scope.data.companyPk,
       }).then(function(response) {
-        console.log(response.data);
         $scope.companyName = response.data.cDetails[0]
         $scope.compContactPersons = response.data.contactP
         $scope.companyPk = response.data.servicePk
-        console.log(response.data.firstMsg);
-
-        $scope.data.messages.unshift({'message':extractContent(response.data.firstMsg[0])})
+        $scope.data.messages.push({'message':extractContent(response.data.firstMsg[0])})
+        $scope.getAllMessages();
       })
 
       $http({
@@ -1265,6 +1266,7 @@ app.directive('chatBox', function() {
       }).
       then(function(response) {
         console.log(response.data, 'dddddddddddd', typeof response.data);
+        $scope.chatThreadData = response.data[0]
         $scope.location = $scope.setLocationData(response.data[0].location)
         console.log($scope.location);
       });
@@ -1641,7 +1643,8 @@ app.directive('chatBox', function() {
           url: '/api/support/emailChat/',
           data: {
             email: mailId,
-            uid: uid
+            uid: uid,
+            servicePk:$scope.companyPk
           }
         }).then(function(response) {
           console.log('mail sent to ' + mailId);
@@ -1659,19 +1662,23 @@ app.directive('chatBox', function() {
 
 
 
-      $http({
-        method: 'GET',
-        url: '/api/support/supportChat/?&uid=' + $scope.data.uid,
-      }).then(function(response) {
-        $scope.data.messages = [];
-        console.log(response.data);
-        for (var i = 0; i < response.data.length; i++) {
-          $scope.data.messages.push(response.data[i]);
-        }
-        $scope.data.unreadMsg = 0
-        $scope.data.boxOpen = true
-        $scope.scroll()
-      });
+
+
+      $scope.getAllMessages = function () {
+        $http({
+          method: 'GET',
+          url: '/api/support/supportChat/?&uid=' + $scope.data.uid,
+        }).then(function(response) {
+          // $scope.data.messages = [];
+          console.log(response.data);
+          for (var i = 0; i < response.data.length; i++) {
+            $scope.data.messages.push(response.data[i]);
+          }
+          $scope.data.unreadMsg = 0
+          $scope.data.boxOpen = true
+          $scope.scroll()
+        });
+      }
 
       $scope.chatBox = {
         messageToSend: '',
@@ -2277,9 +2284,13 @@ app.directive('chatBox', function() {
             },
             urlData:function(){
               return $scope.data
+            },
+            chatThreadData:function () {
+              return $scope.chatThreadData
             }
           },
-          controller: function($scope, locationData,urlData, $users, $uibModalInstance, Flash) {
+          controller: function($scope, locationData,urlData, $users,chatThreadData, $uibModalInstance, Flash) {
+            $scope.chatThreadData = chatThreadData;
             $scope.locationInfo = locationData
             $scope.urlData=urlData
           },
