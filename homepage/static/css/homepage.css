@@ -146,6 +146,7 @@ a, u {
   opacity: 1;
   position: relative;
 }
+
 .accordionItem i {
   text-align: right;
   margin-left: 30%;
@@ -2373,6 +2374,17 @@ hr {
   padding-left: 40px;
 }
 
+.team-member {
+  margin-left: 20px;
+  text-align: center;
+}
+.team_a{
+  text-decoration: none;
+  color:#212021;
+}
+.team_a:hover{
+  color:#343334;
+}
 /* exams css properties */
 /* for normal screens ends here.... */
 @media only screen and (device-width: 1352px) and (device-height: 641px) {
@@ -2829,8 +2841,6 @@ hr {
   background-color: #fff;
 } */
 @media only screen and (max-width:768px) {
-
-
   .other_chap {
     width: 100%;
   }
@@ -2839,8 +2849,9 @@ hr {
   .header_nav {
     float: left !important;
   }
-  .navbar-collapse{
-  border-color: #030303 !important;
+
+  .navbar-collapse {
+    border-color: #030303 !important;
   }
 
   /* courses */
@@ -3692,24 +3703,36 @@ hr {
   .pay_card img {
     width: 55px;
   }
-  .accordionWrapper{
+
+  .accordionWrapper {
     width: 100%;
   }
 
-  .accordionItemHeading{
-    font-size:18px !important;
+  .accordionItemHeading {
+    font-size: 18px !important;
     font-weight: bold;
     width: 100%;
   }
-  .accordionItemHeading i{
-    font-size:16px !important;
+
+  .accordionItemHeading i {
+    font-size: 16px !important;
     font-weight: bold;
     right: 20px;
     top: 20px;
   }
 
-  .list_container{
-    padding:0px;
+  .list_container {
+    padding: 0px;
+    width: 100%;
+  }
+  .card_mob{
+    width: 40px;
+  }
+  .card_mob span{
+    margin-left: -12px;
+    font-size: 50px;
+  }
+  .btn_g{
     width: 100%;
   }
 
