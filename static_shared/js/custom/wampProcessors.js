@@ -139,6 +139,21 @@ var hasAccesss=true;
 
         }
       }
+
+      function pushIntoMyUsers(indx , data) {
+        dontPush = false;
+        console.log(data,';ggggggggggggggggggggggggggg');
+        for (var i = 0; i < scope.myUsers[indx].messages.length; i++) {
+          if (data.pk == scope.myUsers[indx].messages[i].pk) {
+            dontPush = true;
+          }
+        }
+        if (!dontPush) {
+          scope.myUsers[indx].messages.push(data)
+        }
+      }
+
+
       for (var i = 0; i < scope.myUsers.length; i++) {
         if (scope.myUsers[i].uid == args[0]) {
           if((!scope.myUsers[i].boxOpen||!isfocused) && args[1]=='M'){
@@ -154,7 +169,8 @@ var hasAccesss=true;
           }
           if (args[1] == 'M') {
             scope.sound.play();
-            scope.myUsers[i].messages.push(args[2])
+            pushIntoMyUsers(i, args[2])
+            // scope.myUsers[i].messages.push(args[2])
             scope.myUsers[i].unreadMsg += 1
             scope.myUsers[i].spying.value = ''
             // scope.myUsers[i].messages.push( {msg : args[2].msg, sentByMe:false , created:  args[2].created })
@@ -167,7 +183,8 @@ var hasAccesss=true;
               // console.log(this.readyState , this.status , 'onreadyyyyyyyyyyyyyyyyyy' );
               if (this.readyState == 4 && this.status == 200) {
                 var data = JSON.parse(this.responseText)
-                scope.myUsers[i].messages.push(data)
+                pushIntoMyUsers(i, data)
+                // scope.myUsers[i].messages.push(data)
                 scope.myUsers[i].spying.value = ''
               }
             };
@@ -176,7 +193,8 @@ var hasAccesss=true;
 
           } else if (args[1] == 'ML') {
             scope.sound.play();
-            scope.myUsers[i].messages.push(args[2])
+            pushIntoMyUsers(i, args[2])
+            // scope.myUsers[i].messages.push(args[2])
             scope.myUsers[i].unreadMsg += 1
             scope.myUsers[i].spying.value = ''
           }else if (args[1] == 'CL') {

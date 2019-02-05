@@ -102,11 +102,26 @@ class ReviewCommentSerializer(serializers.ModelSerializer):
             raise PermissionDenied()
 
 class ChatThreadSerializer(serializers.ModelSerializer):
+    agent_name = serializers.SerializerMethodField()
+    agent_dp = serializers.SerializerMethodField()
     class Meta:
         model = ChatThread
         fields = ( 'pk' , 'created' , 'uid', 'status' , 'customerRating' , 'customerFeedback' ,
         'company','user','userDevice','userDeviceIp' ,'chatDuration' ,'firstResponseTime',
-        'typ','reviewedOn',"reviewedBy",'closedOn','closedBy','resolvedBy','resolvedOn','archivedOn','archivedBy','escalatedL1On','escalatedL1By','escalatedL2On','escalatedL2By','location')
+        'typ','reviewedOn',"reviewedBy",'closedOn','closedBy','resolvedBy','resolvedOn','archivedOn','archivedBy','escalatedL1On','escalatedL1By','escalatedL2On','escalatedL2By','location','agent_name','agent_dp')
+    def get_agent_name(self , obj):
+        if obj.user:
+            user = User.objects.get(pk=obj.user.pk)
+            return user.first_name + ' ' + user.last_name
+        else:
+            return ''
+        # DocumentVersion.objects.filter(parent=obj.pk).count()
+    def get_agent_dp(self , obj):
+        if obj.user:
+            user = User.objects.get(pk=obj.user.pk)
+            return user.profile.displayPicture.url
+        else:
+            return ''
     def create(self ,  validated_data):
         c = ChatThread(**validated_data)
         c.company = CustomerProfile.objects.get(pk=int(self.context['request'].data['company']))
@@ -257,7 +272,7 @@ class CannedResponsesSerializer(serializers.ModelSerializer):
 class DynamicFormSerializer(serializers.ModelSerializer):
     class Meta:
         model = DynamicForm
-        fields = ( 'pk' , 'created','updated' , 'user' ,'company', 'form_name', 'function_name' , 'form_description')
+        fields = ( 'pk' , 'created','updated' , 'user' ,'company', 'form_name', 'function_name' , 'form_description','typ')
 
 class DynamicFieldSerializer(serializers.ModelSerializer):
     class Meta:

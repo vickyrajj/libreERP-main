@@ -453,10 +453,15 @@ function fetchThread(uid) {
         var data = JSON.parse(this.responseText)
         if (data.length>0) {
           threadExist = true
-          console.log(data,'fffffffffffffffff');
-          chatThreadPk = data[0].pk
-          agentPk = data[0].user
-          streamType=data[0].typ
+          chatThreadPk = data[0].pk;
+          agentPk = data[0].user;
+          streamType=data[0].typ;
+          if (data[0].agent_name.length>0) {
+            agentName.innerHTML = data[0].agent_name;
+          }
+          if (data[0].agent_dp.length>0) {
+            document.getElementById('logo_ji').src= '{{serverAddress}}'+ data[0].agent_dp;
+          }
         }
         fetchMessages(uid);
       } else if (this.responseText == '{"PARAMS":"createCookie"}') {
@@ -776,8 +781,15 @@ document.addEventListener("DOMContentLoaded", function(event) {
       // console.log('IIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIII');
 
       setTimeout(function(){
-        // console.log('inside timeooutttttttttttttt');
-        addMessages(message)
+        var dontPush = false;
+        for (var j = 0; j < chat.messages.length; j++) {
+          if (chat.messages[j].pk==message.pk) {
+            dontPush = true;
+          }
+        }
+        if (!dontPush) {
+          addMessages(message)
+        }
       }, 1500);
 
 
@@ -804,6 +816,10 @@ document.addEventListener("DOMContentLoaded", function(event) {
 
     setInterval(function () {
       let xhttp = new XMLHttpRequest();
+      let lastMsgPk=chat.messages[chat.messages.length-1].pk;
+      if (lastMsgPk==undefined) {
+        return;
+      }
       xhttp.onreadystatechange = function() {
           if (this.readyState == 4 && this.status == 200) {
             var data = JSON.parse(this.responseText)
@@ -813,19 +829,28 @@ document.addEventListener("DOMContentLoaded", function(event) {
                   if (this.readyState == 4 && this.status == 200) {
                     var data = JSON.parse(this.responseText)
                     for (var i = 0; i < data.length; i++) {
-                      addMessages(data[i])
+                      dontPush = false;
+                      for (var j = 0; j < chat.messages.length; j++) {
+                        if (chat.messages[j].pk==data[i].pk) {
+                          dontPush = true;
+                        }
+                      }
+                      if (!dontPush) {
+                        addMessages(data[i])
+                      }
+
                     }
                   }
               };
-              xhttp.open('GET', '{{serverAddress}}/api/support/supportChat/?unDelMsg&values='+JSON.stringify(data.data)  , true);
+              xhttp.open('GET', '{{serverAddress}}/api/support/supportChat/?visitorReq=1&unDelMsg&values='+JSON.stringify(data.data)  , true);
               xhttp.send();
             }
           }
       };
-      let lastMsgPk=chat.messages[chat.messages.length-1].pk
       xhttp.open('GET', '{{serverAddress}}/api/support/messageCheck/?uid=' + uid+'&pk='+lastMsgPk  , true);
       xhttp.send();
-    }, 5000);
+
+    }, 20000);
 
 
     function createCookieDetail(args) {
@@ -993,7 +1018,7 @@ function createChatDiv() {
                   '<div id="singleService" style="background: '+supportBubbleColor+' !important; color:'+iconColor+';cursor:pointer" class="sy-circle first_animation '+sy_circle_class+'">'+
                     '<span id="singleServiceText" style="background: '+supportBubbleColor+' !important; color:'+iconColor+' ;display:none; transition: .5s;opacity:0" class="sy-text '+sy_text_class+'  "></span>'+
                     '<span id="chatSuggestionBar1" style="background: '+supportBubbleColor+' !important; color:'+iconColor+';font-size:13px !important;display:flex !important" class="sy-text-Suggested '+sy_firsttext_class+'"><img style="width:35px;height:35px;display:inline;border-radius:50%;margin:3px;margin-right:10px" src="'+dpSupport+'"/><span>'+firstMessage+'</span></span>'+
-                    '<span id="singleServiceFont" class="SyrowFont font-SyrowCallBack sy-md-2 sy-ops"></span></a>'+
+                    '<span id="singleServiceFont" class="SyrowFont font-SyrowCallBack sy-md-2 sy-ops"> <img id="singleServiceSupportDp" src="'+support_icon+'" style="width:40px !important; height:40px important; border-radius:50% !important;"></img> </span></a>'+
                   '</div>'+
               '</div>'+
 
@@ -1126,6 +1151,13 @@ function createChatDiv() {
          }
    }
 
+  })
+
+
+  inputText.addEventListener('click',function(e){
+    if (device=='sm') {
+      scroll();
+    }
   })
 
 
@@ -1384,21 +1416,64 @@ function createChatDiv() {
 
             if (activeService == 'callCircle') {
               singleServiceText.innerHTML = "Callback"
-              singleServiceFont.className = "SyrowFont font-SyrowCallBack sy-md-2 sy-ops"
+
+              if (support_icon=='{{serverAddress}}') {
+                singleServiceFont.className = "SyrowFont font-SyrowCallBack sy-md-2 sy-ops"
+                document.getElementById('singleServiceSupportDp').style.display = "none"
+              }else {
+                singleServiceFont.className = "SyrowFont sy-md-2 sy-ops"
+              }
+
+
+
             }else if (activeService == 'chatCircle') {
               singleServiceText.innerHTML = "Chat"
-              singleServiceFont.className = "SyrowFont font-SyrowChat sy-md-2 sy-ops"
               singleService.addEventListener("click" , openChat , false)
+
+              if (support_icon=='{{serverAddress}}') {
+                singleServiceFont.className = "SyrowFont font-SyrowChat sy-md-2 sy-ops"
+                document.getElementById('singleServiceSupportDp').style.display = "none"
+              }else {
+                  singleServiceFont.className = "SyrowFont sy-md-2 sy-ops"
+              }
+
+
             }else if (activeService == 'audioCircle') {
               singleServiceText.innerHTML = "Audio Call"
-              singleServiceFont.className = "SyrowFont font-SyrowAudioCall sy-md-2 sy-ops"
+
+
+              if (support_icon=='{{serverAddress}}') {
+                singleServiceFont.className = "SyrowFont font-SyrowAudioCall sy-md-2 sy-ops"
+                document.getElementById('singleServiceSupportDp').style.display = "none"
+              }else {
+                singleServiceFont.className = "SyrowFont sy-md-2 sy-ops"
+              }
+
+
               // singleService.addEventListener("click" , openChat , false)
             }else if (activeService == 'videoCircle') {
               singleServiceText.innerHTML = "Video Call"
-              singleServiceFont.className = "SyrowFont font-SyrowVideoCall sy-md-2 sy-ops"
+
+
+              if (support_icon=='{{serverAddress}}') {
+                singleServiceFont.className = "SyrowFont font-SyrowVideoCall sy-md-2 sy-ops"
+                document.getElementById('singleServiceSupportDp').style.display = "none"
+              }else {
+                singleServiceFont.className = "SyrowFont sy-md-2 sy-ops"
+              }
+
+
             }else if (activeService == 'ticketCircle') {
               singleServiceText.innerHTML = "Ticket"
-              singleServiceFont.className = "SyrowFont font-SyrowTicket sy-md-1 sy-ops"
+
+
+              if (support_icon=='{{serverAddress}}') {
+                  singleServiceFont.className = "SyrowFont font-SyrowTicket sy-md-1 sy-ops"
+                document.getElementById('singleServiceSupportDp').style.display = "none"
+              }else {
+                  singleServiceFont.className = "SyrowFont sy-md-1 sy-ops"
+              }
+
             }
 
         }, 110);
@@ -2896,7 +2971,7 @@ function addExitConfirmation() {
         attachedFile = '<video width="200" height="180" style="box-sizing:border-box;" src="'+ message.attachment +'" controls></video>'
       }else if (message.attachmentType=='application') {
           console.log('application');
-          attachedFile ='<p style="line-height: 1.75; margin:0px 0px 10px; box-sizing:border-box;">  <a style="color:#fff;" href="'+message.attachment+'"> '+message.attachment+' </a></p>'
+          attachedFile ='<p style="line-height: 1.75; margin:0px 0px 10px; box-sizing:border-box;">  <a style="color:#000;" href="'+message.attachment+'"> '+message.attachment+' </a></p>'
       }
     }
 
@@ -2915,7 +2990,7 @@ function addExitConfirmation() {
           var pTag
           res.forEach((r)=>{
             if (r.match(regex)) {
-              str=str.replace(r,'<a style="color:'+fontAndIconColor+'" href="'+r+'" target="_blank">'+r+'</a>')
+              str=str.replace(r,'<a style="color:#5b5bf6" href="'+r+'" target="_blank">'+r+'</a>')
                 pTag='<p style="font-size:14px !important; margin:5px 0px !important;width:100%; box-sizing:border-box !important; text-align:start !important;word-wrap: break-word !important; white-space: pre-wrap;">'+ str +'</p>'
             }else{
                  pTag='<p style="font-size:14px !important; margin:5px 0px !important; box-sizing:border-box !important;width:100%; text-align:start !important;word-wrap: break-word !important; white-space: pre-wrap;">'+ str +'</p>'
@@ -3150,13 +3225,7 @@ createActivity()
         dataToSend = JSON.stringify(dataToSend)
       }else {
         dataToSend = JSON.stringify(dataToSend)
-        var div = document.createElement("div");
-        div.className = "messageOpacity"
-        div.innerHTML = messageDiv(message)
-        messageBox.appendChild(div);
-        scroll();
-        chat.messages.push(message);
-        inputText.value ='';
+
       }
 
 
@@ -3189,6 +3258,24 @@ createActivity()
          if (this.readyState == 4 && this.status == 201) {
            console.log('posted successfully');
            console.log(dataToPublish);
+
+           var dontPush = false;
+           for (var i = 0; i < chat.messages.length; i++) {
+             if (JSON.parse(this.responseText).pk==chat.messages[i].pk) {
+               dontPush = true;
+             }
+           }
+           if (!dontPush) {
+             var div = document.createElement("div");
+             div.className = "messageOpacity"
+             div.innerHTML = messageDiv(JSON.parse(this.responseText))
+             messageBox.appendChild(div);
+             scroll();
+             chat.messages.push(JSON.parse(this.responseText));
+           }
+           inputText.value ='';
+
+
            dataToPublish[2].pk=JSON.parse(this.responseText).pk
            if (threadExist==undefined) {
             let dataToPublish = [uid , status , message , custID ];
@@ -3224,7 +3311,7 @@ createActivity()
                }
              }
          }
-       };
+       }
        xhttp.open('POST', '{{serverAddress}}/api/support/supportChat/', true);
        xhttp.setRequestHeader("Content-type", "application/json");
        xhttp.send(dataToSend);
@@ -3378,12 +3465,22 @@ createActivity()
             }
           }
 
-          var div = document.createElement("div");
-          div.innerHTML = messageDiv(data)
-          messageBox.appendChild(div);
-          scroll();
-          chat.messages.push(data);
+          var dontPush = false;
+          for (var i = 0; i < chat.messages.length; i++) {
+            if (data.pk == chat.messages[i].pk) {
+              dontPush = true;
+            }
+          }
+          if (!dontPush) {
+            var div = document.createElement("div");
+            div.innerHTML = messageDiv(data)
+            messageBox.appendChild(div);
+            scroll();
+            chat.messages.push(data);
+          }
+
           filePicker.value = ""
+
           var dataToPublish = [uid , status , fileData];
           if (threadExist==undefined) {
             var dataToPublish = [uid , status , fileData , custID ];

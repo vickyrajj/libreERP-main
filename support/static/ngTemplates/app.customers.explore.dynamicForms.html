@@ -12,7 +12,7 @@
       <h5>Contact Person: {{compDetails.contactPerson[0].first_name}} {{compDetails.contactPerson[0].last_name}}</h5>
     </div>
   </div>
-    <hr>
+  <hr>
   <div class="row">
     <div class="col-md-4">
       <div class="row" style="border-right:solid 2px #e0e0e0;min-height:54vh;position:relative;" ng-if="dynamicForm.length>0">
@@ -28,10 +28,26 @@
     <div class="col-md-8">
       <h4 ng-if="newForm.pk" class="text-center"> Edit Form </h4>
       <h4 ng-if="!newForm.pk" class="text-center"> New Form </h4>
-      <div class="form-group">
-        <label for="">Form Name:</label>
-        <input type="text" class="form-control" maxlength="25" ng-model="newForm.form_name" id="Form Name" placeholder="Form Name">
+      <div class="row">
+        <div class="col-md-7">
+          <div class="form-group">
+            <label for="">Form Name:</label>
+            <input type="text" class="form-control" maxlength="25" ng-model="newForm.form_name" id="Form Name" placeholder="Form Name">
+          </div>
+        </div>
+        <div class="col-md-5">
+          <label class="radio-inline">
+            <input type="radio" ng-model = "newForm.typ" name="formType" value="dataCollection" >Data Collection
+          </label>
+          <label class="radio-inline">
+            <input type="radio" ng-model = "newForm.typ" name="formType" value="rpc"> RPC
+          </label>
+          <label class="radio-inline">
+            <input type="radio" ng-model = "newForm.typ" name="formType" value="restCall" > Rest Call
+          </label>
+        </div>
       </div>
+
       <div class="form-group">
         <label for="">Function Name:</label>
         <input type="text" class="form-control" ng-model="newForm.function_name" id="Function Name" placeholder="Function Name">
@@ -41,13 +57,13 @@
         <input type="text" class="form-control" ng-model="newForm.form_description" id="" placeholder="Description">
       </div>
 
-      <div class="row"  style="padding:15px 10px;" ng-if="newForm.fields.length>0">
+      <div class="row" style="padding:15px 10px;" ng-if="newForm.fields.length>0">
         <h5 style="padding-left:15px;"> <b>Fields: </b> </h5>
         <div class="col-md-3" ng-repeat="f in newForm.fields track by $index" style="margin-bottom:10px;">
           <div class="card" style="padding:15px; position:relative;">
             {{f.field_name}}
             <i ng-click="deleteDynamicField(f.pk, $index)" style="position:absolute; right:8px; bottom:8px;" class="fa fa-trash"></i>
-              <i ng-click="editDynamicField(f.pk, $index)" style="position:absolute; right:8px; top:4px;" class="fa fa-pencil"></i>
+            <i ng-click="editDynamicField(f.pk, $index)" style="position:absolute; right:8px; top:4px;" class="fa fa-pencil"></i>
           </div>
         </div>
       </div>
@@ -58,7 +74,7 @@
             <label for="">Required?</label>
             <div class="checkbox">
               <input style="margin-left:20px;" type="checkbox" ng-model="fieldForm.is_required" id="" placeholder="Field Name">
-          </div>
+            </div>
 
           </div>
         </div>

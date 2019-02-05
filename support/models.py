@@ -158,6 +158,11 @@ class CannedResponses(models.Model):
     text = models.CharField(max_length = 200 , null = True , blank=True )
     service = models.ForeignKey(service , related_name = 'cannedResponses' , null = True)
 
+FORM_TYP_CHOICES = (
+    ('dataCollection' , 'dataCollection'),
+    ('rpc' , 'rpc'),
+    ('restCall' , 'restCall')
+)
 
 class DynamicForm(models.Model):
     created = models.DateTimeField(auto_now_add = True)
@@ -167,6 +172,8 @@ class DynamicForm(models.Model):
     form_name = models.CharField(max_length = 50 , null = True)
     function_name = models.CharField(max_length = 50 , null = True)
     form_description = models.CharField(max_length = 500 , null = True)
+    typ = models.CharField(choices = FORM_TYP_CHOICES , max_length = 15 , default = 'restCall')
+    # typ = datacollection , rpc , restCall
 
 FIELD_TYP_CHOICES = (
     ('typeahead' , 'typeahead'),

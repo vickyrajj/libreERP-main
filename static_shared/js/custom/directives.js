@@ -1682,6 +1682,8 @@ app.directive('chatBox', function() {
         $scope.chatBox.fileToSend = emptyFile;
       }
 
+      $scope.inProcess = false;
+
       $scope.send = function(mediaType) {
 
         if ($scope.chatBox.fileToSend.size > 0) {
@@ -1712,7 +1714,19 @@ app.directive('chatBox', function() {
           }).
           then(function(response) {
             // console.log($scope.response.data , 'data');
-            $scope.data.messages.push(response.data)
+
+            var dontPush = false;
+            for (var i = 0; i < $scope.data.messages.length; i++) {
+              if (response.data.pk == $scope.data.messages[i].pk) {
+                dontPush = true;
+              }
+            }
+            if (!dontPush) {
+              $scope.data.messages.push(response.data)
+            }
+
+
+            // $scope.data.messages.push(response.data)
             // $scope.attachment = response.data.attachment
             // console.log($scope.attachment);
 
@@ -1744,10 +1758,19 @@ app.directive('chatBox', function() {
 
         }
 
+
+
         if ($scope.chatBox.messageToSend.length > 0) {
+          console.log($scope.inProcess);
+          if ($scope.inProcess) {
+            console.log('returning');
+            return;
+          }
+
+          $scope.inProcess = true;
 
 
-          console.log('here ', $scope.chatBox.messageToSend);
+          // console.log('here ', $scope.chatBox.messageToSend);
 
 
           var youtubeLink = $scope.chatBox.messageToSend.includes("www.youtube.com/");
@@ -1772,7 +1795,7 @@ app.directive('chatBox', function() {
               user: $scope.me.pk,
               sentByAgent: true
             }
-            console.log('MMMMMMMMMMMMMMMMMMMMMMMMMM ', dataToSend);
+            // console.log('MMMMMMMMMMMMMMMMMMMMMMMMMM ', dataToSend);
 
           }
 
@@ -1782,12 +1805,22 @@ app.directive('chatBox', function() {
             url: '/api/support/supportChat/'
           }).
           then(function(response) {
-            console.log(response.data, 'dataaa');
+            // console.log(response.data, 'dataaa');
             $scope.chatBox.messageToSend = ''
-            $scope.data.messages.push(response.data)
-            console.log($scope.me);
 
-            console.log('publishing here... message', $scope.status, response.data, $scope.me.username);
+            var dontPush = false;
+            for (var i = 0; i < $scope.data.messages.length; i++) {
+              if (response.data.pk == $scope.data.messages[i].pk) {
+                dontPush = true;
+              }
+            }
+            if (!dontPush) {
+              $scope.data.messages.push(response.data)
+            }
+
+            // console.log($scope.me);
+
+            // console.log('publishing here... message', $scope.status, response.data, $scope.me.username);
 
             if (connection.session) {
               connection.session.publish(wamp_prefix + 'service.support.chat.' + $scope.data.uid, [$scope.status, response.data, $scope.me, new Date()], {}, {
@@ -1795,6 +1828,7 @@ app.directive('chatBox', function() {
               }).
               then(function(publication) {
                 console.log("Published", $scope.data.uid);
+                $scope.inProcess = false;
                 // alert('deleiverd')
               }, function() {
                 alert('not deleivered')

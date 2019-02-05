@@ -81,6 +81,10 @@ class SupportChatViewSet(viewsets.ModelViewSet):
         if 'unDelMsg' in self.request.GET:
             values=[int(i) for i in ast.literal_eval(self.request.GET['values'])]
             print values , type(values)
+            if u.is_anonymous():
+                return SupportChat.objects.filter(pk__in=values,is_hidden = False)
+            if 'visitorReq' in self.request.GET:
+                return SupportChat.objects.filter(pk__in=values,is_hidden = False)
             return SupportChat.objects.filter(pk__in=values)
         if 'user__isnull' in self.request.GET:
             return SupportChat.objects.filter(user__isnull=True)

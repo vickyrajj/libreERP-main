@@ -136,6 +136,8 @@ app.controller("businessManagement.support", function($scope, $state, $users, $s
           }
         }
 
+
+
         connection.session.register(wamp_prefix+'service.support.heartbeat.'+$scope.me.pk, heartbeat).then(
             function (res) {
               console.log("registered to service.support.heartbeat with "+$scope.me.pk);
@@ -273,13 +275,24 @@ app.controller("businessManagement.support", function($scope, $state, $users, $s
               url: '/api/support/supportChat/?unDelMsg&values='+JSON.stringify(response.data.data),
             }).
             then(function(response) {
-              $scope.myUsers[i].messages=$scope.myUsers[i].messages.concat(response.data)
+              for (var l = 0; l < response.data.length; l++) {
+                var dontPush = false;
+                for (var m = 0; m < $scope.myUsers[i].messages.length; m++) {
+                  if (response.data[l].pk == $scope.myUsers[i].messages[m].pk) {
+                    dontPush = true;
+                  }
+                }
+                if (!dontPush) {
+                  $scope.myUsers[i].messages.push(response.data[l])
+                }
+
+              }
             });
           }
         });
       }
     }
-  }, 10000);
+  }, 20000);
 
   $scope.myCompanies = [];
   function fetchUsers() {
