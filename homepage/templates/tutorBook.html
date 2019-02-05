@@ -40,8 +40,7 @@
   {% endblock %} {% block footer %}
   {% include "footer.html" %}
 </div>
-</div>
-</div>
+
 
 {% endblock %}{% block specific_js %}
 
@@ -50,8 +49,6 @@
 <script type="text/javascript">
   {% include "app.tutor.common.js" %}
 </script>
-<script src="{% static 'js/angular.min.js' %}"></script>
-<script src="{% static 'js/app.tutor.forum.js' %}"></script>
 <script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/MathJax.js?config=TeX-MML-AM_CHTML'></script>
 <script type="text/x-mathjax-config">
   MathJax.Hub.Config({ tex2jax: {inlineMath: [['$','$']]} });

@@ -11,16 +11,9 @@
       var menu = document.getElementById('menu')
        menu.style.display = 'none';
     }
-    var is_menu_open = false;
     function show_menu(){
-      is_menu_open = !is_menu_open;
       var menu = document.getElementById('menu')
-      if (is_menu_open) {
-         menu.style.display = 'block';
-      }else {
-         menu.style.display = 'none';
-      }
-
+       menu.style.display = 'block';
     }
   </script>
 
@@ -48,7 +41,7 @@
         }
       </style> -->
 
-  <div class="col-md-2 pull-right leftSection_div hidden-xs hidden-sm">
+  <div class="col-md-3 pull-right leftSection_div hidden-xs hidden-sm">
     <div class="logoeffect">
       <a href="/"> <img src="/static/images/24tut/white24.png" width="70%"></a>
     </div>
@@ -80,11 +73,11 @@
   </div>
 
 
-  <div class="col-sm-12" id="menu" style="display:none" >
-    <div class="col-xs-10 pull-right menu_list_div hidden-md hidden-lg" style="margin-top:20vh;">
-      <!-- <div class="logoeffect">
+  <div class="col-sm-12" id="menu">
+    <div class="col-sm-6 pull-right menu_list_div hidden-md hidden-lg">
+      <div class="logoeffect">
         <a href="/"> <img src="/static/images/24tut/white24.png" width="70%"></a>
-      </div> -->
+      </div>
       <div class="" style="background: rgba(0,0,0,.05);padding: 10px 15px;color: #fff;">
         <h4>OTHER CHAPTERS</h4>
       </div>
@@ -100,9 +93,9 @@
         </ul>
       </div>
     </div>
-    <div class="col-xs-2 menu_q_div hidden-md hidden-lg" style="margin-top:20vh;">
+    <div class="col-sm-2 menu_q_div hidden-md hidden-lg">
       <div class="" style="overflow: hidden;width:99%;">
-        <ul class="list-unstyled q_list" style="height: 97vh;overflow: auto;width: 100%;overflow-x:hidden;">
+        <ul class="list-unstyled q_list" style="height: 97vh;overflow: auto;width: 126%;overflow-x:hidden;">
           {% for q in questions %}
           <li onclick="toQuestion({{ forloop.counter }})"><span class="q_no">Q{{ forloop.counter }}</span>
           </li>

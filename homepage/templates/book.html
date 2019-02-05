@@ -2,9 +2,7 @@
 
 {% block bookcontent %}
 
-<style>
 
-</style>
 
 <div class="container-fluid" style="padding-top:40px;">
   <div class="col-md-12">
@@ -88,83 +86,136 @@
       </div>
     </div>
     <div class="col-md-6" style="min-height:60vh;padding:0px;">
-
-      {% verbatim %}
-      <div class="row text-center">
-        <div class="row" ng-repeat="a in forumdata" style="border-top:1px solid #eaecf0;border-bottom:1px solid #eaecf0;padding-bottom: 2em;">
-          <div class="col-md-1 col-xs-2">
-            <div style="width:60px;padding-top: 1.5em;">
-              <img src="/static/images/24tut/hom/dp.jpg" style="width:45px;border-radius:50%;height:45px;" />
-            </div>
-          </div>
-          <div class="col-md-11 col-xs-10 text-left">
-            <div class="no_pad" style="border-bottom: 1px solid #eaecf0;">
-
-              <div class="contentrow" style="flex: 0 1 auto;width:100%;">
-                <div class="toprow" style="">
-                  <span style="font-size:17px;cursor:pointer;color:#3C5899">{{a.user.username}}</span>
-                </div>
-                <div class="bottomrow" style="font-size: 1em;">
-                  <span class="" style="font-size:15px;color: #3C4556;">{{a.txt}}
-                  </span>
-                </div>
-                <div class="bottomrow" style="font-size: 1em;">
-                  <span class="" style="font-size:15px;color: #3C5899;">10 comments
-                  </span>
-                </div>
-              </div>
-            </div>
-            <div class="col-md-1 col-xs-2">
-              <div style="width:60px;padding-top: 1.5em;">
-                <img src="/static/images/24tut/hom/dp.jpg" style="width:45px;border-radius:50%;height:45px;" />
-              </div>
-            </div>
-            <div class="col-md-11 col-xs-10 text-left">
-              <div class="row">
-                <div class="no_pad" style="border-bottom: 1px solid #eaecf0;display: flex;align-items: center;">
-                  <div class="contentrow" style="flex: 0 1 auto;max-width:75%;">
-                    <div class="toprow" style="">
-                      <span style="font-size:17px;cursor:pointer;color:#3C5899">Lara</span>
-                    </div>
-                    <div class="bottomrow" style="font-size: 1em;">
-                      <span class="" style="font-size:15px;color: #3C4556;">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam.
-                      </span>
-                    </div>
-                    <div class="bottomrow" style="font-size: 1em;">
-                      <span class="" style="font-size:15px;color:#3C5899;">Posted by April 2018
-                      </span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="row">
-              <div class="text-center" style="padding-top:2em;margin-left:0.5em;">
-                <div class="col-md-1 col-xs-2 text-center">
-                  <div style="width:60px;padding-top: 1.5em;">
-                    <img src="/static/images/24tut/hom/dp.jpg" style="width:45px;border-radius:50%;height:45px;" />
-                  </div>
-                </div>
-                <div class="col-md-11 col-xs-10  text-left" style="padding-top: 1.5em;">
-                  <textarea class="" type="textarea" placeholder='Add  a comment Here..' ng-model="commentText" style='width:75%;resize: none;'></textarea>
-                </div>
-              </div>
-            </div>
+      {% for ft in forumData %}
+      <div class="row" style="border-top:1px solid #eaecf0;border-bottom:1px solid #eaecf0;padding-bottom: 2em;">
+        <div class="col-md-1 col-xs-2">
+          <div style="width:60px;padding-top: 1.5em;">
+            {% if ft.user.profile.displayPicture.url %}
+            <img src="{{ft.user.profile.displayPicture.url}}" style="width:45px;border-radius:50%;height:45px;" />
+            {% else %}
+            <img src="/static/images/24tut/hom/dp.jpg" style="width:45px;border-radius:50%;height:45px;" />
+            {% endif %}
           </div>
         </div>
-        <div class="row">
-          <div class="col-md-1 col-xs-2 text-center">
+
+        <div class="col-md-9 col-xs-10 text-left">
+          <div class="no_pad" style="display: flex;align-items: center;">
+
+            <div class="contentrow" style="flex: 0 1 auto;width:90%;">
+              <div class="toprow" style="">
+                <span style="font-size:17px;cursor:pointer;color:#3C5899">{{ft.user.username}}</span>
+              </div>
+              <div class="bottomrow" style="font-size: 1em;">
+                <span class="" style="font-size:15px;color: #3C4556;">{{ft.txt}}
+                </span>
+              </div>
+              {% if ft.attachment %}
+              <div class="bottomrow">
+                <img src="{{ft.attachment.url}}" style="width:150px;height:150px;" />
+              </div>
+              {% endif %}
+              <div class="bottomrow" style="font-size: 1em;">
+                <span class="" style="font-size:15px;color: #3C5899;">{{ ft.forumthread.all|length }} comments
+                </span>
+              </div>
+            </div>
+          </div>
+          {% if ft.clicked == 0 %}
+          {% for ftc in ft.forumthread.all %}
+          <div class="col-md-1 col-xs-2" ng-show="ft.clicked==1" id="id">
             <div style="width:60px;padding-top: 1.5em;">
+              {% if ftc.user.profile.displayPicture %}
+              <img src="{{ftc.user.profile.displayPicture.url}}" style="width:45px;border-radius:50%;height:45px;" />
+              {% else %}
               <img src="/static/images/24tut/hom/dp.jpg" style="width:45px;border-radius:50%;height:45px;" />
+              {% endif %}
+            </div>
+          </div>
+          <div class="col-md-11 col-xs-10 text-left" ng-show="ft.clicked==1">
+            <div class="row">
+              <div class="no_pad" style="border-bottom: 1px solid #eaecf0;display: flex;align-items: center;margin-left: 1em;">
+                <div class="contentrow" style="flex: 0 1 auto;max-width:75%;">
+                  <div class="toprow" style="">
+                    <span style="font-size:17px;cursor:pointer;color:#3C5899">{{ftc.user.username}}</span>
+                  </div>
+                  <div class="bottomrow" style="font-size: 1em;">
+                    <span class="" style="font-size:15px;color: #3C4556;">{{ftc.txt}}
+                    </span>
+                  </div>
+                  <div class="bottomrow" style="font-size: 1em;">
+                    <span class="" style="font-size:15px;color:#3C5899;">Posted by {{ftc.created}}
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          {% endfor %}
+          <div class="row">
+            <div class="text-center" style="padding-top:2em;margin-left:0.5em;">
+              <div class="col-md-1 col-xs-2">
+                <div style="width:60px;padding-top: 1.5em;">
+                  {% if request.user.profile.displayPicture %}
+                  <img src="{{request.user.profile.displayPicture.url}}" style="width:45px;border-radius:50%;height:45px;" />
+                  {% else %}
+                  <img src="/static/images/24tut/hom/dp.jpg" style="width:45px;border-radius:50%;height:45px;" />
+                  {% endif %}
+                </div>
+              </div>
+              <div class="col-md-11 col-xs-10  text-left" style="padding-top: 1.5em;">
+                <form action="/saveForumDetails/" method="post">{% csrf_token %}
+                  <input name="typ" type="hidden" class="form-control" value="comment">
+                  <input name="parent" type="hidden" class="form-control" value="{{ft.pk}}">
+                  <textarea type="textarea" placeholder='Post a Answer Here..' style='width:75%;resize: none;margin-left: 0.5em;' name="txt"></textarea>
+                  <div style="width:75%;background-color: #F2F2F2;border:1px solid #eaecf0;padding:0;margin-top: -2px;height:4em;text-align: right;margin-left: 0.5em;">
+                    <button class="btn btn-primary" style="margin:0.7em 2em 0 0" padding="0em" type="submit">Post</button>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+          {% endif %}
+        </div>
+
+        <div class="col-md-2 text-center">
+          <button class="btn btn-primary" style="margin:1.5em 2em 0 0" padding="0em" onclick='click[{{ ft.clicked }}]'>View</button>
+        </div>
+      </div>
+      {% endfor %}
+      <div class="row">
+        <div class="text-center" style="padding-top:2em;margin-left:0.5em;">
+          <div class="col-md-1 col-xs-2">
+            <div style="width:60px;padding-top: 1.5em;">
+              {% if request.user.profile.displayPicture %}
+              <img src="{{request.user.profile.displayPicture.url}}" style="width:45px;border-radius:50%;height:45px;" />
+              {% else %}
+              <img src="/static/images/24tut/hom/dp.jpg" style="width:45px;border-radius:50%;height:45px;" />
+              {% endif %}
             </div>
           </div>
           <div class="col-md-11 col-xs-10  text-left" style="padding-top: 1.5em;">
-            <textarea class="autoExpand areaa" type="textarea" placeholder='Add  a comment Here..' ng-model="parentText" style='width:100%;resize: none;'></textarea>
+            <form action="/saveForumDetails/" method="post" enctype="multipart/form-data">{% csrf_token %}
+              <input name="typ" type="hidden" class="form-control" value="forum">
+              <input name="page" type="hidden" class="form-control" value="{{blogname}}">
+              <textarea type="textarea" placeholder='Post a Question Here..' style='width:77%;resize: none;' name="txt"></textarea>
+              <div style="width:77%;background-color: #F2F2F2;border:1px solid #eaecf0;padding:0;margin-top: -2px;height:4em;text-align: right">
+                <span style="cursor:pointer; "><i class="fa fa-paperclip" style="font-size:1.5em;margin:0.8em;"  onclick="document.getElementById('selectedFile').click();"></i></span>
+                <input type="file" name="files" style="display: none;" id="selectedFile">
+                <span><button class="btn btn-primary" style="margin:-0.5em 2em 0 0" type="submit">Post</button> </span>
+              </div>
+            </form>
           </div>
         </div>
       </div>
-      {% endverbatim %}
     </div>
   </div>
 </div>
+
+<script>
+  var click = function(val){
+    val = 1;
+    console.log(val);
+  }
+</script>
+
 {% endblock %}

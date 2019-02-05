@@ -17,6 +17,7 @@ from API.permissions import *
 from ERP.models import application, permission , module
 from ERP.views import getApps, getModules
 from django.db.models import Q
+from django.db.models import Value, IntegerField
 from django.http import JsonResponse
 import random, string
 from django.utils import timezone
@@ -49,6 +50,10 @@ def contactUs(request):
 def testimonials(request):
     subobjs = Subject.objects.all().order_by('level')
     return render(request, 'testimonials.html', {"subobj":subobjs,'seoDetails':{'title':globalSettings.SEO_TITLE,'description':globalSettings.SEO_DESCRIPTION,'image':globalSettings.SEO_IMG,'width':globalSettings.SEO_IMG_WIDTH,'height':globalSettings.SEO_IMG_HEIGHT}})
+
+def team(request):
+    subobjs = Subject.objects.all().order_by('level')
+    return render(request, 'team.html', {"subobj":subobjs,'seoDetails':{'title':globalSettings.SEO_TITLE,'description':globalSettings.SEO_DESCRIPTION,'image':globalSettings.SEO_IMG,'width':globalSettings.SEO_IMG_WIDTH,'height':globalSettings.SEO_IMG_HEIGHT}})
 
 def account(request):
     try:
@@ -264,8 +269,11 @@ def blogDetails(request, blogname):
         elif blogobj.contentType == 'book':
             book = Book.objects.get(pk=blogobj.header)
             sectionobj = Section.objects.filter(book = book.pk)
+            forumData = ForumThread.objects.filter(verified=True).annotate(clicked=Value(0, output_field=IntegerField()))
             data['book'] = book
             data['sectionobj'] = sectionobj
+            data['forumData'] = forumData
+            data['blogname'] = blogname
             return render(request, 'book.html', data)
         elif blogobj.contentType == 'course':
             course = Course.objects.get(pk=blogobj.header)
@@ -439,6 +447,26 @@ def desclaimer(request):
     subobjs = Subject.objects.all().order_by('level')
     return render(request,"desclaimer.html" , {"home" : False , "subobj":subobjs,"brandLogo" : globalSettings.BRAND_LOGO , "brandLogoInverted": globalSettings.BRAND_LOGO_INVERT,'seoDetails':{'title':globalSettings.SEO_TITLE,'description':globalSettings.SEO_DESCRIPTION,'image':globalSettings.SEO_IMG,'width':globalSettings.SEO_IMG_WIDTH,'height':globalSettings.SEO_IMG_HEIGHT}})
 
+def SaveForumDetails(request):
+    print request.GET,request.POST
+    if 'typ' in request.POST:
+        if request.POST['typ'] == 'comment':
+            parentObj = ForumThread.objects.get(pk=int(request.POST['parent']))
+            retUrl = '/'+str(parentObj.page)+'/'
+            data = {'parent':parentObj,'txt':str(request.POST['txt']),'user':request.user}
+            print data,'creating dataaaaaaaaaaa'
+            fcObj = ForumComment.objects.create(**data)
+            return redirect(retUrl)
+        else:
+            page = str(request.POST['page'])
+            retUrl = '/'+page+'/'
+            attachment = request.FILES['files']
+            data = {'user':request.user,'page':page,'txt':str(request.POST['txt']),'attachment':attachment}
+            print data,'creating dataaaaaaaaaaa'
+            fObj = ForumThread.objects.create(**data)
+            return redirect(retUrl)
+    else:
+        return redirect('/')
 
 class RegistrationViewSet(viewsets.ModelViewSet):
     permission_classes = (permissions.AllowAny,)
