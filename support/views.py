@@ -51,7 +51,6 @@ from openpyxl.utils import get_column_letter
 from dateutil.relativedelta import relativedelta
 from django.db.models import Sum, Count, Avg
 from .models import *
-from bs4 import BeautifulSoup
 
 # Create your views here.
 
@@ -1222,11 +1221,15 @@ class SendFeedBackRequest(APIView):
     def post(self , request , format = None):
         if 'key' in request.data:
             print len(request.data['key']) , request.data['key'],'aaaaaaaaaaa'
+            print request.data['customerRating'], request.data['customerFeedback']
             threadId = decrypt(request.data['key'], "cioc")
             chatDetails = ChatThread.objects.get(uid=threadId)
+            print threadId,'iiiiiiiiiiidddddddddd'
+            print chatDetails.customerFeedback
             chatDetails.customerRating = request.data['customerRating']
             chatDetails.customerFeedback = request.data['customerFeedback']
             chatDetails.save()
+            print chatDetails.customerFeedback
         else:
             chatData = ChatThread.objects.get(pk = request.data['chatThreadPk'])
             encryptedKey = encrypt(request.data['id'], "cioc")
@@ -1258,6 +1261,7 @@ class SendFeedBackRequest(APIView):
                 except:
                     pass
         return Response(status = status.HTTP_200_OK)
+
 from flask import Markup
 class SendMessage(APIView):
     renderer_classes = (JSONRenderer,)
