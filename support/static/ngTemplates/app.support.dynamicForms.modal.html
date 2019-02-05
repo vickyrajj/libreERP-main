@@ -25,7 +25,7 @@
             <input  uib-typeahead="res as res[f.key] for res in typeahedSearch($viewValue , f.parameters)" ng-if="f.field_typ=='typeahead'" type="text" class="form-control" id="" placeholder="typeahead" ng-model="f.value">
           </div>
         </div>
-        <button type="button" class="btn btn-primary" ng-click="send()">
+        <button ng-if="dynamicForms.length>0" type="button" class="btn btn-primary" ng-click="send()">
           Send
         </button>
       </div>
