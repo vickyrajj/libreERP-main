@@ -424,6 +424,6 @@ class ForumThread(models.Model):
 
 class ForumComment(models.Model):
     created = models.DateTimeField(auto_now_add = True)
-    page = models.ForeignKey(ForumThread , null = True , related_name='forumthread')
+    parent = models.ForeignKey(ForumThread , null = True , related_name='forumthread')
     txt =  models.TextField(null = True)
     user = models.ForeignKey(User , null = True , related_name='commentedUser')

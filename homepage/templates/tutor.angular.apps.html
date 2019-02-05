@@ -1,4 +1,4 @@
-{% extends "base.simple.html" %} {% load staticfiles %} {% block specific_head %}
+{% extends "base.html" %} {% load staticfiles %} {% block specific_head %}
 <title>{{seoDetails.title}}</title>
 
 <meta name="description" content="{{seoDetails.description}}" />
@@ -26,41 +26,38 @@
 <link rel="icon" href="/static/images/tutor.ico" type="image/gif" sizes="16x16">
 
 {% endblock %} {% block specific_css %}
-<link href="{% static 'css/homepage.css' %}" rel="stylesheet">
+<link rel="stylesheet" href="{% static 'css/homepage.css' %}" rel="stylesheet">
 
 {% endblock %} {% block header %}
 {% include "header.html" %}
 {% endblock %}
 <!-- Header -->
-{% block tutorbookcontent %}
+{% block content %}
 
-{% block bookcontent %}{% endblock %}
+  {% block tutorcontent %}{% endblock %}
 
-<div class="container-fluid" style="padding:0px;">
-  {% endblock %} {% block footer %}
-  {% include "footer.html" %}
-</div>
+  <div class="container-fluid"style="padding:0px;">
+    <div flash-message="4000" style="position:fixed;top:70px;right:10px;z-index:9999;min-width:300px;"></div>
+    {% endblock %} {% block footer %}
+    {% include "footer.html" %}
+  </div>
 </div>
 </div>
 
 {% endblock %}{% block specific_js %}
-
-
-
+<!-- <script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/MathJax.js?config=TeX-MML-AM_CHTML'></script> -->
+<!-- <script type="text/x-mathjax-config">
+  MathJax.Hub.Config({ tex2jax: {inlineMath: [['$','$']]} });
+</script> -->
+<script src="{% static 'js/angular.min.js' %}"></script>
+<script src="{% static 'js/app.tutor.signin.js' %}"></script>
 <script type="text/javascript">
   {% include "app.tutor.common.js" %}
 </script>
-<script src="{% static 'js/angular.min.js' %}"></script>
-<script src="{% static 'js/app.tutor.forum.js' %}"></script>
-<script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/MathJax.js?config=TeX-MML-AM_CHTML'></script>
-<script type="text/x-mathjax-config">
-  MathJax.Hub.Config({ tex2jax: {inlineMath: [['$','$']]} });
-</script>
-
+{% block tutorjs %}{% endblock %}
 <script>
   document.addEventListener('DOMContentLoaded', function() {
     console.log('document - DOMContentLoaded - capture'); // 2nd
-
 
   }, true);
 </script>
