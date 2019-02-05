@@ -2424,7 +2424,7 @@ app.directive('chatBox', function() {
                   data: $scope.visitorData
                 }).
                 then(function(response) {
-                  Flash.create('Success','Message Sent')
+                  Flash.create('success','Message Sent')
                 });
               }
 
