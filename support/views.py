@@ -51,6 +51,7 @@ from openpyxl.utils import get_column_letter
 from dateutil.relativedelta import relativedelta
 from django.db.models import Sum, Count, Avg
 from .models import *
+from bs4 import BeautifulSoup
 
 # Create your views here.
 
@@ -1255,11 +1256,10 @@ class SendFeedBackRequest(APIView):
                 try:
                     visitor = Visitor.objects.get(uid = request.data['id'])
                     try:
-                        msg = "Your feedback is important for us"
                         emailAddr = [visitor.email]
                         ctx = {
                             'heading' : "Feedback Form",
-                            'msg' : msg,
+                            'msg' : "Your feedback is important for us",
                             'details': 'Please click on the below link to submit your feedback',
                             'link' : link
                         }
@@ -1278,4 +1278,32 @@ class SendFeedBackRequest(APIView):
                         pass
                 except:
                     pass
+        return Response(status = status.HTTP_200_OK)
+from flask import Markup
+class SendMessage(APIView):
+    renderer_classes = (JSONRenderer,)
+    def post(self , request , format = None):
+        value = request.data
+        if value['dataTyp'] == 'msg':
+            if value['name']!='':
+                msg = "Hi " + value['name'] + ",\n" + value['textMsg']
+            else:
+                msg = "Hi,\n" + value['msg']
+            url = globalSettings.SMS_API_PREFIX + 'number=%s&message=%s'%(value['phone'] ,msg )
+            requests.get(url)
+        else:
+            emailAddr = [value['email']]
+            try:
+                name = value['name']
+            except:
+                name =''
+            ctx = {
+                'name':name,
+                'details': Markup(value['emailMsg']),
+            }
+            email_body = get_template('app.sendMessageByEmail.html').render(ctx)
+            msg = EmailMessage('Enquiry Reply', email_body, to= emailAddr)
+            msg.content_subtype = 'html'
+            msg.send()
+
         return Response(status = status.HTTP_200_OK)

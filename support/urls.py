@@ -38,5 +38,6 @@ urlpatterns = [
     url(r'createSVG/$' , CreateSVG.as_view()),
     url(r'messageCheck/$' , MessageCheck.as_view()),
     url(r'sendFeedBackRequest/$' , SendFeedBackRequest.as_view()),
+    url(r'sendMessage/$' , SendMessage.as_view()),
 
 ]

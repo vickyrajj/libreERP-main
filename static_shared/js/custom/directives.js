@@ -2310,6 +2310,7 @@ app.directive('chatBox', function() {
       $scope.openDynamicFuncModal = function () {
 
         console.log($scope.companyPk);
+        console.log(typeof $scope.visitorForm,'kkkkkkkkkkk');
 
           $uibModal.open({
             templateUrl: '/static/ngTemplates/app.support.dynamicForms.modal.html',
@@ -2321,10 +2322,13 @@ app.directive('chatBox', function() {
               },
               callTochatter: function() {
                 return $scope.callToChatter;
-              }
+              },
+              visitor : function() {
+                return $scope.visitorForm;
+              },
             },
-            controller: function($scope, servicePk, $users,callTochatter , $uibModalInstance, Flash) {
-
+            controller: function($scope, servicePk, $users,callTochatter , visitor, $uibModalInstance, Flash) {
+              console.log(visitor,'aaaaa');
               $http({
                 method:'GET',
                 url:'/api/support/dynamicForms/?companyPk='+servicePk
@@ -2370,6 +2374,59 @@ app.directive('chatBox', function() {
                   return response.data.results;
                 })
               };
+              $scope.sendMessage = function(value){
+                $scope.formTyp = true
+                $scope.visitorData={
+                  email:'',
+                  phone :'',
+                  emailMsg:'',
+                  textMsg:'',
+                  name:'',
+                  dataTyp : value
+                }
+                if(visitor.email!=undefined){
+                  $scope.visitorData.email = visitor.email
+                }
+                else{
+                    $scope.visitorData.email = ''
+                }
+                if(visitor.phoneNumber!=undefined){
+                  $scope.visitorData.phone = visitor.phoneNumber
+                }
+                else{
+                    $scope.visitorData.email = ''
+                }
+                if(visitor.name!=undefined){
+                  $scope.visitorData.name = visitor.name
+                }
+                else{
+                    $scope.visitorData.name = ''
+                }
+              }
+              $scope.sendMsg = function(){
+                if ($scope.visitorData.phone==''&&$scope.visitorData.dataTyp=='msg') {
+                  Flash.create('warning','Add Visitors Number')
+                  return
+                }
+
+                if ($scope.visitorData.email==''&&$scope.visitorData.dataTyp=='email') {
+                  Flash.create('warning','Add Visitors Email')
+                }
+
+
+                  if ($scope.visitorData.emailMsg==''&&$scope.visitorData.textMsg=='') {
+                    Flash.create('warning','Add Message')
+                    return
+                  }
+                $http({
+                  method: 'POST',
+                  url: '/api/support/sendMessage/',
+                  data: $scope.visitorData
+                }).
+                then(function(response) {
+                  Flash.create('Success','Message Sent')
+                });
+              }
 
             },
           }).result.then(function() {
