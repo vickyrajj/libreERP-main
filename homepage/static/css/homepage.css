@@ -3697,12 +3697,9 @@ hr {
     z-index: 7;
   }
   .user_img{
-    width: 40px;
-    height: 40px;
     border-radius: 50%;
-    background-color: transparent;
     position: fixed;
-    top: 9px;
+    top: -16px;
     right: 60px;
     z-index: 7;
   }

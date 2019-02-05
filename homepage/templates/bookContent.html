@@ -115,7 +115,7 @@
         <a href="/account/">
           <div class="user_img" id="flybtn">
             {% if request.user.is_authenticated %}
-            <img src=/media/{{request.user.profile.displayPicture}} style="position:fixed;top:13px;right:70px;font-size:30px;cursor:pointer;height:40px;width:40px; border-radius:50%;">
+            <img src=/media/{{request.user.profile.displayPicture}} style="cursor:pointer;height:40px;width:40px; border-radius:50%;">
             {% endif %}
           </div>
         </a>
