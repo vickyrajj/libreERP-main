@@ -1292,7 +1292,7 @@ class SendMessage(APIView):
             if value['name']!='':
                 msg = "Hi " + value['name'] + ",\n" + value['textMsg']
             else:
-                msg = "Hi,\n" + value['msg']
+                msg = "Hi,\n" + value['textMsg']
             url = globalSettings.SMS_API_PREFIX + 'number=%s&message=%s'%(value['phone'] ,msg )
             requests.get(url)
         else:
