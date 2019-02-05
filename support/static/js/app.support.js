@@ -136,6 +136,8 @@ app.controller("businessManagement.support", function($scope, $state, $users, $s
           }
         }
 
+
+
         connection.session.register(wamp_prefix+'service.support.heartbeat.'+$scope.me.pk, heartbeat).then(
             function (res) {
               console.log("registered to service.support.heartbeat with "+$scope.me.pk);
@@ -205,6 +207,19 @@ app.controller("businessManagement.support", function($scope, $state, $users, $s
         })
     })
   }
+  var getFirstMessage = function(companyPk){
+    return new Promise(function(resolve,reject){
+      $http({
+          method: 'GET',
+          url: '/api/support/customerProfile/pk=' + companyPk,
+        }).then(function(response){
+          console.log(response.data,'888888888888888888');
+          resolve(response.data)
+        }).catch((err)=>{
+          reject(err)
+        })
+    })
+  }
 
 
 
@@ -215,7 +230,6 @@ app.controller("businessManagement.support", function($scope, $state, $users, $s
         url: '/api/support/getChatStatus/?checkStatus&uid=' + $scope.newUsers[i].uid,
       }).
       then(function(response) {
-        console.log(response.data);
         if(response.data.changeStatus){
           getCompDetails(response.data.companyPk).then((data)=>{
             $scope.sendMailsToContact(data.contactP,$scope.newUsers[i].uid)
@@ -234,7 +248,6 @@ app.controller("businessManagement.support", function($scope, $state, $users, $s
         url: '/api/support/getChatStatus/?sendMail&uid=' + $scope.myUsers[i].uid,
       }).
       then(function(response) {
-        console.log(response.data,'myUsers');
         if(response.data.sendMail){
           getCompDetails(response.data.companyPk).then((data)=>{
             $scope.sendMailsToContact(data.contactP,$scope.myUsers[i].uid)
@@ -244,6 +257,42 @@ app.controller("businessManagement.support", function($scope, $state, $users, $s
     }
 
   }, 1000*60*1);
+
+
+  setInterval(function () {
+
+    for (let i = 0; i < $scope.myUsers.length; i++) {
+      if($scope.myUsers[i].messages.length>0){
+        let lastMsgPk=$scope.myUsers[i].messages[$scope.myUsers[i].messages.length-1].pk;
+        $http({
+          method: 'GET',
+          url: '/api/support/messageCheck/?uid=' + $scope.myUsers[i].uid+'&pk='+lastMsgPk,
+        }).
+        then(function(response) {
+          if(response.data.data.length>0){
+            $http({
+              method: 'GET',
+              url: '/api/support/supportChat/?unDelMsg&values='+JSON.stringify(response.data.data),
+            }).
+            then(function(response) {
+              for (var l = 0; l < response.data.length; l++) {
+                var dontPush = false;
+                for (var m = 0; m < $scope.myUsers[i].messages.length; m++) {
+                  if (response.data[l].pk == $scope.myUsers[i].messages[m].pk) {
+                    dontPush = true;
+                  }
+                }
+                if (!dontPush) {
+                  $scope.myUsers[i].messages.push(response.data[l])
+                }
+
+              }
+            });
+          }
+        });
+      }
+    }
+  }, 20000);
 
   $scope.myCompanies = [];
   function fetchUsers() {

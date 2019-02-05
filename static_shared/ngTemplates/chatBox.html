@@ -1,6 +1,6 @@
 <div class="animated fadeIn" id="chatBox">
   <div style="min-height:83vh;margin-top:0px;padding:0px;border-left: 1px solid #eeeeee; border-right: 1px solid #eeeeee; background-color: white;border-bottom:2px solid #eeeeee " class="container-fluid">
-    <div class="container-fluid" style="padding:0px;border-bottom:1px solid #eeeeee;height: 16vh;width:100%">
+    <div class="container-fluid" style="padding:0px;border-bottom:1px solid #eeeeee;height: 110px;">
       <div class="row" style="padding:2px;margin:0px;border-bottom: 1px dotted grey;background-color:#eee">
           <div class="col-md-2" style="padding:0px">
             <div class=" btn-sm btn-block" style="border-radius:0px !important;text-align: center;" type="button" name="button" ng-click="knowledgeBase(data.companyPk)"><i class="fa fa-book" style="font-size:20px;" aria-hidden="true"></i>
@@ -67,17 +67,18 @@
       <!-- <iframe ng-src="{{data.currentUrl | trusted}}" scrolling="no" style="height:100%; transition:0.5s;width:100%; border:1px solid #e0e0e0;" allowFullScreen></iframe> -->
     </div>
     <div ng-if="data.audio&&!data.closeIframe" class="container-fluid" style="height:3.5vh; padding:0px;" ng-init="setHeight()">
+
       <iframe id="iframeChat{{data.uid}}" ng-src="{{data.audioUrl | trusted}}" scrolling="no" style="height:100%; width:100%; border:1px solid #e0e0e0;"></iframe>
     </div>
 
     <div class="container-fluid" id="scrollArea{{data.uid}}" style="margin-left:5px;padding-top: 5px; height:{{msgDivHeight}}vh; overflow-y:auto; overflow-x:hidden;display:inline-block;width:100%">
-      <div class="row" ng-if="data.currentUrl" style="background:#f6f6f6;padding:5px;">
+      <!-- <div class="row" ng-if="data.currentUrl" style="background:#f6f6f6;padding:5px;">
         <span>Active : {{data.currentUrl}}</span>
-      </div>
+      </div> -->
       <div class="row" style="padding:0px;" ng-repeat="message in data.messages track by $index">
 
         <div ng-if="!message.logs" class="row container-fluid" style="{{message.sentByAgent ? 'padding-right:30px' : 'padding-left:30px'}};">
-          <span ng-if="!message.sentByAgent" style="float:left;  font-size:11px; " class="text-muted">{{message.created | getTime}},</span>
+          <span ng-if="!message.sentByAgent" style="float:left;  font-size:11px; " class="text-muted">{{message.created | getTime}}</span>
           <span ng-if="message.sentByAgent" style="float:right;  font-size:11px; " class="text-muted">{{message.user | getName}}, {{message.created | getTime}},</span>
           <!-- {{message.created}} -->
         </div>

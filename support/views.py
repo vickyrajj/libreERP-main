@@ -38,6 +38,7 @@ from django.template.loader import render_to_string, get_template
 from django.core.mail import send_mail, EmailMessage
 from django.utils import timezone
 import re
+import ast
 regex = re.compile('^HTTP_')
 
 BLOCK_SIZE = 16
@@ -74,6 +75,14 @@ class SupportChatViewSet(viewsets.ModelViewSet):
             supChatObj = supChatObj.filter(is_hidden = False)
         if 'visitorReq' in self.request.GET:
             supChatObj = supChatObj.filter(is_hidden = False)
+        if 'unDelMsg' in self.request.GET:
+            values=[int(i) for i in ast.literal_eval(self.request.GET['values'])]
+            print values , type(values)
+            if u.is_anonymous():
+                return SupportChat.objects.filter(pk__in=values,is_hidden = False)
+            if 'visitorReq' in self.request.GET:
+                return SupportChat.objects.filter(pk__in=values,is_hidden = False)
+            return SupportChat.objects.filter(pk__in=values)
         if 'user__isnull' in self.request.GET:
             return SupportChat.objects.filter(user__isnull=True)
         if 'uid' in self.request.GET:
@@ -96,9 +105,10 @@ class GetMyUser(APIView):
             serviceObj=list(service.objects.filter(pk = custP[0].service.pk).values_list('contactPerson',flat=True))
             serviceName=list(service.objects.filter(pk = custP[0].service.pk).values_list('name',flat=True))
             servicePk=list(service.objects.filter(pk = custP[0].service.pk).values_list('pk',flat=True))
+            firstMsg=list(CustomerProfile.objects.filter(pk=request.GET['getCompanyDetails']).values_list('firstMessage',flat=True))
 
 
-            return Response({'cDetails':serviceName,'contactP':serviceObj,'servicePk':servicePk}, status=status.HTTP_200_OK)
+            return Response({'cDetails':serviceName,'contactP':serviceObj,'servicePk':servicePk,'firstMsg':firstMsg}, status=status.HTTP_200_OK)
         if 'allAgents' in request.GET:
             print '%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%'
             allAgents = list(User.objects.exclude(pk=self.request.user.pk).values_list('pk',flat=True))
@@ -1193,3 +1203,11 @@ class EmailScript(APIView):
         msg.content_subtype = 'html'
         msg.send()
         return Response({}, status = status.HTTP_200_OK)
+
+class MessageCheck(APIView):
+    renderer_classes = (JSONRenderer,)
+    permission_classes=(permissions.AllowAny,)
+    def get(self , request , format = None):
+        sObj = list(SupportChat.objects.filter(uid = request.GET['uid'],pk__gt=request.GET['pk']).values_list('pk',flat=True))
+        print sObj,"printtttttttttttttttttttttttttttttttt"
+        return Response({"data":sObj}, status = status.HTTP_200_OK)

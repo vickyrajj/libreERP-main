@@ -343,6 +343,7 @@ app.controller("app.company.explore.dynamicForm", function($scope, $state, $user
       function_name: '',
       form_description: '',
       company: $scope.cPk,
+      typ:'',
       fields: []
     }
   }
@@ -387,6 +388,7 @@ app.controller("app.company.explore.dynamicForm", function($scope, $state, $user
     toPost.form_name = $scope.newForm.form_name
     toPost.function_name = $scope.newForm.function_name
     toPost.form_description = $scope.newForm.form_description
+    toPost.typ = $scope.newForm.typ
 
     $http({
       method: 'POST',
@@ -402,6 +404,16 @@ app.controller("app.company.explore.dynamicForm", function($scope, $state, $user
   }
 
   $scope.editDynamicForm = function(pk) {
+
+    var toPatch = {}
+    toPatch.user = $scope.newForm.user
+    toPatch.company = $scope.newForm.company
+    toPatch.form_name = $scope.newForm.form_name
+    toPatch.function_name = $scope.newForm.function_name
+    toPatch.form_description = $scope.newForm.form_description
+    toPatch.typ = $scope.newForm.typ
+
+
     if ($scope.newForm.form_name == '') {
       Flash.create('warning', 'please fill all details')
       return;
@@ -409,7 +421,7 @@ app.controller("app.company.explore.dynamicForm", function($scope, $state, $user
     $http({
       method: 'PATCH',
       url: '/api/support/dynamicForms/' + pk + '/',
-      data: $scope.newForm
+      data: toPatch
     }).then(function(response) {
       $scope.dynamicForm[$scope.setIndex] = response.data;
       // $scope.resetForm();
