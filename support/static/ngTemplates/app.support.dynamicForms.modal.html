@@ -11,8 +11,11 @@
         <div class="card" ng-repeat="d in dynamicForms" style="padding:15px; margin-bottom:15px; cursor:pointer; {{formInView.form_name==d.form_name?'background-color:#e0e0e0;':''}}" ng-click="setForm(d.pk, $index)">
           {{d.form_name}}
         </div>
+        <button class="btn btn-primary btn-block" ng-click="sendMessage('email')"> <i class="fa fa-paper-plane"> </i>  Email</button>
+        <button class="btn btn-primary btn-block" ng-click="sendMessage('msg')"> <i class="fa fa-envelope"> </i> Message</button>
       </div>
       <div class="col-md-8" style="border-left:1px solid #e0e0e0;">
+        <div ng-if="!formTyp">
         <p style="color:#575757; text-align:center;"> <b> {{formInView.form_name}}</b> </p>
         <div class="row container-fluid" ng-repeat="f in formInView.fields" style="margin-bottom:15px; padding-left:30px;">
           <div class="form-group">
@@ -25,6 +28,32 @@
         <button type="button" class="btn btn-primary" ng-click="send()">
           Send
         </button>
+      </div>
+        <div ng-if="formTyp">
+          <div ng-if="visitorData.dataTyp=='email'">
+            <div class="form-group login-input-group">
+              <label><b> Visitor Email </b></label>
+              <input type="email" class="form-control" placeholder="Visitor E-mail..." ng-model="visitorData.email">
+            </div>
+            <div class="form-group login-input-group">
+              <label>Message</label>
+              <textarea  ui-tinymce="tinymceOptions" rows="6" ng-model="visitorData.emailMsg"></textarea>
+            </div>
+          </div>
+          <div ng-if="visitorData.dataTyp=='msg'">
+            <div class="form-group login-input-group">
+              <label><b> Visitor Phone </b></label>
+              <input type="text" class="form-control" placeholder="Visitor Phone..." ng-model="visitorData.phone">
+            </div>
+            <div class="form-group login-input-group">
+              <label>Message</label>
+              <textarea class="form-control" rows="6" ng-model="visitorData.textMsg"></textarea>
+            </div>
+          </div>
+          <button type="button" class="btn btn-primary" ng-click="sendMsg()">
+            Send
+          </button>
+        </div>
       </div>
     </div>
 
