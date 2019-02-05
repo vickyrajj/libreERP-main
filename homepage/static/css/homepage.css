@@ -2378,13 +2378,16 @@ hr {
   margin-left: 20px;
   text-align: center;
 }
-.team_a{
+
+.team_a {
   text-decoration: none;
-  color:#212021;
+  color: #212021;
 }
-.team_a:hover{
-  color:#343334;
+
+.team_a:hover {
+  color: #343334;
 }
+
 /* exams css properties */
 /* for normal screens ends here.... */
 @media only screen and (device-width: 1352px) and (device-height: 641px) {
@@ -2588,6 +2591,7 @@ hr {
   .abt_div {
     width: 28%;
   }
+
 
   /* for hd screens ends here.... */
 }
@@ -2841,11 +2845,11 @@ hr {
   background-color: #fff;
 } */
 @media only screen and (max-width:768px) {
+  /* mobile display size starts here.... */
   .other_chap {
     width: 100%;
   }
 
-  /* mobile display size starts here.... */
   .header_nav {
     float: left !important;
   }
@@ -3279,14 +3283,15 @@ hr {
   }
 
   .home_header {
+    background-image: url('/static/images/24tut/mob_head.png');
     min-height: 90vh;
-    background-size: cover;
+    background-size: 100% 100%;
     background-repeat: no-repeat;
   }
 
   .home_content {
     color: #fff;
-    padding-top: 3rem;
+    padding-top: 4.5rem;
   }
 
   .owl_div {
@@ -3691,6 +3696,16 @@ hr {
     right: 60px;
     z-index: 7;
   }
+  .user_img{
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background-color: transparent;
+    position: fixed;
+    top: 9px;
+    right: 60px;
+    z-index: 7;
+  }
 
   .pay_card {
     margin-bottom: 10px;
@@ -3725,14 +3740,17 @@ hr {
     padding: 0px;
     width: 100%;
   }
-  .card_mob{
+
+  .card_mob {
     width: 40px;
   }
-  .card_mob span{
+
+  .card_mob span {
     margin-left: -12px;
     font-size: 50px;
   }
-  .btn_g{
+
+  .btn_g {
     width: 100%;
   }
 
