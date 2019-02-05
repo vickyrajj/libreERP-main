@@ -1230,11 +1230,10 @@ class SendFeedBackRequest(APIView):
                 try:
                     visitor = Visitor.objects.get(uid = request.data['id'])
                     try:
-                        msg = "Your feedback is important for us"
                         emailAddr = [visitor.email]
                         ctx = {
                             'heading' : "Feedback Form",
-                            'msg' : msg,
+                            'msg' : "Your feedback is important for us",
                             'details': 'Please click on the below link to submit your feedback',
                             'link' : link
                         }

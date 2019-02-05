@@ -126,7 +126,8 @@
        <img ng-if="msg.attachmentType == 'image' ||msg.attachmentType == 'instructionImage'" ng-src="{{msg.attachment}}" style="width:250px;" ng-click="imageClicked(msg.attachment)">
        <video ng-if="msg.attachmentType == 'video'" width="280" height="240" ng-src="{{msg.attachment}}" controls></video>
        <audio ng-if="msg.attachmentType == 'audio'" ng-src="{{msg.attachment}}" controls></audio>
-       <p class="text-center" ng-if="msg.attachmentType == 'application'" style="word-wrap: break-word;"><a ng-href="{{msg.attachment}}" target = "_blank" ><i class="fa {{msg.attachment.split('chat/')[1] | fileTypeIcon }} fa-2x" ></i></a> <br> {{msg.attachment.split('chat/')[1]}}  </p>
+        <p class="text-center" ng-if="msg.attachmentType == 'application'" style="word-wrap: break-word;"><a ng-href="{{msg.attachment}}" target="_blank"><i style="color:#fff" class="fa {{msg.attachment.split('chat/')[1] | fileTypeIcon }} fa-2x" ></i></a> <br> {{msg.attachment.split('chat/')[1]}} </p>
+       <!-- <p class="text-center" ng-if="msg.attachmentType == 'application'" style="word-wrap: break-word;"><a ng-href="{{msg.attachment}}" target = "_blank" ><i class="fa {{msg.attachment.split('chat/')[1] | fileTypeIcon }} fa-2x" ></i></a> <br> {{msg.attachment.split('chat/')[1]}}  </p> -->
        <div ng-if="msg.attachmentType == 'youtubeLink'" >
          <iframe width="100%" height="215" ng-src="{{msg.message | trusted}}" frameborder="0" allowfullscreen></iframe>
        </div>
