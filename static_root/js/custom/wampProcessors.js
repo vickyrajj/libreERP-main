@@ -141,9 +141,9 @@ var hasAccesss=true;
       }
 
       function pushIntoMyUsers(indx , data) {
-        alert('sdfffffffff')
+        // alert('sdfffffffff')
         dontPush = false;
-        console.log(data,';ggggggggggggggggggggggggggg');
+        // console.log(data,';ggggggggggggggggggggggggggg');
         for (var i = 0; i < scope.myUsers[indx].messages.length; i++) {
           if (data.pk == scope.myUsers[indx].messages[i].pk) {
             dontPush = true;

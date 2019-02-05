@@ -1147,9 +1147,25 @@ class EmailChat(APIView):
         emailAddr=[]
         print request.data['email'],'email'
         emailAddr.append(request.data['email'])
-        chatStarted=ChatThread.objects.filter(uid=request.data['uid'])[0].created
+        chatThreadObj = ChatThread.objects.filter(uid=request.data['uid'])[0]
+        chatStarted= chatThreadObj.created
         sObj = SupportChat.objects.filter(uid = request.data['uid'])
         visitor = Visitor.objects.filter(uid = request.data['uid'])
+
+
+
+        try:
+            print int(request.data['servicePk'][0]) ,'sssssssssssss'
+            custProfile = CustomerProfile.objects.filter(service__pk = int(request.data['servicePk'][0]))
+            print custProfile,'ggggggggg$$$$$$$'
+            introMessage = custProfile[0].firstMessage
+            print introMessage,'introMessageintroMessageintroMessageintroMessageintroMessageintroM'
+            companyName = service.objects.filter(pk = int(request.data['servicePk'][0]))[0].name
+            companyUrl = ''
+        except:
+            introMessage = ''
+            companyName = ''
+            companyUrl = ''
 
         if len(visitor)>0:
             name = visitor[0].name
@@ -1169,13 +1185,18 @@ class EmailChat(APIView):
                     toAppend['attachment'] = globalSettings.SITE_ADDRESS + '/media/' + str(a.attachment)
             allChats.append(toAppend)
         sObj = allChats
+
+
         ctx = {
             'heading' : "Support Conversation",
             'allChats' : sObj,
-            'started':chatStarted
+            'started':chatStarted,
+            'introMessage':introMessage,
+            'companyName':companyName,
+            'companyUrl':companyUrl
         }
         print ctx
-        email_body = get_template('app.support.email.html').render(ctx)
+        email_body = get_template('app.support.newEmail.html').render(ctx)
         msg = EmailMessage("Chat Conversation" , email_body, to= emailAddr)
         msg.content_subtype = 'html'
         msg.send()

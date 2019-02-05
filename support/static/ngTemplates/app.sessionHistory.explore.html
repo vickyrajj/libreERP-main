@@ -95,7 +95,7 @@
 
           <div class="" ng-repeat="comment in reviewCommentData" style="margin-top:25px;">
             <div class="col-md-9">
-              <div style="background-color:{{comment.user==msgData[0].user_id? '#ea1515':'#286EFA'}};float:right; color:#fff; margin-top:5px ;border-radius:15px 50px 50px 15px; padding:8px 10px 0px 15px;word-break: break-all !important;">
+              <div style="background-color:{{comment.user==msgData.user_id? '#ea1515':'#286EFA'}};float:right; color:#fff; margin-top:5px ;border-radius:15px 50px 50px 15px; padding:8px 10px 0px 15px;word-break: break-all !important;">
                 <p> {{comment.message}} </p>
               </div>
               <div ng-if="comment.agent_capture">
@@ -118,25 +118,27 @@
         <h4 style="display:inline-block">Agent Info:</h4>
         <span class="pull-right btn btn-primary" ng-click="showChart()" style="font-size:15px">Change Status</span>
         <div style="margin:15px 0px">
-          <img style="width:5rem" ng-if="msgData[0].user_id" src="{{msgData[0].user_id | getDP}}" alt="">
+          <img style="width:5rem" ng-if="msgData.user_id" src="{{msgData.user_id | getDP}}" alt="">
           <div class="" style="display:inline-block">
-            <p style="font-size:16px;font-weight:700">{{msgData[0].user_id | getName}}</p>
+            <p style="font-size:16px;font-weight:700">{{msgData.user_id | getName}}</p>
           </div>
         </div>
-        <p style="font-size:15px"><strong>Created : </strong>{{msgData[0].created | date : 'dd-MMM-yyyy'}}</p>
-        <p style="font-size:15px" ng-if="msgData[0].chatDuration>0.0"><strong>Chat Duration : </strong>{{msgData[0].chatDuration}} Min</p>
-        <p style="font-size:15px" ng-if="msgData[0].company"><strong>Client : </strong>{{msgData[0].company}}</p>
+        <p style="font-size:15px"><strong>Created : </strong>{{myChatThreadData.created | date : 'dd-MMM-yyyy'}}</p>
+        <p style="font-size:15px" ng-if="msgData.chatDuration>0.0"><strong>Chat Duration : </strong>{{msgData.chatDuration}} Min</p>
+        <p style="font-size:15px" ng-if="msgData.company"><strong>Client : </strong>{{msgData.company}}</p>
         <p ng-if="visitorDetails.email"><strong>Visitor's Email : </strong>{{visitorDetails.email}}</p>
         <p ng-if="visitorDetails.name"><strong>Visitor's Name : </strong>{{visitorDetails.name}}</p>
         <p ng-if="visitorDetails.phoneNumber"><strong>Visitor's Number : </strong>{{visitorDetails.phoneNumber}}</p>
+        <p><strong>Company: </strong>{{myChatThreadData.companyName}}</p>
+        <p ><strong>Visitor's Uid : </strong>{{myChatThreadData.uid}}</p>
         <p><strong>Device IP : </strong>{{msgData.userDeviceIp}}</p>
-        <p style="font-size:15px" ng-if="msgData[0].customerRating"><strong>Rating : </strong>{{msgData[0].customerRating}} <i class="fa fa-star fa-md" aria-hidden="true"></i></p>
-        <p style="font-size:15px" ng-if="msgData[0].customerFeedback"><strong>Feedback : </strong>{{msgData[0].customerFeedback}}</p>
+        <p style="font-size:15px" ng-if="msgData.customerRating"><strong>Rating : </strong>{{msgData.customerRating}} <i class="fa fa-star fa-md" aria-hidden="true"></i></p>
+        <p style="font-size:15px" ng-if="msgData.customerFeedback"><strong>Feedback : </strong>{{msgData.customerFeedback}}</p>
         <p style="font-size:15px" ng-if="chatThreadData.uid!=none"><strong>Status : </strong>{{chatThreadData.status}}
-          <span ng-if="msgData[0].statusChat!='started'">
-            <span ng-if="msgData[0][msgData[0].statusChat+'By']&&msgData[0][msgData[0].statusChat+'On']">by {{msgData[0][msgData[0].statusChat+'By']}}</span>
-            <span ng-if="msgData[0][msgData[0].statusChat+'On']&&!msgData[0][msgData[0].statusChat+'By']"> by Visitor</span>
-            <span ng-if="msgData[0][msgData[0].statusChat+'On']">on {{msgData[0][msgData[0].statusChat+'On'].split('.')[0].split(' ')[0]}} at {{msgData[0][msgData[0].statusChat+'On'].split('.')[0].split(' ')[1]}}</span>
+          <span ng-if="msgData.statusChat!='started'">
+            <span ng-if="msgData[msgData.statusChat+'By']&&msgData[msgData.statusChat+'On']">by {{msgData[msgData.statusChat+'By']}}</span>
+            <span ng-if="msgData[msgData.statusChat+'On']&&!msgData[msgData.statusChat+'By']"> by Visitor</span>
+            <span ng-if="msgData[msgData.statusChat+'On']">on {{msgData[msgData.statusChat+'On'].split('.')[0].split(' ')[0]}} at {{msgData[msgData.statusChat+'On'].split('.')[0].split(' ')[1]}}</span>
          </span>
         </p>
       </div>
