@@ -464,12 +464,14 @@ function fetchThread(uid) {
           }
         }
         fetchMessages(uid);
+        checkVisitorDetails(uid)
       } else if (this.responseText == '{"PARAMS":"createCookie"}') {
         console.log('genertate new uid');
         document.cookie = encodeURIComponent("uid") + "=deleted; expires=" + new Date(0).toUTCString()
         uid = new Date().getTime()
         setCookie("uid", uid, 365);
         fetchMessages(uid);
+        checkVisitorDetails(uid)
       }
   };
   xhttp.open('GET', '{{serverAddress}}/api/support/chatThread/?uid=' + uid + '&checkThread', true);
@@ -1312,7 +1314,7 @@ function createChatDiv() {
     uid = getCookie("uid");
     if (uid != "") {
         fetchThread(uid);
-        checkVisitorDetails(uid)
+
     } else {
         // uid = custID +'$'+custName+'$'+broswer.charAt(0)
         uid = new Date().getTime()
@@ -2528,7 +2530,7 @@ var myformrating;
 
     }
 
-    
+
 
 
 
