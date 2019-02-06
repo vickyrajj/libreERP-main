@@ -134,6 +134,8 @@ def blogDetails(request, blogname):
         # data['created'] = sub.created
         data['subject'] = sub
         data['subTopics'] = subTopics
+        data['forumdata'] = ForumThread.objects.filter(verified=True).annotate(clicked=Value(0, output_field=IntegerField()))
+        data['blogname'] = blogname
         if sub.title:
             data['seoDetails']['title'] =  'CBSE Class ' + str(sub.level) +' ' + str(sub.title) + ' Online Course [{0}]'.format(datetime.datetime.today().year)
         if sub.description:
@@ -452,14 +454,22 @@ def SaveForumDetails(request):
     if 'typ' in request.POST:
         if request.POST['typ'] == 'comment':
             parentObj = ForumThread.objects.get(pk=int(request.POST['parent']))
-            retUrl = '/'+str(parentObj.page)+'/'
-            data = {'parent':parentObj,'txt':str(request.POST['txt']),'user':request.user}
+            page = str(parentObj.page)
+            if page.startswith('class-') :
+                page = page + "/forum"
+            retUrl = '/'+ page +'/'
+            data = {'parent':parentObj,'user':request.user}
+            if len(str(request.POST['txt']))>0:
+                data['txt'] = str(request.POST['txt'])
             print data,'creating dataaaaaaaaaaa'
             fcObj = ForumComment.objects.create(**data)
             return redirect(retUrl)
         else:
             page = str(request.POST['page'])
+            if page.startswith('class-') :
+                page = page + "/forum"
             retUrl = '/'+page+'/'
+            print retUrl,'jjjjjjjjjjjjjjjjjj'
             data = {'user':request.user,'page':page}
             if len(str(request.POST['txt']))>0:
                 data['txt'] = str(request.POST['txt'])

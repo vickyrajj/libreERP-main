@@ -474,7 +474,7 @@ class ForumCommentSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = ForumComment
-        fields = ('pk' , 'created' , 'parent', 'txt','user')
+        fields = ('pk' , 'created' , 'parent', 'txt','user','verified')
 
         def create(self , validated_data):
             fc = ForumComment(**validated_data)

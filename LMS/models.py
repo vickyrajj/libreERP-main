@@ -426,4 +426,5 @@ class ForumComment(models.Model):
     created = models.DateTimeField(auto_now_add = True)
     parent = models.ForeignKey(ForumThread , null = True , related_name='forumthread')
     txt =  models.TextField(null = True)
+    verified = models.BooleanField(default = False)
     user = models.ForeignKey(User , null = True , related_name='commentedUser')

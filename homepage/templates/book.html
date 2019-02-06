@@ -1,8 +1,59 @@
-{% extends "tutorBook.html" %}{% load staticfiles %}
+{% extends "tutorBook.html" %}
 
 {% block bookcontent %}
 
+
 <div class="container-fluid" style="padding-top:40px;">
+  <!-- <style media="screen">
+    .areatext{
+      width: 75%;
+      margin-left: 0.5em;
+    }
+    .parenttext{
+      width: 77%;
+      margin-left: 0.5em;
+    }
+    .send{
+     width: 75%;
+    }
+    .post{
+     width: 79%;
+    }
+    .head{
+      display: none;
+    }
+    .
+   </style>
+  <style media="screen and (max-width:768px)">
+    .areatext{
+      width: 95%;
+      margin-left: 1em;
+      margin-top: 0.5em;
+
+     }
+     .parenttext{
+       width: 100%;
+       margin-left: 0;
+     }
+     .coloumn{
+       padding: 0;
+       margin:0;
+
+     }
+     .send{
+      width: 97%;
+     }
+     .post{
+      width: 105%;
+     }
+     .forumhead{
+       display:none;
+     }
+     .head{
+       display: block;
+     }
+   </style> -->
+
   <div class="col-md-12">
     <div class="col-md-10">
       <div class="row" style="margin-top:1em;">
@@ -66,7 +117,7 @@
     <div class="col-md-6 clickchange">
       <span style="font-size:25px;"><b>Solutions</b></span>
     </div>
-    <div class="col-md-6 clickchange">
+    <div class="col-md-6 clickchange forumhead">
       <span style="font-size:25px;"><b> Forum</b></span>
     </div>
   </div>
@@ -83,12 +134,27 @@
         </ul>
       </div>
     </div>
-
-    <div class="col-md-6" style="min-height:60vh;padding:0px;">
+    <div class="col-md-6 col-xs-12" style="min-height:60vh;padding:0px;">
+      <div class="head" style="background-color:#FCC300;min-height:10vh;  position:relative;padding-bottom: 2em;padding-top: 0.1em;width: 120%;
+margin-left: -2.2em;">
+        {% verbatim %}
+        <div>
+          <div class=" clickchange ">
+            <span style="font-size:25px;"><b> Forum</b></span>
+          </div>
+        </div>
+        {% endverbatim %}
+      </div>
+       {% include "forum.html" %} 
+      <!-- {% if not request.user.is_authenticated %}
+      <div class="row" style="margin:2em 1em;">
+        <a href="/signin"><button class="btn btn-primary" style="margin:-0.5em 0 0 0;padding:0.2em 1em;border-radius:0%">Ask a New Question</button></a>
+      </div>
+      {% endif %}
       {% for ft in forumData %}
-      <div class="row" style="border-top:1px solid #eaecf0;border-bottom:1px solid #eaecf0;padding-bottom: 2em;">
-        <div class="col-md-1 col-xs-2">
-          <div style="width:60px;padding-top: 1.5em;">
+      <div class="row" style="border-bottom:1px solid #eaecf0;padding-bottom: 1em;">
+        <div class="col-md-1 col-xs-1">
+          <div style="width:50px;padding-top: 1.5em;">
             {% if ft.user.profile.displayPicture.url %}
             <img src="{{ft.user.profile.displayPicture.url}}" style="width:45px;border-radius:50%;height:45px;" />
             {% else %}
@@ -97,10 +163,10 @@
           </div>
         </div>
 
-        <div class="col-md-10 col-xs-11 text-left">
+        <div class="col-md-11 col-xs-12 text-left coloumn">
           <div class="no_pad" style="display: flex;align-items: center;">
 
-            <div class="contentrow" style="flex: 0 1 auto;width:90%;">
+            <div class="contentrow" style="flex: 0 1 auto;width:100%;">
               <div class="toprow" style="">
                 <span style="font-size:17px;cursor:pointer;color:#3C5899">{{ft.user.username}}</span>
               </div>
@@ -114,30 +180,30 @@
               </div>
               {% endif %}
               <div class="bottomrow" style="font-size: 1em;">
-                <span class="" style="font-size:15px;color: #3C5899;">{{ ft.forumthread.all|length }} comments
+                <span class="" style="font-size:13px;color: #3C5899;">{{ ft.forumthread.all|length }} Answers
                 </span>
               </div>
             </div>
           </div>
           {% if request.user.is_authenticated %}
           <div class="row">
-            <div class="text-center" style="padding-top:2em;margin-left:0.5em;">
+            <div class="text-center" style="padding-top:0;margin-left:0.5em;">
               <div class="col-md-1 col-xs-2">
                 <div style="width:60px;padding-top: 1.5em;">
                   {% if request.user.profile.displayPicture %}
-                  <img src="{{request.user.profile.displayPicture.url}}" style="width:45px;border-radius:50%;height:45px;" />
+                  <img src="{{request.user.profile.displayPicture.url}}" style="width:40px;border-radius:50%;height:40px;" />
                   {% else %}
                   <img src="/static/images/24tut/hom/dp.jpg" style="width:45px;border-radius:50%;height:45px;" />
                   {% endif %}
                 </div>
               </div>
-              <div class="col-md-11 col-xs-10  text-left" style="padding-top: 1.5em;">
+              <div class="col-md-11 col-xs-10  text-left" style="padding-top: 1em;">
                 <form action="/saveForumDetails/" method="post">{% csrf_token %}
                   <input name="typ" type="hidden" class="form-control" value="comment">
                   <input name="parent" type="hidden" class="form-control" value="{{ft.pk}}">
-                  <textarea type="textarea" placeholder='Post a Answer Here..' style='width:75%;resize: none;margin-left: 0.5em;' name="txt"></textarea>
-                  <div style="width:75%;padding:0;margin-top: -2px;height:4em;text-align: right;margin-left: 0.5em;">
-                    <button class="btn btn-primary" style="margin:0.7em 0 0 0;padding:0.2em 1em;border-radius:0%"  type="submit"><i class="fa fa-paper-plane" aria-hidden="true"></i></button>
+                  <textarea class="areatext" type="textarea" placeholder='Post a Answer Here..' style='resize: none;' name="txt"></textarea>
+                  <div class="send " style="padding:0;margin-top: -2px;height:4em;text-align: right;margin-left: 0.5em;">
+                    <button class="btn btn-primary" style="margin:0.7em 0 0 0;padding:0.2em 1em;border-radius:0%" type="submit"><i class="fa fa-paper-plane" aria-hidden="true"></i></button>
                   </div>
                 </form>
               </div>
@@ -145,7 +211,7 @@
           </div>
           {% endif %}
           {% for ftc in ft.forumthread.all %}
-          <div class="col-md-1 col-xs-2" ng-show="ft.clicked==1" id="id">
+          <div class="col-md-1 col-xs-2" >
             <div style="width:60px;padding-top: 1.5em;">
               {% if ftc.user.profile.displayPicture %}
               <img src="{{ftc.user.profile.displayPicture.url}}" style="width:45px;border-radius:50%;height:45px;" />
@@ -154,19 +220,16 @@
               {% endif %}
             </div>
           </div>
-          <div class="col-md-11 col-xs-10 text-left" >
+          <div class="col-md-11 col-xs-10 text-left">
             <div class="row">
-              <div class="no_pad" style="border-top: 1px solid #eaecf0;display: flex;align-items: center;margin-left: 1em;">
-                <div class="contentrow" style="flex: 0 1 auto;max-width:75%;">
-                  <!-- <div class="toprow" style="">
-                    <span style="font-size:17px;cursor:pointer;color:#3C5899">{{ftc.user.username}}</span>
-                  </div> -->
+              <div class="no_pad" style="{% if  request.user.is_authenticated %}border-top: 1px solid #eaecf0{% endif %};display: flex;align-items: center;margin-left: 1em;">
+                <div class="contentrow" style="flex: 0 1 auto;max-width:100%;">
                   <div class="bottomrow" style="font-size: 1em;">
                     <span class="" style="font-size:15px;color: #3C4556;">{{ftc.txt}}
                     </span>
                   </div>
                   <div class="bottomrow" style="font-size: 1em;">
-                    <span class="" style="font-size:15px;color:#9E9E9E;">Posted  {{ftc.created}} by <span style="color:#3C5899;">{{ftc.user.username}}</span>
+                    <span class="" style="font-size:13px;color:#9E9E9E;">Posted {{ftc.created}} by <span style="color:#3C5899;">{{ftc.user.username}}</span>
                     </span>
                   </div>
                 </div>
@@ -181,8 +244,8 @@
       {% endfor %}
       {% if request.user.is_authenticated %}
       <div class="row">
-        <div class="text-center" style="padding-top:2em;margin-left:0.5em;">
-          <div class="col-md-1 col-xs-2">
+        <div class="text-center" style="padding-top:2em;">
+          <div class="col-md-1 col-xs-2" style="margin-left: -0.5em;">
             <div style="width:60px;padding-top: 1.5em;">
               {% if request.user.profile.displayPicture %}
               <img src="{{request.user.profile.displayPicture.url}}" style="width:45px;border-radius:50%;height:45px;" />
@@ -195,9 +258,9 @@
             <form action="/saveForumDetails/" method="post" enctype="multipart/form-data">{% csrf_token %}
               <input name="typ" type="hidden" class="form-control" value="forum">
               <input name="page" type="hidden" class="form-control" value="{{blogname}}">
-              <textarea type="textarea" placeholder='Post a Question Here..' style='width:77%;resize: none;' name="txt"></textarea>
-              <div style="width:77%;padding:0;margin-top: -2px;height:4em;text-align: right">
-                <span style="cursor:pointer; "><i class="fa fa-paperclip" style="font-size:1.5em;margin:0.8em;"  onclick="document.getElementById('selectedFile').click();"></i></span>
+              <textarea class="parenttext" rows="3" type="textarea" placeholder='Post a Question Here..' style='resize: none;margin-left:1.2em;' name="txt"></textarea>
+              <div class="post" style="padding:0;margin-top: -2px;height:4em;text-align: right">
+                <span style="cursor:pointer; "><i class="fa fa-paperclip" style="font-size:1.5em;margin:0.8em ;" onclick="document.getElementById('selectedFile').click();"></i></span>
                 <input type="file" name="files" style="display: none;" id="selectedFile">
                 <span><button class="btn btn-primary" style="margin:-0.5em 0 0 0;padding:0.2em 1em;border-radius:0%" type="submit">Post</button> </span>
               </div>
@@ -205,7 +268,8 @@
           </div>
         </div>
       </div>
-      {% endif %}
+      {% endif %} -->
+
     </div>
   </div>
 </div>

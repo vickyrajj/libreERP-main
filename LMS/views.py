@@ -414,5 +414,5 @@ class ForumCommentViewSet(viewsets.ModelViewSet):
     permission_classes = (permissions.IsAuthenticated, isAdmin, )
     serializer_class = ForumCommentSerializer
     queryset = ForumComment.objects.all()
-    # filter_backends = [DjangoFilterBackend]
-    # filter_fields = ['course']
+    filter_backends = [DjangoFilterBackend]
+    filter_fields = ['verified']
