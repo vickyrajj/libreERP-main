@@ -1201,7 +1201,6 @@ class EmailChat(APIView):
         print str(chatStarted.date().strftime('%b %d, %Y'))
         print str(chatStarted.time().strftime('%H:%M %p')),'gggg'
         subject =  'CHAT FOR ' + str(companyName) + 'ON'+' '+ str(chatStarted.date().strftime('%b %d, %Y')) +' AT ' + str(chatStarted.time().strftime('%H:%M %p')) +''
-        print subject,'dddddddddddddddddddddd'
         email_body = get_template('app.support.newEmail.html').render(ctx)
         msg = EmailMessage(subject , email_body, to= emailAddr)
         msg.content_subtype = 'html'
