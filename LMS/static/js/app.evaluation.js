@@ -122,6 +122,7 @@ app.controller("home.LMS.evaluation.form", function($scope, $state, $users, $sta
     $scope.mode = 'edit';
     $scope.selectedquestions = $scope.tab.data.paper.questions;
     $scope.form.name = $scope.tab.data.paper.name
+    $scope.form.group = $scope.tab.data.paper.group
     $scope.form.description = $scope.tab.data.paper.description
     $scope.form.level = $scope.tab.data.paper.level
     console.log($scope.selectedquestions);
@@ -371,7 +372,7 @@ app.controller("home.LMS.evaluation.form", function($scope, $state, $users, $sta
       Flash.create('danger', 'Add Question Paper description')
       return
     }
-    
+
     var toSend = []
     for (var i = 0; i < $scope.selectedquestions.length; i++) {
       console.log($scope.selectedquestions[i])

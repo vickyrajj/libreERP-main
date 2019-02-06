@@ -1,6 +1,6 @@
 <div class="container-fluid" ng-controller="home.LMS.evaluation.explore">
   <div class="col-md-10">
-  <label class="text-muted"><h4>Question Paper:{{paper.name}}</h4></label>
+    <label class="text-muted"><h4>Question Paper:{{paper.name}}</h4></label>
     <div class="row" ng-repeat="y in paper.questions">
       <div class="col-md-1">
         <div class="form-group pull-right">
@@ -48,7 +48,7 @@
       </div> -->
     </div>
   </div>
-  <div class="col-md-2">
-    <h4><a class="btn btn-primary btn-sm pull-right" href="{{'/api/LMS/generateQuesPaper/?paper=' + paper.pk}}" target="_blank"><i class="fa fa-download"></i> Download</a></h4>
-</div>
+  <div class="col-md-2" style="padding-top:10px" ng-if="paper.questions.length>0">
+    <a class="btn btn-primary btn-sm pull-right" href="{{'/api/LMS/generateQuesPaper/?paper=' + paper.pk}}" target="_blank"><i class="fa fa-download"></i> Download</a>
+  </div>
 </div>

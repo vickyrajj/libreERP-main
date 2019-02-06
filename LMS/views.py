@@ -26,7 +26,8 @@ from .models import *
 from .serializers import *
 # import tempfile
 # from backports import tempfile
-from subprocess import Popen, PIPE
+# from subprocess import Popen, PIPE
+import subprocess
 import os
 
 class SectionViewSet(viewsets.ModelViewSet):
@@ -66,15 +67,39 @@ class DownloadQuesPaper(APIView):
     def get(self , request , format = None):
         p = Paper.objects.get(pk = request.GET.get('paper',None))
         print p.pk,'***************'
-        ques=Question.objects.filter(id__in = [i.ques.pk for i in p.questions.all()])
+        print [i.ques.pk for i in p.questions.all()]
+        quesPk = list(p.questions.all().values_list('ques',flat=True))
+        print quesPk
+        ques=Question.objects.filter(id__in = quesPk)
         tex_body = get_template('my_latex_template.tex').render({"ques" : ques})
-        content= str(tex_body)
-        print content
-        response = HttpResponse(content,content_type='text/plain')
-        response['Content-Disposition'] = 'attachment; filename="questionPaper%s_%s.txt"' %(p.pk,datetime.datetime.now(pytz.timezone('Asia/Kolkata')).year)
-        f = open('./media_root/questionPaper%s_%s.txt'%(p.pk,datetime.datetime.now(pytz.timezone('Asia/Kolkata')).year) , 'wb')
-        f.write(response.content)
+        content= str(tex_body.encode('utf-8')).replace('&quot;','"')
+        # print content
+        fN = '%s_%s'%(p.pk,datetime.datetime.now(pytz.timezone('Asia/Kolkata')).year)
+        mediaDir = os.path.join(globalSettings.BASE_DIR,'media_root')
+        flname = os.path.join(mediaDir,'texFiles', 'questionPaper%s.tex'%(fN))
+        f = open(flname , 'wb')
+        f.write(content)
         f.close()
+        pdfDir = os.path.join(mediaDir,'pdfFiles')
+        cmd = ['pdflatex','-output-directory', pdfDir, '-interaction', 'nonstopmode', flname]
+        proc = subprocess.Popen(cmd)
+        proc.communicate()
+        try:
+            os.remove(os.path.join(pdfDir, 'questionPaper%s.aux'%(fN)))
+            os.remove(os.path.join(pdfDir, 'questionPaper%s.log'%(fN)))
+        except:
+            print 'error while deleting log filesssssss'
+
+        try:
+            pdfFile = os.path.join(pdfDir,'questionPaper%s.pdf'%(fN))
+            with open(pdfFile, 'r') as f:
+               file_data = f.read()
+            response = HttpResponse(file_data, content_type='application/pdf')
+            response['Content-Disposition'] = 'attachment; filename="questionPaper%s.pdf"' %(fN)
+        except:
+            response = HttpResponse(content,content_type='text/plain')
+            response['Content-Disposition'] = 'attachment; filename="questionPaper%s.txt"' %(fN)
+
         return response
 
 
