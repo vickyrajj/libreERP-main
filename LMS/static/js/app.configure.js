@@ -616,7 +616,6 @@ app.controller("home.LMS.configure.form", function($scope, $state, $users, $stat
         return;
       }
       toSend.append('subject', $scope.form.subject.pk)
-      toSend.append('seoTitle',$scope.form.seoTitle)
       if ($scope.form.syllabus != null && $scope.form.syllabus.length>0) {
         toSend.append('syllabus',$scope.form.syllabus)
       }

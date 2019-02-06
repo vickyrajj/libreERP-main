@@ -16,17 +16,13 @@
       </div> -->
     </div>
     <div class="col-md-5" ng-if="mode == 'topic'">
-      <div class="form-group" >
+      <div class="form-group">
         <label>Subject</label>
         <input type="text" class="form-control" ng-model="form.subject" uib-typeahead="subject as (subject.title +'- Class ' + subject.level) for subject in subjectSearch($viewValue)">
       </div>
       <div class="form-group">
         <label>Title</label>
         <input ng-model="form.title" type="text" class="form-control">
-      </div>
-      <div class="form-group">
-        <label>SEO-Title</label>
-        <input ng-model="form.seoTitle" type="text" class="form-control">
       </div>
       <div class="form-group">
         <label>Description</label>
@@ -38,9 +34,15 @@
       </button>
     </div>
     <div class="col-md-6" ng-if="mode == 'topic'">
+      <div class="form-group">
+        <div class="container">
+          HTML <switch ng-model="form.textMode" class="green"></switch><span style="margin-left:10px;">Text</span>
+        </div>
+      </div>
       <div class="form-group" ng-init="tinymceOptions.height=300">
         <label>Syllabus</label>
-        <textarea ui-tinymce="tinymceOptions" ng-model="form.syllabus"></textarea>
+        <textarea class="form-control" ng-model="form.syllabus" name="name" ng-if="form.textMode" rows="18" style="resize:none;"></textarea>
+        <textarea ui-tinymce="tinymceOptions" ng-model="form.syllabus"  ng-if="!form.textMode"></textarea>
       </div>
     </div>
 
@@ -55,7 +57,7 @@
       </div>
       <div class="form-group">
         <label>Display Pic</label>
-        <input file-model="form.dp" type="file" >
+        <input file-model="form.dp" type="file">
       </div>
       <div class="form-group">
         <label>Level</label>
@@ -82,11 +84,11 @@
       </div>
       <div class="form-group">
         <label>Display Pic</label>
-        <input file-model="form.dp" type="file" >
+        <input file-model="form.dp" type="file">
       </div>
       <div class="form-group">
         <label>Author</label>
-        <input ng-model="form.author" type="text" class="form-control" >
+        <input ng-model="form.author" type="text" class="form-control">
       </div>
       <div class="form-group">
         <label>ISSN</label>
@@ -98,7 +100,7 @@
       </div>
       <div class="form-group">
         <label>Version</label>
-        <input ng-model="form.version" type="text"class="form-control" >
+        <input ng-model="form.version" type="text" class="form-control">
       </div>
       <div class="form-group">
         <label>License</label>
@@ -134,16 +136,17 @@
         </div>
         <div class="col-md-5">
           <div class="form-group">
-            <h3 style="text-align:center">Sections </h3> <hr> <button type = "button" class="btn btn-primary btn-sm" ng-click="addSection(0,'top')"> <i class="fa fa-plus"></i> Add </button>
+            <h3 style="text-align:center">Sections </h3>
+            <hr> <button type="button" class="btn btn-primary btn-sm" ng-click="addSection(0,'top')"> <i class="fa fa-plus"></i> Add </button>
           </div>
-          <div class="row" ng-repeat = " s in form.sections">
+          <div class="row" ng-repeat=" s in form.sections">
             <div class="col-md-11">
               <div class="well well-sm">
                 {{s.title}}
                 <i class="fa fa-pencil pull-right" style="margin-top:0px;cursor:pointer;" ng-click="editSection($index)"></i>
               </div>
               <div class="row" style="cursor:pointer;padding-top:-20px;padding-bottom:20px;padding-right:30px;padding-left:20px">
-                <button type = "button" class="btn btn-primary btn-sm" ng-click="addSection($index,'bottom')"> <i class="fa fa-plus"></i> Add </button>
+                <button type="button" class="btn btn-primary btn-sm" ng-click="addSection($index,'bottom')"> <i class="fa fa-plus"></i> Add </button>
                 <i class="fa fa-arrow-down pull-right" ng-click="secMove($index,'down')"></i>
                 <i class="fa fa-arrow-up pull-right" ng-click="secMove($index,'up')"></i>
               </div>

@@ -1,8 +1,6 @@
-{% extends "tutorBook.html" %}
+{% extends "tutorBook.html" %}{% load staticfiles %}
 
 {% block bookcontent %}
-
-
 
 <div class="container-fluid" style="padding-top:40px;">
   <div class="col-md-12">
@@ -87,6 +85,7 @@
         </ul>
       </div>
     </div>
+
     <div class="col-md-6" style="min-height:60vh;padding:0px;">
       {% for ft in forumData %}
       <div class="row" style="border-top:1px solid #eaecf0;border-bottom:1px solid #eaecf0;padding-bottom: 2em;">
@@ -100,7 +99,7 @@
           </div>
         </div>
 
-        <div class="col-md-9 col-xs-10 text-left">
+        <div class="col-md-10 col-xs-11 text-left">
           <div class="no_pad" style="display: flex;align-items: center;">
 
             <div class="contentrow" style="flex: 0 1 auto;width:90%;">
@@ -122,37 +121,7 @@
               </div>
             </div>
           </div>
-          {% if ft.clicked == 0 %}
-          {% for ftc in ft.forumthread.all %}
-          <div class="col-md-1 col-xs-2" ng-show="ft.clicked==1" id="id">
-            <div style="width:60px;padding-top: 1.5em;">
-              {% if ftc.user.profile.displayPicture %}
-              <img src="{{ftc.user.profile.displayPicture.url}}" style="width:45px;border-radius:50%;height:45px;" />
-              {% else %}
-              <img src="/static/images/24tut/hom/dp.jpg" style="width:45px;border-radius:50%;height:45px;" />
-              {% endif %}
-            </div>
-          </div>
-          <div class="col-md-11 col-xs-10 text-left" ng-show="ft.clicked==1">
-            <div class="row">
-              <div class="no_pad" style="border-bottom: 1px solid #eaecf0;display: flex;align-items: center;margin-left: 1em;">
-                <div class="contentrow" style="flex: 0 1 auto;max-width:75%;">
-                  <div class="toprow" style="">
-                    <span style="font-size:17px;cursor:pointer;color:#3C5899">{{ftc.user.username}}</span>
-                  </div>
-                  <div class="bottomrow" style="font-size: 1em;">
-                    <span class="" style="font-size:15px;color: #3C4556;">{{ftc.txt}}
-                    </span>
-                  </div>
-                  <div class="bottomrow" style="font-size: 1em;">
-                    <span class="" style="font-size:15px;color:#3C5899;">Posted by {{ftc.created}}
-                    </span>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          {% endfor %}
+          {% if request.user.is_authenticated %}
           <div class="row">
             <div class="text-center" style="padding-top:2em;margin-left:0.5em;">
               <div class="col-md-1 col-xs-2">
@@ -169,21 +138,50 @@
                   <input name="typ" type="hidden" class="form-control" value="comment">
                   <input name="parent" type="hidden" class="form-control" value="{{ft.pk}}">
                   <textarea type="textarea" placeholder='Post a Answer Here..' style='width:75%;resize: none;margin-left: 0.5em;' name="txt"></textarea>
-                  <div style="width:75%;background-color: #F2F2F2;border:1px solid #eaecf0;padding:0;margin-top: -2px;height:4em;text-align: right;margin-left: 0.5em;">
-                    <button class="btn btn-primary" style="margin:0.7em 2em 0 0" padding="0em" type="submit">Post</button>
+                  <div style="width:75%;padding:0;margin-top: -2px;height:4em;text-align: right;margin-left: 0.5em;">
+                    <button class="btn btn-primary" style="margin:0.7em 0 0 0;padding:0.2em 1em;border-radius:0%"  type="submit"><i class="fa fa-paper-plane" aria-hidden="true"></i></button>
                   </div>
                 </form>
               </div>
             </div>
           </div>
           {% endif %}
+          {% for ftc in ft.forumthread.all %}
+          <div class="col-md-1 col-xs-2" ng-show="ft.clicked==1" id="id">
+            <div style="width:60px;padding-top: 1.5em;">
+              {% if ftc.user.profile.displayPicture %}
+              <img src="{{ftc.user.profile.displayPicture.url}}" style="width:45px;border-radius:50%;height:45px;" />
+              {% else %}
+              <img src="/static/images/24tut/hom/dp.jpg" style="width:45px;border-radius:50%;height:45px;" />
+              {% endif %}
+            </div>
+          </div>
+          <div class="col-md-11 col-xs-10 text-left" >
+            <div class="row">
+              <div class="no_pad" style="border-top: 1px solid #eaecf0;display: flex;align-items: center;margin-left: 1em;">
+                <div class="contentrow" style="flex: 0 1 auto;max-width:75%;">
+                  <!-- <div class="toprow" style="">
+                    <span style="font-size:17px;cursor:pointer;color:#3C5899">{{ftc.user.username}}</span>
+                  </div> -->
+                  <div class="bottomrow" style="font-size: 1em;">
+                    <span class="" style="font-size:15px;color: #3C4556;">{{ftc.txt}}
+                    </span>
+                  </div>
+                  <div class="bottomrow" style="font-size: 1em;">
+                    <span class="" style="font-size:15px;color:#9E9E9E;">Posted  {{ftc.created}} by <span style="color:#3C5899;">{{ftc.user.username}}</span>
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          {% endfor %}
+
         </div>
 
-        <div class="col-md-2 text-center">
-          <button class="btn btn-primary" style="margin:1.5em 2em 0 0" padding="0em" onclick='click[{{ ft.clicked }}]'>View</button>
-        </div>
       </div>
       {% endfor %}
+      {% if request.user.is_authenticated %}
       <div class="row">
         <div class="text-center" style="padding-top:2em;margin-left:0.5em;">
           <div class="col-md-1 col-xs-2">
@@ -200,24 +198,20 @@
               <input name="typ" type="hidden" class="form-control" value="forum">
               <input name="page" type="hidden" class="form-control" value="{{blogname}}">
               <textarea type="textarea" placeholder='Post a Question Here..' style='width:77%;resize: none;' name="txt"></textarea>
-              <div style="width:77%;background-color: #F2F2F2;border:1px solid #eaecf0;padding:0;margin-top: -2px;height:4em;text-align: right">
+              <div style="width:77%;padding:0;margin-top: -2px;height:4em;text-align: right">
                 <span style="cursor:pointer; "><i class="fa fa-paperclip" style="font-size:1.5em;margin:0.8em;"  onclick="document.getElementById('selectedFile').click();"></i></span>
                 <input type="file" name="files" style="display: none;" id="selectedFile">
-                <span><button class="btn btn-primary" style="margin:-0.5em 2em 0 0" type="submit">Post</button> </span>
+                <span><button class="btn btn-primary" style="margin:-0.5em 0 0 0;padding:0.2em 1em;border-radius:0%" type="submit">Post</button> </span>
               </div>
             </form>
           </div>
         </div>
       </div>
+      {% endif %}
     </div>
   </div>
 </div>
 
-<script>
-  var click = function(val){
-    val = 1;
-    console.log(val);
-  }
-</script>
+
 
 {% endblock %}

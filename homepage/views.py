@@ -55,6 +55,14 @@ def team(request):
     subobjs = Subject.objects.all().order_by('level')
     return render(request, 'team.html', {"subobj":subobjs,'seoDetails':{'title':globalSettings.SEO_TITLE,'description':globalSettings.SEO_DESCRIPTION,'image':globalSettings.SEO_IMG,'width':globalSettings.SEO_IMG_WIDTH,'height':globalSettings.SEO_IMG_HEIGHT}})
 
+def ncertSolutions(request):
+    subobjs = Subject.objects.all().order_by('level')
+    return render(request, 'ncertSolutions.html', {"subobj":subobjs,'seoDetails':{'title':globalSettings.SEO_TITLE,'description':globalSettings.SEO_DESCRIPTION,'image':globalSettings.SEO_IMG,'width':globalSettings.SEO_IMG_WIDTH,'height':globalSettings.SEO_IMG_HEIGHT}})
+
+def courses(request):
+    subobjs = Subject.objects.all().order_by('level')
+    return render(request, 'discoverCourses.html', {"subobj":subobjs,'seoDetails':{'title':globalSettings.SEO_TITLE,'description':globalSettings.SEO_DESCRIPTION,'image':globalSettings.SEO_IMG,'width':globalSettings.SEO_IMG_WIDTH,'height':globalSettings.SEO_IMG_HEIGHT}})
+
 def account(request):
     try:
         subobjs = Subject.objects.all().order_by('level')
@@ -449,7 +457,7 @@ def desclaimer(request):
     return render(request,"desclaimer.html" , {"home" : False , "subobj":subobjs,"brandLogo" : globalSettings.BRAND_LOGO , "brandLogoInverted": globalSettings.BRAND_LOGO_INVERT,'seoDetails':{'title':globalSettings.SEO_TITLE,'description':globalSettings.SEO_DESCRIPTION,'image':globalSettings.SEO_IMG,'width':globalSettings.SEO_IMG_WIDTH,'height':globalSettings.SEO_IMG_HEIGHT}})
 
 def SaveForumDetails(request):
-    print request.GET,request.POST
+    print request.GET,request.POST,request.FILES
     if 'typ' in request.POST:
         if request.POST['typ'] == 'comment':
             parentObj = ForumThread.objects.get(pk=int(request.POST['parent']))
@@ -461,8 +469,14 @@ def SaveForumDetails(request):
         else:
             page = str(request.POST['page'])
             retUrl = '/'+page+'/'
-            attachment = request.FILES['files']
-            data = {'user':request.user,'page':page,'txt':str(request.POST['txt']),'attachment':attachment}
+            data = {'user':request.user,'page':page}
+            if len(str(request.POST['txt']))>0:
+                data['txt'] = str(request.POST['txt'])
+            try:
+                attachment = request.FILES['files']
+                data['attachment'] = attachment
+            except:
+                pass
             print data,'creating dataaaaaaaaaaa'
             fObj = ForumThread.objects.create(**data)
             return redirect(retUrl)
