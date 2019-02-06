@@ -1241,6 +1241,7 @@ class MessageCheck(APIView):
         print sObj,"printtttttttttttttttttttttttttttttttt"
         return Response({"data":sObj}, status = status.HTTP_200_OK)
 
+import shorturlpy
 class SendFeedBackRequest(APIView):
     renderer_classes = (JSONRenderer,)
     permission_classes=(permissions.AllowAny,)
@@ -1274,7 +1275,10 @@ class SendFeedBackRequest(APIView):
                         pass
                     try:
                         phone = visitor.phoneNumber
-                        text = "Please click on the below link to submit your feedback " + link
+                        loadurl = shorturlpy.ShortUrlPy()
+                        data = loadurl.ShortenUrl(link, 'tinyurl')
+                        print data
+                        text = "Please click on the below link to submit your feedback " + data
                         url = globalSettings.SMS_API_PREFIX + 'number=%s&message=%s'%(phone , text )
                         requests.get(url)
                     except:
