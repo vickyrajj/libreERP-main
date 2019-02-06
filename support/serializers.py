@@ -194,14 +194,14 @@ class ChatThreadSerializer(serializers.ModelSerializer):
                 setattr(instance , key , validated_data[key])
             except:
                 pass
-        if 'user' in self.context['request'].data and 'firstAssign' not in self.context['request'].data:
+        if 'user' in self.context['request'].data:
             instance.user = User.objects.get(pk=int(self.context['request'].data['user']))
 
-        if 'user' in self.context['request'].data and 'firstAssign' in self.context['request'].data:
-            if instance.user is None:
-                instance.user = User.objects.get(pk=int(self.context['request'].data['user']))
-            else:
-                raise ValidationError(detail={'PARAMS' : 'Already Taken'})
+        # if 'user' in self.context['request'].data and 'firstAssign' in self.context['request'].data:
+        #     if instance.user is None:
+        #         instance.user = User.objects.get(pk=int(self.context['request'].data['user']))
+        #     else:
+        #         raise ValidationError(detail={'PARAMS' : 'Already Taken'})
 
         instance.save()
 

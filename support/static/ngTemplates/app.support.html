@@ -5,7 +5,7 @@
       <!-- middle part -->
        <div class="col-md-10" style="padding:0px; min-height:92vh;width:85%">
         <div class="col-md-3 anim-in-out anim-fade" style="width:24%;padding:0px;height:92vh;border-right:2px #eeeeee solid;" ng-repeat="cust in chatsInView">
-          <chat-box data = "cust" index="$index" id="chatBox{{cust.uid}}" close-chat="closeChatBox" webRtcAddress = "webRtcAddress" ></chat-box>
+          <chat-box data = "cust" index="$index" id="chatBox{{cust.uid}}" close-chat="closeChatBox" webRtcAddress = "webRtcAddress" device="device" ></chat-box>
         </div>
       </div>
       <!-- right side part -->

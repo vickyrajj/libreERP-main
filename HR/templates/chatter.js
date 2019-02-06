@@ -786,6 +786,10 @@ document.addEventListener("DOMContentLoaded", function(event) {
         isAgentOnline = true;
         // videoCallAccepted = true
         // checkVideoCallAccepted()
+
+        agentName.innerHTML = args[2].first_name+' '+args[2].last_name
+        document.getElementById('logo_ji').src=args[2].profile.displayPicture
+
         return
       }else if (args[0]=='O') {
         console.log('yes online');
@@ -3028,7 +3032,7 @@ function addExitConfirmation() {
       }, 1000);
       if (message.attachmentType=='image') {
         msgCount++;
-        attachedFile = '<img  id="attachedFile'+msgCount+'" src="'+ message.attachment +'" style="width:200px; box-sizing:border-box;">'
+        attachedFile = '<img  id="attachedFile'+msgCount+'" src="'+ message.attachment +'" style="width:200px; min-height:10px; box-sizing:border-box;">'
       }else if (message.attachmentType=='instructionImage') {
           console.log('instructionImage');
         attachedFile = '<img  src="'+ message.attachment +'" style="width:200px; box-sizing:border-box;">'
@@ -3081,7 +3085,7 @@ function addExitConfirmation() {
                         '<div style=" clear: both; float:right; background-color:'+ windowColor +'; color:'+fontAndIconColor+';  padding:5px 10px;margin:8px;max-width:94%; border-radius:20px 0px 20px 20px; box-sizing:border-box; ">'+
                           msgDiv+
                         '</div>'+
-                        '<div style="clear: both; float:right; padding:0px 10px; font-size:9px !important;">'+ message.timeDate +'</div>'+
+                        '<div style="clear: both; float:right; padding:0px 10px 5px 10px; font-size:9px !important;">'+ message.timeDate +'</div>'+
                       '</div>'
         return msgHtml
 
@@ -3114,15 +3118,15 @@ setInterval(function () {
   // alert(currentUrl)
   console.log(agentPk);
   if (agentPk) {
-    if(currentUrl!==window.location.href){
+    // if(currentUrl!==window.location.href){
       currentUrl=window.location.href;
       connection.session.publish(wamp_prefix+'service.support.agent.'+agentPk, [uid , 'CU' , currentUrl] , {}, {
         acknowledge: true
       })
-    }
+    // }
   }
 
-}, 5000);
+}, 10000);
 
 
 var activityPk;

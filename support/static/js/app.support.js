@@ -25,6 +25,42 @@ app.config(function($stateProvider, anTinyconProvider) {
 app.controller("businessManagement.support", function($scope, $state, $users, $stateParams, $http, Flash, $timeout, $interval, $uibModal, ngAudio, anTinycon) {
 
 
+  $scope.device = {name:''}
+
+  function lgDevice(x) {
+    if (x.matches) {
+      $scope.device.name = 'large'
+    }
+  }
+
+  function mdDevice(x) {
+    if (x.matches) {
+      $scope.device.name = 'medium'
+    }
+  }
+
+  function smDevice(x) {
+    if (x.matches) {
+      $scope.device.name = 'small'
+    }
+  }
+
+
+
+  var sm = window.matchMedia("(max-width: 600px)")
+  smDevice(sm) // Call listener function at run time
+  sm.addListener(smDevice) // Attach listener function on state changes
+
+  var md = window.matchMedia("(min-width: 992px) and (max-width: 1499px)")
+  mdDevice(md)
+  md.addListener(mdDevice)
+
+  var lg = window.matchMedia("(min-width: 1500px)")
+  lgDevice(lg)
+  lg.addListener(lgDevice)
+
+
+
   $scope.newUsers = [];
   $scope.myUsers = [];
 
@@ -564,6 +600,8 @@ app.controller("businessManagement.support", function($scope, $state, $users, $s
     var newUserIndx = indx;
     var newUid = uid;
 
+    console.log($scope.newUsers[indx]);
+
     $http({
       method: 'GET',
       url: '/api/support/chatThread/?uid=' + newUid
@@ -576,8 +614,7 @@ app.controller("businessManagement.support", function($scope, $state, $users, $s
       } else {
 
         var toPatch = {
-          user: $scope.me.pk,
-          firstAssign: 1
+          user: $scope.me.pk
         }
 
         $http({
@@ -592,7 +629,7 @@ app.controller("businessManagement.support", function($scope, $state, $users, $s
           $scope.newUsers.splice(newUserIndx, 1);
 
           $scope.status = 'AP';
-          connection.session.publish(wamp_prefix + 'service.support.chat.' + newUid, [$scope.status, $scope.me.pk], {}, {
+          connection.session.publish(wamp_prefix + 'service.support.chat.' + newUid, [$scope.status, $scope.me.pk, $scope.me], {}, {
             acknowledge: true
           }).
           then(function(publication) {
@@ -626,10 +663,8 @@ app.controller("businessManagement.support", function($scope, $state, $users, $s
               });
             }
           })
-        }).catch(function(err) {
-          Flash.create('warning', 'picked by someone else')
-        })
 
+        })
       }
 
 

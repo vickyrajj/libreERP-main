@@ -1119,13 +1119,15 @@ app.directive('chatBox', function() {
     scope: {
       data: '=',
       index: '=',
-      closeChat: '='
+      closeChat: '=',
+      device:'='
     },
     controller: function($scope, $users, $uibModal, $http, ngAudio, Flash, $sce, webNotification) {
       $scope.IsVisitorOn = true;
       $scope.isVisitorVideoShowing = true;
       $scope.location = {}
       console.log($scope.data, "^^^^^^^^^^^^^^^^^^^^^");
+
 
       $scope.sendCustomMessage = function (message) {
         if (message==undefined) {
@@ -1338,15 +1340,26 @@ app.directive('chatBox', function() {
 
 
 
-
       $scope.setHeight = function() {
         // console.log('Here');
         if ($scope.data.audio) {
-          $scope.msgDivHeight = 61
+          if ($scope.device.name=='large') {
+            $scope.msgDivHeight = 70
+          }else {
+            $scope.msgDivHeight = 62
+          }
         } else if ($scope.data.video) {
-          $scope.msgDivHeight = 46
+          if ($scope.device.name=='large') {
+            $scope.msgDivHeight = 54
+          }else {
+            $scope.msgDivHeight = 46
+          }
         } else {
-          $scope.msgDivHeight = 66
+          if ($scope.device.name=='large') {
+            $scope.msgDivHeight = 74
+          }else {
+            $scope.msgDivHeight = 66
+          }
         }
       }
 

@@ -99,6 +99,12 @@ var hasAccesss=true;
         if (scope.newUsers[i].uid == args[0]) {
 
           scope.onNotification(scope.newUsers[i].uid,args[2].message);
+
+          if (args.indexOf('continue')!=-1) {
+            scope.newUsers[i].is_continue = true
+          }
+
+
           if (args[1] == 'M') {
             scope.sound.play();
             scope.newUsers[i].messages.push(args[2])
@@ -142,6 +148,7 @@ var hasAccesss=true;
 
       function pushIntoMyUsers(indx , data) {
         dontPush = false;
+        console.log(data,';ggggggggggggggggggggggggggg');
         for (var i = 0; i < scope.myUsers[indx].messages.length; i++) {
           if (data.pk == scope.myUsers[indx].messages[i].pk) {
             dontPush = true;
@@ -303,6 +310,7 @@ var hasAccesss=true;
         return
       }
 
+
       var detail = {
         name: '',
         uid: args[0],
@@ -322,6 +330,10 @@ var hasAccesss=true;
         AudioVideoOn:true,
         alreadyDone:false,
         closeIframe:false
+      }
+
+      if (args.indexOf('continue')!=-1) {
+        detail.is_continue = true
       }
 
       if (args[4]) {
