@@ -254,5 +254,9 @@ app.controller('controller.profile', function($scope, $http, $aside, $state, Fla
   $scope.data = $scope.tab.data;
   $scope.profile = $scope.data.profile;
   $scope.tutorData = $scope.data.tutors24Profile;
-  $scope.detail = $scope.data.tutors24Profile.detail.split("||");
+  if ($scope.data.tutors24Profile.detail) {
+    $scope.detail = $scope.data.tutors24Profile.detail.split("||");
+  }else{
+    $scope.detail = '';
+  }
 });

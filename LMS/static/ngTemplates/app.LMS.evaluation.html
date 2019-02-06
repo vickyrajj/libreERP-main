@@ -17,6 +17,15 @@
               <generic-Table data="data.tableData" config-Obj="{{config}}" callback-Fn="tableAction"></generic-Table>
           </div>
       </uib-tab>
+      <uib-tab>
+          <uib-tab-heading>
+              Paper Group
+              <i class="fa fa-list-ul"></i>
+          </uib-tab-heading>
+          <div class="container-fluid">
+              <generic-Table data="data.paperGroupTableData" config-Obj="{{groupConfig}}" callback-Fn="tableActionPaperGroup"></generic-Table>
+          </div>
+      </uib-tab>
 
       <uib-tab ng-repeat="tab in tabs" active="tab.active" disable="tab.disabled">
           <uib-tab-heading >
@@ -28,6 +37,9 @@
           </div>
           <div ng-if="tab.app == 'paperExplorer'">
               <div ng-include="'/static/ngTemplates/app.LMS.evaluation.explore.html'"></div>
+          </div>
+          <div ng-if="tab.app == 'paperGroupEditor'">
+              <div ng-include="'/static/ngTemplates/app.LMS.evaluation.paper.group.form.html'"></div>
           </div>
       </uib-tab>
   </uib-tabset>

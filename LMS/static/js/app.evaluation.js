@@ -19,10 +19,24 @@ app.controller('home.LMS.evaluation', function($scope, $http, $aside, $state, Fl
     itemTemplate: '/static/ngTemplates/app.LMS.evaluation.item.html',
   }, ];
 
+  groupViews = [{
+    name: 'list',
+    icon: 'fa-th-large',
+    template: '/static/ngTemplates/genericTable/genericSearchList.html',
+    itemTemplate: '/static/ngTemplates/app.LMS.evaluation.paper.group.html',
+  }, ];
 
   $scope.config = {
     views: views,
     url: '/api/LMS/paper/',
+    searchField: 'ques',
+    deletable: true,
+    itemsNumPerView: [16, 32, 48],
+  }
+
+  $scope.groupConfig = {
+    views: groupViews,
+    url: '/api/LMS/paperGroup/',
     searchField: 'ques',
     deletable: true,
     itemsNumPerView: [16, 32, 48],
@@ -59,6 +73,98 @@ app.controller('home.LMS.evaluation', function($scope, $http, $aside, $state, Fl
     }
 
   }
+
+  $scope.tableActionPaperGroup = function(target, action, mode) {
+    console.log(target, action, mode, '-----------tattta acccc mmmm');
+    console.log($scope.data.paperGroupTableData, '-------data');
+
+    for (var i = 0; i < $scope.data.paperGroupTableData.length; i++) {
+      if ($scope.data.paperGroupTableData[i].pk == parseInt(target)) {
+        if (action == 'edit') {
+          var title = 'Edit Paper Group :';
+          var appType = 'paperGroupEditor';
+        }
+        $scope.paperGroupData = $scope.data.paperGroupTableData[i]
+        $scope.addTab({
+          title: title + $scope.data.paperGroupTableData[i].title,
+          cancel: true,
+          app: appType,
+          data: {
+            pk: target,
+            index: i
+          },
+          active: true
+        })
+      }
+    }
+
+  }
+
+  $scope.savePaperGroup = function() {
+    console.log($scope.paperGroupData);
+
+    var f = $scope.paperGroupData
+    if (f.title.length == 0 || f.description.length == 0) {
+      Flash.create('danger', 'All Fields Are Required')
+      return
+    }
+    if (f.blogData.ogimage == emptyFile && (f.blogData.ogimageUrl == '' || f.blogData.ogimageUrl == undefined)) {
+      Flash.create('danger', 'Either the OG image file OR og image url is required')
+      return;
+    }
+    if (f.blogData.tagsCSV == '' || f.blogData.section == '' || f.blogData.author == '' || f.blogData.description == '') {
+      Flash.create('danger', 'Please check the All SEO related fields');
+      return;
+    }
+    var toSend = {
+      title: f.title,
+      description: f.description,
+      subject: f.subject.pk
+    }
+    var method = 'PATCH'
+    var url = '/api/LMS/paperGroup/' + f.pk + '/'
+    $http({
+      method: method,
+      url: url,
+      data: toSend,
+    }).
+    then(function(response) {
+      var f = $scope.paperGroupData
+      var fd = new FormData();
+      if (f.blogData.ogimage != emptyFile && typeof f.blogData.ogimage != 'string' && f.blogData.ogimage != null) {
+        fd.append('ogimage', f.blogData.ogimage);
+      } else {
+        fd.append('ogimageUrl', f.blogData.ogimageUrl);
+      }
+      fd.append('contentType', 'paperGroup');
+      fd.append('title', f.blogData.title);
+      fd.append('shortUrl', f.blogData.shortUrl);
+      fd.append('description', f.blogData.description);
+      fd.append('tagsCSV', f.blogData.tagsCSV);
+      fd.append('section', f.blogData.section);
+      fd.append('author', f.blogData.author);
+      fd.append('header', f.pk)
+      var method = 'POST';
+      var url = '/api/PIM/blog/';
+      if (f.blogData.pk) {
+        method = 'PATCH';
+        url += f.blogData.pk + '/';
+      }
+      $http({
+        method: method,
+        url: url,
+        data: fd,
+        transformRequest: angular.identity,
+        headers: {
+          'Content-Type': undefined
+        }
+      }).
+      then(function(response) {
+        Flash.create('success', 'Saved Successfully')
+      });
+    })
+  }
+
 
 
   $scope.tabs = [];
@@ -171,7 +277,7 @@ app.controller("home.LMS.evaluation.form", function($scope, $state, $users, $sta
             subject: '',
             blogData: {
               title: '',
-              shortUrl:'',
+              shortUrl: '',
               ogimage: emptyFile,
               ogimageUrl: '',
               description: '',
@@ -357,7 +463,7 @@ app.controller("home.LMS.evaluation.form", function($scope, $state, $users, $sta
   console.log($scope.form.description, 'eeee');
   $scope.save = function() {
 
-    if ($scope.form.group.pk==undefined) {
+    if ($scope.form.group.pk == undefined) {
       Flash.create('danger', 'Please Select Proper Paper Group')
       return
     }
@@ -371,7 +477,7 @@ app.controller("home.LMS.evaluation.form", function($scope, $state, $users, $sta
       Flash.create('danger', 'Add Question Paper description')
       return
     }
-    
+
     var toSend = []
     for (var i = 0; i < $scope.selectedquestions.length; i++) {
       console.log($scope.selectedquestions[i])
@@ -393,9 +499,9 @@ app.controller("home.LMS.evaluation.form", function($scope, $state, $users, $sta
           questions: toSend,
           name: $scope.form.name,
           timelimit: $scope.form.timelimit,
-          group:$scope.form.group.pk,
-          description:$scope.form.description,
-          level:$scope.form.level
+          group: $scope.form.group.pk,
+          description: $scope.form.description,
+          level: $scope.form.level
         }
       }).
       then(function(response) {
@@ -412,9 +518,9 @@ app.controller("home.LMS.evaluation.form", function($scope, $state, $users, $sta
           questions: toSend,
           name: $scope.form.name,
           timelimit: $scope.form.timelimit,
-          group:$scope.form.group.pk,
-          description:$scope.form.description,
-          level:$scope.form.level
+          group: $scope.form.group.pk,
+          description: $scope.form.description,
+          level: $scope.form.level
         }
       }).
       then(function(response) {

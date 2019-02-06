@@ -55,6 +55,14 @@ def team(request):
     subobjs = Subject.objects.all().order_by('level')
     return render(request, 'team.html', {"subobj":subobjs,'seoDetails':{'title':globalSettings.SEO_TITLE,'description':globalSettings.SEO_DESCRIPTION,'image':globalSettings.SEO_IMG,'width':globalSettings.SEO_IMG_WIDTH,'height':globalSettings.SEO_IMG_HEIGHT}})
 
+def ncertSolutions(request):
+    subobjs = Subject.objects.all().order_by('level')
+    return render(request, 'ncertSolutions.html', {"subobj":subobjs,'seoDetails':{'title':globalSettings.SEO_TITLE,'description':globalSettings.SEO_DESCRIPTION,'image':globalSettings.SEO_IMG,'width':globalSettings.SEO_IMG_WIDTH,'height':globalSettings.SEO_IMG_HEIGHT}})
+
+def courses(request):
+    subobjs = Subject.objects.all().order_by('level')
+    return render(request, 'discoverCourses.html', {"subobj":subobjs,'seoDetails':{'title':globalSettings.SEO_TITLE,'description':globalSettings.SEO_DESCRIPTION,'image':globalSettings.SEO_IMG,'width':globalSettings.SEO_IMG_WIDTH,'height':globalSettings.SEO_IMG_HEIGHT}})
+
 def account(request):
     try:
         subobjs = Subject.objects.all().order_by('level')
