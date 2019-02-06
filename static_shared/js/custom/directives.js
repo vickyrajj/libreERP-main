@@ -1112,7 +1112,7 @@ app.directive('reviewInfo', function() {
 
 app.directive('chatBox', function() {
   return {
-    templateUrl: '/static/ngTemplates/chatBox.html',
+    templateUrl: '/static/ngTemplates/newChatBox.html',
     restrict: 'E',
     transclude: true,
     replace: true,

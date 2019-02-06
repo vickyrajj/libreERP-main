@@ -155,17 +155,17 @@ var hasAccesss=true;
 
       for (var i = 0; i < scope.myUsers.length; i++) {
         if (scope.myUsers[i].uid == args[0]) {
-          // if((!scope.myUsers[i].boxOpen||!isfocused) && args[1]=='M'){
-          //   scope.onNotification(scope.myUsers[i].uid,args[2].message,i);
-          // }
-          // else if((!scope.myUsers[i].boxOpen||!isfocused) && args[1]=='VCS'){
-          //   scope.onNotification(scope.myUsers[i].uid,"Video call!!!",i);
-          // }else if((!scope.myUsers[i].boxOpen||!isfocused) && args[1]=='AC'){
-          //   scope.onNotification(scope.myUsers[i].uid,"Audio call!!!",i);
-          // }
-          // else if((!scope.myUsers[i].boxOpen||!isfocused) && args[1]=='MF'){
-          //   scope.onNotification(scope.myUsers[i].uid,"Media File Receicved",i);
-          // }
+          if((!scope.myUsers[i].boxOpen||!isfocused) && args[1]=='M'){
+            scope.onNotification(scope.myUsers[i].uid,args[2].message,i);
+          }
+          else if((!scope.myUsers[i].boxOpen||!isfocused) && args[1]=='VCS'){
+            scope.onNotification(scope.myUsers[i].uid,"Video call!!!",i);
+          }else if((!scope.myUsers[i].boxOpen||!isfocused) && args[1]=='AC'){
+            scope.onNotification(scope.myUsers[i].uid,"Audio call!!!",i);
+          }
+          else if((!scope.myUsers[i].boxOpen||!isfocused) && args[1]=='MF'){
+            scope.onNotification(scope.myUsers[i].uid,"Media File Receicved",i);
+          }
           if (args[1] == 'M') {
             scope.sound.play();
             pushIntoMyUsers(i, args[2])
