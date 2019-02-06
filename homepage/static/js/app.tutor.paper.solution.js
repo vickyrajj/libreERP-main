@@ -1,3 +1,5 @@
+var app = angular.module('app', [ 'ui.bootstrap',]);
+console.log('ininnnnnnnnnnnnnnnnnn jsssssssssssss');
 app.controller('main', function($scope, $http, $interval,$rootScope) {
   console.log('in mainnnn');
   $scope.signin = function(loggedIn) {
@@ -5,10 +7,8 @@ app.controller('main', function($scope, $http, $interval,$rootScope) {
   }
 })
 
-
-
 app.controller('startexam', function($scope, $http, $timeout, $interval, $uibModal) {
-
+console.log('innnnnnnnnnnn cooooooonttttttttttooo');
   $scope.initiateMath = function() {
     MathJax.Hub.Queue(["Typeset", MathJax.Hub]);
   }
