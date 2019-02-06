@@ -1584,7 +1584,8 @@ hr {
   left: 78%;
   z-index: -20;
 }
-.teamcircle{
+
+.teamcircle {
   width: 130px;
   height: 130px;
   border-radius: 65px;
@@ -1594,10 +1595,10 @@ hr {
   z-index: -20;
   opacity: 0;
 }
-.team-member:hover .teamcircle{
+
+.team-member:hover .teamcircle {
   opacity: 0.5;
 }
-
 
 .colorcircle1 {
   width: 130px;
@@ -2134,7 +2135,6 @@ hr {
 
 .contentrow {
   font-size: 13px;
-
 }
 
 .nodisplay {
@@ -2403,6 +2403,17 @@ hr {
   color: #343334;
 }
 
+.card_mob {
+  width: 100px;
+  height: 100px;
+}
+
+.time_div {
+  padding-left: 0px;
+  padding-right: 0px;
+  margin:0px;
+}
+
 /* exams css properties */
 /* for normal screens ends here.... */
 @media only screen and (device-width: 1352px) and (device-height: 641px) {
@@ -2606,7 +2617,6 @@ hr {
   .abt_div {
     width: 28%;
   }
-
 
   /* for hd screens ends here.... */
 }
@@ -2860,6 +2870,7 @@ hr {
   background-color: #fff;
 } */
 @media only screen and (max-width:768px) {
+
   /* mobile display size starts here.... */
   .other_chap {
     width: 100%;
@@ -3147,7 +3158,7 @@ hr {
 
   .movie-card {
     width: 100%;
-    padding-left:13px;
+    padding-left: 13px;
     min-height: 50vh;
   }
 
@@ -3620,6 +3631,10 @@ hr {
     font-size: 0.5em;
   }
 
+  #menu {
+    display: none;
+  }
+
   .menu_list_div {
     background-image: linear-gradient(-179deg, #0b2674, #edae2c);
     height: 100%;
@@ -3713,7 +3728,8 @@ hr {
     right: 60px;
     z-index: 7;
   }
-  .user_img{
+
+  .user_img {
     border-radius: 50%;
     position: fixed;
     top: -16px;
@@ -3754,13 +3770,17 @@ hr {
     padding: 0px;
     width: 100%;
   }
-
+  .time_div {
+    padding-left: 0px;
+    padding-right: 10px;
+  }
   .card_mob {
-    width: 40px;
+    width: 50px;
+    height: 85px;
   }
 
   .card_mob span {
-    margin-left: -12px;
+    margin-left: -7px;
     font-size: 50px;
   }
 
