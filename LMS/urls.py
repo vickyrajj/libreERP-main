@@ -29,6 +29,8 @@ router.register(r'note' , NoteViewSet , base_name ='note')
 router.register(r'notesection' , NotesSectionViewSet , base_name ='notesection')
 router.register(r'announcement' , AnnouncementViewSet , base_name ='announcement')
 router.register(r'homework' , HomeworkViewSet , base_name ='homework')
+router.register(r'forumthread' , ForumThreadViewSet , base_name ='forumthread')
+router.register(r'forumcomment' , ForumCommentViewSet , base_name ='forumcomment')
 
 
 urlpatterns = [

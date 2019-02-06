@@ -401,3 +401,18 @@ class HomeworkViewSet(viewsets.ModelViewSet):
     queryset = Homework.objects.all()
     filter_backends = [DjangoFilterBackend]
     filter_fields = ['course']
+
+
+class ForumThreadViewSet(viewsets.ModelViewSet):
+    permission_classes = (permissions.IsAuthenticated, isAdmin, )
+    serializer_class = ForumThreadSerializer
+    queryset = ForumThread.objects.all()
+    filter_backends = [DjangoFilterBackend]
+    filter_fields = ['verified']
+
+class ForumCommentViewSet(viewsets.ModelViewSet):
+    permission_classes = (permissions.IsAuthenticated, isAdmin, )
+    serializer_class = ForumCommentSerializer
+    queryset = ForumComment.objects.all()
+    # filter_backends = [DjangoFilterBackend]
+    # filter_fields = ['course']

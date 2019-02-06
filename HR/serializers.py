@@ -22,6 +22,11 @@ class userSearchSerializer(serializers.ModelSerializer):
         model = User
         fields = ( 'pk', 'username' , 'first_name' , 'last_name' , 'profile'  , 'designation','tutors24Profile' )
 
+class userLiteSerializer(serializers.ModelSerializer):
+    profile = userProfileLiteSerializer(many=False , read_only=True)
+    class Meta:
+        model = User
+        fields = ( 'pk', 'username' , 'first_name' , 'last_name'  ,'email', 'profile')
 
 class rankSerializer(serializers.ModelSerializer):
     class Meta:
