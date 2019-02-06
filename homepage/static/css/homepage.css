@@ -2404,14 +2404,17 @@ hr {
 }
 
 .card_mob {
-  width: 100px;
-  height: 100px;
+  width: 150px;
+  height: 95px;
 }
 
 .time_div {
-  padding-left: 0px;
-  padding-right: 0px;
+  padding-left: 10px;
+  padding-right: 10px;
   margin:0px;
+}
+.btn_g {
+margin-left: -25px;
 }
 
 /* exams css properties */
@@ -3786,6 +3789,7 @@ hr {
 
   .btn_g {
     width: 100%;
+    margin-left: 0px;
   }
 
   /* mobile screen size ends here.... */
