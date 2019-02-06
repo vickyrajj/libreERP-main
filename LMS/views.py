@@ -29,6 +29,7 @@ from .serializers import *
 # from subprocess import Popen, PIPE
 import subprocess
 import os
+from PIM.models import blogPost
 
 class SectionViewSet(viewsets.ModelViewSet):
     permission_classes = (permissions.IsAuthenticated, isAdmin, )
@@ -71,8 +72,8 @@ class DownloadQuesPaper(APIView):
         quesPk = list(p.questions.all().values_list('ques',flat=True))
         print quesPk
         ques=Question.objects.filter(id__in = quesPk)
-        tex_body = get_template('my_latex_template.tex').render({"ques" : ques})
-        content= str(tex_body.encode('utf-8')).replace('&quot;','"')
+        tex_body = get_template('paper_latex_template.tex').render({"ques" : ques})
+        content= str(tex_body.encode('utf-8')).replace('&quot;','"').replace('39;',"'")
         # print content
         fN = '%s_%s'%(p.pk,datetime.datetime.now(pytz.timezone('Asia/Kolkata')).year)
         mediaDir = os.path.join(globalSettings.BASE_DIR,'media_root')
@@ -80,18 +81,17 @@ class DownloadQuesPaper(APIView):
         f = open(flname , 'wb')
         f.write(content)
         f.close()
-        pdfDir = os.path.join(mediaDir,'pdfFiles')
-        cmd = ['pdflatex','-output-directory', pdfDir, '-interaction', 'nonstopmode', flname]
+        cmd = ['pdflatex','-output-directory', mediaDir, '-interaction', 'nonstopmode', flname]
         proc = subprocess.Popen(cmd)
         proc.communicate()
         try:
-            os.remove(os.path.join(pdfDir, 'questionPaper%s.aux'%(fN)))
-            os.remove(os.path.join(pdfDir, 'questionPaper%s.log'%(fN)))
+            os.remove(os.path.join(mediaDir, 'questionPaper%s.aux'%(fN)))
+            os.remove(os.path.join(mediaDir, 'questionPaper%s.log'%(fN)))
         except:
             print 'error while deleting log filesssssss'
 
         try:
-            pdfFile = os.path.join(pdfDir,'questionPaper%s.pdf'%(fN))
+            pdfFile = os.path.join(mediaDir,'questionPaper%s.pdf'%(fN))
             with open(pdfFile, 'r') as f:
                file_data = f.read()
             response = HttpResponse(file_data, content_type='application/pdf')
@@ -106,7 +106,7 @@ class DownloadQuesPaper(APIView):
         # p = Paper.objects.get(pk = request.GET.get('paper',None))
         # print p.pk,'***************'
         # ques=Question.objects.filter(id__in = [i.ques.pk for i in p.questions.all()])
-        # tex_body = get_template('my_latex_template.tex').render({"ques" : ques})
+        # tex_body = get_template('paper_latex_template.tex').render({"ques" : ques})
         # content= str(tex_body)
         # print content
         # with tempfile.TemporaryDirectory() as tempdir:
@@ -136,6 +136,71 @@ class DownloadQuesPaper(APIView):
         #     # with open(os.path.join(tempdir, 'texput.pdf'), 'rb') as f:
         #     #     pdf = f.read()
         # return queryset
+
+def pdfsCreation(data,name,title,author,desc):
+    # print data
+    tex_body = get_template('book_latex_template.tex').render({"ques" : data,'name':name,'title':title,'author':author,'desc':desc})
+    content= str(tex_body.encode('utf-8')).replace('&quot;','"').replace('39;',"'").replace('&lt;strong&gt;',' ').replace('&lt;/strong&gt;',' ')
+    # print content
+    mediaDir = os.path.join(globalSettings.BASE_DIR,'media_root')
+    flname = os.path.join(mediaDir,'texFiles', '%s.tex'%(name))
+    f = open(flname , 'wb')
+    f.write(content)
+    f.close()
+    cmd = ['pdflatex','-output-directory', mediaDir, '-interaction', 'nonstopmode', flname]
+    proc = subprocess.Popen(cmd)
+    proc.communicate()
+    try:
+        os.remove(os.path.join(mediaDir, '%s.aux'%(name)))
+        os.remove(os.path.join(mediaDir, '%s.log'%(name)))
+    except:
+        print 'error while deleting log filesssssss'
+    return 1
+
+class GeneratePdf(APIView):
+    permission_classes = (permissions.AllowAny, )
+    renderer_classes = (JSONRenderer,)
+    def post(self , request , format = None):
+        print request.GET,request.POST,request.data
+        if 'bookId' in request.data:
+            bookObj = Book.objects.get(pk=int(request.data['bookId']))
+            blogObj = blogPost.objects.get(contentType='book',header=bookObj.pk)
+            # print blogObj
+            allQuestion = Question.objects.none()
+            # print allQuestion,allQuestion.count()
+            sectionsObjs = bookObj.sections.all()
+            # print sectionsObjs.count()
+            sectionPdfCount = 0
+            for sec in sectionsObjs:
+                # print sec
+                secQuestions = Question.objects.filter(bookSection=sec)
+                # print secQuestions.count()
+                allQuestion = allQuestion | secQuestions
+                try:
+                    name = str(sec.shortUrl)
+                    print name,'nameeeeeeeeeeeeeee'
+                    if sec.description:
+                        desc = sec.description
+                    else:
+                        desc = ''
+                    c = pdfsCreation(secQuestions,name,sec.title,blogObj.author,desc)
+                    sectionPdfCount += int(c)
+                except:
+                    print name,'Secion has errors'
+            print 'sections pdf doneeeeeee total {0}'.format(sectionPdfCount)
+            print allQuestion.count()
+            try:
+                name = str(blogObj.shortUrl)
+                if bookObj.description:
+                    desc = bookObj.description
+                else:
+                    desc = ''
+                b = pdfsCreation(allQuestion,name,bookObj.title,blogObj.author,desc)
+                print 'book pdf also Doneeeeeee'
+            except:
+                print 'error while generating Bookkkkkkkkk'
+
+        return Response({}, status = status.HTTP_200_OK)
 
 class SubjectViewSet(viewsets.ModelViewSet):
     permission_classes = (permissions.IsAuthenticated, isAdmin, )
@@ -176,9 +241,14 @@ class PaperattemptHistory(viewsets.ModelViewSet):
 class AnswerViewSet(viewsets.ModelViewSet):
     permission_classes = (permissions.IsAuthenticated, isAdmin, )
     serializer_class = AnswerSerializer
-    queryset = Answer.objects.all()
+    # queryset = Answer.objects.all()
     filter_backends = [DjangoFilterBackend]
     filter_fields = ['user','paper']
+    def get_queryset(self):
+        if 'deleteAll' in self.request.GET:
+            answersObj = Answer.objects.filter(user=int(self.request.GET['user']),paper=int(self.request.GET['paper'])).delete()
+            return Answer.objects.none()
+        return Answer.objects.all()
 
 class CourseViewSet(viewsets.ModelViewSet):
     permission_classes = (permissions.IsAuthenticated, isAdmin, )
@@ -421,3 +491,18 @@ class HomeworkViewSet(viewsets.ModelViewSet):
     queryset = Homework.objects.all()
     filter_backends = [DjangoFilterBackend]
     filter_fields = ['course']
+
+
+class ForumThreadViewSet(viewsets.ModelViewSet):
+    permission_classes = (permissions.IsAuthenticated, isAdmin, )
+    serializer_class = ForumThreadSerializer
+    queryset = ForumThread.objects.all()
+    filter_backends = [DjangoFilterBackend]
+    filter_fields = ['verified']
+
+class ForumCommentViewSet(viewsets.ModelViewSet):
+    permission_classes = (permissions.IsAuthenticated, isAdmin, )
+    serializer_class = ForumCommentSerializer
+    queryset = ForumComment.objects.all()
+    # filter_backends = [DjangoFilterBackend]
+    # filter_fields = ['course']

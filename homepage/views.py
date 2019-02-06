@@ -17,6 +17,7 @@ from API.permissions import *
 from ERP.models import application, permission , module
 from ERP.views import getApps, getModules
 from django.db.models import Q
+from django.db.models import Value, IntegerField
 from django.http import JsonResponse
 import random, string
 from django.utils import timezone
@@ -38,6 +39,10 @@ def aboutUs(request):
     subobjs = Subject.objects.all().order_by('level')
     return render(request, 'aboutUs.html', {"subobj":subobjs,'seoDetails':{'title':globalSettings.SEO_TITLE,'description':globalSettings.SEO_DESCRIPTION,'image':globalSettings.SEO_IMG,'width':globalSettings.SEO_IMG_WIDTH,'height':globalSettings.SEO_IMG_HEIGHT}})
 
+def signin(request):
+    subobjs = Subject.objects.all().order_by('level')
+    return render(request, 'signin.html', {"subobj":subobjs,'seoDetails':{'title':globalSettings.SEO_TITLE,'description':globalSettings.SEO_DESCRIPTION,'image':globalSettings.SEO_IMG,'width':globalSettings.SEO_IMG_WIDTH,'height':globalSettings.SEO_IMG_HEIGHT}})
+
 def contactUs(request):
     subobjs = Subject.objects.all().order_by('level')
     return render(request, 'contact.html', {"subobj":subobjs,'seoDetails':{'title':globalSettings.SEO_TITLE,'description':globalSettings.SEO_DESCRIPTION,'image':globalSettings.SEO_IMG,'width':globalSettings.SEO_IMG_WIDTH,'height':globalSettings.SEO_IMG_HEIGHT}})
@@ -45,6 +50,10 @@ def contactUs(request):
 def testimonials(request):
     subobjs = Subject.objects.all().order_by('level')
     return render(request, 'testimonials.html', {"subobj":subobjs,'seoDetails':{'title':globalSettings.SEO_TITLE,'description':globalSettings.SEO_DESCRIPTION,'image':globalSettings.SEO_IMG,'width':globalSettings.SEO_IMG_WIDTH,'height':globalSettings.SEO_IMG_HEIGHT}})
+
+def team(request):
+    subobjs = Subject.objects.all().order_by('level')
+    return render(request, 'team.html', {"subobj":subobjs,'seoDetails':{'title':globalSettings.SEO_TITLE,'description':globalSettings.SEO_DESCRIPTION,'image':globalSettings.SEO_IMG,'width':globalSettings.SEO_IMG_WIDTH,'height':globalSettings.SEO_IMG_HEIGHT}})
 
 def account(request):
     try:
@@ -66,8 +75,6 @@ def account(request):
         balanceForm = {"minutes1" : 0 , "minutes2" : 0 , "hours1" : 0, "hours2" : 0}
 
     return render(request, 'account.html', {"userObj":userObj, "userProfile":userProfile, "userProf":userProf,"balanceForm":balanceForm, "subobj":subobjs})
-
-
 
 
 def blogDetails(request, blogname):
@@ -153,34 +160,39 @@ def blogDetails(request, blogname):
             if '/' in blogname:
                 prts = blogname.split('/')
 
-            print prts,'partsssssssssssssssss'
+            print len(prts),'partsssssssssssssssss'
 
             if len(prts) == 0:
                 blogname = blogname
                 blogobj = blogPost.objects.get(shortUrl=blogname)
-                groupObj = PaperGroup.objects.get(pk=int(blogobj.header))
-                papersList = Paper.objects.filter(group=groupObj)
-                data['blogobj'] = blogobj
-                data['groupObj'] = groupObj
-                data['papersList'] = papersList
-                print groupObj,blogobj,papersList
-                htmlName = 'questionPapersList.html'
+                if blogobj.contentType == 'paperGroup':
+                    groupObj = PaperGroup.objects.get(pk=int(blogobj.header))
+                    papersList = Paper.objects.filter(group=groupObj)
+                    data['blogobj'] = blogobj
+                    data['groupObj'] = groupObj
+                    data['papersList'] = papersList
+                    print groupObj,blogobj,papersList
+                    htmlName = 'questionPapersList.html'
+                else:
+                    print 1/0
 
             elif len(prts) == 2:
                 blogname = prts[0]
                 quesTitle = prts[1]
                 quesTitle = str(quesTitle).split("-with-answers")[0].replace('-',' ')
-                print quesTitle,'titleeeeeee'
+                print quesTitle,'titleeeeeee----------------'
                 blogobj = blogPost.objects.get(shortUrl=blogname)
-                quesobj = Paper.objects.get(name__iexact=quesTitle)
-                data['blogobj'] = blogobj
-                data['quesobj'] = quesobj
-                data['blogurl'] = blogobj.shortUrl
-                data['quesurl'] = quesobj.name
-                data['user'] = request.user.pk
-                data['paper'] = quesobj.pk
-                print request.user.pk,quesobj
-                htmlName = 'paperSolutions.html'
+                if blogobj.contentType == 'paperGroup':
+                    quesobj = Paper.objects.get(name__iexact=quesTitle)
+                    data['blogobj'] = blogobj
+                    data['quesobj'] = quesobj
+                    data['blogurl'] = blogobj.shortUrl
+                    data['quesurl'] = quesobj.name
+                    data['user'] = request.user.pk
+                    data['paper'] = quesobj.pk
+                    htmlName = 'paperSolutions.html'
+                else:
+                    print 1/0
 
             elif len(prts) == 3:
                 blogname = prts[0]
@@ -188,24 +200,31 @@ def blogDetails(request, blogname):
                 quesTitle = str(quesTitle).replace('-',' ')
                 print quesTitle,'titleeeeeee'
                 blogobj = blogPost.objects.get(shortUrl=blogname)
-                quesobj = Paper.objects.get(name__iexact=quesTitle)
-                print quesobj,quesobj.pk
-                data['id'] = quesobj.pk
-                data['user'] = quesobj.user.pk
-                print data['user'] ,'userrrrr'
-                htmlName = 'exam.html'
+                if blogobj.contentType == 'paperGroup':
+                    quesobj = Paper.objects.get(name__iexact=quesTitle)
+                    data['id'] = quesobj.pk
+                    data['user'] = quesobj.user.pk
+                    print data['user'] ,'userrrrr'
+                    htmlName = 'exam.html'
+                else:
+                    print 1/0
             if blogobj.title:
                 data['seoDetails']['title'] = blogobj.title
             if blogobj.description:
                 data['seoDetails']['description'] = blogobj.description
             if blogobj.ogimage:
-                data['seoDetails']['image'] = blogobj.ogimage.url
-                w, h = get_image_dimensions(blogobj.ogimage.file)
-                print w,h
-                data['seoDetails']['width'] = w
-                data['seoDetails']['height'] = h
+                try:
+                    data['seoDetails']['image'] = blogobj.ogimage.url
+                    w, h = get_image_dimensions(blogobj.ogimage.file)
+                    print w,h,'width,heighttttttttt'
+                    data['seoDetails']['width'] = w
+                    data['seoDetails']['height'] = h
+                except:
+                    pass
+            print htmlName,'html pageeeeeeeeeee'
             return render(request, htmlName, data)
         except:
+            print 'paper group error'
             pass
         # this section is for books pages
         blogobj = blogPost.objects.get(shortUrl=blogname)
@@ -216,7 +235,12 @@ def blogDetails(request, blogname):
             data['seoDetails']['description'] = blogobj.description
         if blogobj.ogimage:
             data['seoDetails']['image'] = blogobj.ogimage.url
-            w, h = get_image_dimensions(blogobj.ogimage.file)
+            try:
+                w, h = get_image_dimensions(blogobj.ogimage.file)
+            except:
+                data['seoDetails']['image'] = globalSettings.SEO_IMG
+                w = globalSettings.SEO_IMG_WIDTH
+                h = globalSettings.SEO_IMG_HEIGHT
             print w,h
             data['seoDetails']['width'] = w
             data['seoDetails']['height'] = h
@@ -245,8 +269,12 @@ def blogDetails(request, blogname):
         elif blogobj.contentType == 'book':
             book = Book.objects.get(pk=blogobj.header)
             sectionobj = Section.objects.filter(book = book.pk)
+            forumData = ForumThread.objects.filter(verified=True).annotate(clicked=Value(0, output_field=IntegerField()))
             data['book'] = book
             data['sectionobj'] = sectionobj
+            data['forumData'] = forumData
+            data['blogname'] = blogname
+            data['bookUrl'] = blogobj.shortUrl
             return render(request, 'book.html', data)
         elif blogobj.contentType == 'course':
             course = Course.objects.get(pk=blogobj.header)
@@ -420,6 +448,26 @@ def desclaimer(request):
     subobjs = Subject.objects.all().order_by('level')
     return render(request,"desclaimer.html" , {"home" : False , "subobj":subobjs,"brandLogo" : globalSettings.BRAND_LOGO , "brandLogoInverted": globalSettings.BRAND_LOGO_INVERT,'seoDetails':{'title':globalSettings.SEO_TITLE,'description':globalSettings.SEO_DESCRIPTION,'image':globalSettings.SEO_IMG,'width':globalSettings.SEO_IMG_WIDTH,'height':globalSettings.SEO_IMG_HEIGHT}})
 
+def SaveForumDetails(request):
+    print request.GET,request.POST
+    if 'typ' in request.POST:
+        if request.POST['typ'] == 'comment':
+            parentObj = ForumThread.objects.get(pk=int(request.POST['parent']))
+            retUrl = '/'+str(parentObj.page)+'/'
+            data = {'parent':parentObj,'txt':str(request.POST['txt']),'user':request.user}
+            print data,'creating dataaaaaaaaaaa'
+            fcObj = ForumComment.objects.create(**data)
+            return redirect(retUrl)
+        else:
+            page = str(request.POST['page'])
+            retUrl = '/'+page+'/'
+            attachment = request.FILES['files']
+            data = {'user':request.user,'page':page,'txt':str(request.POST['txt']),'attachment':attachment}
+            print data,'creating dataaaaaaaaaaa'
+            fObj = ForumThread.objects.create(**data)
+            return redirect(retUrl)
+    else:
+        return redirect('/')
 
 class RegistrationViewSet(viewsets.ModelViewSet):
     permission_classes = (permissions.AllowAny,)

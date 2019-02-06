@@ -1,4 +1,4 @@
-{% extends "base.html" %} {% load staticfiles %} {% block specific_head %}
+{% extends "base.simple.html" %} {% load staticfiles %} {% block specific_head %}
 <title>{{seoDetails.title}}</title>
 
 <meta name="description" content="{{seoDetails.description}}" />
@@ -40,15 +40,15 @@
   {% endblock %} {% block footer %}
   {% include "footer.html" %}
 </div>
-</div>
-</div>
+
 
 {% endblock %}{% block specific_js %}
-<script src="{% static 'js/angular.min.js' %}"></script>
-<script src="{% static 'js/ui-bootstrap-tpls-0.14.3.min.js' %}"></script>
-<script src="{% static 'js/js.cookie.min.js' %}"></script>
-<script src="{% static 'js/app.tutor.common.js' %}"></script>
-<script src="{% static 'js/app.tutor.bookSection.js' %}"></script>
+
+
+
+<script type="text/javascript">
+  {% include "app.tutor.common.js" %}
+</script>
 <script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/MathJax.js?config=TeX-MML-AM_CHTML'></script>
 <script type="text/x-mathjax-config">
   MathJax.Hub.Config({ tex2jax: {inlineMath: [['$','$']]} });

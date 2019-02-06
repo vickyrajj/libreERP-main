@@ -5,7 +5,7 @@ from rest_framework.exceptions import *
 from .models import *
 from PIM.models import blogPost
 import random, string
-from HR.serializers import userSearchSerializer
+from HR.serializers import userSearchSerializer,userSerializer,userLiteSerializer
 from PIM.serializers import blogSerializer
 
 # class TopicLiteSerializer(serializers.ModelSerializer):
@@ -253,7 +253,7 @@ class PaperattemptHistorySerializer(serializers.ModelSerializer):
     paper = PaperSerializer(many = False , read_only = True)
     class Meta:
         model = PaperattemptHistory
-        fields = ('pk' , 'created' , 'paper','mark','attempted','notattempted','reviewed','notview'  )
+        fields = ('pk' , 'created' , 'paper','mark','attempted','notattempted','reviewed','notview','sessionTime'  )
         read_only_fields = ('user', )
     def create(self , validated_data):
         ph = PaperattemptHistory(**validated_data)
@@ -467,3 +467,37 @@ class HomeworkSerializer(serializers.ModelSerializer):
             p.paper = paper
         p.save()
         return p
+
+class ForumCommentSerializer(serializers.ModelSerializer):
+    # parent = ForumThreadSerializer(many = False , read_only = True )
+    user = userLiteSerializer(many = False , read_only = True)
+
+    class Meta:
+        model = ForumComment
+        fields = ('pk' , 'created' , 'parent', 'txt','user')
+
+        def create(self , validated_data):
+            fc = ForumComment(**validated_data)
+            if 'user' in  self.context['request'].data:
+                user = userSearch.objects.get(pk = self.context['request'].data['user'])
+                fc.user = user
+            if 'parent' in  self.context['request'].data:
+                parent = ForumThread.objects.get(pk = self.context['request'].data['parent'])
+                fc.parent = parent
+            fc.save()
+            return fc
+
+class ForumThreadSerializer(serializers.ModelSerializer):
+    user = userLiteSerializer(many = False , read_only = True)
+    forumthread = ForumCommentSerializer(many = True , read_only = True)
+    class Meta:
+        model = ForumThread
+        fields = ('pk' , 'created' , 'updated', 'page', 'txt', 'attachment','user','verified','forumthread')
+
+        def create(self , validated_data):
+            f = ForumThread(**validated_data)
+            if 'user' in  self.context['request'].data:
+                user = userSearch.objects.get(pk = self.context['request'].data['user'])
+                f.user = user
+            f.save()
+            return f

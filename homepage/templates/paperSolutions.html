@@ -50,12 +50,12 @@
   <!-- <a href="/{{blogobj.shortUrl}}/{{quesobj.name.split|join:'-'}}/practise/"></a> -->
   {% verbatim %}
   <div ng-controller="startexam">
-    <div class="col-md-12 text-right" style="margin-top:3em" ng-show="data>0">
+    <div class="col-md-12 text-right" style="margin-top:3em">
       <span class="btn-style1" ng-click='startexam()' style="cursor:pointer">Start Exam</span>
     </div>
-    <div class="col-md-12 text-right" style="margin-top:3em" ng-hide="data>0">
+    <!-- <div class="col-md-12 text-right" style="margin-top:3em" ng-if="data==0">
       <a href="{{url}}"><span class="btn-style1" style="cursor:pointer">Start Exam</span></a>
-    </div>
+    </div> -->
   </div>
   {% endverbatim %}
   <div class="col-md-12">
@@ -103,7 +103,6 @@
 
 
 {% block tutorjs %}
-<script src="{% static 'js/app.tutor.paper.solution.js' %}"></script>
 <script src="{% static 'js/app.tutor.paper.solution.js' %}"></script>
 <script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/MathJax.js?config=TeX-MML-AM_CHTML'></script>
 <script type="text/x-mathjax-config">

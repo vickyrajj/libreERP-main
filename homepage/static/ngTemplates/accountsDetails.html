@@ -5,25 +5,25 @@
         <div class="row text-center" style="border-bottom:1px solid #e0e0e0">
           <h3 style="font-weight:700; color:#414142">Balance</h3>
         </div>
-        <div class="row text-center" style="padding-top:5px;">
-          <div class="col-xs-5 col-md-offset-1">
+        <div class="container-fluid text-center" style="padding-top:5px;">
+          <div class="col-xs-5">
             <div class="row text-center text-muted">
               HOURS
             </div>
             <div class="row" style="margin-top:30px;">
-              <div class="col-xs-6" style="padding-left:30px;padding-right:30px;">
-                <div class="card container-fluid text-muted" style="border-radius:10px;">
+              <div class="col-xs-6 time_div">
+                <div class="card container-fluid text-muted card_mob" style="border-radius:10px;">
                   <span style="font-size:60px;">{{form.hours1}}</span>
                 </div>
               </div>
-              <div class="col-xs-6" style="padding-left:30px;padding-right:30px;">
-                <div class="card container-fluid text-muted" style="border-radius:10px;">
+              <div class="col-xs-6">
+                <div class="card container-fluid text-muted card_mob" style="border-radius:10px;">
                   <span style="font-size:60px;">{{form.hours2}}</span>
                 </div>
               </div>
             </div>
           </div>
-          <div class="col-xs-1">
+          <div class="col-xs-2"style="padding-left:5px;">
             <div class="container-fluid" style="padding-top:50px;">
               <span style="font-size:60px;">:</span>
             </div>
@@ -33,13 +33,13 @@
               MINUTES
             </div>
             <div class="row" style="margin-top:30px;">
-              <div class="col-xs-6" style="padding-left:30px;padding-right:30px;">
-                <div class="card container-fluid text-muted" style="border-radius:10px;">
+              <div class="col-xs-6 time_div">
+                <div class="card container-fluid text-muted card_mob" style="border-radius:10px;">
                   <span style="font-size:60px;">{{form.minutes1}}</span>
                 </div>
               </div>
-              <div class="col-xs-6" style="padding-left:30px;padding-right:30px;">
-                <div class="card container-fluid text-muted" style="border-radius:10px;">
+              <div class="col-xs-6">
+                <div class="card container-fluid text-muted card_mob" style="border-radius:10px;">
                   <span style="font-size:60px;">{{form.minutes2}}</span>
                 </div>
               </div>
@@ -48,10 +48,10 @@
         </div>
         <div class="row text-center" style="padding-top:30px;">
           <div class="col-md-4 col-md-offset-2">
-            <button type="button" class="btn_gradient" ng-click="startSession()">START A SESSION</button>
+            <button type="button" class="btn_gradient btn_g" ng-click="startSession()">START A SESSION</button>
           </div>
           <div class="col-md-4 col-md-offset-2">
-            <button type="button" class="btn_gradient" ng-click="addHours()">ADD MORE TIME</button>
+            <button type="button" class="btn_gradient btn_g" ng-click="addHours()">ADD MORE TIME</button>
           </div>
         </div>
         <div class="row text-center" style="border-bottom:1px solid #e0e0e0; padding-top:30px;">
@@ -108,8 +108,8 @@
         </div>
         <div class="row text-center">
           <div class="btn-group">
-            <a href="/logout" type="button" class="btn btn-danger" style="margin:0px;float:right;padding:0.9em 2em;border-top-right-radius:25px !important">LOGOUT</a>
-            <button type="button" class="btn_gradient" ng-click="editProfile()" style="margin:0px;border-radius:0px;border-top-left-radius:25px">EDIT PROFILE</button>
+            <a href="/logout" type="button" class="btn btn-danger" style="margin:0px;float:right;padding:0.933em 2em;border-bottom-right-radius:7px !important;border-top-right-radius:25px !important">LOGOUT</a>
+            <button type="button" class="btn_gradient" ng-click="editProfile()" style="margin:0px;border-radius:0px;border-bottom-left-radius:7px !important;border-top-left-radius:25px">EDIT PROFILE</button>
           </div>
         </div>
       </div>

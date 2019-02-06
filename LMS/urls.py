@@ -29,6 +29,8 @@ router.register(r'note' , NoteViewSet , base_name ='note')
 router.register(r'notesection' , NotesSectionViewSet , base_name ='notesection')
 router.register(r'announcement' , AnnouncementViewSet , base_name ='announcement')
 router.register(r'homework' , HomeworkViewSet , base_name ='homework')
+router.register(r'forumthread' , ForumThreadViewSet , base_name ='forumthread')
+router.register(r'forumcomment' , ForumCommentViewSet , base_name ='forumcomment')
 
 
 urlpatterns = [
@@ -36,5 +38,6 @@ urlpatterns = [
     url(r'generateQuesPaper/$' , DownloadQuesPaper.as_view() ),
     url(r'questionsAutoCreate/$' , QuestionsAutoCreate.as_view() ),
     url(r'getLevelsAndBooks/$' , GetLevelsAndBooks.as_view() ),
+    url(r'generatePdf/$' , GeneratePdf.as_view() ),
 
 ]
