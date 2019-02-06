@@ -50,19 +50,21 @@ label.star:before {
 
 </head>
 
-<body>
-  <div class="container-fluid">
-    <div class="row" style="padding-top:30px;" >
-      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1 col-sm-offset-1 col-sm-10 col-xs-12" style="background-color:#f6f7fa;padding-bottom:30px">
-        <div class="row text-center">
+<body style="background-color:#f6f7fa">
+  <div class="container-fluid" >
+      {% if chatDetails.customerRating == None and chatDetails.customerFeedback == None %}
+    <div class="row" style="padding-top:30px;">
+      <div class=" text-center col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1 col-sm-offset-1 col-sm-10 col-xs-12" style="background-color:#fff;padding-bottom:30px"  id="alerts">
+        <div class="row text-center" >
           <div class="col-md-12 col-xs-12 col-sm-12">
-            <h2> Please provide your feedback below: <h2>
+            <h2> {{chatDetails.company.service.name}} </h2>
+            <h3> We appreciate your valuable feedback: </h3>
           </div>
         </div>
         <div class="row text-center">
           <div class="col-md-12 col-xs-12 col-sm-12  text-center">
             <div class="stars">
-              <label> Rate your experience with our service:</label>
+              <label> How satisfied are you with the call?</label>
               <form id="stars">
                 <input class="star star-5" id="star-5" type="radio" name="star" />
                 <label class="star star-5" for="star-5"></label>
@@ -80,14 +82,14 @@ label.star:before {
         </div>
         <div class="row text-center">
           <div class=" col-md-offset-3 col-md-6 col-sm-offset-1  col-xs-12 col-sm-10">
-            <label> Feel free to add any other comments or suggestions: </label>
+            <label> Describe your experience:</label>
             <textarea rows="4" class="form-control" cols="80" placeholder="Feedback" id ="feedbackText"></textarea>
           </div>
         </div>
           <div class="row text-center" style="padding-top:15px">
               <div class=" col-md-offset-3 col-md-6 col-sm-offset-1  col-xs-12 col-sm-10">
-            <div id="alerts">
-            </div>
+            <!-- <div id="alerts">
+            </div> -->
           </div>
           </div>
         <div class="row text-center">
@@ -99,6 +101,14 @@ label.star:before {
         </div>
       </div>
     </div>
+    {% else %}
+    <div class="row text-center" style="padding-top:30px;" >
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1 col-sm-offset-1 col-sm-10 col-xs-12" style="background-color:#fff;padding-bottom:30px">
+        <h2>Your Feedback Submitted Successfully</h2>
+          <h3>Thank you for your valuable feedback</h3>
+      </div>
+    </div>
+    {% endif %}
   </div>
   </div>
   </div>
@@ -136,6 +146,7 @@ label.star:before {
       }
       return "";
     }
+
   key  = window.location.href.split('?id=')[1]
   var csrftoken = getCookie("csrftoken")
   function submit(){
@@ -170,7 +181,7 @@ label.star:before {
     var xhttp = new XMLHttpRequest();
     xhttp.onreadystatechange = function() {
       if (this.readyState == 4 && this.status == 200) {
-        document.getElementById('alerts').innerHTML='<div class="alert alert-success">Feedback is Submitted</div>'
+        document.getElementById('alerts').innerHTML='<h2>Your Feedback Submitted Successfully</h2> <h3>Thank you for your valuable feedback</h3>'
       }
     };
     xhttp.open('POST', '{{serverAddress}}/api/support/sendFeedBackRequest/', true);
