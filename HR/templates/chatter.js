@@ -2919,9 +2919,11 @@ function addExitConfirmation() {
   div.innerHTML = confirmationBox
   messageBox.appendChild(div);
   scroll();
+  disableTextArea();
   document.getElementById('confirmationCancel').addEventListener("click", function() {
     var confBox = document.getElementById('confirmationBox')
     confBox.parentNode.removeChild(confBox);
+    enableTextArea();
   });
 
   document.getElementById('confirmationYes').addEventListener("click", function() {

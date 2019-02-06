@@ -118,8 +118,11 @@ class ChatThreadSerializer(serializers.ModelSerializer):
             return ''
     def get_agent_dp(self , obj):
         if obj.user:
-            user = User.objects.get(pk=obj.user.pk)
-            return user.profile.displayPicture.url
+            try:
+                user = User.objects.get(pk=obj.user.pk)
+                return user.profile.displayPicture.url
+            except:
+                return ''
         else:
             return ''
     def get_companyName(self , obj):
