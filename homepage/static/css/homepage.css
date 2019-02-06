@@ -1584,6 +1584,20 @@ hr {
   left: 78%;
   z-index: -20;
 }
+.teamcircle{
+  width: 130px;
+  height: 130px;
+  border-radius: 65px;
+  position: absolute;
+  top: 91%;
+  left: 30%;
+  z-index: -20;
+  opacity: 0;
+}
+.team-member:hover .teamcircle{
+  opacity: 0.5;
+}
+
 
 .colorcircle1 {
   width: 130px;
@@ -2377,6 +2391,7 @@ hr {
 .team-member {
   margin-left: 20px;
   text-align: center;
+  position: relative;
 }
 
 .team_a {
@@ -3132,6 +3147,8 @@ hr {
 
   .movie-card {
     width: 100%;
+    padding-left:13px;
+    min-height: 50vh;
   }
 
   .carddesign {
