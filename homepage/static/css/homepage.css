@@ -1585,6 +1585,21 @@ hr {
   z-index: -20;
 }
 
+.teamcircle {
+  width: 130px;
+  height: 130px;
+  border-radius: 65px;
+  position: absolute;
+  top: 91%;
+  left: 30%;
+  z-index: -20;
+  opacity: 0;
+}
+
+.team-member:hover .teamcircle {
+  opacity: 0.5;
+}
+
 .colorcircle1 {
   width: 130px;
   height: 130px;
@@ -2120,7 +2135,6 @@ hr {
 
 .contentrow {
   font-size: 13px;
-
 }
 
 .nodisplay {
@@ -2377,14 +2391,42 @@ hr {
 .team-member {
   margin-left: 20px;
   text-align: center;
+  position: relative;
 }
-.team_a{
+
+.team_a {
   text-decoration: none;
-  color:#212021;
+  color: #212021;
 }
-.team_a:hover{
-  color:#343334;
+
+.team_a:hover {
+  color: #343334;
 }
+
+.card_mob {
+  width: 150px;
+  height: 95px;
+}
+
+.time_div {
+  padding-left: 10px;
+  padding-right: 10px;
+  margin: 0px;
+}
+
+.btn_g {
+  margin-left: -25px;
+}
+
+.review_div {
+  margin-left: -40px;
+}
+
+.tutor_div {
+  border-right: 1px solid #c7c7c7;
+  width: 20%
+}
+
 /* exams css properties */
 /* for normal screens ends here.... */
 @media only screen and (device-width: 1352px) and (device-height: 641px) {
@@ -2841,11 +2883,12 @@ hr {
   background-color: #fff;
 } */
 @media only screen and (max-width:768px) {
+
+  /* mobile display size starts here.... */
   .other_chap {
     width: 100%;
   }
 
-  /* mobile display size starts here.... */
   .header_nav {
     float: left !important;
   }
@@ -3128,6 +3171,8 @@ hr {
 
   .movie-card {
     width: 100%;
+    padding-left: 13px;
+    min-height: 50vh;
   }
 
   .carddesign {
@@ -3279,14 +3324,15 @@ hr {
   }
 
   .home_header {
+    background-image: url('/static/images/24tut/mob_head.png');
     min-height: 90vh;
-    background-size: cover;
+    background-size: 100% 100%;
     background-repeat: no-repeat;
   }
 
   .home_content {
     color: #fff;
-    padding-top: 3rem;
+    padding-top: 4.5rem;
   }
 
   .owl_div {
@@ -3598,6 +3644,10 @@ hr {
     font-size: 0.5em;
   }
 
+  #menu {
+    display: none;
+  }
+
   .menu_list_div {
     background-image: linear-gradient(-179deg, #0b2674, #edae2c);
     height: 100%;
@@ -3692,6 +3742,14 @@ hr {
     z-index: 7;
   }
 
+  .user_img {
+    border-radius: 50%;
+    position: fixed;
+    top: -16px;
+    right: 60px;
+    z-index: 7;
+  }
+
   .pay_card {
     margin-bottom: 10px;
   }
@@ -3725,15 +3783,40 @@ hr {
     padding: 0px;
     width: 100%;
   }
-  .card_mob{
-    width: 40px;
+
+  .time_div {
+    padding-left: 0px;
+    padding-right: 10px;
   }
-  .card_mob span{
-    margin-left: -12px;
+
+  .card_mob {
+    width: 50px;
+    height: 85px;
+  }
+
+  .card_mob span {
+    margin-left: -7px;
     font-size: 50px;
   }
-  .btn_g{
+
+  .btn_g {
     width: 100%;
+    margin-left: 0px;
+  }
+
+  .review_div {
+    margin-left: 0px;
+    padding-bottom: 10px;
+  }
+
+  .tutor_div {
+    border-right: 0px solid #c7c7c7;
+    width: 100%;
+    text-align: center;
+  }
+
+  .i_info {
+    display: inline;
   }
 
   /* mobile screen size ends here.... */

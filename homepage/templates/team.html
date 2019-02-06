@@ -13,20 +13,13 @@
       <div class="team-member">
         <img src="{% static 'images/pradeep.png' %}" style="height:150px;border-radius:50%;">
         <h4>Pradeep</h4>
+        <div class="teamcircle" style="background-color:#3e9afa"></div>
         <div class="col-md-8 col-md-offset-2">
           B.Tech , IIT Bombay - Aerospace Engineering <br>
           Ex-HCL <br>
           Ex-UIPath <br>
           Ex-SumTotal <br>
           Co-Founder, CIOC <br>
-          <ul class="list-inline social-buttons">
-            <!-- <li><a href="#"><i class="fa fa-twitter"></i></a> -->
-            <!-- </li> -->
-            <!-- <li><a href="#"><i class="fa fa-facebook"></i></a> -->
-            <!-- </li> -->
-            <li><a href="https://www.linkedin.com/in/pradeep-yadav-34521044/"><i class="fa fa-linkedin"></i></a>
-            </li>
-          </ul>
         </div>
 
       </div>
@@ -35,35 +28,22 @@
       <div class="team-member">
         <img src="{% static 'images/raj.jpg' %}" style="height:150px;border-radius:50%;">
         <h4>Raj</h4>
+        <div class="teamcircle" style="background-color:#fa3e71"></div>
         <div class="col-md-8 col-md-offset-2">
           B.Tech , IIT Bombay - Aerospace Engineering <br>
           M.Tech , IIT Kanpur - Aerospace Engineering <br>
           Co-Founder, CIOC <br>
-          <ul class="list-inline social-buttons">
-            <!-- </li>
-            </li> -->
-            <li><a href="https://www.linkedin.com/in/raj-kumar-yadav-3633145b/"><i class="fa fa-linkedin"></i></a>
-            </li>
-          </ul>
         </div>
-
       </div>
     </div>
     <div class="col-md-4">
       <div class="team-member">
         <img src="{% static 'images/ashwini.jpeg' %}" style="height:150px;border-radius:50%;">
         <h4>Ashwini</h4>
+        <div class="teamcircle" style="background-color:#6a3efa"></div>
         <div class="col-md-8 col-md-offset-2">
           B.Tech , IIT Bombay - Aerospace Engineering <br>
           6 Years of teaching experience (Various institutes in Kota, Rajasthan) <br>
-          <ul class="list-inline social-buttons">
-            <!-- <li><a href="#"><i class="fa fa-twitter"></i></a> -->
-            <!-- </li> -->
-            <!-- <li><a href="#"><i class="fa fa-facebook"></i></a> -->
-            <!-- </li> -->
-            <li><a href="https://www.linkedin.com/in/sowmya-narayan-68743a150/"><i class="fa fa-linkedin"></i></a>
-            </li>
-          </ul>
         </div>
       </div>
     </div>
@@ -73,18 +53,11 @@
       <div class="team-member">
         <img src="{% static 'images/atharwa.jpg' %}" style="height:150px;border-radius:50%;">
         <h4>Atharva</h4>
+        <div class="teamcircle" style="background-color:#adfa3e"></div>
         <div class="col-md-8 col-md-offset-2">
           B.Tech , IIT Bombay - Chemical Engineering <br>
           M.Tech , IIT Bombay - Chemical Engineering <br>
           PhD , University of Wisconsin , USA <br>
-          <ul class="list-inline social-buttons">
-            <!-- <li><a href="#"><i class="fa fa-twitter"></i></a> -->
-            <!-- </li> -->
-            <!-- <li><a href="#"><i class="fa fa-facebook"></i></a> -->
-            <!-- </li> -->
-            <li><a href="https://www.linkedin.com/in/deepika-kumari-00a45592/"><i class="fa fa-linkedin"></i></a>
-            </li>
-          </ul>
         </div>
 
       </div>
@@ -93,18 +66,11 @@
       <div class="team-member">
         <img src="{% static 'images/divyam.jpg' %}" style="height:150px;border-radius:50%;">
         <h4>Divyam</h4>
+        <div class="teamcircle" style="background-color:#f22e0b"></div>
         <div class="col-md-8 col-md-offset-2">
           B.Tech , IIT Bombay - Aerospace Engineering <br>
           MS , TU Delft, Netherlands <br>
           PhD , TU Berlin, Germany <br>
-          <ul class="list-inline social-buttons">
-            <!-- <li><a href="#"><i class="fa fa-twitter"></i></a> -->
-            <!-- </li> -->
-            <!-- <li><a href="#"><i class="fa fa-facebook"></i></a> -->
-            <!-- </li> -->
-            <li><a href="https://www.linkedin.com/in/pravin-kumar-126bb889/"><i class="fa fa-linkedin"></i></a>
-            </li>
-          </ul>
         </div>
 
       </div>
@@ -120,7 +86,6 @@
 
 {% block tutorjs %}
 <script type="text/javascript">
-  { % include "app.tutor.common.js" %
-  }
+  {% include "app.tutor.common.js" %}
 </script>
 {% endblock %}
