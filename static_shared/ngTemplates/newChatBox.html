@@ -120,6 +120,10 @@
 
 
     </div>
+    <div class="row " style="margin:0px; padding:10px;">
+      <span ng-if="!message.sentByAgent" style="float:left; font-size:12px; padding-bottom:15px;">{{data.spying.value}}</span>
+      <img ng-if="data.spying.isTyping" src="/static/images/pencil.gif" width="40px;" alt="">
+    </div>
   </div>
   <div class="row" style="margin:0px;border-top:1px solid #eee; padding: 10px 5px 0px 5px;">
     <span class="uibTypeaheadDropup">
