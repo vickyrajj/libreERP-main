@@ -2411,10 +2411,20 @@ hr {
 .time_div {
   padding-left: 10px;
   padding-right: 10px;
-  margin:0px;
+  margin: 0px;
 }
+
 .btn_g {
-margin-left: -25px;
+  margin-left: -25px;
+}
+
+.review_div {
+  margin-left: -40px;
+}
+
+.tutor_div {
+  border-right: 1px solid #c7c7c7;
+  width: 20%
 }
 
 /* exams css properties */
@@ -3773,10 +3783,12 @@ margin-left: -25px;
     padding: 0px;
     width: 100%;
   }
+
   .time_div {
     padding-left: 0px;
     padding-right: 10px;
   }
+
   .card_mob {
     width: 50px;
     height: 85px;
@@ -3790,6 +3802,21 @@ margin-left: -25px;
   .btn_g {
     width: 100%;
     margin-left: 0px;
+  }
+
+  .review_div {
+    margin-left: 0px;
+    padding-bottom: 10px;
+  }
+
+  .tutor_div {
+    border-right: 0px solid #c7c7c7;
+    width: 100%;
+    text-align: center;
+  }
+
+  .i_info {
+    display: inline;
   }
 
   /* mobile screen size ends here.... */
