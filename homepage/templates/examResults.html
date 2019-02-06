@@ -10,7 +10,7 @@
 {% verbatim %}
 <div class="container-fluid" ng-controller="examresults">
 
-  <h2 class="text-center"  ><b>Exam Summary</b></h2>
+  <h2 class="text-center"><b>Exam Summary</b></h2>
   <div class="row" style="padding-top: 2em;">
     <div class="col-md-offset-1 col-md-3" style="margin-top:2em;">
       <span style="font-size:18px;"><b>Total No of Questions:</b></span><span style="font-size:18px;"><b>&nbsp;{{totalques}}</b></span>
@@ -91,16 +91,15 @@
     </div>
     <div style="margin-top:4em;text-align:center;">
       <div class="container text-center" style="height:500px;">
-        <div  ng-repeat="a in subtitle" style="display:inline-block;" class="adjustwidth">
-          <span style="font-size:20px;padding:0.4em;" class="leftalign"><b>{{a.title}}</b></span>
-          {{a.correct}}
-          <canvas id="pie" class="chart chart-pie" chart-data="[a.correct?a.correct:'0',a.incorrect]" chart-labels="labels1" chart-colours="colors" style="margin-top:1em;">
-          </canvas>
-        </div>
+          <div ng-repeat="a in subtitle" style="display:inline-block;" class="adjustwidth">
+            <span style="font-size:20px;padding:0.4em;" class="leftalign"><b>{{a.title}}</b></span>
+            <canvas id="pie" class="chart chart-pie" chart-data="[a.correct?a.correct:'0',a.incorrect?a.correct:'0']" chart-labels="labels1" chart-colours="colors" style="margin-top:1em;">
+            </canvas>
+          </div>
       </div>
     </div>
   </div>
 
 
-{% endverbatim %}
-{% endblock %}
+  {% endverbatim %}
+  {% endblock %}
