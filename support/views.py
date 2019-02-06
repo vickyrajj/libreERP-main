@@ -55,7 +55,9 @@ from .models import *
 # Create your views here.
 
 def feedBackPage(request):
-    return render(request,'app.feedBack.html')
+    threadId = decrypt(request.GET['id'], "cioc")
+    chatDetails = ChatThread.objects.get(uid=threadId)
+    return render(request,'app.feedBack.html',{"chatDetails":chatDetails})
 
 class CustomerProfileViewSet(viewsets.ModelViewSet):
     permission_classes = (permissions.AllowAny,)
@@ -1052,6 +1054,7 @@ class HeartbeatApi(APIView):
                 th=list(o.values())
                 newDetails.append(th);
             return Response(newDetails, status=status.HTTP_200_OK)
+
 class StreamRecordings(APIView):
     renderer_classes = (JSONRenderer,)
     permission_classes=(permissions.AllowAny,)
@@ -1243,16 +1246,11 @@ class SendFeedBackRequest(APIView):
     permission_classes=(permissions.AllowAny,)
     def post(self , request , format = None):
         if 'key' in request.data:
-            print len(request.data['key']) , request.data['key'],'aaaaaaaaaaa'
-            print request.data['customerRating'], request.data['customerFeedback']
             threadId = decrypt(request.data['key'], "cioc")
             chatDetails = ChatThread.objects.get(uid=threadId)
-            print threadId,'iiiiiiiiiiidddddddddd'
-            print chatDetails.customerFeedback
             chatDetails.customerRating = request.data['customerRating']
             chatDetails.customerFeedback = request.data['customerFeedback']
             chatDetails.save()
-            print chatDetails.customerFeedback
         else:
             chatData = ChatThread.objects.get(pk = request.data['chatThreadPk'])
             encryptedKey = encrypt(request.data['id'], "cioc")
