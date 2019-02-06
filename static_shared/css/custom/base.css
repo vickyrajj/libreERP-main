@@ -164,7 +164,7 @@ input:checked + .bal_slider:before {
 
 .uibTypeaheadDropup ul{
 	margin-bottom: 100px;
-  width:100%;
+  width:98%;
   top:84vh !important;
   transform: translate(0px,-100%);
   background: #ddd

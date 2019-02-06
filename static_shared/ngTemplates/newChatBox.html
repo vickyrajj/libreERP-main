@@ -1,0 +1,142 @@
+<div class="animated fadeIn" id="chatBox">
+
+  <div class="row" style="margin:0px; padding:0px; background-color:#eee; height:34px;">
+    <div class="col-xs-2" style="padding:0px">
+      <div class=" btn-sm btn-block" style="border-radius:0px !important;text-align: center;" type="button" name="button" ng-click="knowledgeBase(data.companyPk)"><i class="fa fa-book" style="font-size:20px;" aria-hidden="true"></i>
+      </div>
+    </div>
+    <div class="col-xs-4" style="padding:0px">
+      <div class=" btn-sm btn-block" type="button" style="border-radius:0px !important;padding:5px 0px;text-align: center;" name="button" mwl-confirm title="Transfer Chat" message="Are you sure?" data-placement="bottom" confirm-text="Yes <i class='fa fa-check'></i>" cancel-text="No" on-confirm="chatTransfer(data.uid,data.chatThreadPk)"
+        confirm-button-type="default" cancel-button-type="default"><i style="font-size:20px" class="fa fa-user-o" aria-hidden="true"></i>
+        <i style="font-size:1.2rem" class="fa fa-exchange" aria-hidden="true"></i>
+        <i style="font-size:2rem" class="fa fa-user" aria-hidden="true"></i>
+      </div>
+    </div>
+    <div class="col-xs-2" style="padding:0px">
+      <div class=" btn-sm btn-block" type="button" style="border-radius:0px !important;text-align: center;" name="button" mwl-confirm title="Close Chat" message="Are you sure?" data-placement="bottom" confirm-text="Yes <i class='fa fa-check'></i>" cancel-text="No" on-confirm="chatClose(index,data.uid,data.chatThreadPk);closed=true"
+        confirm-button-type="default" cancel-button-type="default" ng-hide="closed">
+        <img style="width:24px;border-radius:10px" src="/static/images/close_chat.png">
+      </div>
+      <span ng-if="closed" style="font-size:18px;color:red">Chat Closed</span>
+    </div>
+    <div class="col-xs-2" style="padding:0px;font-size:20px;text-align:center;border-radius:1px;">
+      <i class="fa fa-pencil " style="cursor:pointer;" aria-hidden="true" ng-click="editUserDetails(data.uid)" title="Edit Details"></i>
+    </div>
+    <div class="col-xs-2" style="padding:0px;font-size:20px;text-align:center;border-radius:1px;">
+      <i class="fa fa-cog " style="cursor:pointer;" aria-hidden="true" ng-click="openDynamicFuncModal(data.uid)" title="Edit Details"></i>
+    </div>
+  </div>
+
+  <div class="row" style="margin:0px; padding:0px; height:38px;">
+    <div class="col-xs-8" style="padding:0px;">
+      <div style="padding:0px 5px">
+        <i class="fa fa-circle" aria-hidden="true" style="color:{{data.isOnline ? '#37a508':'#ff0022'}}"></i>
+         <span style="font-size:1.4rem; cursor:default;" ng-mouseover="showCompanyName = true" ng-mouseleave="showCompanyName = false">{{data.uid}}</span>
+         <div style="font-size:1.2rem;">{{companyName}}</div>
+      </div>
+    </div>
+    <div class="col-xs-4" style="padding:0px;">
+      <div class="row">
+        <div  class="col-md-3" style="margin:5px">
+            <i ng-show="chatHistBtn" class="fa fa-eye" aria-hidden="true" style="cursor:pointer; font-size:2rem; " ng-click="getChatHistory(data.email)" title="Chat History"></i>
+        </div>
+        <div class="col-md-3" ng-click="showCountryDetails()" style="padding:.5rem">
+          <!-- {{location.location.country_flag}} -->
+          <img ng-show="location.flag" style="width:2rem" ng-src="{{location.flag}}" alt="">
+          <!-- <img style="width:2rem" src="https://cdn.pixabay.com/photo/2017/07/04/13/37/blue-wings-2471094_960_720.png" alt=""> -->
+        </div>
+        <div class="col-md-3" style="padding:.5rem">
+          <!-- <img src="/static/images/remove1.png" alt="close" style="width:13px; height:13px"> -->
+            <i class="fa fa-times " aria-hidden="true" style="cursor:pointer; font-size:2rem;" ng-click="closeChatBox(index)"></i>
+        </div>
+
+      </div>
+    </div>
+  </div>
+  <div class="row" style="margin:0px; padding:0px; border-bottom:1px solid #eee; height:21px;">
+    <div style="padding:0px 5px;">
+      <span ng-if="data.name" class="text-muted" style="font-size:1.3rem;">{{data.name}} </span>
+      <span ng-if="data.email" class="text-muted" style="font-size:1rem;" >({{data.email}})</span>
+    </div>
+  </div>
+
+  <div ng-if="data.video&&!data.closeIframe" class="container-fluid" style="{{data.isVideoShowing&&isVisitorVideoShowing?'height:20vh':'height:2.8vh'}} ;transition:.5s; padding:0px;" ng-init="setHeight()">
+    <i style="position:absolute; right:10px; top:105px; color:#fff; cursor:pointer;" ng-click="captureImage()" class="fa fa-camera fa-lg" aria-hidden="true"></i>
+    <i style="position:absolute; right:40px; top:105px; color:#fff; cursor:pointer;" ng-click="hideVisitorScreen()" class="fa fa-compress fa-lg" aria-hidden="true"></i>
+    <!-- <i style="position:absolute; right:70px; top:105px; color:#fff; cursor:pointer;" ng-click="!data.alreadyDone? toggleVisitorScreen():''" class="fa fa-video-camera fa-lg" aria-hidden="true"></i> -->
+    <iframe id="iframeChat{{data.uid}}" ng-src="{{data.videoUrl | trusted}}" scrolling="no" style="height:100%; transition:0.5s;width:100%; border:1px solid #e0e0e0;" allow="geolocation; microphone; camera;"  autoplay="true" allowfullscreen></iframe>
+    <!-- <iframe ng-src="{{data.currentUrl | trusted}}" scrolling="no" style="height:100%; transition:0.5s;width:100%; border:1px solid #e0e0e0;" allowFullScreen></iframe> -->
+  </div>
+  <div ng-if="data.audio&&!data.closeIframe" class="container-fluid" style="height:3.5vh; padding:0px;" ng-init="setHeight()">
+
+    <iframe id="iframeChat{{data.uid}}" ng-src="{{data.audioUrl | trusted}}" scrolling="no" style="height:100%; width:100%; border:1px solid #e0e0e0;"></iframe>
+  </div>
+
+  <div class="row"  id="scrollArea{{data.uid}}" style="margin:0px; height:{{msgDivHeight}}vh; overflow-y:auto; overflow-x:hidden;display:inline-block;width:100%;">
+    <div class="row" style="margin:0px;padding:0px;" ng-repeat="message in data.messages track by $index">
+
+      <div ng-if="!message.logs" class="row container-fluid" style="{{message.sentByAgent ? 'padding-right:30px' : 'padding-left:30px'}};">
+        <span ng-if="!message.sentByAgent" style="float:left;  font-size:11px; " class="text-muted">{{message.created | getTime}}</span>
+        <span ng-if="message.sentByAgent" style="float:right;  font-size:11px; " class="text-muted">{{message.user | getName}}, {{message.created | getTime}},</span>
+        <!-- {{message.created}} -->
+      </div>
+
+      <div class="row container-fluid" style="font-size:14px;">
+        <div ng-if="!message.logs" style="float:{{message.sentByAgent ? 'right; background-color:#E4E5E9; ':'left; background-color:#DDF7C8;'}} padding:10px;margin:8px;border-radius:{{message.sentByAgent ? '20px 0px 20px 20px':'0px 20px 20px 20px'}}; {{message.is_hidden ? 'background-color:#5252e3 !important; color:#fff;!important':''}} max-width:92%;">
+          <p ng-if="message.message.length>0 && message.attachmentType!='youtubeLink'" style="word-wrap: break-word !important; white-space: pre-wrap; "> <span ng-bind-html="(message.message | linkInText)"></span></p>
+          <img ng-if="message.attachmentType == 'image' ||message.attachmentType == 'instructionImage'" ng-src="{{message.attachment}}" ng-click="imageClicked(message.attachment)" style="width:100%;">
+          <video ng-if="message.attachmentType == 'video'" width="280" height="240" ng-src="{{message.attachment}}" controls></video>
+          <audio ng-if="message.attachmentType == 'audio'" ng-src="{{message.attachment}}" controls></audio>
+
+          <p class="text-center" ng-if="message.attachmentType == 'application'" style="word-wrap: break-word;"><a ng-href="{{message.attachment}}" target="_blank"><i class="fa {{message.attachment.split('chat/')[1] | fileTypeIcon }} fa-2x" ></i></a> <br> {{message.attachment.split('chat/')[1]}} </p>
+          <div ng-if="message.attachmentType == 'youtubeLink'">
+            <iframe width="100%" height="215" ng-src="{{message.message | trusted}}" frameborder="0" allowfullscreen allow="geolocation; microphone; camera" ></iframe>
+          </div>
+          <div ng-if="message.userEndedChat">
+            <div class="row">
+              <div class="col-md-6">
+                <img ng-src="/static/images/userEndedChat.png" style="width:150px;">
+              </div>
+              <div class="col-md-6">
+                <p style="margin-top:45px;" >Chat Closed By User</p>
+              </div>
+            </div>
+          </div>
+          <div ng-if="message.usersFeedback">
+            <p>Rating : {{message.rating}}</p>
+            <p ng-if="message.usersFeedback!='NA'">Feedback : {{message.usersFeedback}}</p>
+            <!-- <div class="row">
+              <div class="col-md-6">
+                <p>{{message.usersFeedback}}</p>
+              </div>
+              <div class="col-md-6">
+                {{message.rating}}
+              </div>
+            </div> -->
+          </div>
+        </div>
+
+      </div>
+
+
+
+    </div>
+  </div>
+  <div class="row" style="margin:0px;border-top:1px solid #eee; padding: 10px 5px 0px 5px;">
+    <span class="uibTypeaheadDropup">
+      <textarea id="chatBoxdiv{{index}}" ng-disabled="data.disableInput" ng-keydown="textAreaBehavior($event)" ng-if="chatBox.fileToSend.size==0" class="col-xs-9" rows="2" style="border:none; outline:none; resize:none; background-color:#fff;" ng-model="chatBox.messageToSend" uib-typeahead="cannedRes.text as cannedRes.text for cannedRes in searchCannedRes($viewValue)" placeholder="Message" autofocus></textarea>
+    </span>
+
+    <input type="file" id="filePickerChat{{index}}" style="display:none;" file-model="chatBox.fileToSend">
+
+    <span ng-if="chatBox.fileToSend.size==0" class="col-xs-1" style="cursor:pointer;font-size:20px" ng-click="attachFile()"><i class="fa fa-paperclip"  aria-hidden="true"></i></span>
+    <span ng-if="chatBox.fileToSend.size!=0" class="col-xs-2" style="cursor:pointer;font-size:20px;padding:0px;text-align:center"> <i class="fa {{chatBox.fileToSend.name | fileTypeIcon }}"></i>
+        </span>
+    <span ng-if="chatBox.fileToSend.size!=0" class="col-xs-7" style="cursor:pointer;font-size:12px;padding:0px"> {{chatBox.fileToSend.name.slice(0,25)}}
+        </span>
+    <span ng-if="chatBox.fileToSend.size!=0" class="col-xs-1" style="cursor:pointer;font-size:20px;padding:0px;text-align:center" ng-click="removeFile()"> <i class="fa fa-times" aria-hidden="true"></i>
+        </span>
+    <span class=" col-xs-1 text-right" ng-click="send()" style="cursor:pointer;font-size:20px"><i class="fa fa-paper-plane-o" aria-hidden="true"></i>
+        </span>
+  </div>
+</div>

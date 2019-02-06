@@ -3041,7 +3041,7 @@ function addExitConfirmation() {
         attachedFile = '<video width="200" height="180" style="box-sizing:border-box;" src="'+ message.attachment +'" controls></video>'
       }else if (message.attachmentType=='application') {
           console.log('application');
-          attachedFile ='<p style="font-size:14px !important; margin:5px 0px !important;width:100%; line-height: 1.75; box-sizing:border-box;">  <a target="_blank" style="color:#3961ea;" href="'+message.attachment+'"> '+message.attachment+' </a></p>'
+          attachedFile ='<p style="font-size:14px !important; margin:5px 0px !important;width:100%; line-height: 1.50; box-sizing:border-box;">  <a target="_blank" style="color:#3961ea; word-wrap: break-word !important;" href="'+message.attachment+'"> '+message.attachment+' </a></p>'
       }
     }
 

@@ -126,7 +126,7 @@ class ChatThreadSerializer(serializers.ModelSerializer):
         try:
             return obj.company.service.name
         except :
-            return '' 
+            return ''
 
     def create(self ,  validated_data):
         c = ChatThread(**validated_data)
@@ -189,13 +189,20 @@ class ChatThreadSerializer(serializers.ModelSerializer):
                 instance.escalatedL2By = User.objects.get(pk=int(self.context['request'].user.pk))
                 instance.save()
 
-        for key in ['status' , 'customerRating' , 'customerFeedback' , 'company','user','typ','isLate','location']:
+        for key in ['status' , 'customerRating' , 'customerFeedback' , 'company','typ','isLate','location']:
             try:
                 setattr(instance , key , validated_data[key])
             except:
                 pass
-        if 'user' in self.context['request'].data:
+        if 'user' in self.context['request'].data and 'firstAssign' not in self.context['request'].data:
             instance.user = User.objects.get(pk=int(self.context['request'].data['user']))
+
+        if 'user' in self.context['request'].data and 'firstAssign' in self.context['request'].data:
+            if instance.user is None:
+                instance.user = User.objects.get(pk=int(self.context['request'].data['user']))
+            else:
+                raise ValidationError(detail={'PARAMS' : 'Already Taken'})
+
         instance.save()
 
         if 'email' in self.context['request'].data:
