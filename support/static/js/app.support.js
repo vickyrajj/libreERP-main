@@ -596,6 +596,66 @@ app.controller("businessManagement.support", function($scope, $state, $users, $s
   }
   $scope.count = 0;
 
+
+  $scope.patchChat = function (newUserIndx, newUid, response) {
+
+    console.log(newUserIndx, newUid, response);
+
+    var toPatch = {
+      user: $scope.me.pk
+    }
+
+    $http({
+      method: 'PATCH',
+      url: '/api/support/chatThread/' + response.data[0].pk + '/',
+      data: toPatch
+    }).
+    then(function(response) {
+
+      $scope.myUsers.push($scope.newUsers[newUserIndx]);
+      $scope.addToChat($scope.myUsers.length - 1, newUid)
+      $scope.newUsers.splice(newUserIndx, 1);
+
+      $scope.status = 'AP';
+      connection.session.publish(wamp_prefix + 'service.support.chat.' + newUid, [$scope.status, $scope.me.pk, $scope.me], {}, {
+        acknowledge: true
+      }).
+      then(function(publication) {
+        console.log("Published AP", newUid);
+      });
+
+
+      $scope.status = 'R';
+      connection.session.publish(wamp_prefix + 'service.support.agent', [newUid, $scope.status], {}, {
+        acknowledge: true
+      }).
+      then(function(publication) {
+        console.log("Published");
+      });
+
+      $http({
+        method: 'GET',
+        url: '/api/support/supportChat/?user__isnull=True&uid=' + newUid
+      }).
+      then(function(response) {
+        for (var i = 0; i < response.data.length; i++) {
+          $http({
+            method: 'PATCH',
+            url: '/api/support/supportChat/' + response.data[i].pk + '/',
+            data: {
+              user: $scope.me.pk
+            }
+          }).
+          then(function(response) {
+            // console.log(response.data);
+          });
+        }
+      })
+
+    })
+
+  }
+
   $scope.assignUser = function(indx, uid) {
     var newUserIndx = indx;
     var newUid = uid;
@@ -607,64 +667,21 @@ app.controller("businessManagement.support", function($scope, $state, $users, $s
       url: '/api/support/chatThread/?uid=' + newUid
     }).
     then(function(response) {
+      var responseToPass = response
       console.log(response.data[0].user);
       if (response.data[0].user) {
-        Flash.create('warning', 'picked by someone else')
-        $scope.newUsers.splice(newUserIndx, 1);
+
+        connection.session.call(wamp_prefix + 'service.support.heartbeat.' + response.data[0].user, []).then(
+          function(res) {
+            Flash.create('warning', 'picked by someone else')
+            $scope.newUsers.splice(newUserIndx, 1);
+          },
+          function(err) {
+            $scope.patchChat(newUserIndx, newUid, responseToPass)
+          }
+        );
       } else {
-
-        var toPatch = {
-          user: $scope.me.pk
-        }
-
-        $http({
-          method: 'PATCH',
-          url: '/api/support/chatThread/' + response.data[0].pk + '/',
-          data: toPatch
-        }).
-        then(function(response) {
-
-          $scope.myUsers.push($scope.newUsers[newUserIndx]);
-          $scope.addToChat($scope.myUsers.length - 1, newUid)
-          $scope.newUsers.splice(newUserIndx, 1);
-
-          $scope.status = 'AP';
-          connection.session.publish(wamp_prefix + 'service.support.chat.' + newUid, [$scope.status, $scope.me.pk, $scope.me], {}, {
-            acknowledge: true
-          }).
-          then(function(publication) {
-            console.log("Published AP", uid);
-          });
-
-
-          $scope.status = 'R';
-          connection.session.publish(wamp_prefix + 'service.support.agent', [newUid, $scope.status], {}, {
-            acknowledge: true
-          }).
-          then(function(publication) {
-            console.log("Published");
-          });
-
-          $http({
-            method: 'GET',
-            url: '/api/support/supportChat/?user__isnull=True&uid=' + newUid
-          }).
-          then(function(response) {
-            for (var i = 0; i < response.data.length; i++) {
-              $http({
-                method: 'PATCH',
-                url: '/api/support/supportChat/' + response.data[i].pk + '/',
-                data: {
-                  user: $scope.me.pk
-                }
-              }).
-              then(function(response) {
-                // console.log(response.data);
-              });
-            }
-          })
-
-        })
+        $scope.patchChat(newUserIndx, newUid, responseToPass)
       }
 
 
