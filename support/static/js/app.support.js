@@ -1,5 +1,5 @@
 // you need to first configure the stapp.config(function($stateProvider){
-app.config(function($stateProvider,anTinyconProvider) {
+app.config(function($stateProvider, anTinyconProvider) {
 
   $stateProvider
     .state('businessManagement.support', {
@@ -12,17 +12,17 @@ app.config(function($stateProvider,anTinyconProvider) {
       }
     })
 
-    anTinyconProvider.setOptions({
-         width: 7,
-         height: 9,
-         font: "10px arial",
-         colour: "#ffffff",
-         background: "#549A2F",
-         fallback: true
-     });
+  anTinyconProvider.setOptions({
+    width: 7,
+    height: 9,
+    font: "10px arial",
+    colour: "#ffffff",
+    background: "#549A2F",
+    fallback: true
+  });
 });
 
-app.controller("businessManagement.support", function($scope, $state, $users, $stateParams, $http, Flash, $timeout, $interval, $uibModal,ngAudio,anTinycon) {
+app.controller("businessManagement.support", function($scope, $state, $users, $stateParams, $http, Flash, $timeout, $interval, $uibModal, ngAudio, anTinycon) {
 
 
   $scope.newUsers = [];
@@ -103,77 +103,78 @@ app.controller("businessManagement.support", function($scope, $state, $users, $s
   }
 
 
-    $scope.sendBackHeartBeat=function() {
-      // var scope = angular.element(document.getElementById('chatTab')).scope();
+  $scope.sendBackHeartBeat = function() {
+    // var scope = angular.element(document.getElementById('chatTab')).scope();
 
 
-        function heartbeat(args) {
-          if (args[0]=='popup') {
-            console.log(args[2]);
-            alert(args[1]+" has assigned "+ args[2].uid + " uid chat to you!")
-            $scope.myUsers.push(args[2]);
-            connection.session.publish(wamp_prefix+'service.support.chat.' + args[2].uid, ['AP', $scope.me.pk], {}, {
-              acknowledge: true
-            }).
-            then(function(publication) {
-              console.log("Published AP", args[2].uid);
-            });
+    function heartbeat(args) {
+      if (args[0] == 'popup') {
+        console.log(args[2]);
+        alert(args[1] + " has assigned " + args[2].uid + " uid chat to you!")
+        $scope.myUsers.push(args[2]);
+        connection.session.publish(wamp_prefix + 'service.support.chat.' + args[2].uid, ['AP', $scope.me.pk], {}, {
+          acknowledge: true
+        }).
+        then(function(publication) {
+          console.log("Published AP", args[2].uid);
+        });
 
-            var xhttp = new XMLHttpRequest();
-             xhttp.onreadystatechange = function() {
-               if (this.readyState == 4 && this.status == 200) {
-                 console.log('chat thread pk changed');
-               }
-             };
-             xhttp.open('PATCH', '/api/support/chatThread/'+ args[2].chatThreadPk + '/', true);
-             xhttp.setRequestHeader("Content-type", "application/json");
-             xhttp.setRequestHeader("X-CSRFToken", getCookie("csrftoken"));
-             xhttp.send(JSON.stringify({user:$scope.me.pk}));
-            return
+        var xhttp = new XMLHttpRequest();
+        xhttp.onreadystatechange = function() {
+          if (this.readyState == 4 && this.status == 200) {
+            console.log('chat thread pk changed');
           }
-          else {
-            return true
-          }
-        }
-
-
-
-        connection.session.register(wamp_prefix+'service.support.heartbeat.'+$scope.me.pk, heartbeat).then(
-            function (res) {
-              console.log("registered to service.support.heartbeat with "+$scope.me.pk);
-            },
-            function (err) {
-              console.log("failed to registered: ");
-            }
-          );
-
+        };
+        xhttp.open('PATCH', '/api/support/chatThread/' + args[2].chatThreadPk + '/', true);
+        xhttp.setRequestHeader("Content-type", "application/json");
+        xhttp.setRequestHeader("X-CSRFToken", getCookie("csrftoken"));
+        xhttp.send(JSON.stringify({
+          user: $scope.me.pk
+        }));
+        return
+      } else {
+        return true
+      }
     }
 
 
 
+    connection.session.register(wamp_prefix + 'service.support.heartbeat.' + $scope.me.pk, heartbeat).then(
+      function(res) {
+        console.log("registered to service.support.heartbeat with " + $scope.me.pk);
+      },
+      function(err) {
+        console.log("failed to registered: ");
+      }
+    );
+
+  }
+
+
+
   Tinycon.setOptions({
-  	width: 7,
-  	height: 9,
-  	font: '11px arial',
-  	color: '#ffffff',
-  	background: '#00008B',
-  	fallback: true
+    width: 7,
+    height: 9,
+    font: '11px arial',
+    color: '#ffffff',
+    background: '#00008B',
+    fallback: true
   });
 
   $scope.sound = ngAudio.load("static/audio/notification.ogg");
 
-  setInterval(function () {
-    if($scope.newUsers.length>0){
+  setInterval(function() {
+    if ($scope.newUsers.length > 0) {
       Tinycon.setBubble($scope.newUsers.length);
       $scope.sound.play();
-    }else{
+    } else {
       Tinycon.reset();
     }
   }, 5000);
 
 
 
-  function sendMail(mailId,uid){
+  function sendMail(mailId, uid) {
     $http({
       method: 'POST',
       url: '/api/support/emailChat/',
@@ -182,65 +183,65 @@ app.controller("businessManagement.support", function($scope, $state, $users, $s
         uid: uid
       }
     }).then(function(response) {
-      console.log('mail sent to '+mailId);
+      console.log('mail sent to ' + mailId);
     });
   }
 
-   $scope.sendMailsToContact=function(contacts,chatUid){
+  $scope.sendMailsToContact = function(contacts, chatUid) {
     for (var i = 0; i < contacts.length; i++) {
-      var profile=$users.get(contacts[i])
-      sendMail(profile.email,chatUid)
+      var profile = $users.get(contacts[i])
+      sendMail(profile.email, chatUid)
     }
   }
 
 
-  var getCompDetails = function(companyPk){
-    return new Promise(function(resolve,reject){
+  var getCompDetails = function(companyPk) {
+    return new Promise(function(resolve, reject) {
       $http({
-          method: 'GET',
-          url: '/api/support/getMyUser/?getCompanyDetails=' + companyPk,
-        }).then(function(response){
-          console.log(response.data);
-          resolve(response.data)
-        }).catch((err)=>{
-          reject(err)
-        })
+        method: 'GET',
+        url: '/api/support/getMyUser/?getCompanyDetails=' + companyPk,
+      }).then(function(response) {
+        console.log(response.data);
+        resolve(response.data)
+      }).catch((err) => {
+        reject(err)
+      })
     })
   }
-  var getFirstMessage = function(companyPk){
-    return new Promise(function(resolve,reject){
+  var getFirstMessage = function(companyPk) {
+    return new Promise(function(resolve, reject) {
       $http({
-          method: 'GET',
-          url: '/api/support/customerProfile/pk=' + companyPk,
-        }).then(function(response){
-          console.log(response.data,'888888888888888888');
-          resolve(response.data)
-        }).catch((err)=>{
-          reject(err)
-        })
+        method: 'GET',
+        url: '/api/support/customerProfile/pk=' + companyPk,
+      }).then(function(response) {
+        console.log(response.data, '888888888888888888');
+        resolve(response.data)
+      }).catch((err) => {
+        reject(err)
+      })
     })
   }
 
 
 
-  setInterval(function () {
+  setInterval(function() {
     for (let i = 0; i < $scope.newUsers.length; i++) {
       $http({
         method: 'GET',
         url: '/api/support/getChatStatus/?checkStatus&uid=' + $scope.newUsers[i].uid,
       }).
       then(function(response) {
-        if(response.data.changeStatus){
-          getCompDetails(response.data.companyPk).then((data)=>{
-            $scope.sendMailsToContact(data.contactP,$scope.newUsers[i].uid)
+        if (response.data.changeStatus) {
+          getCompDetails(response.data.companyPk).then((data) => {
+            $scope.sendMailsToContact(data.contactP, $scope.newUsers[i].uid)
           })
           $scope.newUsers.splice(i, 1);
         }
       });
     }
-  }, 1000*60*1);
+  }, 1000 * 60 * 1);
 
-  setInterval(function () {
+  setInterval(function() {
 
     for (let i = 0; i < $scope.myUsers.length; i++) {
       $http({
@@ -248,31 +249,31 @@ app.controller("businessManagement.support", function($scope, $state, $users, $s
         url: '/api/support/getChatStatus/?sendMail&uid=' + $scope.myUsers[i].uid,
       }).
       then(function(response) {
-        if(response.data.sendMail){
-          getCompDetails(response.data.companyPk).then((data)=>{
-            $scope.sendMailsToContact(data.contactP,$scope.myUsers[i].uid)
+        if (response.data.sendMail) {
+          getCompDetails(response.data.companyPk).then((data) => {
+            $scope.sendMailsToContact(data.contactP, $scope.myUsers[i].uid)
           })
         }
       });
     }
 
-  }, 1000*60*1);
+  }, 1000 * 60 * 1);
 
 
-  setInterval(function () {
+  setInterval(function() {
 
     for (let i = 0; i < $scope.myUsers.length; i++) {
-      if($scope.myUsers[i].messages.length>0){
-        let lastMsgPk=$scope.myUsers[i].messages[$scope.myUsers[i].messages.length-1].pk;
+      if ($scope.myUsers[i].messages.length > 0) {
+        let lastMsgPk = $scope.myUsers[i].messages[$scope.myUsers[i].messages.length - 1].pk;
         $http({
           method: 'GET',
-          url: '/api/support/messageCheck/?uid=' + $scope.myUsers[i].uid+'&pk='+lastMsgPk,
+          url: '/api/support/messageCheck/?uid=' + $scope.myUsers[i].uid + '&pk=' + lastMsgPk,
         }).
         then(function(response) {
-          if(response.data.data.length>0){
+          if (response.data.data.length > 0) {
             $http({
               method: 'GET',
-              url: '/api/support/supportChat/?unDelMsg&values='+JSON.stringify(response.data.data),
+              url: '/api/support/supportChat/?unDelMsg&values=' + JSON.stringify(response.data.data),
             }).
             then(function(response) {
               for (var l = 0; l < response.data.length; l++) {
@@ -295,6 +296,7 @@ app.controller("businessManagement.support", function($scope, $state, $users, $s
   }, 20000);
 
   $scope.myCompanies = [];
+
   function fetchUsers() {
     if (connectionOpened) {
       $http({
@@ -320,14 +322,14 @@ app.controller("businessManagement.support", function($scope, $state, $users, $s
             },
             video: false,
             videoUrl: '',
-            audio:false,
-            audioUrl:'',
+            audio: false,
+            audioUrl: '',
             isVideoShowing: true,
             alreadyDone: false,
-            closeIframe:false
+            closeIframe: false
           })
 
-          connection.session.publish(wamp_prefix+'service.support.agent', [response.data[i].uid, 'R'], {}, {
+          connection.session.publish(wamp_prefix + 'service.support.agent', [response.data[i].uid, 'R'], {}, {
             acknowledge: true
           }).
           then(function(publication) {
@@ -354,8 +356,8 @@ app.controller("businessManagement.support", function($scope, $state, $users, $s
 
         for (var i = 0; i < response.data.length; i++) {
 
-          if($scope.myCompanies.indexOf(response.data[i].companyPk)>=0){
-            console.log(response.data,"555555555555555555555");
+          if ($scope.myCompanies.indexOf(response.data[i].companyPk) >= 0) {
+            console.log(response.data, "555555555555555555555");
             $scope.newUsers.push({
               name: '',
               uid: response.data[i].uid,
@@ -371,16 +373,17 @@ app.controller("businessManagement.support", function($scope, $state, $users, $s
               },
               video: false,
               videoUrl: '',
-              audio:false,
-              audioUrl:'',
+              audio: false,
+              audioUrl: '',
               isVideoShowing: true,
               alreadyDone: false,
-              closeIframe:false
+              closeIframe: false
             })
           }
         }
       });
       var myActiveTime = Date.now();
+
       function heartbeat() {
         return {
           ActiveUsers: $scope.myUsers,
@@ -388,7 +391,7 @@ app.controller("businessManagement.support", function($scope, $state, $users, $s
           activeTime: myActiveTime
         }
       }
-      connection.session.register(wamp_prefix+'service.support.hhhhh.' + $scope.me.pk, heartbeat).then(
+      connection.session.register(wamp_prefix + 'service.support.hhhhh.' + $scope.me.pk, heartbeat).then(
         function(res) {
           console.log("registered to service.support.hhhh ");
         },
@@ -396,8 +399,8 @@ app.controller("businessManagement.support", function($scope, $state, $users, $s
           console.log("failed to registered: ");
         });
       return
-    }else {
-      setTimeout(function () {
+    } else {
+      setTimeout(function() {
         // console.log('elseeeeeeeeeeeeeeeeee');
         fetchUsers()
       }, 500);
@@ -525,7 +528,7 @@ app.controller("businessManagement.support", function($scope, $state, $users, $s
     for (var i = 0; i < openedChats.length; i++) {
       for (var j = 0; j < $scope.myUsers.length; j++) {
         if ($scope.myUsers[j].uid == openedChats[i].uid) {
-          if (openedChats[i].index!=null) {
+          if (openedChats[i].index != null) {
             $scope.addToChat(openedChats[i].index, openedChats[i].uid)
           }
         }
@@ -555,83 +558,168 @@ app.controller("businessManagement.support", function($scope, $state, $users, $s
       return
     });
   }
-$scope.count=0;
-  $scope.assignUser = function(indx, uid) {
+  $scope.count = 0;
 
-    $scope.myUsers.push($scope.newUsers[indx]);
-    // $scope.count++;
-    $scope.addToChat($scope.myUsers.length-1, uid)
-    $scope.newUsers.splice(indx, 1);
+  $scope.assignUser = function(indx, uid) {
+    var newUserIndx = indx;
+    var newUid = uid;
 
     $http({
       method: 'GET',
-      url: '/api/support/supportChat/?user__isnull=True&uid=' + uid
+      url: '/api/support/chatThread/?uid=' + newUid
     }).
     then(function(response) {
-      // console.log(response.data);
-      for (var i = 0; i < response.data.length; i++) {
+      console.log(response.data[0].user);
+      if (response.data[0].user) {
+        Flash.create('warning', 'picked by someone else')
+        $scope.newUsers.splice(newUserIndx, 1);
+      } else {
 
-        $http({
-          method: 'PATCH',
-          url: '/api/support/supportChat/' + response.data[i].pk + '/',
-          data: {
-            user: $scope.me.pk
-          }
-        }).
-        then(function(response) {
-          // console.log(response.data);
-        });
-
-      }
-
-      $http({
-        method: 'GET',
-        url: '/api/support/chatThread/?uid=' + uid
-      }).
-      then(function(response) {
-
-        var chatThreadCreated = new Date(response.data[0].created).getTime()
-        // console.log(chatThreadCreated);
-
-        var now = new Date().getTime();
         var toPatch = {
-          user: $scope.me.pk
+          user: $scope.me.pk,
+          firstAssign: 1
         }
-        // if (now - chatThreadCreated > 180000 ) {
-        //   toPatch.isLate = true
-        // }
-
-
 
         $http({
           method: 'PATCH',
           url: '/api/support/chatThread/' + response.data[0].pk + '/',
-          data:toPatch
+          data: toPatch
         }).
         then(function(response) {
-          // console.log(response.data);
-        });
-      })
 
-    });
+          $scope.myUsers.push($scope.newUsers[newUserIndx]);
+          $scope.addToChat($scope.myUsers.length - 1, newUid)
+          $scope.newUsers.splice(newUserIndx, 1);
 
-    $scope.status = 'AP';
-    connection.session.publish(wamp_prefix+'service.support.chat.' + uid, [$scope.status, $scope.me.pk], {}, {
-      acknowledge: true
-    }).
-    then(function(publication) {
-      console.log("Published AP", uid);
-    });
+          $scope.status = 'AP';
+          connection.session.publish(wamp_prefix + 'service.support.chat.' + newUid, [$scope.status, $scope.me.pk], {}, {
+            acknowledge: true
+          }).
+          then(function(publication) {
+            console.log("Published AP", uid);
+          });
 
 
-    $scope.status = 'R';
-    connection.session.publish(wamp_prefix+'service.support.agent', [uid, $scope.status], {}, {
-      acknowledge: true
-    }).
-    then(function(publication) {
-      console.log("Published");
-    });
+          $scope.status = 'R';
+          connection.session.publish(wamp_prefix + 'service.support.agent', [newUid, $scope.status], {}, {
+            acknowledge: true
+          }).
+          then(function(publication) {
+            console.log("Published");
+          });
+
+          $http({
+            method: 'GET',
+            url: '/api/support/supportChat/?user__isnull=True&uid=' + newUid
+          }).
+          then(function(response) {
+            for (var i = 0; i < response.data.length; i++) {
+              $http({
+                method: 'PATCH',
+                url: '/api/support/supportChat/' + response.data[i].pk + '/',
+                data: {
+                  user: $scope.me.pk
+                }
+              }).
+              then(function(response) {
+                // console.log(response.data);
+              });
+            }
+          })
+        }).catch(function(err) {
+          Flash.create('warning', 'picked by someone else')
+        })
+
+      }
+
+
+
+    })
+
+
 
   }
+
+  // $scope.assignUser = function(indx, uid) {
+  //
+  //   $scope.myUsers.push($scope.newUsers[indx]);
+  //   // $scope.count++;
+  //   $scope.addToChat($scope.myUsers.length - 1, uid)
+  //   $scope.newUsers.splice(indx, 1);
+  //
+  //   $http({
+  //     method: 'GET',
+  //     url: '/api/support/supportChat/?user__isnull=True&uid=' + uid
+  //   }).
+  //   then(function(response) {
+  //     // console.log(response.data);
+  //     for (var i = 0; i < response.data.length; i++) {
+  //
+  //       $http({
+  //         method: 'PATCH',
+  //         url: '/api/support/supportChat/' + response.data[i].pk + '/',
+  //         data: {
+  //           user: $scope.me.pk
+  //         }
+  //       }).
+  //       then(function(response) {
+  //         // console.log(response.data);
+  //       });
+  //
+  //     }
+  //
+  //     $http({
+  //       method: 'GET',
+  //       url: '/api/support/chatThread/?uid=' + uid
+  //     }).
+  //     then(function(response) {
+  //
+  //       var chatThreadCreated = new Date(response.data[0].created).getTime()
+  //       // console.log(chatThreadCreated);
+  //
+  //       var now = new Date().getTime();
+  //       var toPatch = {
+  //         user: $scope.me.pk,
+  //         firstAssign: 1
+  //       }
+  //       // if (now - chatThreadCreated > 180000 ) {
+  //       //   toPatch.isLate = true
+  //       // }
+  //
+  //
+  //
+  //       $http({
+  //         method: 'PATCH',
+  //         url: '/api/support/chatThread/' + response.data[0].pk + '/',
+  //         data: toPatch
+  //       }).
+  //       then(function(response) {
+  //         // console.log(response.data);
+  //       }).catch(function(err) {
+  //         console.log(err);
+  //         Flash.create('warning', 'this chat is already taken')
+  //       })
+  //     })
+  //
+  //   });
+  //
+  //   $scope.status = 'AP';
+  //   connection.session.publish(wamp_prefix + 'service.support.chat.' + uid, [$scope.status, $scope.me.pk], {}, {
+  //     acknowledge: true
+  //   }).
+  //   then(function(publication) {
+  //     console.log("Published AP", uid);
+  //   });
+  //
+  //
+  //   $scope.status = 'R';
+  //   connection.session.publish(wamp_prefix + 'service.support.agent', [uid, $scope.status], {}, {
+  //     acknowledge: true
+  //   }).
+  //   then(function(publication) {
+  //     console.log("Published");
+  //   });
+  //
+  // }
 
 });

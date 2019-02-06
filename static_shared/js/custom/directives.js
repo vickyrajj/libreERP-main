@@ -2274,6 +2274,8 @@ app.directive('chatBox', function() {
 
       $scope.showCountryDetails = function(uid) {
 
+        console.log($scope.data,'sssssssss');
+
         $uibModal.open({
           templateUrl: '/static/ngTemplates/app.support.showCountryDetails.modal.html',
           size: 'md',
@@ -2282,17 +2284,17 @@ app.directive('chatBox', function() {
             locationData: function() {
               return $scope.location;
             },
-            urlData:function(){
-              return $scope.data
+            currentUrl:function(){
+              return $scope.data.currentUrl
             },
             chatThreadData:function () {
               return $scope.chatThreadData
             }
           },
-          controller: function($scope, locationData,urlData, $users,chatThreadData, $uibModalInstance, Flash) {
+          controller: function($scope, locationData,currentUrl, $users,chatThreadData, $uibModalInstance, Flash) {
             $scope.chatThreadData = chatThreadData;
             $scope.locationInfo = locationData
-            $scope.urlData=urlData
+            $scope.currentUrl=currentUrl
           },
         }).result.then(function() {
 
@@ -2466,7 +2468,6 @@ app.directive('chatBox', function() {
               $scope.form = visitorData
             }
             checkEmail = function() {
-
               $http({
                 method: 'GET',
                 url: '/api/support/visitor/?email=' + $scope.form.email,
@@ -2481,7 +2482,6 @@ app.directive('chatBox', function() {
               });
             }
             checkPhone = function() {
-
               $http({
                 method: 'GET',
                 url: '/api/support/visitor/?phoneNumber=' + $scope.form.phoneNumber,

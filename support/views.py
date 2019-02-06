@@ -1268,8 +1268,16 @@ class SendFeedBackRequest(APIView):
                             'details': 'Please click on the below link to submit your feedback',
                             'link' : link
                         }
+
+                        try:
+                            companyName = chatData.company.service.name
+                            subject =  'Please Fill Feedback For' + str(companyName)
+                        except:
+                            companyName = ''
+                            subject = ''
+
                         email_body = get_template('app.feedbackEmail.html').render(ctx)
-                        msg = EmailMessage("Feedback Form" , email_body, to= emailAddr)
+                        msg = EmailMessage(subject , email_body, to= emailAddr)
                         msg.content_subtype = 'html'
                         msg.send()
                     except:
