@@ -102,7 +102,7 @@ class ChatThread(models.Model):
     lastActivity = models.DateTimeField(null = True, blank=True)
     isLate = models.BooleanField(default = False)
     mailSent=models.DateTimeField(null = True, blank=True)
-    uid = models.CharField(max_length = 50 , null = True )
+    uid = models.CharField(max_length = 50 , null = True , unique = True)
     status = models.CharField(choices = CHATTHREAD_STATUS_CHOICES , max_length = 15 , default = 'started')
     customerRating = models.PositiveSmallIntegerField(null = True,blank=True)
     customerFeedback = models.CharField(max_length = 3000 , null = True,blank=True)

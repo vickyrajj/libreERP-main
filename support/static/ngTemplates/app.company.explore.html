@@ -10,9 +10,9 @@
       <div style="position:absolute;left:0px;width:100%;">
         <ul class="nav padded" style="width:100%;">
           <li ng-repeat="app in companyApps" style="cursor:pointer; {{app.name==inView.name?'background-color:#eee':''}}" class="ripple" ng-click="setView(app.name)">
-            <a>
+            <a style="padding:10px;">
               <div align="center">
-                <i class="fa {{app.icon}} fa-2x pull-left"></i> {{app.name | humanize}}
+                {{app.name | humanize}}
               </div>
             </a>
           </li>

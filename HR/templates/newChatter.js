@@ -351,24 +351,24 @@ var failedMessages=[];
 var trySendingAgain=[];
 
 var viewports = {
-        default: metaTag.getAttribute('content'),
-        landscape: 'width=990'
-    };
+		default: metaTag.getAttribute('content'),
+		landscape: 'width=990'
+	};
 
 // Change the viewport value based on screen.width
 var viewport_set = function() {
-        if ( screen.width > 768 )
-            metaTag.setAttribute( 'content', viewports.landscape );
-        else
-            metaTag.setAttribute( 'content', viewports.default );
-    }
+		if ( screen.width > 768 )
+			metaTag.setAttribute( 'content', viewports.landscape );
+		else
+			metaTag.setAttribute( 'content', viewports.default );
+	}
 
 // Set the correct viewport value on page load
 viewport_set();
 
 // Set the correct viewport after device orientation change or resize
 window.onresize = function() {
-    viewport_set();
+	viewport_set();
 }
 
 if (is_blink=='True') {
@@ -786,9 +786,6 @@ document.addEventListener("DOMContentLoaded", function(event) {
         isAgentOnline = true;
         // videoCallAccepted = true
         // checkVideoCallAccepted()
-        console.log(args[0]);
-        console.log(args[1]);
-        console.log(args[2]);
 
         agentName.innerHTML = args[2].first_name+' '+args[2].last_name
         document.getElementById('logo_ji').src=args[2].profile.displayPicture
@@ -1566,7 +1563,7 @@ function createChatDiv() {
               .font-Syrow24hSupport:before {\
               content: '\\61';\
             }\
-    #chatSuggestionBar1 p{font-size:13px ! important;}\
+	#chatSuggestionBar1 p{font-size:13px ! important;}\
             .font-SyrowX:before {\
                content: '\\e97e';\
              }\
@@ -1776,10 +1773,10 @@ function createChatDiv() {
               @keyframes msgDiv{\
                 0%{\
                     opacity:0;\
-                    }\
+                	}\
                 100%{\
                     opacity:1;\
-                    }\
+                	}\
                 }\
                 .syrow_modal {\
                 display: none;\
@@ -1849,42 +1846,42 @@ function createChatDiv() {
                 left: 25px;\
           }\
           @keyframes modalBox{\
-            0%{\
+        	0%{\
               transform:translateY(-200px);\
-              }\
+          	}\
             70%{\
               transform:translateY(20px);\
-              }\
+          	}\
             100%{\
-                  transform:translateY(0px);\
-              }\
+              	transform:translateY(0px);\
+          	}\
           }\
           @keyframes first_animation{\
             0%{\
                 transform:translateY(20px);\
                 opacity:0.5;\
-                }\
+            	}\
             40%{\
                 transform:translateY(-120px);\
                 opacity:0.7;\
-                }\
+            	}\
             90%{\
                 transform:translateY(10px);\
                 opacity:0.9;\
-                }\
+            	}\
               100%{\
-                    transform:translateY();\
+                	transform:translateY();\
                   opacity:1;\
-                }\
+            	}\
             }\
           }\
           @keyframes changingOpacity{\
-            0%{\
+        	0%{\
               opacity:0.4;\
-              }\
+          	}\
             100%{\
-                  opacity:1;\
-              }\
+              	opacity:1;\
+          	}\
           }\
           @keyframes blink{\
           0%{\
@@ -1898,14 +1895,14 @@ function createChatDiv() {
             }\
           }\
           @keyframes chatSuggestionBar{\
-            0%{\
+        	0%{\
               transform:scale(0px);\
               opacity:0;\
-              }\
+          	}\
             100%{\
-                  transform:scale(1);\
+              	transform:scale(1);\
                 opacity:1;\
-              }\
+          	}\
           }\
           .typingBox{\
             display:none;z-index:11111111111111111111111111111;position:absolute;bottom:81px;font-size:13px !important;padding:3px;background-color:#f6f6f6;color:#000;border-radius: 0px 20px 20px 20px;left:0px;\
@@ -2465,7 +2462,6 @@ var myformrating;
     // or you can use variable feedbackFormSubmitted which is true only if feedbackForm is submitted
     messageBox.innerHTML = '';
     isConfirmedToEnd=false;
-    confirmationOpened = false;
     msgCount=0;
     agentName.innerHTML = nameSupport
     document.cookie = encodeURIComponent("uid") + "=deleted; expires=" + new Date(0).toUTCString()
@@ -2909,10 +2905,8 @@ function hideAudioAndVidoeBtn(){
 }
 
 var isConfirmedToEnd=false;
-var confirmationOpened = false;
 
 function addExitConfirmation() {
-  confirmationOpened = true;
   var confirmationBox = '<div class="confirmationDiv">'+
   '<div class="confirmationSureText">Are you sure you want to end this chat?</div>'+
   '<div class="confirmationBtnDiv">'+
@@ -2925,12 +2919,11 @@ function addExitConfirmation() {
   div.innerHTML = confirmationBox
   messageBox.appendChild(div);
   scroll();
-  disableTextArea('cancel to continue...');
+  disableTextArea('click cancel to continue chat..');
   document.getElementById('confirmationCancel').addEventListener("click", function() {
     var confBox = document.getElementById('confirmationBox')
     confBox.parentNode.removeChild(confBox);
     enableTextArea();
-    confirmationOpened = false;
   });
 
   document.getElementById('confirmationYes').addEventListener("click", function() {
@@ -2965,12 +2958,8 @@ function addExitConfirmation() {
         closeSupport.click()
         return
       }
-      console.log(confirmationOpened);
 
-      if (!confirmationOpened && !feedbackFormOpened) {
-        addExitConfirmation()
-      }
-
+      addExitConfirmation()
       // if (confirm("Are you sure you want to end this chat ?")) {
       //   isConfirmedToEnd=true
       //     if(getFrameContent!=undefined){
@@ -3267,12 +3256,6 @@ createActivity()
        xhttp.send(JSON.stringify({'location':dataToSend}));
   }
 
-  // alert(uid)
-  // if (uid!=getCookie("uid")) {
-  //   uid = getCookie("uid");
-  //   alert(uid)
-  // }
-
 
   function sendMessage(inptText,is_hidden) {
 
@@ -3289,33 +3272,52 @@ createActivity()
       if (uid!=getCookie("uid")) {
         uid = getCookie("uid");
       }
-      var status;
+
       var youtubeLink = inptText.includes("yout");
       if (youtubeLink) {
         status = "ML";
         link = "https://www.youtube.com/embed/" + inptText.split("v=")[1];
         var dataToSend = {uid: uid , message: link, attachmentType:'youtubeLink' , sentByAgent:false , created: new Date() };
+        console.log('is Agent online ',isAgentOnline);
+        if (agentPk) {
+          dataToSend.user = agentPk
+          if (!isAgentOnline) {
+            dataToSend.user = null
+          }else {
+            dataToSend.user = agentPk
+          }
+        }
+        var message = dataToSend
+        // dataToSend = JSON.stringify(dataToSend)
       }else {
         status = "M";
         var dataToSend = {uid: uid , message: inptText , sentByAgent:false , created: new Date() };
+        console.log('is Agent online ',isAgentOnline);
+        if (agentPk) {
+
+          dataToSend.user = agentPk
+          if (!isAgentOnline) {
+
+            dataToSend.user = null
+          }else {
+            dataToSend.user = agentPk
+          }
+        }
         var message = dataToSend
       }
       // alert(is_hidden)
       if (is_hidden) {
         dataToSend.is_hidden = true
-      }
+        dataToSend = JSON.stringify(dataToSend)
+      }else {
+        dataToSend = JSON.stringify(dataToSend)
 
-      if (agentPk) {
-        dataToSend.user = agentPk
-        if (!isAgentOnline) {
-          dataToSend.user = null
-        }else {
-          dataToSend.user = agentPk
-        }
       }
 
 
       setTimeout(function() {
+        // console.log(isAgentOnline, ' is agent online..........');
+
         if (!isAgentOnline) {
           agentName.innerHTML = nameSupport
           var div = document.createElement("div");
@@ -3336,162 +3338,69 @@ createActivity()
           scroll();
           }
       }, 4000)
+       var dataToPublish = [uid , status , message ];
+       var xhttp = new XMLHttpRequest();
+       xhttp.onreadystatechange = function() {
+         if (this.readyState == 4 && this.status == 201) {
+           console.log('posted successfully');
+           console.log(dataToPublish);
 
-
-
-
-
-
-       // var dataToPublish = [uid , status , message ];
-       // var xhttp = new XMLHttpRequest();
-       // xhttp.onreadystatechange = function() {
-       //   if (this.readyState == 4 && this.status == 201) {
-       //     console.log('posted successfully');
-       //     console.log(dataToPublish);
-       //
-       //     var dontPush = false;
-       //     for (var i = 0; i < chat.messages.length; i++) {
-       //       if (JSON.parse(this.responseText).pk==chat.messages[i].pk) {
-       //         dontPush = true;
-       //       }
-       //     }
-       //     if (!dontPush) {
-       //       var div = document.createElement("div");
-       //       div.className = "messageOpacity"
-       //       div.innerHTML = messageDiv(JSON.parse(this.responseText))
-       //       messageBox.appendChild(div);
-       //       scroll();
-       //       chat.messages.push(JSON.parse(this.responseText));
-       //     }
-       //     inputText.value ='';
-       //
-       //
-       //     dataToPublish[2].pk=JSON.parse(this.responseText).pk
-       //     if (threadExist==undefined) {
-       //      let dataToPublish = [uid , status , message , custID ];
-       //      details = getCookie("uidDetails");
-       //      if (details != "") {
-       //        // console.log(details);
-       //         dataToPublish.push(JSON.parse(details))
-       //      } else {
-       //        dataToPublish.push(false)
-       //      }
-       //      var dataToSend = JSON.stringify({uid: uid , company: custID});
-       //       var xhttp = new XMLHttpRequest();
-       //        xhttp.onreadystatechange = function() {
-       //          if (this.readyState == 4 && this.status == 201) {
-       //            console.log('posted successfully',this.responseText);
-       //            var data = JSON.parse(this.responseText)
-       //            threadExist=true
-       //            chatThreadPk = data.pk
-       //            dataToPublish.push(chatThreadPk)
-       //            publishMessageToAll(dataToPublish);
-       //          }
-       //        };
-       //        xhttp.open('POST', '{{serverAddress}}/api/support/chatThread/', true);
-       //        xhttp.setRequestHeader("Content-type", "application/json");
-       //        xhttp.send(dataToSend);
-       //       }else {
-       //         console.log('chat threAD EXIST');
-       //         if (isAgentOnline) {
-       //           console.log('ONLINE' , agentPk);
-       //           publishMessageToOne(agentPk,dataToPublish)
-       //         }else {
-       //           publishMessageToAll(dataToPublish)
-       //         }
-       //       }
-       //   }
-       // }
-       // xhttp.open('POST', '{{serverAddress}}/api/support/supportChat/', true);
-       // xhttp.setRequestHeader("Content-type", "application/json");
-       // xhttp.send(dataToSend);
-
-       function postAndPublishMessage(toWhome) {
-         dataToSend.uid = uid;
-         var xhttp = new XMLHttpRequest();
-         xhttp.onreadystatechange = function() {
-           if (this.readyState == 4 && this.status == 201) {
-             var messageData = JSON.parse(this.responseText);
-             var dataToPublish = [uid, status, messageData, custID]
-             details = getCookie("uidDetails");
-              if (details != "") {
-                 dataToPublish.push(JSON.parse(details))
-              } else {
-                 dataToPublish.push(false)
-              }
-              dataToPublish.push(chatThreadPk)
-              if (toWhome=='toAll') {
-                publishMessageToAll(dataToPublish);
-              }else if (toWhome=='toOne') {
-                 publishMessageToOne(agentPk,dataToPublish)
-              }
-
-            var dontPush = false;
-            for (var i = 0; i < chat.messages.length; i++) {
-              if (JSON.parse(this.responseText).pk==chat.messages[i].pk) {
-                dontPush = true;
-              }
-            }
-            if (!dontPush) {
-              var div = document.createElement("div");
-              div.className = "messageOpacity"
-              div.innerHTML = messageDiv(JSON.parse(this.responseText))
-              messageBox.appendChild(div);
-              scroll();
-              chat.messages.push(JSON.parse(this.responseText));
-            }
-            inputText.value ='';
-
+           var dontPush = false;
+           for (var i = 0; i < chat.messages.length; i++) {
+             if (JSON.parse(this.responseText).pk==chat.messages[i].pk) {
+               dontPush = true;
+             }
            }
-         }
-        xhttp.open('POST', '{{serverAddress}}/api/support/supportChat/', true);
-        xhttp.setRequestHeader("Content-type", "application/json");
-        xhttp.send(JSON.stringify(dataToSend));
-       }
+           if (!dontPush) {
+             var div = document.createElement("div");
+             div.className = "messageOpacity"
+             div.innerHTML = messageDiv(JSON.parse(this.responseText))
+             messageBox.appendChild(div);
+             scroll();
+             chat.messages.push(JSON.parse(this.responseText));
+           }
+           inputText.value ='';
 
-       function handleChatThreadAndMessage() {
 
-         if (threadExist==undefined) {
-           let dataToPost = JSON.stringify({uid: uid , company: custID});
-           var xhttp = new XMLHttpRequest();
-            xhttp.onreadystatechange = function() {
-              if (this.readyState == 4 && this.status == 201) {
-                var data = JSON.parse(this.responseText)
-                threadExist = true
-                chatThreadPk = data.pk
-                postAndPublishMessage('toAll');
-              }
-
-              if (this.readyState == 4 && this.status == 400) {
-                if (JSON.parse(this.responseText).uid[0].indexOf('already exists')>=0) {
-                  threadExist = undefined;
-                  document.cookie = encodeURIComponent("uid") + "=deleted; expires=" + new Date(0).toUTCString()
-                  uid = new Date().getTime()
-                  setCookie("uid", uid, 365);
-                  handleChatThreadAndMessage()
-                }
-              }
-            };
-            xhttp.open('POST', '{{serverAddress}}/api/support/chatThread/', true);
-            xhttp.setRequestHeader("Content-type", "application/json");
-            xhttp.send(dataToPost);
-         }else{
-           if (isAgentOnline) {
-              postAndPublishMessage('toOne');
-            }else {
-              postAndPublishMessage('toAll');
+           dataToPublish[2].pk=JSON.parse(this.responseText).pk
+           if (threadExist==undefined) {
+            let dataToPublish = [uid , status , message , custID ];
+            details = getCookie("uidDetails");
+            if (details != "") {
+              // console.log(details);
+               dataToPublish.push(JSON.parse(details))
+            } else {
+              dataToPublish.push(false)
             }
-
+            var dataToSend = JSON.stringify({uid: uid , company: custID});
+             var xhttp = new XMLHttpRequest();
+              xhttp.onreadystatechange = function() {
+                if (this.readyState == 4 && this.status == 201) {
+                  console.log('posted successfully',this.responseText);
+                  var data = JSON.parse(this.responseText)
+                  threadExist=true
+                  chatThreadPk = data.pk
+                  dataToPublish.push(chatThreadPk)
+                  publishMessageToAll(dataToPublish);
+                }
+              };
+              xhttp.open('POST', '{{serverAddress}}/api/support/chatThread/', true);
+              xhttp.setRequestHeader("Content-type", "application/json");
+              xhttp.send(dataToSend);
+             }else {
+               console.log('chat threAD EXIST');
+               if (isAgentOnline) {
+                 console.log('ONLINE' , agentPk);
+                 publishMessageToOne(agentPk,dataToPublish)
+               }else {
+                 publishMessageToAll(dataToPublish)
+               }
+             }
          }
        }
-       handleChatThreadAndMessage();
-
-
-
-
-
-
-
+       xhttp.open('POST', '{{serverAddress}}/api/support/supportChat/', true);
+       xhttp.setRequestHeader("Content-type", "application/json");
+       xhttp.send(dataToSend);
 
 
 
@@ -3587,14 +3496,14 @@ createActivity()
   }
 
   function disableTextArea(placeholder){
-    // connection._transport.close()
     if (placeholder==undefined) {
-      var placeholder =  "Please Wait. Connecting.. ";
+      var placeholder = "Please Wait. Connecting.. ";
     }else {
       var placeholder = placeholder
     }
+    // connection._transport.close()
     inputText.disabled = true;
-    inputText.placeholder =placeholder;
+    inputText.placeholder = placeholder;
     paperClip.style.display = "none";
     paperPlane.style.display = "none";
   }
@@ -3607,273 +3516,127 @@ createActivity()
 
   function sendFile() {
 
-    // status = "MF";
-    // if (uid!=getCookie("uid")) {
-    //   uid = getCookie("uid");
-    // }
-    // var file = filePicker;
-    // var fd = new FormData();
-    // fd.append('uid', uid);
-    // fd.append('attachment', file.files[0]);
-    // fd.append('attachmentType' , file.files[0].type.split('/')[0] )
-    //
-    // if (agentPk) {
-    //   fd.append('user' , agentPk)
-    // }
-    //
-    //  var xhttp = new XMLHttpRequest();
-    //
-    //
-    //   xhttp.onreadystatechange = function() {
-    //     if (this.readyState == 4 && this.status == 201) {
-    //       // console.log(this.responseText);
-    //       var data = JSON.parse(this.responseText)
-    //       filePk = data.pk
-    //
-    //       var typ = file.files[0].type.split('/')[0]
-    //       // console.log(typ);
-    //
-    //       var fileData = {
-    //         filePk : data.pk,
-    //         typ : data.attachmentType
-    //       }
-    //
-    //
-    //       if (agentPk) {
-    //         // console.log('agent pk is pnline',isAgentOnline);
-    //         fileData.user = agentPk;
-    //         if (!isAgentOnline) {
-    //           // console.log('agetn oflineee');
-    //           fileData.user = null
-    //         }else {
-    //           fileData.user = agentPk;
-    //         }
-    //       }
-    //
-    //       var dontPush = false;
-    //       for (var i = 0; i < chat.messages.length; i++) {
-    //         if (data.pk == chat.messages[i].pk) {
-    //           dontPush = true;
-    //         }
-    //       }
-    //       if (!dontPush) {
-    //         var div = document.createElement("div");
-    //         div.innerHTML = messageDiv(data)
-    //         messageBox.appendChild(div);
-    //         scroll();
-    //         chat.messages.push(data);
-    //       }
-    //
-    //       filePicker.value = ""
-    //
-    //       var dataToPublish = [uid , status , fileData];
-    //       if (threadExist==undefined) {
-    //         var dataToPublish = [uid , status , fileData , custID ];
-    //         details = getCookie("uidDetails");
-    //         if (details != "") {
-    //           // console.log(details);
-    //            dataToPublish.push(JSON.parse(details))
-    //         } else {
-    //           dataToPublish.push(false)
-    //         }
-    //         var dataToSend = JSON.stringify({uid: uid , company: custID});
-    //         var xhttp = new XMLHttpRequest();
-    //          xhttp.onreadystatechange = function() {
-    //            if (this.readyState == 4 && this.status == 201) {
-    //              console.log('posted successfully');
-    //              threadExist=true
-    //              // console.log(data , 'data$$$$$$$$$$$$$$$$$$$');
-    //              chatThreadPk = data.pk
-    //              dataToPublish.push(chatThreadPk)
-    //              connection.session.publish(wamp_prefix+'service.support.agent', dataToPublish, {}, {
-    //                acknowledge: true
-    //              }).
-    //              then(function(publication) {
-    //                console.log("Published the media file to all");
-    //              },function(){
-    //                console.log('failed to send media file to all');
-    //              });
-    //            }
-    //          };
-    //          xhttp.open('POST', '{{serverAddress}}/api/support/chatThread/', true);
-    //          xhttp.setRequestHeader("Content-type", "application/json");
-    //          xhttp.send(dataToSend);
-    //       }else {
-    //         console.log('chat threAD EXIST');
-    //         if (isAgentOnline) {
-    //           console.log('ONLINE' , agentPk);
-    //           connection.session.publish(wamp_prefix+'service.support.agent.'+agentPk, dataToPublish , {}, {
-    //             acknowledge: true
-    //           }).
-    //           then(function(publication) {
-    //             console.log("Published the media file to "+agentPk);
-    //           },function(){
-    //             console.log('failed to send media file to '+agentPk);
-    //           });
-    //         }else {
-    //           console.log('offline send to all');
-    //           console.log(dataToPublish, custID);
-    //           dataToPublish.push(custID);
-    //           connection.session.publish(wamp_prefix+'service.support.agent', dataToPublish , {}, {
-    //             acknowledge: true
-    //           }).
-    //           then(function(publication) {
-    //             console.log("Published the media file to all");
-    //           });
-    //         }
-    //         console.log('chat thread exist');
-    //       }
-    //
-    //     }
-    //   };
-    //   xhttp.open('POST', '{{serverAddress}}/api/support/supportChat/', true);
-    //   xhttp.send(fd);
+    status = "MF";
+    if (uid!=getCookie("uid")) {
+      uid = getCookie("uid");
+    }
+    var file = filePicker;
+    var fd = new FormData();
+    fd.append('uid', uid);
+    fd.append('attachment', file.files[0]);
+    fd.append('attachmentType' , file.files[0].type.split('/')[0] )
+
+    if (agentPk) {
+      fd.append('user' , agentPk)
+    }
+
+     var xhttp = new XMLHttpRequest();
 
 
+      xhttp.onreadystatechange = function() {
+        if (this.readyState == 4 && this.status == 201) {
+          // console.log(this.responseText);
+          var data = JSON.parse(this.responseText)
+          filePk = data.pk
+
+          var typ = file.files[0].type.split('/')[0]
+          // console.log(typ);
+
+          var fileData = {
+            filePk : data.pk,
+            typ : data.attachmentType
+          }
 
 
-
-
-
-
-
-
-      function postAndPublishFile(toWhome) {
-
-        var status = "MF";
-        if (uid!=getCookie("uid")) {
-          uid = getCookie("uid");
-        }
-        var file = filePicker;
-        var fd = new FormData();
-        fd.append('uid', uid);
-        fd.append('attachment', file.files[0]);
-        fd.append('attachmentType' , file.files[0].type.split('/')[0] )
-
-        if (agentPk) {
-          fd.append('user' , agentPk)
-        }
-
-        var fileData = {}
-
-
-        var xhttp = new XMLHttpRequest();
-        xhttp.onreadystatechange = function() {
-          if (this.readyState == 4 && this.status == 201) {
-
-
-            var data = JSON.parse(this.responseText)
-            filePk = data.pk
-            var typ = file.files[0].type.split('/')[0]
-            fileData.filePk = data.pk
-            fileData.typ = data.attachmentType
-
-            if (agentPk) {
+          if (agentPk) {
+            // console.log('agent pk is pnline',isAgentOnline);
+            fileData.user = agentPk;
+            if (!isAgentOnline) {
+              // console.log('agetn oflineee');
+              fileData.user = null
+            }else {
               fileData.user = agentPk;
-              if (!isAgentOnline) {
-                fileData.user = null
-              }else {
-                fileData.user = agentPk;
-              }
             }
+          }
 
-            var dontPush = false;
-            for (var i = 0; i < chat.messages.length; i++) {
-              if (data.pk == chat.messages[i].pk) {
-                dontPush = true;
-              }
+          var dontPush = false;
+          for (var i = 0; i < chat.messages.length; i++) {
+            if (data.pk == chat.messages[i].pk) {
+              dontPush = true;
             }
-            if (!dontPush) {
-              var div = document.createElement("div");
-              div.innerHTML = messageDiv(data)
-              messageBox.appendChild(div);
-              scroll();
-              chat.messages.push(data);
+          }
+          if (!dontPush) {
+            var div = document.createElement("div");
+            div.innerHTML = messageDiv(data)
+            messageBox.appendChild(div);
+            scroll();
+            chat.messages.push(data);
+          }
+
+          filePicker.value = ""
+
+          var dataToPublish = [uid , status , fileData];
+          if (threadExist==undefined) {
+            var dataToPublish = [uid , status , fileData , custID ];
+            details = getCookie("uidDetails");
+            if (details != "") {
+              // console.log(details);
+               dataToPublish.push(JSON.parse(details))
+            } else {
+              dataToPublish.push(false)
             }
-
-            filePicker.value = ""
-
-            // var messageData = JSON.parse(this.responseText);
-            // var dataToPublish = [uid, status, messageData, custID]
-            // details = getCookie("uidDetails");
-            //  if (details != "") {
-            //     dataToPublish.push(JSON.parse(details))
-            //  } else {
-            //     dataToPublish.push(false)
-            //  }
-            //  dataToPublish.push(chatThreadPk)
-             if (toWhome=='toAll') {
-              var dataToPublish = [uid , status , fileData , custID ];
-              details = getCookie("uidDetails");
-              if (details != "") {
-                 dataToPublish.push(JSON.parse(details))
-              } else {
-                dataToPublish.push(false)
-              }
-              dataToPublish.push(chatThreadPk)
-              // dataToPublish.push(custID)
-              connection.session.publish(wamp_prefix+'service.support.agent', dataToPublish, {}, {
-                 acknowledge: true
-               }).
-               then(function(publication) {
-                 console.log("Published the media file to all");
-               },function(){
-                 console.log('failed to send media file to all');
-               });
-             }else if (toWhome=='toOne') {
-               var dataToPublish = [uid , status , fileData];
-               connection.session.publish(wamp_prefix+'service.support.agent.'+agentPk, dataToPublish , {}, {
+            var dataToSend = JSON.stringify({uid: uid , company: custID});
+            var xhttp = new XMLHttpRequest();
+             xhttp.onreadystatechange = function() {
+               if (this.readyState == 4 && this.status == 201) {
+                 console.log('posted successfully');
+                 threadExist=true
+                 // console.log(data , 'data$$$$$$$$$$$$$$$$$$$');
+                 chatThreadPk = data.pk
+                 dataToPublish.push(chatThreadPk)
+                 connection.session.publish(wamp_prefix+'service.support.agent', dataToPublish, {}, {
                    acknowledge: true
                  }).
                  then(function(publication) {
-                   console.log("Published the media file to "+agentPk);
+                   console.log("Published the media file to all");
                  },function(){
-                   console.log('failed to send media file to '+agentPk);
+                   console.log('failed to send media file to all');
                  });
-             }
-
-
-          }
-        }
-        xhttp.open('POST', '{{serverAddress}}/api/support/supportChat/', true);
-        xhttp.send(fd);
-      }
-
-      function handleChatThreadAndFile() {
-        if (threadExist==undefined) {
-          let dataToPost = JSON.stringify({uid: uid , company: custID});
-          var xhttp = new XMLHttpRequest();
-           xhttp.onreadystatechange = function() {
-             if (this.readyState == 4 && this.status == 201) {
-               var data = JSON.parse(this.responseText)
-               threadExist = true
-               chatThreadPk = data.pk
-               postAndPublishFile('toAll');
-             }
-
-             if (this.readyState == 4 && this.status == 400) {
-               if (JSON.parse(this.responseText).uid[0].indexOf('already exists')>=0) {
-                 threadExist = undefined;
-                 document.cookie = encodeURIComponent("uid") + "=deleted; expires=" + new Date(0).toUTCString()
-                 uid = new Date().getTime()
-                 setCookie("uid", uid, 365);
-                 handleChatThreadAndFile()
                }
-             }
-           };
-           xhttp.open('POST', '{{serverAddress}}/api/support/chatThread/', true);
-           xhttp.setRequestHeader("Content-type", "application/json");
-           xhttp.send(dataToPost);
-        }else{
-          if (isAgentOnline) {
-             postAndPublishFile('toOne');
-           }else {
-             postAndPublishFile('toAll');
-           }
+             };
+             xhttp.open('POST', '{{serverAddress}}/api/support/chatThread/', true);
+             xhttp.setRequestHeader("Content-type", "application/json");
+             xhttp.send(dataToSend);
+          }else {
+            console.log('chat threAD EXIST');
+            if (isAgentOnline) {
+              console.log('ONLINE' , agentPk);
+              connection.session.publish(wamp_prefix+'service.support.agent.'+agentPk, dataToPublish , {}, {
+                acknowledge: true
+              }).
+              then(function(publication) {
+                console.log("Published the media file to "+agentPk);
+              },function(){
+                console.log('failed to send media file to '+agentPk);
+              });
+            }else {
+              console.log('offline send to all');
+              console.log(dataToPublish, custID);
+              dataToPublish.push(custID);
+              connection.session.publish(wamp_prefix+'service.support.agent', dataToPublish , {}, {
+                acknowledge: true
+              }).
+              then(function(publication) {
+                console.log("Published the media file to all");
+              });
+            }
+            console.log('chat thread exist');
+          }
 
         }
-      }
-      handleChatThreadAndFile();
+      };
+      xhttp.open('POST', '{{serverAddress}}/api/support/supportChat/', true);
+      xhttp.send(fd);
 
   }
 
@@ -4038,4 +3801,4 @@ lg.addListener(lgDevice)
 
 
 
-  })
+  });

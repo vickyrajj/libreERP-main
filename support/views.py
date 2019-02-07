@@ -1155,18 +1155,15 @@ class EmailChat(APIView):
         sObj = SupportChat.objects.filter(uid = request.data['uid'])
         visitor = Visitor.objects.filter(uid = request.data['uid'])
 
-
+        try:
+            introMessage = chatThreadObj.company.firstMessage
+        except :
+            introMessage = ''
 
         try:
-            print int(request.data['servicePk'][0]) ,'sssssssssssss'
-            custProfile = CustomerProfile.objects.filter(service__pk = int(request.data['servicePk'][0]))
-            print custProfile,'ggggggggg$$$$$$$'
-            introMessage = custProfile[0].firstMessage
-            print introMessage,'introMessageintroMessageintroMessageintroMessageintroMessageintroM'
-            companyName = service.objects.filter(pk = int(request.data['servicePk'][0]))[0].name
+            companyName = chatThreadObj.company.service.name
             companyUrl = ''
         except:
-            introMessage = ''
             companyName = ''
             companyUrl = ''
 
@@ -1189,7 +1186,6 @@ class EmailChat(APIView):
             allChats.append(toAppend)
         sObj = allChats
 
-
         ctx = {
             'heading' : "Support Conversation",
             'allChats' : sObj,
@@ -1200,7 +1196,7 @@ class EmailChat(APIView):
         }
         print str(chatStarted.date().strftime('%b %d, %Y'))
         print str(chatStarted.time().strftime('%H:%M %p')),'gggg'
-        subject =  'CHAT FOR ' + str(companyName) + 'ON'+' '+ str(chatStarted.date().strftime('%b %d, %Y')) +' AT ' + str(chatStarted.time().strftime('%H:%M %p')) +''
+        subject =  'Chat for ' + str(companyName) + 'on'+' '+ str(chatStarted.date().strftime('%b %d, %Y')) +' at ' + str(chatStarted.time().strftime('%H:%M %p')) +''
         email_body = get_template('app.support.newEmail.html').render(ctx)
         msg = EmailMessage(subject , email_body, to= emailAddr)
         msg.content_subtype = 'html'

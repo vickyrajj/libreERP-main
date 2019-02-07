@@ -148,12 +148,22 @@ app.controller("businessManagement.support", function($scope, $state, $users, $s
         console.log(args[2]);
         alert(args[1] + " has assigned " + args[2].uid + " uid chat to you!")
         $scope.myUsers.push(args[2]);
-        connection.session.publish(wamp_prefix + 'service.support.chat.' + args[2].uid, ['AP', $scope.me.pk], {}, {
+        // connection.session.publish(wamp_prefix + 'service.support.chat.' + args[2].uid, ['AP', $scope.me.pk], {}, {
+        //   acknowledge: true
+        // }).
+        // then(function(publication) {
+        //   console.log("Published AP", args[2].uid);
+        // });
+
+        $scope.status = 'AP';
+        console.log(wamp_prefix, $scope.status, $scope.me.pk, $scope.me);
+        connection.session.publish(wamp_prefix + 'service.support.chat.' + args[2].uid, [$scope.status, $scope.me.pk, $scope.me], {}, {
           acknowledge: true
         }).
         then(function(publication) {
           console.log("Published AP", args[2].uid);
         });
+
 
         var xhttp = new XMLHttpRequest();
         xhttp.onreadystatechange = function() {
