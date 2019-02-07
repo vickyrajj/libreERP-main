@@ -2426,6 +2426,19 @@ hr {
   border-right: 1px solid #c7c7c7;
   width: 20%
 }
+.discover_cards{
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+  margin-bottom: 15px;
+}
+.zoomOnHover:hover {
+  transform: scale(1.1);
+  /*box-shadow: 2px 2px 10px rgba(7, 131, 184, 1);*/
+}
+
+.zoomOnHover {
+  transition: all .2s ease-in-out;
+  cursor: pointer;
+}
 
 /* exams css properties */
 /* for normal screens ends here.... */
@@ -2679,6 +2692,11 @@ hr {
   width: 219.683px;
   height: 300px;
   border-radius: 10px 10px 10px 0px;
+}
+
+.dimgstyle{
+  width: 180px;
+  height: 300px;
 }
 
 .genericHeading {
