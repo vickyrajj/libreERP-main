@@ -45,7 +45,7 @@ app.controller('home.LMS.evaluation', function($scope, $http, $aside, $state, Fl
 
   $scope.tableAction = function(target, action, mode) {
     console.log(target, action, mode);
-    console.log($scope.data.tableData);
+    console.log($scope.data.tableData,'pppppppappppperssss');
 
     for (var i = 0; i < $scope.data.tableData.length; i++) {
       if ($scope.data.tableData[i].pk == parseInt(target)) {
@@ -56,7 +56,6 @@ app.controller('home.LMS.evaluation', function($scope, $http, $aside, $state, Fl
           var title = 'Paper Details :';
           var appType = 'paperExplorer';
         }
-
 
         $scope.addTab({
           title: title + $scope.data.tableData[i].pk,
@@ -88,6 +87,14 @@ app.controller('home.LMS.evaluation', function($scope, $http, $aside, $state, Fl
           var appType = 'paperGroupDetails';
         }
         $scope.paperGroupData = $scope.data.paperGroupTableData[i]
+        // $http({
+        //   method: 'GET',
+        //   url: '/api/LMS/topic/?group=' + $scope.paperGroupData.pk,
+        // }).
+        // then(function(response) {
+        //   $scope.papergroup.papers = response.data
+        //   console.log($scope.papergroup.papers,'--------fjfhbfhfjfjdapapapapeerrrr');
+        // })
         $scope.addTab({
           title: title + $scope.data.paperGroupTableData[i].title,
           cancel: true,

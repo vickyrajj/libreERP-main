@@ -62,6 +62,7 @@ class PaperQuesViewSet(viewsets.ModelViewSet):
     serializer_class = PaperSerializer
     queryset = PaperQues.objects.all()
 
+
 class DownloadQuesPaper(APIView):
     permission_classes = (permissions.AllowAny, )
     renderer_classes = (JSONRenderer,)
@@ -221,7 +222,7 @@ class PaperViewSet(viewsets.ModelViewSet):
     serializer_class = PaperSerializer
     queryset = Paper.objects.all()
     filter_backends = [DjangoFilterBackend]
-    filter_fields = ['name']
+    filter_fields = ['name','group']
 
 class PaperGroupViewSet(viewsets.ModelViewSet):
     permission_classes = (permissions.IsAuthenticated,)
