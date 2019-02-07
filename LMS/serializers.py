@@ -90,7 +90,7 @@ class TopicLiteSerializer(serializers.ModelSerializer):
 class BookLiteSerializer(serializers.ModelSerializer):
     class Meta:
         model = Book
-        fields = ('pk'  , 'title')
+        fields = ('pk'  , 'title', 'dp', 'author','volume')
 
 class SectionLiteSerializer(serializers.ModelSerializer):
     book = BookLiteSerializer(many = False , read_only = True)
@@ -474,7 +474,7 @@ class ForumCommentSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = ForumComment
-        fields = ('pk' , 'created' , 'parent', 'txt','user')
+        fields = ('pk' , 'created' , 'parent', 'txt','user','verified')
 
         def create(self , validated_data):
             fc = ForumComment(**validated_data)

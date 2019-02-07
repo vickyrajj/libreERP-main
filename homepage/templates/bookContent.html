@@ -144,7 +144,6 @@
       {% endif %}
       {% if not request.user.is_authenticated %}
       <a style="cursor:pointer;" class="btn btn-primary pull-right sign_btn" href="/signin/">sign in</a>
-      <!--  ng-click="signin()" -->
       {% endif %}
       <br>
       <a href="/media/{{sectionobj.shortUrl}}.pdf" class="btn btn-success pull-right" target="_blank">Download</a>

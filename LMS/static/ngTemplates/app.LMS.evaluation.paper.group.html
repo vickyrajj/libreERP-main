@@ -1,9 +1,9 @@
 <div class="col-md-3 " style="padding-bottom:20px;padding-left:10px;padding-right:10px;">
 
-  <div class="container-fluid card" style="padding-bottom:10px;cursor:pointer;">
+  <div class="container-fluid card" style="padding-bottom:10px;">
     <h2 class="text-muted" style="font-size:20px;">{{data.title}}</h2>
     <hr>
-    <div class="container-fluid" style="height:70px;">
+    <div class="container-fluid" style="height:70px;cursor:pointer;"ng-click="rowActionClicked('details')">
       <div class="col-md-12"style="padding:0px">
         <span class="text-muted"><b>Description :</b> {{data.description}}</span><br>
         <span class="text-muted"><b>Subject :</b> {{data.subject.title}}</span><br>
@@ -12,8 +12,7 @@
       </div>
     </div>
     <div class="container-fluid">
-        <i class="fa fa-pencil fa-lg" style="cursor:pointer;" ng-click="rowActionClicked('edit')"></i>
-        <i class="fa fa-info-circle pull-right fa-lg" style="cursor:pointer;" ng-click="rowActionClicked('details')"></i>
+        <i class="fa fa-pencil fa-lg pull-right" style="cursor:pointer;" ng-click="rowActionClicked('edit')"></i>
     </div>
   </div>
 

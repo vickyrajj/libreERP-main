@@ -45,6 +45,13 @@ class BookViewSet(viewsets.ModelViewSet):
     filter_backends = [DjangoFilterBackend]
     filter_fields = ['title']
 
+class BookLiteViewSet(viewsets.ModelViewSet):
+    permission_classes = (permissions.IsAuthenticated, isAdmin, )
+    serializer_class = BookLiteSerializer
+    queryset = Book.objects.all()
+    filter_backends = [DjangoFilterBackend]
+    filter_fields = ['title']
+
 class QPartViewSet(viewsets.ModelViewSet):
     permission_classes = (permissions.IsAuthenticated, isAdmin, )
     serializer_class = QPartSerializer
@@ -499,11 +506,11 @@ class ForumThreadViewSet(viewsets.ModelViewSet):
     serializer_class = ForumThreadSerializer
     queryset = ForumThread.objects.all()
     filter_backends = [DjangoFilterBackend]
-    filter_fields = ['verified']
+    filter_fields = ['verified','user']
 
 class ForumCommentViewSet(viewsets.ModelViewSet):
     permission_classes = (permissions.IsAuthenticated, isAdmin, )
     serializer_class = ForumCommentSerializer
     queryset = ForumComment.objects.all()
-    # filter_backends = [DjangoFilterBackend]
-    # filter_fields = ['course']
+    filter_backends = [DjangoFilterBackend]
+    filter_fields = ['verified','user']
