@@ -1,15 +1,15 @@
 {% load replacetags %}
 {% autoescape on %}
-\documentclass[12pt,paper=a4paper,english]{exam}
-\usepackage[english]{babel}
+\documentclass{exam}
+\usepackage[a4paper,bindingoffset=0 cm, left=1.5cm, right=1.5cm, top=1.5cm, bottom=1.5cm, footskip=0.5cm]{geometry}
 \usepackage[ddmmyyyy]{datetime}
 \usepackage{graphicx}
 \usepackage{grffile}
 \usepackage{amsmath,amssymb}
 \usepackage{multicol}
 \newcommand{\examdate}{\today}
-\pagestyle{head}
-\runningheader{CIOC}{Page \thepage\ of \numpages}{\examdate}
+\pagestyle{headandfoot}
+\runningheader{CIOC}{}{\examdate}
 \runningheadrule
 \begin{document}
 \renewcommand{\dateseparator}{-}
@@ -20,8 +20,8 @@
 \vspace{1cm}
 \noindent
 \begin{tabular}{@{}p{.40\textwidth}@{\hspace{6cm}}p{.40\textwidth}@{}}
-\textbf Name : & \textbf Marks :\\\\
-\textbf Time : 60 minutes & \textbf  Date :{\examdate}\\ % Date
+Name : & Marks :\\\\
+Time : 60 minutes & Date : {\examdate}\\ % Date
 \end{tabular}\par
 \vspace{0.7cm}
 \noindent\fbox{%
@@ -38,20 +38,26 @@
 
 \begin{questions}
 {% for q in ques %}
-\question {{q.ques}}\par\hspace{14.2cm} 
-  {% if q.qtype == 'mcc' %}
+\question {{q.ques}}\par
+  {% for data in q.quesParts.all %}
+    {% if data.mode == 'text' %} \choice {{data.txt}}
+    {% else %} \choice \includegraphics[width=0.3\textwidth]{{data.image.path|replacetags}}
+    {% endif %}
+  {% endfor %}
+  {% if q.qtype == 'mcc' or q.qtype == 'mcq' %}
   \checkboxchar{$\Box$}
-    {% if q.optionsParts.all %} \begin{checkboxes}
+    {% if q.optionsParts.all %}
+    Options :\par
+    \begin{checkboxes}
       {% for data in q.optionsParts.all %}
         {% if data.mode == 'text' %} \choice {{data.txt}}
         {% else %} \choice \includegraphics[width=0.3\textwidth]{{data.image.path|replacetags}}
         {% endif %}
       {% endfor %} \end{checkboxes}
-    {% else %} NO OPTIONS
     {% endif %}
   {% elif q.qtype == 'string' %}
+  Answer :\par
   \makeemptybox{2in}
-  {% elif q.qtype == 'mcq' %}
   {% endif %}
 {% endfor %}
 \end{questions}

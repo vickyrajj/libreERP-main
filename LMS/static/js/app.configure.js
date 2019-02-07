@@ -171,6 +171,20 @@ app.controller("home.LMS.configure", function($scope, $state, $users, $statePara
 });
 
 app.controller("home.LMS.configure.form", function($scope, $state, $users, $stateParams, $filter, $uibModal, $http, Flash) {
+  $scope.generatePdf = function(bookId){
+    console.log('generate pdf');
+    Flash.create('warning', 'PDF Generation Has Started Please Wait For Some Time')
+    $http({
+      method: 'POST',
+      url: '/api/LMS/generatePdf/',
+      data: {'bookId':bookId}
+    }).
+    then(function(response) {
+      console.log(response.data);
+      Flash.create('success', 'PDF Has Been Successfully Generated')
+    })
+  }
+
   $scope.mode = 'topic';
   $scope.hideBook = 'no'
   $scope.secArr = false

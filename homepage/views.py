@@ -282,6 +282,7 @@ def blogDetails(request, blogname):
             data['sectionobj'] = sectionobj
             data['forumData'] = forumData
             data['blogname'] = blogname
+            data['bookUrl'] = blogobj.shortUrl
             return render(request, 'book.html', data)
         elif blogobj.contentType == 'course':
             course = Course.objects.get(pk=blogobj.header)
