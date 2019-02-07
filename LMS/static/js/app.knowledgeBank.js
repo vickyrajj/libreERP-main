@@ -15,7 +15,8 @@ app.controller("home.LMS.knowledgeBank.book.explore", function($scope, $state, $
   $scope.bookData = $scope.bookDetails
   $scope.showQues = function(idx) {
     $scope.sectionQuestion = $scope.bookData.sections[idx].questions
-    $scope.view.typ = 'questions'
+    console.log('calllllllllllledddd this');
+    // $scope.view.typ = 'questions'
   }
   console.log('ccccccccccccc', $scope.bookData);
 

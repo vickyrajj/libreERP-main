@@ -80,9 +80,8 @@ class Topic(models.Model):
     created = models.DateTimeField(auto_now_add = True)
     updated = models.DateField(auto_now=True)
     subject = models.ForeignKey(Subject , null = False , related_name='topics')
-    title = models.CharField(max_length = 30 , null = False)
+    title = models.CharField(max_length = 70 , null = False)
     description = models.TextField(max_length=2000 , null = False)
-    seoTitle = models.CharField(max_length = 30 , null = True)
     syllabus = models.TextField(null = True)
 
     def get_absolute_url(self):

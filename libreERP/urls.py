@@ -8,7 +8,7 @@ from homepage.views import index
 # from homepage.views import blog,blogDetails,news,team, career ,policy ,terms ,refund , contacts , registration , desclaimer
 # from ERP.views import serviceRegistration , dynamicTemplates, courses , coursesContent , ncert , mockTestView
 from HR.views import loginView , logoutView , home , registerView , tokenAuthentication , root, generateOTP, documentView,registrationLite
-from homepage.views import blog,blogAnotherView,blogDetails, career ,policy ,terms ,team,refund  , desclaimer ,aboutUs, signin,contactUs,desclaimer,policy,terms,refund,testimonials,account,SaveForumDetails
+from homepage.views import *
 from ERP.views import serviceRegistration , dynamicTemplates , mockTestView , testResultsView
 from tutor.views import studentHome , tutorHome
 from ERP.views import PaymentResponse, renderedStatic
@@ -64,9 +64,9 @@ urlpatterns = [
     url(r'^account/', account , name ='account'),
     url(r'^team/', team , name ='team'),
     url(r'^saveForumDetails/', SaveForumDetails , name ='saveForumDetails'),
-
-
-
+    url(r'^ncert-solutions/', ncertSolutions , name ='ncertSolutions'),
+    url(r'^courses/', courses , name ='courses'),
+    url(r'^sitemap-extended.xml', sitemapView , name ='sitemapView'),
 
 ]
 

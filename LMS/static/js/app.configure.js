@@ -171,6 +171,20 @@ app.controller("home.LMS.configure", function($scope, $state, $users, $statePara
 });
 
 app.controller("home.LMS.configure.form", function($scope, $state, $users, $stateParams, $filter, $uibModal, $http, Flash) {
+  $scope.generatePdf = function(bookId){
+    console.log('generate pdf');
+    Flash.create('warning', 'PDF Generation Has Started Please Wait For Some Time')
+    $http({
+      method: 'POST',
+      url: '/api/LMS/generatePdf/',
+      data: {'bookId':bookId}
+    }).
+    then(function(response) {
+      console.log(response.data);
+      Flash.create('success', 'PDF Has Been Successfully Generated')
+    })
+  }
+
   $scope.mode = 'topic';
   $scope.hideBook = 'no'
   $scope.secArr = false
@@ -602,7 +616,6 @@ app.controller("home.LMS.configure.form", function($scope, $state, $users, $stat
         return;
       }
       toSend.append('subject', $scope.form.subject.pk)
-      toSend.append('seoTitle',$scope.form.seoTitle)
       if ($scope.form.syllabus != null && $scope.form.syllabus.length>0) {
         toSend.append('syllabus',$scope.form.syllabus)
       }
