@@ -66,9 +66,9 @@ app.controller("businessManagement.masterSheet", function($scope, $state, $users
     views: views,
     url: '/api/support/products/',
     searchField: 'part_no',
-    fields: ['part_no', 'weight', 'price', 'description_2', 'description_1', 'gst','customs_no','custom','replaced'],
+    fields: ['part_no', 'weight', 'price', 'description_2', 'description_1', 'gst','customs_no','custom','replaced','bar_code'],
     checkbox: false,
-    deletable:true,
+    deletable:false,
     canCreate : true,
     multiselectOptions: multiselectOptions,
     editorTemplate:'/static/ngTemplates/app.masterSheet.newProduct.html',
@@ -225,7 +225,8 @@ app.controller('businessManagement.masterSheet.newProduct', function($scope, $ht
       price:0,
       customs_no:'',
       gst:18,
-      custom:7.5
+      custom:7.5,
+      bar_code:''
     }
   }
   $scope.reset()

@@ -130,6 +130,7 @@ class service(models.Model): # contains other companies datails
     about = models.TextField(max_length = 2000 , null = True)
     cin = models.CharField(max_length = 100 , null = True) # company identification number
     tin = models.CharField(max_length = 100 , null = True) # tax identification number
+    gst = models.CharField(max_length = 100 , null = True)
     logo = models.CharField(max_length = 200 , null = True) # image/svg link to the logo
     web = models.TextField(max_length = 100 , null = True) # image/svg link to the logo
     doc  = models.ForeignKey(media , related_name = 'services' , null = True)

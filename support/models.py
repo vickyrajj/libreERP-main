@@ -166,7 +166,6 @@ class MaterialIssueMain(models.Model):
     materialIssue = models.ManyToManyField(MaterialIssue, related_name='materialqty')
     user =  models.ForeignKey(User , related_name='materialuser')
     project = models.ForeignKey(Projects , related_name='materialproject')
-    vendor = models.ForeignKey(Vendor , related_name = 'vandormaterial' ,null = True, blank =True)
 
 class StockCheck(models.Model):
     inventory =   models.ForeignKey( Inventory , null = True)
@@ -228,3 +227,27 @@ class InvoiceQty(models.Model):
     igst = models.FloatField(null = True,default=0)
     igstVal = models.FloatField(null = True,default=0)
     total = models.FloatField(null = True,default=0)
+
+class DeliveryChallan(models.Model):
+    created = models.DateTimeField(auto_now_add=True)
+    materialIssue = models.ForeignKey(MaterialIssueMain , null = True)
+    customername = models.CharField( max_length = 50 , null=True,blank=True)
+    customeraddress = models.CharField( max_length = 200 , null=True,blank=True)
+    customergst = models.CharField( max_length = 200 , null=True,blank=True)
+    heading = models.CharField( max_length = 200 , null=True,blank=True)
+    challanNo = models.CharField( max_length = 20 , null=True,blank=True)
+    challanDate = models.DateField(null = True)
+    deliveryThr = models.CharField( max_length = 50 , null=True,blank=True)
+    refNo = models.CharField( max_length = 50 , null=True,blank=True)
+    apprx = models.CharField( max_length = 50 , null=True,blank=True)
+    notes = models.CharField(max_length = 500, null=True,blank=True)
+
+class StockCheckReport(models.Model):
+    created = models.DateTimeField(auto_now_add=True)
+    user = models.ForeignKey(User , related_name='useradded' , null = True)
+
+class StockCheckItem(models.Model):
+    product = models.ForeignKey( Products , null = True)
+    qty = models.PositiveIntegerField(null=True , default=0)
+    matching = models.BooleanField(default = False)
+    stockReport = models.ForeignKey(StockCheckReport , related_name='stockreportDetails' , null = True)

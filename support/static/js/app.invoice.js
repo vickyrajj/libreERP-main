@@ -15,7 +15,7 @@ app.controller("businessManagement.invoice", function($scope, $state, $users, $s
     views: views,
     url: '/api/support/invoice/',
     filterSearch: true,
-    searchField: 'name',
+    searchField: 'invoiceNumber',
     deletable: true,
     itemsNumPerView: [6, 12, 18],
     // getParams: [{
@@ -196,6 +196,28 @@ app.controller("businessManagement.invoice.form", function($scope, $state, $user
       return response.data.results;
     })
   };
+  $scope.calculate=function(){
+    for (var i = 0; i < $scope.products.length; i++) {
+      console.log($scope.gstcode,$scope.gstCal,'kkkkkkkkkkkkkkkkkkk');
+      if ($scope.gstcode === $scope.gstCal) {
+        $scope.products[i].cgst = 9
+        $scope.products[i].cgstVal = parseFloat((($scope.products[i].cgst * $scope.products[i].taxableprice) / 100).toFixed(2))
+        $scope.products[i].sgst = 9
+        $scope.products[i].sgstVal = parseFloat((($scope.products[i].sgst * $scope.products[i].taxableprice) / 100).toFixed(2))
+        $scope.products[i].igst = 0
+        $scope.products[i].igstVal = 0
+      } else {
+        $scope.products[i].cgst = 0
+        $scope.products[i].cgstVal = 0
+        $scope.products[i].sgst = 0
+        $scope.products[i].sgstVal = 0
+        $scope.products[i].igst = 18
+        $scope.products[i].igstVal = parseFloat((($scope.products[i].igst * $scope.products[i].taxableprice) / 100).toFixed(2))
+      }
+      $scope.products[i].total = parseFloat(($scope.products[i].taxableprice + $scope.products[i].cgstVal + $scope.products[i].sgstVal + $scope.products[i].igstVal).toFixed(2))
+    }
+  }
+
 
   var gstData = '29AABCB6326Q1Z6'
   $scope.$watch('form.billGst', function(newValue, oldValue) {
@@ -203,6 +225,7 @@ app.controller("businessManagement.invoice.form", function($scope, $state, $user
       $scope.gstcode = gstData.substring(0, 2)
       $scope.gstCal = newValue.substring(0, 2)
       $scope.form.billCode = newValue.substring(0, 2)
+      $scope.calculate()
     }
   })
   $scope.$watch('form.shipGst', function(newValue, oldValue) {
@@ -234,22 +257,7 @@ app.controller("businessManagement.invoice.form", function($scope, $state, $user
         $scope.products[i].product = ppk
         $scope.products[i].qty = 1
         $scope.products[i].taxableprice = parseFloat((newValue[i].part_no.price * $scope.products[i].qty).toFixed(2))
-        if ($scope.gstcode === $scope.gstCal) {
-          $scope.products[i].cgst = 9
-          $scope.products[i].cgstVal = parseFloat((($scope.products[i].cgst * $scope.products[i].taxableprice) / 100).toFixed(2))
-          $scope.products[i].sgst = 9
-          $scope.products[i].sgstVal = parseFloat((($scope.products[i].sgst * $scope.products[i].taxableprice) / 100).toFixed(2))
-          $scope.products[i].igst = 0
-          $scope.products[i].igstVal = 0
-        } else {
-          $scope.products[i].cgst = 0
-          $scope.products[i].cgstVal = 0
-          $scope.products[i].sgst = 0
-          $scope.products[i].sgstVal = 0
-          $scope.products[i].igst = 18
-          $scope.products[i].igstVal = parseFloat((($scope.products[i].igst * $scope.products[i].taxableprice) / 100).toFixed(2))
-        }
-        $scope.products[i].total = parseFloat(($scope.products[i].taxableprice + $scope.products[i].cgstVal + $scope.products[i].sgstVal + $scope.products[i].igstVal).toFixed(2))
+        $scope.calculate()
       } else {
         pkList.push(newValue[i].part_no)
         $scope.products[i].price = parseFloat(newValue[i].price)

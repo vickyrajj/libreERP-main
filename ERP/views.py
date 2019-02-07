@@ -314,6 +314,9 @@ class applicationViewSet(viewsets.ModelViewSet):
     filter_fields = ['name' , 'module']
     def get_queryset(self):
         u = self.request.user
+        if 'search' in self.request.GET:
+            print application.objects.filter(name__contains=self.request.GET['search']).exclude(Q(name = 'app.reviews') | Q(name='app.uiSettings') | Q(name='app.knowledgeBase'))
+            return application.objects.filter(name__contains=self.request.GET['search']).exclude(Q(name = 'app.reviews') | Q(name='app.uiSettings') | Q(name='app.knowledgeBase'))
         if not u.is_superuser:
             return getApps(u)
         else:

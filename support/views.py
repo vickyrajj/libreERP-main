@@ -161,6 +161,25 @@ class InvoiceQtyViewSet(viewsets.ModelViewSet):
     filter_backends = [DjangoFilterBackend]
     filter_fields = ['invoice']
 
+class DeliveryChallanViewSet(viewsets.ModelViewSet):
+    permission_classes = (permissions.AllowAny , )
+    queryset = DeliveryChallan.objects.all()
+    serializer_class = DeliveryChallanSerializer
+    filter_backends = [DjangoFilterBackend]
+    filter_fields = ['materialIssue','challanNo']
+
+class StockCheckReportViewSet(viewsets.ModelViewSet):
+    permission_classes = (permissions.AllowAny , )
+    queryset = StockCheckReport.objects.all()
+    serializer_class = StockCheckReportSerializer
+
+class StockCheckItemViewSet(viewsets.ModelViewSet):
+    permission_classes = (permissions.AllowAny , )
+    queryset = StockCheckItem.objects.all()
+    serializer_class = StockCheckItemSerializer
+    filter_backends = [DjangoFilterBackend]
+    filter_fields = ['stockReport']
+
 class ProductsUploadAPIView(APIView):
     permission_classes = (permissions.IsAuthenticated ,)
 
@@ -243,8 +262,14 @@ class ProductsUploadAPIView(APIView):
                     except:
                         gst = 18
 
+                    try:
+                        bar_code = ws['J' + str(i)].value
 
-                    Products.objects.get_or_create(part_no=part_no, description_1=description_1,description_2=description_2,replaced=replaced,parent=parent,weight=weight, price=price,customs_no=customs_no,custom=custom,gst=gst)
+                    except:
+                        bar_code = None
+
+
+                    Products.objects.get_or_create(part_no=part_no, description_1=description_1,description_2=description_2,replaced=replaced,parent=parent,weight=weight, price=price,customs_no=customs_no,custom=custom,gst=gst,bar_code=bar_code)
                     count+=1
                 except:
                     unSaved.append(part_no)
@@ -443,8 +468,11 @@ def purchaseOrder(response , project , purchaselist, multNumber,currencyTyp, req
         part_no = i.products.part_no
         desc = i.products.description_1
         hs = i.products.customs_no
+        if currencyTyp == 'INR':
+            price = i.landed_price
+        else:
+            price = i.price
 
-        price = i.landed_price
         qty = i.quantity1
         amnt = round((price * qty),2)
         grandTotal +=amnt
@@ -1715,19 +1743,19 @@ class OrderAPIView(APIView):
                 prodListQty = 0
                 orderObj = MaterialIssue.objects.create(**data)
                 orderObj.save()
-                orderlist.append(orderObj.pk)
+                orderlist.append(orderObj)
         dataVal = {
             "user" : user,
             "project" : project,
         }
         materialIssueObj = MaterialIssueMain.objects.create(**dataVal)
-        materialIssueObj.save()
+        # materialIssueObj.save()
         for i in orderlist:
-            print i
-            inv = MaterialIssue.objects.get(pk=i)
-            materialIssueObj.materialIssue.add(inv)
-            materialIssueObj.save()
-            print materialIssueObj,'aaaaaaaaa'
+            # print i
+            # inv = MaterialIssue.objects.get(pk=i)
+            materialIssueObj.materialIssue.add(i)
+        materialIssueObj.save()
+        print materialIssueObj,'aaaaaaaaa'
 
         return Response(materialIssueObj.pk,status=status.HTTP_200_OK)
 
@@ -1760,7 +1788,7 @@ class EmailApi(APIView):
             'message' : 'Please click on the below link to change the status'
 
         }
-        email.append('ankita.k@cioc.in')
+        email.append('Gopinath.Anandan@bruderer.com')
         email_subject = 'Approval'
         email_body = get_template('app.approval.email.html').render(ctx)
         msg = EmailMessage(email_subject, email_body, to= email , from_email= 'ankita.k@cioc.in' )
@@ -1935,6 +1963,126 @@ import ast
 import json
 from openpyxl.styles import PatternFill , Font
 import string
+# class DownloadProjectSCExcelReponse(APIView):
+#     permission_classes = (permissions.IsAuthenticated,)
+#     def get(self , request , format = None):
+#         workbook = Workbook()
+#         projectObj = Projects.objects.filter(Q(status='approved')|Q(status='ongoing'),savedStatus=False,junkStatus=False)
+#         projectsObj = list(projectObj.values('comm_nr').distinct())
+#         sendData =[]
+#         hdFont = Font(size=12,bold=True)
+#         alphaChars = list(string.ascii_uppercase)
+#         for idx,p in enumerate(projectsObj):
+#             if idx==0:
+#                 Sheet1 = workbook.active
+#                 Sheet1.title = p['comm_nr']
+#             if idx>0:
+#                 Sheet1 = workbook.create_sheet(p['comm_nr'])
+#             hd = ["Supplier", "Part No",'Description','Qty','Landed Cost','Stock Consumed','total','Stock Consumed In']
+#             count=1
+#             hdWidth = [10,10,10]
+#             Sheet1.append(hd)
+#
+#             for idx,i in enumerate(hd):
+#                 cl = str(alphaChars[idx])+'1'
+#                 Sheet1[cl].fill = PatternFill(start_color="48dce0", end_color="48dce0", fill_type = "solid")
+#                 Sheet1[cl].font = hdFont
+#                 # Sheet1.column_dimensions[str(alphaChars[idx])].width = hdWidth[idx]
+#             # Sheet1['A1'].fill = PatternFill(start_color="6225c6", end_color="6225c6", fill_type = "solid")
+#             projData = projectObj.filter(comm_nr__exact=p['comm_nr'])
+#             # for i in projData:
+#             bomObj=BoM.objects.filter(project__comm_nr__exact=p['comm_nr'])
+#             materialObj=MaterialIssueMain.objects.filter(project__comm_nr__exact=p['comm_nr'])
+#             for j in bomObj:
+#                 listVal = 0
+#                 val = []
+#                 stockConsumed=0
+#                 total = 0
+#                 for k in materialObj:
+#                     mat = []
+#                     materialdata= list(k.materialIssue.all().values())
+#                     for g in materialdata:
+#                         mat.append(g)
+#                     for m in k.materialIssue.all():
+#                         if j.products.pk==m.product.pk:
+#                             stockConsumed += m.qty
+#                         total = j.landed_price * stockConsumed
+#                 inv = Inventory.objects.all()
+#                 for v in inv:
+#                     # listVal =[]
+#                     if j.project.pk == v.project.pk and j.products.pk == v.product.pk:
+#                         materialObjs=MaterialIssueMain.objects.all()
+#                         for h in materialObjs:
+#                             matdata = h.materialIssue.all()
+#                             for e in matdata:
+#                                 stock =  ast.literal_eval(e.stock)
+#                                 for s in stock:
+#                                     if s['addedqty']>0:
+#                                         if v.pk==s['inventory']:
+#                                             if s['comm_nr']!=h.project.comm_nr:
+#                                                 objts = BoM.objects.filter(project__comm_nr__exact=h.project.comm_nr,products__id=j.products.pk)
+#                                                 if len(objts)>0:
+#                                                     pass
+#                                                 else:
+#                                                     value = '(quantity : ' + str(s['addedqty']) + ', comm_nr : ' + h.project.comm_nr + ')'
+#                                                     val.append(value)
+#
+#                 val = json.dumps(val)
+#                 count+=1
+#                 Sheet1.append([j.project.vendor.name, j.products.part_no,j.products.description_1,j.quantity2,j.landed_price,stockConsumed,total,val])
+#             Sheet1.append(['', '','','',' ',' ',' '])
+#             # hd1 = ['material Issued']
+#             # Sheet1.append(hd1)
+#             hd2= ['Supplier','Part No','Description','Quantity','landed Cost','total','consumed From']
+#             Sheet1.append(hd2)
+#             count = count+2
+#             for idx,i in enumerate(hd2):
+#                 cl = str(alphaChars[idx])+str(count)
+#                 Sheet1[cl].fill = PatternFill(start_color="48dce0", end_color="48dce0", fill_type = "solid")
+#                 Sheet1[cl].font = hdFont
+#             for d in projData:
+#                 bomObj=BoM.objects.filter(project__id=d.pk)
+#                 materialObj=MaterialIssueMain.objects.filter(project__id=d.pk)
+#                 if len(materialObj)>0:
+#                     bomObjs = list(bomObj.values())
+#                     for a in materialObj:
+#                         for b in a.materialIssue.all():
+#                             try :
+#                                 bomObj.get(products__id=b.product.pk)
+#                                 pass
+#                             except:
+#                                 inval = []
+#                                 suply = []
+#                                 for u in ast.literal_eval(b.stock):
+#                                     if u['comm_nr']!=a.project.comm_nr:
+#                                         if u['addedqty']>0:
+#                                             sup = projectObj.get(pk=u['project'])
+#                                             invalue = '(quantity : ' + str(u['addedqty']) + ', comm_nr : ' + u['comm_nr'] + ')'
+#                                             supplier = sup.vendor.name
+#                                             inval.append(invalue)
+#                                             suply.append(str(supplier))
+#                                 inval = json.dumps(inval)
+#                                 # suply = json.dumps(suply)
+#                                 suply = str(suply).replace("[", " ")
+#                                 suply = str(suply).replace("]", " ")
+#                                 if len(inval)>5:
+#                                     tot = b.qty*b.price
+#                                     Sheet1.append([str(suply),b.product.part_no, b.product.description_1,b.qty,b.price,tot,inval])
+#
+#             Sheet1.column_dimensions['A'].width = 20
+#             Sheet1.column_dimensions['B'].width = 20
+#             Sheet1.column_dimensions['C'].width = 40
+#             Sheet1.column_dimensions['D'].width = 40
+#             Sheet1.column_dimensions['E'].width = 20
+#             Sheet1.column_dimensions['F'].width = 20
+#             Sheet1.column_dimensions['G'].width = 20
+#             Sheet1.column_dimensions['H'].width = 100
+#
+#         response = HttpResponse(content=save_virtual_workbook(workbook),content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+#         response['Content-Disposition'] = 'attachment; filename=stockConsumed.xlsx'
+#         return response
+
+# sai modified APIIIIIIIIIIIIIIIIIII
 class DownloadProjectSCExcelReponse(APIView):
     permission_classes = (permissions.IsAuthenticated,)
     def get(self , request , format = None):
@@ -1944,6 +2092,8 @@ class DownloadProjectSCExcelReponse(APIView):
         sendData =[]
         hdFont = Font(size=12,bold=True)
         alphaChars = list(string.ascii_uppercase)
+        inv = Inventory.objects.all()
+        materialObjs=MaterialIssueMain.objects.all()
         for idx,p in enumerate(projectsObj):
             if idx==0:
                 Sheet1 = workbook.active
@@ -1959,30 +2109,37 @@ class DownloadProjectSCExcelReponse(APIView):
                 cl = str(alphaChars[idx])+'1'
                 Sheet1[cl].fill = PatternFill(start_color="48dce0", end_color="48dce0", fill_type = "solid")
                 Sheet1[cl].font = hdFont
-                # Sheet1.column_dimensions[str(alphaChars[idx])].width = hdWidth[idx]
-            # Sheet1['A1'].fill = PatternFill(start_color="6225c6", end_color="6225c6", fill_type = "solid")
             projData = projectObj.filter(comm_nr__exact=p['comm_nr'])
-            # for i in projData:
             bomObj=BoM.objects.filter(project__comm_nr__exact=p['comm_nr'])
-            materialObj=MaterialIssueMain.objects.filter(project__comm_nr__exact=p['comm_nr'])
+            # materialObj=MaterialIssueMain.objects.filter(project__comm_nr__exact=p['comm_nr'])
             for j in bomObj:
-                listVal = 0
+                bomMat = MaterialIssueMain.objects.filter(project__comm_nr__exact=p['comm_nr'],materialIssue__product=j.products)
+                bomMatQty = bomMat.aggregate(qt=Sum('materialIssue__qty')).values()[0]
+                if not bomMatQty:
+                    bomMatQty = 0
+                # print bomMat.count(),'bommatCountbommatCountbommatCount',bomMatQty,round(float(bomMatQty) * float(j.landed_price),2)
+                stockConsumed = bomMatQty
+                total = round(float(bomMatQty) * float(j.landed_price),2)
                 val = []
-                stockConsumed=0
-                for k in materialObj:
-                    mat = []
-                    materialdata= list(k.materialIssue.all().values())
-                    for g in materialdata:
-                        mat.append(g)
-                    for m in k.materialIssue.all():
-                        if j.products.pk==m.product.pk:
-                            stockConsumed += m.qty
-                        total = j.landed_price * stockConsumed
-                inv = Inventory.objects.all()
+                # stockConsumed=0
+                # total = 0
+                # ct = 0
+                # for k in materialObj:
+                #     # mat = []
+                #     # materialdata= list(k.materialIssue.all().values())
+                #     # for g in materialdata:
+                #     #     mat.append(g)
+                #     for m in k.materialIssue.all():
+                #         if j.products.pk==m.product.pk:
+                #             stockConsumed += m.qty
+                #             ct += 1
+                #         total = j.landed_price * stockConsumed
+                # print 'bommatCountbommatCountbommatCountbommatCount',stockConsumed,total
+                # inv = Inventory.objects.all()
                 for v in inv:
                     # listVal =[]
                     if j.project.pk == v.project.pk and j.products.pk == v.product.pk:
-                        materialObjs=MaterialIssueMain.objects.all()
+                        # materialObjs=MaterialIssueMain.objects.all()
                         for h in materialObjs:
                             matdata = h.materialIssue.all()
                             for e in matdata:
@@ -2015,7 +2172,7 @@ class DownloadProjectSCExcelReponse(APIView):
                 bomObj=BoM.objects.filter(project__id=d.pk)
                 materialObj=MaterialIssueMain.objects.filter(project__id=d.pk)
                 if len(materialObj)>0:
-                    bomObjs = list(bomObj.values())
+                    # bomObjs = list(bomObj.values())
                     for a in materialObj:
                         for b in a.materialIssue.all():
                             try :
@@ -2039,6 +2196,15 @@ class DownloadProjectSCExcelReponse(APIView):
                                 if len(inval)>5:
                                     tot = b.qty*b.price
                                     Sheet1.append([str(suply),b.product.part_no, b.product.description_1,b.qty,b.price,tot,inval])
+
+            # bomProductsPks = list(bomObj.values_list('products__pk',flat=True).distinct())
+            # print bomProductsPks,'bomProductsPksbomProductsPks'
+            # otherMatObjs = MaterialIssueMain.objects.filter(project__comm_nr__exact=p['comm_nr']).exclude(materialIssue__product__in=bomProductsPks)
+            # uniqueproducts = list(otherMatObjs.values_list('materialIssue__product__pk',flat=True).distinct())
+            # print uniqueproducts,'uniqueproductsuniqueproducts'
+            # for m in uniqueproducts:
+            #     pd = Products.objects.get(pk=m)
+            #     otPMI = otherMatObjs.filter(materialIssue__product=m)
 
             Sheet1.column_dimensions['A'].width = 20
             Sheet1.column_dimensions['B'].width = 20
@@ -2416,81 +2582,121 @@ class CancelMaterialAPIView(APIView):
         return Response(status=status.HTTP_200_OK)
 
 def deliveryChallan(response , value , request):
+    print value,'llllllllllll'
+    materialdata = DeliveryChallan.objects.get(pk=value)
     styles = getSampleStyleSheet()
     style_right = ParagraphStyle(name='right', parent=styles['Normal'], alignment=TA_RIGHT)
     doc = SimpleDocTemplate(response,pagesize=letter, topMargin=0.2*cm,leftMargin=0.1*cm,rightMargin=0.1*cm)
     doc.request = request
     elements = []
-    invdata = MaterialIssueMain.objects.get(pk = request.GET['value'])
-    print invdata,'aaaaa'
-    p1 = Paragraph("<para alignment='center' fontSize=15  ><b> Delivery Challan</b></para>",styles['Normal'])
+    # invdata = MaterialIssueMain.objects.get(pk = request.GET['value'])
+    # print invdata,'aaaaa'
+    try:
+        heading = materialdata.heading.replace('\n', '<br />')
+    except:
+        heading = materialdata.heading
+    p1 = Paragraph("<para alignment='center' fontSize=10  ><b> {0}</b></para>".format(heading),styles['Normal'])
 
     elements.append(p1)
     elements.append(Spacer(1,15))
-    supplier = invdata.vendor.name
-    # projecttitle =invdata.project.title
-    # customer =invdata.project.service.name
-    # dated = invdata.created.date()
-    p0_01 =Paragraph("<para  alignment='left' fontSize=10>Supplier - {0}</para>".format(supplier),styles['Normal'])
-    # p1_01 =Paragraph("<para fontSize=10>Project title</para>",styles['Normal'])
-    # p1_02 =Paragraph(str(projecttitle),styles['Normal'])
-    #
-    # p2_01 =Paragraph("<para fontSize=10>Customer</para>",styles['Normal'])
-    # p2_02 =Paragraph(str(customer),styles['Normal'])
-    #
-    # p3_01 =Paragraph("<para fontSize=10>Date of issue</para>",styles['Normal'])
-    # p3_02 =Paragraph(str(dated),styles['Normal'])
+    detail = Paragraph("""
+    <para align="left">
+    <font size='8'>
+    No : %s <br/>
+    Date : %s
+    </font>
+    </para>
+    """ %(materialdata.challanNo,materialdata.challanDate),styles['Normal'])
+    detail1 = Paragraph("""
+    <para align="left">
+    <font size ='8'>
+    <b>Our GST IN: 29AABCB6326Q1Z6</b> <br/><br/>
 
+    </font></para>
+    """ %(),styles['Normal'])
+    td=[[detail,detail1]]
+    t=Table(td)
+    elements.append(t)
+    try:
+        address = materialdata.customeraddress.replace('\n', '<br />')
+    except:
+        address = materialdata.customeraddress
 
-
-    data1=[[p0_01]]
-    # rheights=1*[0.2*inch] #[1.1*inch,1.1*inch]
-    # cwidths=6.5*inch
-    t1=Table(data1)
-
+    detailaddress = Paragraph("""
+    <para align="left">
+    <font size ='8'><br/>
+    <b>To,</b> <br/>
+    %s <br/>
+    GST IN : %s
+    </font></para>
+    """ %(address,materialdata.customergst),styles['Normal'])
+    detailval = Paragraph("""
+    <para align="left">
+    <font size ='8'><br/>
+    Delivery through : %s <br/><br/>
+    Kind Attn : %s <br/>
+    Your reference : %s <br/>
+    </font></para>
+    """ %(materialdata.deliveryThr,materialdata.customername,materialdata.refNo),styles['Normal'])
+    td1=[[detailaddress,detailval]]
+    t1=Table(td1)
+    t.hAlign = 'LEFT'
     elements.append(t1)
-    elements.append(Spacer(1,40))
-
-
+    elements.append(Spacer(1,15))
+    p4_00 =Paragraph("<para fontSize=6 align=center><b>Sl. No</b></para>",styles['Normal'])
     p4_01 =Paragraph("<para fontSize=6 align=center><b>Part number</b></para>",styles['Normal'])
     p4_02 =Paragraph("<para fontSize=6 align=center><b>Part description</b></para>",styles['Normal'])
     p4_03 =Paragraph("<para fontSize=6 align=center><b>Quantity</b></para>",styles['Normal'])
-    # p4_04 =Paragraph("<para fontSize=6 align=center><b>Stock value / unit<br/>(Z) </b></para>",styles['Normal'])
-    # p4_05 =Paragraph("<para fontSize=6 align=center><b>Stock value consumed for the comm nr<br/>(AD = ACxZ)</b></para>",styles['Normal'])
-    data2= [[p4_01,p4_02,p4_03]]
-
-    grandtotal = 0
-
-    for i in invdata.materialIssue.all():
-        partno = i.product.part_no
-        description = i.product.description_1
-        qty = i.qty
-        qdata = qty
-        price = i.price
-        pdata = price
-        total = qty*price
-        tdata = total
-        grandtotal+=total
-        gtotal = grandtotal
-        p6_01 =Paragraph(partno,styles['Normal'])
-        p6_02 =Paragraph(description,styles['Normal'])
-        p6_03 =Paragraph("{:,}".format(qdata),styles['Normal'])
-        # p6_04 =Paragraph("{:,}".format(round(pdata,2)),style_right)
-        # p6_05 =Paragraph("{:,}".format(round(tdata,2)),style_right)
-        data2+=[[p6_01,p6_02,p6_03]]
-
-    # p7_01 =Paragraph("<para fontSize=8 ></para>",styles['Normal'])
-    # p7_02 =Paragraph("<para fontSize=8 ></para>",styles['Normal'])
-    # p7_03 =Paragraph("<para fontSize=8 ></para>",styles['Normal'])
-    # p7_04 =Paragraph("<para fontSize=8 ><b>Total</b></para>",style_right)
-    # p7_05 =Paragraph("{:,}".format(round(gtotal,2)),style_right)
-    # data2+=[[p7_01,p7_02,p7_03,p7_04,p7_05]]
-
-    # rheight=0.4*inch #[1.1*inch,1.1*inch]
-    # cwidth=1.6*inch,3*inch,0.4*inch
-    t2=Table(data2)
+    p4_04 =Paragraph("<para fontSize=6 align=center><b>HSN</b></para>",styles['Normal'])
+    data2= [[p4_00,p4_01,p4_02,p4_03,p4_04]]
+    indx = 0
+    for i in materialdata.materialIssue.materialIssue.all():
+        indx+=1
+        p6_00 =Paragraph("<para fontSize=6>{0}</para>".format(indx),styles['Normal'])
+        p6_01 =Paragraph("<para fontSize=6>{0}</para>".format(i.product.part_no),styles['Normal'])
+        p6_02 =Paragraph("<para fontSize=6>{0}</para>".format(i.product.description_1),styles['Normal'])
+        p6_03 =Paragraph("<para fontSize=6 align='center'>{0}</para>".format(i.qty),styles['Normal'])
+        p6_04 =Paragraph("<para fontSize=6>{0}</para>".format(i.product.customs_no),styles['Normal'])
+        data2+=[[p6_00,p6_01,p6_02,p6_03,p6_04]]
+    t2=Table(data2,colWidths=(18*mm,40*mm,90*mm,25*mm,40*mm))
     t2.setStyle(TableStyle([('ALIGN',(0,0),(-1,-1),'CENTER'),('VALIGN',(0,0),(-1,-1),'MIDDLE'),('BOX',(0,0),(-1,-1),0.25,colors.black),('INNERGRID', (0,0), (-1,-1), 0.25, colors.black)]))
     elements.append(t2)
+    elements.append(Spacer(1,15))
+    footer1 = Paragraph("""
+    <para align="left">
+    <font size ='8'>
+    Approximate value of goods in INR : %s <br/>
+    <b> NOT FOR SALE</b>
+    </font></para>
+    """ %(materialdata.apprx),styles['Normal'])
+    td3=[[footer1]]
+    t3=Table(td3)
+    elements.append(t3)
+    elements.append(Spacer(1,15))
+    try:
+        notes = materialdata.notes.replace('\n', '<br />')
+    except:
+        notes = materialdata.notes
+    footer2 = Paragraph("""
+    <para align="left">
+    <font size ='8'>
+    Notes :  <br/>
+    %s <br/>
+    </font></para>
+    """ %(notes),styles['Normal'])
+    td4=[[footer2]]
+    t4=Table(td4)
+    elements.append(t4)
+    footer3 = Paragraph("""
+    <para align="left">
+    <font size ='8'>
+    For BRUDERER PRESSES INDIA PRIVATE LIMITED <br/> <br/>
+    Authorised Signatory <br/>
+    </font></para>
+    """ %(),styles['Normal'])
+    td5=[[footer3]]
+    t5=Table(td5)
+    elements.append(t5)
     doc.build(elements)
 
 class DeliveryChallanNoteAPIView(APIView):
@@ -2498,7 +2704,7 @@ class DeliveryChallanNoteAPIView(APIView):
         print request.GET,'aaaaaa'
         value = request.GET['value']
         response = HttpResponse(content_type='application/pdf')
-        response['Content-Disposition'] = 'attachment;filename="Quotationdownload.pdf"'
+        response['Content-Disposition'] = 'attachment;filename="Challandownload.pdf"'
         deliveryChallan(response , value ,request)
         return response
 
@@ -2739,7 +2945,7 @@ def invoice(response, pkVal  , request):
         s32 =Paragraph("<para fontSize=8 alignment='right'> {:,} </para>".format(round(i.total,2)),styles['Normal'])
         data2.append([s21,s22,s23,s24,s25,s26,s27,s28,s29,s30,s31,s32])
     s21 =Paragraph("<para fontSize=8> </para>",styles['Normal'])
-    s22 =Paragraph("<para fontSize=8><b>Total </b></para>",styles['Normal'])
+    s22 =Paragraph("<para fontSize=8><b>Total in INR</b></para>",styles['Normal'])
     s23 =Paragraph("<para fontSize=8> </para>",styles['Normal'])
     s24 =Paragraph("<para fontSize=8> </para>",styles['Normal'])
     s25 =Paragraph("<para fontSize=8  alignment='right'><b>{:,}</b></para>".format(round(taxable,2)),styles['Normal'])
@@ -2764,11 +2970,11 @@ def invoice(response, pkVal  , request):
     t10.setStyle(TableStyle([('TEXTFONT', (0, 0), (-1, -1), 'Times-Bold'),('TEXTCOLOR',(0,0),(-1,-1),black),('ALIGN',(0,0),(-1,-1),'RIGHT'),('VALIGN',(0,0),(-1,-1),'TOP'),('BOX',(0,0),(-1,-1),0.25,colors.black),('INNERGRID', (0,0), (-1,-1), 0.25, colors.black)]))
     elements.append(t10)
     try:
-        billaddr = inv.invoiceTerms.replace('\n', '<br />')
+        invtrms = inv.invoiceTerms.replace('\n', '<br />')
     except:
-        billaddr = inv.invoiceTerms
+        invtrms = inv.invoiceTerms
     dataFooter = []
-    s51 =Paragraph("<para fontSize=8>Payment Terms : {0} </para>".format(billaddr),styles['Normal'])
+    s51 =Paragraph("<para fontSize=8>Payment Terms : {0} </para>".format(invtrms),styles['Normal'])
     s52 =Paragraph("<para fontSize=8> </para>",styles['Normal'])
     s53 =Paragraph("<para fontSize=6 alignment='center'> Certified that the particulars given above are true and correct <br/></para><para fontSize=10> For BRUDERER PRESSES INDIA PVT.LTD.</para>",styles['Normal'])
     dataFooter =[[s51,s52,s53]]
@@ -2788,6 +2994,216 @@ class InvoiceDownloadAPIView(APIView):
         # print request.GET,'aaaaaa'
         pkVal = request.GET['pkVal']
         response = HttpResponse(content_type='application/pdf')
-        response['Content-Disposition'] = 'attachment;filename="Quotationdownload.pdf"'
+        response['Content-Disposition'] = 'attachment;filename="Invoicedownload.pdf"'
         invoice(response, pkVal ,request)
         return response
+
+class StockReportAPIView(APIView):
+    def get(self , request , format = None):
+        data ={}
+        toReturn = []
+        today_min = datetime.datetime.combine(datetime.date.today(), datetime.time.min)
+        today_max = datetime.datetime.combine(datetime.date.today(), datetime.time.max)
+        try:
+            obj = StockCheckReport.objects.get(created__range=(today_min, today_max))
+            count = 1
+            data = {'pk':obj.pk,'created':obj.created,'user':obj.user.pk}
+        except:
+            count = 0
+        toReturn.append({'count':count,'data':data})
+        return Response(toReturn,status=status.HTTP_200_OK)
+
+
+def stockSheet(response, value, created, request):
+    styles = getSampleStyleSheet()
+    style_right = ParagraphStyle(name='right', parent=styles['Normal'], alignment=TA_RIGHT)
+    doc = SimpleDocTemplate(response,pagesize=letter, topMargin=0.2*cm,leftMargin=0.1*cm,rightMargin=0.1*cm)
+    doc.request = request
+    elements = []
+    dateVal =  created.split('T')[0]
+    obj = StockCheckItem.objects.filter(stockReport__id=int(value))
+    objStock = StockCheckItem.objects.filter(stockReport__id=int(value),matching = True)
+    ntMatchingStock = StockCheckItem.objects.filter(stockReport__id=int(value),matching = False)
+    invobj = Inventory.objects.all()
+    invobjList = list(invobj.values('product').distinct().values('product__pk','product__description_1','product__part_no','product__description_2','product__weight','product__price','product__bar_code'))
+
+    header = Paragraph("""
+    <para align='left'>
+    <font size="10"><b>Stock Report</b></font><br/><br/>
+    <font size="8"><b>Dated : </b> %s </font>
+    </para>
+    """ %(dateVal),styles['Normal'])
+    tdata=[header]
+    tdheader=[tdata]
+    t=Table(tdheader)
+    t.setStyle(TableStyle([('ALIGN',(0,0),(-1,-1),'CENTER'),('VALIGN',(0,0),(-1,-1),'MIDDLE')]))
+    elements.append(t)
+    if len(objStock)>0:
+        relatedheader = Paragraph("""
+        <para align='left'>
+        <font size="8"><b> Matching Items</b></font>
+        </para>
+        """ %(),styles['Normal'])
+        t1data=[relatedheader]
+        td1header=[t1data]
+        t1=Table(td1header)
+        t1.setStyle(TableStyle([('ALIGN',(0,0),(-1,-1),'CENTER'),('VALIGN',(0,0),(-1,-1),'MIDDLE')]))
+        elements.append(t1)
+        data2=[]
+        i = 0
+        s00 =Paragraph("<para fontSize=8>S.No </para>",styles['Normal'])
+        s01 =Paragraph("<para fontSize=8>Part No </para>",styles['Normal'])
+        s02 =Paragraph("<para fontSize=8>Product Description </para>",styles['Normal'])
+        s03 =Paragraph("<para fontSize=8>Qty </para>",styles['Normal'])
+        data2+=[[s01,s02,s03]]
+        for p in objStock:
+            i+=1
+            s10 =Paragraph("<para fontSize=8 alignment='center'> {0} </para>".format(i),styles['Normal'])
+            s11 =Paragraph("<para fontSize=8 alignment='left'> {0} </para>".format(smart_str(p.product.part_no)),styles['Normal'])
+            s12 =Paragraph("<para fontSize=8 alignment='left'> {0} </para>".format(smart_str(p.product.description_1)),styles['Normal'])
+            s13 =Paragraph("<para fontSize=8 alignment='center'> {0}</para>".format(p.qty),styles['Normal'])
+            data2.append([s11,s12,s13])
+        t2=Table(data2,colWidths=(30*mm,80*mm,12*mm))
+        t2.hAlign = 'LEFT'
+        t2.setStyle(TableStyle([('TEXTFONT', (0, 0), (-1, -1), 'Times-Bold'),('TEXTCOLOR',(0,0),(-1,-1),black),('ALIGN',(0,0),(-1,-1),'RIGHT'),('VALIGN',(0,0),(-1,-1),'TOP'),('BOX',(0,0),(-1,-1),0.25,colors.black),('INNERGRID', (0,0), (-1,-1), 0.25, colors.black)]))
+        elements.append(t2)
+        elements.append(Spacer(1,15))
+    if len(ntMatchingStock)>0:
+        ntmatheader = Paragraph("""
+        <para align='left'>
+        <font size="8"><b> Not Matching Items</b></font>
+        </para>
+        """ %(),styles['Normal'])
+        t3data=[ntmatheader]
+        td3header=[t3data]
+        t3=Table(td3header)
+        t3.setStyle(TableStyle([('ALIGN',(0,0),(-1,-1),'CENTER'),('VALIGN',(0,0),(-1,-1),'MIDDLE')]))
+        elements.append(t3)
+        data3=[]
+        i = 0
+        s20 =Paragraph("<para fontSize=8>S.No </para>",styles['Normal'])
+        s21 =Paragraph("<para fontSize=8>Part No </para>",styles['Normal'])
+        s22 =Paragraph("<para fontSize=8>Product Description </para>",styles['Normal'])
+        s23 =Paragraph("<para fontSize=8>Qty </para>",styles['Normal'])
+        data3+=[[s21,s22,s23]]
+        for j in ntMatchingStock:
+            i+=1
+            s30 =Paragraph("<para fontSize=8 alignment='center'> {0} </para>".format(i),styles['Normal'])
+            s31 =Paragraph("<para fontSize=8 alignment='left'> {0} </para>".format(smart_str(j.product.part_no)),styles['Normal'])
+            s32 =Paragraph("<para fontSize=8 alignment='left'> {0} </para>".format(smart_str(j.product.description_1)),styles['Normal'])
+            s33 =Paragraph("<para fontSize=8 alignment='center'> {0}</para>".format(j.qty),styles['Normal'])
+            data3.append([s31,s32,s33])
+        t4=Table(data3,colWidths=(30*mm,80*mm,12*mm))
+        t4.hAlign = 'LEFT'
+        t4.setStyle(TableStyle([('TEXTFONT', (0, 0), (-1, -1), 'Times-Bold'),('TEXTCOLOR',(0,0),(-1,-1),black),('ALIGN',(0,0),(-1,-1),'RIGHT'),('VALIGN',(0,0),(-1,-1),'TOP'),('BOX',(0,0),(-1,-1),0.25,colors.black),('INNERGRID', (0,0), (-1,-1), 0.25, colors.black)]))
+        elements.append(t4)
+        elements.append(Spacer(1,15))
+
+    missingheader = Paragraph("""
+    <para align='left'>
+    <font size="8"><b> Missing Items</b></font>
+    </para>
+    """ %(),styles['Normal'])
+    t5data=[missingheader]
+    td5header=[t5data]
+    t5=Table(td5header)
+    t5.setStyle(TableStyle([('ALIGN',(0,0),(-1,-1),'CENTER'),('VALIGN',(0,0),(-1,-1),'MIDDLE')]))
+    elements.append(t5)
+    data5=[]
+    i = 0
+    # s40 =Paragraph("<para fontSize=8>S.No </para>",styles['Normal'])
+    s41 =Paragraph("<para fontSize=8>Part No </para>",styles['Normal'])
+    s42 =Paragraph("<para fontSize=8>Product Description </para>",styles['Normal'])
+    s43 =Paragraph("<para fontSize=8>Qty </para>",styles['Normal'])
+    s44 =Paragraph("<para fontSize=8>Qty in Inventory </para>",styles['Normal'])
+    data5+=[[s41,s42,s43,s44]]
+    for q in ntMatchingStock:
+        try:
+            count = 0
+            tot = 0
+            matobj = Inventory.objects.filter(product__id = q.product.pk,created__lt=created)
+            count =  matobj.aggregate(total=Sum(F('qty'),output_field=PositiveIntegerField())).get('total',0)
+            tot = count - q.qty
+            i+=1
+            s50 =Paragraph("<para fontSize=8 alignment='center'> {0} </para>".format(i),styles['Normal'])
+            s51 =Paragraph("<para fontSize=8 alignment='left'> {0} </para>".format(smart_str(q.product.part_no)),styles['Normal'])
+            s52 =Paragraph("<para fontSize=8 alignment='left'> {0} </para>".format(smart_str(q.product.description_1)),styles['Normal'])
+            s53 =Paragraph("<para fontSize=8 alignment='center'> {0}</para>".format(tot),styles['Normal'])
+            s54 =Paragraph("<para fontSize=8 alignment='center'> {0}</para>".format(count),styles['Normal'])
+            data5.append([s51,s52,s53,s54])
+        except:
+            pass
+    for k in invobjList:
+        objts = obj.filter(product_id=k['product__pk'])
+        if(len(objts)>0):
+            pass
+        else:
+            count = 0
+            matobj = Inventory.objects.filter(product__id = k['product__pk'],created__lt=created)
+            count =  matobj.aggregate(total=Sum(F('qty'),output_field=PositiveIntegerField())).get('total',0)
+            if count>0:
+                s50 =Paragraph("<para fontSize=8 alignment='center'> {0} </para>".format(i),styles['Normal'])
+                s51 =Paragraph("<para fontSize=8 alignment='left'> {0} </para>".format(smart_str(k['product__part_no'])),styles['Normal'])
+                s52 =Paragraph("<para fontSize=8 alignment='left'> {0} </para>".format(smart_str(k['product__description_1'])),styles['Normal'])
+                s53 =Paragraph("<para fontSize=8 alignment='center'> {0}</para>".format(count),styles['Normal'])
+                s54 =Paragraph("<para fontSize=8 alignment='center'> {0}</para>".format(count),styles['Normal'])
+                data5.append([s51,s52,s53,s54])
+    t6=Table(data5,colWidths=(30*mm,80*mm,12*mm,30*mm))
+    t6.hAlign = 'LEFT'
+    t6.setStyle(TableStyle([('TEXTFONT', (0, 0), (-1, -1), 'Times-Bold'),('TEXTCOLOR',(0,0),(-1,-1),black),('ALIGN',(0,0),(-1,-1),'RIGHT'),('VALIGN',(0,0),(-1,-1),'TOP'),('BOX',(0,0),(-1,-1),0.25,colors.black),('INNERGRID', (0,0), (-1,-1), 0.25, colors.black)]))
+    elements.append(t6)
+    doc.build(elements)
+
+class StockSheetAPIView(APIView):
+    def get(self , request , format = None):
+        value = request.GET['value']
+        created = request.GET['created']
+        response = HttpResponse(content_type='application/pdf')
+        response['Content-Disposition'] = 'attachment;filename="sheetdownload.pdf"'
+        stockSheet(response, value, created, request)
+        return response
+
+class AddInventoryAPIView(APIView):
+    permission_classes = (permissions.IsAuthenticated ,)
+    def post(self , request , format = None):
+        try:
+            invObj = Inventory.objects.get(project__id=request.data['project'],product__id=request.data['product'])
+            if invObj.qty>0:
+                if invObj.qty==invObj.addedqty:
+                    invObj.qty = request.data['qty']
+                    invObj.addedqty = request.data['qty']
+                    invObj.save()
+                    bomObj = BoM.objects.get(project__id=request.data['project'],products__id=request.data['product'])
+                    bomObj.quantity2 = request.data['qty']
+                    bomObj.save()
+                    msg = "Saved"
+                    typ = "success"
+                else:
+                    msg = "Product Already Used from Inventory"
+                    typ = "err"
+            else:
+                msg = "Product Already Used from Inventory"
+                typ = "err"
+        except:
+            msg = "Product Not Found in PO"
+            typ = "err"
+        toreturn ={"msg":msg,"typ":typ}
+        return Response(toreturn,status=status.HTTP_200_OK)
+
+class BulkCreateInventoryAPIView(APIView):
+    permission_classes = (permissions.IsAuthenticated ,)
+    def post(self , request , format = None):
+        print request.data
+        if 'project' in request.data:
+            bomData = BoM.objects.filter(project=int(request.data['project']))
+            invData = []
+            projObj = Projects.objects.get(pk=int(request.data['project']))
+            for i in bomData:
+                invObj = Inventory(project=projObj,product=i.products,qty=i.quantity2,addedqty=i.quantity2,rate=i.landed_price)
+                invData.append(invObj)
+            print len(invData),'inventory objects will create'
+            Inventory.objects.bulk_create(invData)
+            toreturn ={"msg":'Success'}
+        else:
+            toreturn ={"msg":'Error'}
+        return Response(toreturn,status=status.HTTP_200_OK)

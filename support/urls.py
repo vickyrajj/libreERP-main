@@ -18,6 +18,9 @@ router.register(r'stockSummaryReport' , StockSummaryReportViewSet , base_name = 
 router.register(r'projectStockSummary' , ProjectStockSummaryViewSet , base_name = 'projectStockSummary')
 router.register(r'invoice' , InvoiceViewSet , base_name = 'invoice')
 router.register(r'invoiceQty' , InvoiceQtyViewSet , base_name = 'invoiceQty')
+router.register(r'deliveryChallan' , DeliveryChallanViewSet , base_name = 'deliveryChallan')
+router.register(r'stockCheckReport' , StockCheckReportViewSet , base_name = 'stockCheckReport')
+router.register(r'stockCheckItem' , StockCheckItemViewSet , base_name = 'stockCheckItem')
 
 
 
@@ -42,8 +45,12 @@ urlpatterns = [
     url(r'getCmrList/$' , GetCmrListAPIView.as_view() ),
     url(r'productTable/$' , ProjectProductAPIView.as_view() ),
     url(r'cancelMaterial/$' , CancelMaterialAPIView.as_view() ),
-    url(r'deliveryChallan/$' , DeliveryChallanNoteAPIView.as_view() ),
+    url(r'deliveryChallanDownload/$' , DeliveryChallanNoteAPIView.as_view() ),
     url(r'invoiceDownload/$' , InvoiceDownloadAPIView.as_view() ),
+    url(r'stockCheck/$' , StockReportAPIView.as_view() ),
+    url(r'stockSheet/$' , StockSheetAPIView.as_view() ),
+    url(r'addInventory/$' , AddInventoryAPIView.as_view() ),
+    url(r'bulkCreateInventory/$' , BulkCreateInventoryAPIView.as_view() ),
 
     # url(r'stock/$' , StockAPIView.as_view() ),
 ]

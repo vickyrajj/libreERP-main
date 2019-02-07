@@ -19,7 +19,10 @@ var projectsStepsData = [{
     display: 'OnGoing'
   },
 ];
-app.controller("businessManagement.projects", function($scope, $state, $users, $stateParams, $http, Flash, $uibModal, $rootScope, $permissions, $timeout, ) {
+app.controller("businessManagement.projects", function($scope, $state, $users, $stateParams, $http, Flash, $uibModal, $rootScope, $permissions, $timeout,$permissions ) {
+
+
+
 
   $scope.cmnrList = []
   $rootScope.tabIdx = null
@@ -402,6 +405,7 @@ app.controller("businessManagement.projects.form", function($scope, $state, $use
               tin: $scope.form.tin,
               logo: $scope.form.logo,
               web: $scope.form.web,
+              gst: $scope.form.gst,
             };
             $http({
               method: method,
@@ -515,7 +519,9 @@ app.controller("businessManagement.projects.service.item", function($scope, $sta
 
 })
 
-app.controller("businessManagement.projects.service.view", function($scope, $state, $users, $stateParams, $http, Flash, $rootScope, $uibModal) {
+app.controller("businessManagement.projects.service.view", function($scope, $state, $users, $stateParams, $http, Flash, $rootScope, $uibModal,$permissions) {
+  var as = $permissions.myPerms('app.canChangeStatus');
+  $scope.permission = as
 
   $scope.projectSteps = {
     steps: projectsStepsData
@@ -596,7 +602,30 @@ app.controller("businessManagement.projects.service.view", function($scope, $sta
   };
 
 
-
+  $scope.invoceSave = function() {
+    console.log("aaaaaa");
+    $scope.form.invoiceValue = 0
+    if($scope.projects.length>0){
+      for (var i = 0; i < $scope.projects.length; i++) {
+        $scope.form.invoiceValue += ($scope.projects[i].quantity1 *  $scope.projects[i].price )
+      }
+    }
+    if($scope.data.length>0){
+      for (var i = 0; i < $scope.data.length; i++) {
+        $scope.form.invoiceValue += ($scope.data[i].quantity1 *  $scope.data[i].price )
+      }
+    }
+    console.log($scope.form.invoiceValue,'ddddddddd');
+    var send = {
+      invoiceValue: $scope.form.invoiceValue,
+    }
+    $http({
+      method: 'PATCH',
+      url: '/api/support/projects/' + $scope.form.pk + '/',
+      data: send,
+    }).
+    then(function(response) {})
+  }
 
 
   $scope.projects = []
@@ -638,19 +667,9 @@ app.controller("businessManagement.projects.service.view", function($scope, $sta
         $scope.data[i].landed_price = (($scope.data[i].cif + $scope.data[i].customVal + $scope.data[i].socialVal + $scope.data[i].charge1 + $scope.data[i].charge2).toFixed(2))
       }
     }
+    $scope.invoceSave()
   }
-  $scope.invoceSave = function() {
-    console.log("aaaaaa");
-    var send = {
-      invoiceValue: $scope.form.invoiceValue,
-    }
-    $http({
-      method: 'PATCH',
-      url: '/api/support/projects/' + $scope.form.pk + '/',
-      data: send,
-    }).
-    then(function(response) {})
-  }
+
 
   function sum(data) {
     if (data == $scope.materialIssue) {
@@ -1536,30 +1555,39 @@ app.controller("businessManagement.projects.service.view", function($scope, $sta
       },
     }).
     then(function(response) {
-      for (var i = 0; i < $scope.projects.length; i++) {
-        $scope.qty = $scope.projects[i].quantity2;
-        $scope.rate = $scope.projects[i].landed_price
-        $scope.pkforProduct = $scope.projects[i].products.pk
-        $scope.project = $scope.form.pk
-        $scope.inventory = {
-          product: $scope.pkforProduct,
-          qty: $scope.qty,
-          addedqty: $scope.qty,
-          rate: $scope.rate,
-          project: $scope.project
-        }
-        $http({
-          method: 'POST',
-          url: '/api/support/inventory/',
-          data: $scope.inventory,
-        }).
-        then(function(response) {
+      console.log($scope.projects);
+      $http({
+        method: 'POST',
+        url: '/api/support/bulkCreateInventory/',
+        data: {'project':$scope.form.pk},
+      }).
+      then(function(response) {
           Flash.create('success', 'Saved');
+      })
 
-        })
-      }
-
-      Flash.create('success', 'Saved');
+      // for (var i = 0; i < $scope.projects.length; i++) {
+      //   $scope.qty = $scope.projects[i].quantity2;
+      //   $scope.rate = $scope.projects[i].landed_price
+      //   $scope.pkforProduct = $scope.projects[i].products.pk
+      //   $scope.project = $scope.form.pk
+      //   $scope.inventory = {
+      //     product: $scope.pkforProduct,
+      //     qty: $scope.qty,
+      //     addedqty: $scope.qty,
+      //     rate: $scope.rate,
+      //     project: $scope.project
+      //   }
+      //   console.log($scope.inventory);
+      //   $http({
+      //     method: 'POST',
+      //     url: '/api/support/inventory/',
+      //     data: $scope.inventory,
+      //   }).
+      //   then(function(response) {
+      //       Flash.create('success', 'Saved');
+      //   })
+      // }
+      // // Flash.create('success', 'Saved');
       $scope.form.status = response.data.status
       $scope.updateStatus()
       $scope.fetchMaterial()
@@ -1715,11 +1743,41 @@ app.controller("businessManagement.projects.service.view", function($scope, $sta
           })
         };
 
+        $scope.calculate=function(){
+          for (var i = 0; i < $scope.products.length; i++) {
+            console.log($scope.gstcode,$scope.gstCal,'kkkkkkkkkkkkkkkkkkk');
+            if ($scope.gstcode === $scope.gstCal) {
+              $scope.products[i].cgst = 9
+              $scope.products[i].cgstVal = parseFloat((($scope.products[i].cgst * $scope.products[i].taxableprice) / 100).toFixed(2))
+              $scope.products[i].sgst = 9
+              $scope.products[i].sgstVal = parseFloat((($scope.products[i].sgst * $scope.products[i].taxableprice) / 100).toFixed(2))
+              $scope.products[i].igst = 0
+              $scope.products[i].igstVal = 0
+            } else {
+              $scope.products[i].cgst = 0
+              $scope.products[i].cgstVal = 0
+              $scope.products[i].sgst = 0
+              $scope.products[i].sgstVal = 0
+              $scope.products[i].igst = 18
+              $scope.products[i].igstVal = parseFloat((($scope.products[i].igst * $scope.products[i].taxableprice) / 100).toFixed(2))
+            }
+            $scope.products[i].total = parseFloat(($scope.products[i].taxableprice + $scope.products[i].cgstVal + $scope.products[i].sgstVal + $scope.products[i].igstVal).toFixed(2))
+          }
+        }
+
+
         var gstData = '29AABCB6326Q1Z6'
         $scope.$watch('form.billGst', function(newValue, oldValue) {
           if (newValue != undefined) {
             $scope.gstcode = gstData.substring(0, 2)
             $scope.gstCal = newValue.substring(0, 2)
+            $scope.form.billCode = newValue.substring(0, 2)
+            $scope.calculate()
+          }
+        })
+        $scope.$watch('form.shipCode', function(newValue, oldValue) {
+          if (newValue != undefined) {
+            $scope.form.shipCode = newValue.substring(0, 2)
           }
         })
 
@@ -1729,7 +1787,6 @@ app.controller("businessManagement.projects.service.view", function($scope, $sta
         $scope.$watch('products', function(newValue, oldValue) {
           var pkList = []
           for (var i = 0; i < newValue.length; i++) {
-
             if (typeof newValue[i].part_no == 'object') {
               var ppk = newValue[i].part_no.pk
               delete newValue[i].part_no.pk
@@ -1744,22 +1801,7 @@ app.controller("businessManagement.projects.service.view", function($scope, $sta
               $scope.products[i].product = ppk
               $scope.products[i].qty = 1
               $scope.products[i].taxableprice = parseFloat((newValue[i].part_no.price * $scope.products[i].qty).toFixed(2))
-              if ($scope.gstcode === $scope.gstCal) {
-                $scope.products[i].cgst = 9
-                $scope.products[i].cgstVal = parseFloat((($scope.products[i].cgst * $scope.products[i].taxableprice) / 100).toFixed(2))
-                $scope.products[i].sgst = 9
-                $scope.products[i].sgstVal = parseFloat((($scope.products[i].sgst * $scope.products[i].taxableprice) / 100).toFixed(2))
-                $scope.products[i].igst = 0
-                $scope.products[i].igstVal = 0
-              } else {
-                $scope.products[i].cgst = 0
-                $scope.products[i].cgstVal = 0
-                $scope.products[i].sgst = 0
-                $scope.products[i].sgstVal = 0
-                $scope.products[i].igst = 18
-                $scope.products[i].igstVal = parseFloat((($scope.products[i].igst * $scope.products[i].taxableprice) / 100).toFixed(2))
-              }
-              $scope.products[i].total = parseFloat(($scope.products[i].taxableprice + $scope.products[i].cgstVal + $scope.products[i].sgstVal + $scope.products[i].igstVal).toFixed(2))
+              $scope.calculate()
             } else {
               pkList.push(newValue[i].part_no)
               $scope.products[i].price = parseFloat(newValue[i].price)
@@ -1861,7 +1903,6 @@ app.controller("businessManagement.projects.service.view", function($scope, $sta
             $timeout(function() {
               Flash.create('success', 'Saved');
             }, 1500);
-
           })
         }
 
@@ -1947,7 +1988,19 @@ app.controller("businessManagement.projects.archieve.explore", function($scope, 
     }
   }
   $scope.invoceSave = function() {
-    console.log("aaaaaa");
+    console.log("herrrrrrrrr");
+    $scope.form.invoiceValue = 0
+    if($scope.projects.length>0){
+      for (var i = 0; i < $scope.projects.length; i++) {
+        $scope.form.invoiceValue += ($scope.projects[i].quantity1 *  $scope.projects[i].price )
+      }
+    }
+    if($scope.data.length>0){
+      for (var i = 0; i < $scope.data.length; i++) {
+        $scope.form.invoiceValue += ($scope.data[i].quantity1 *  $scope.data[i].price )
+      }
+    }
+    console.log($scope.form.invoiceValue,'ssssssssssssssjjjjj');
     var send = {
       invoiceValue: $scope.form.invoiceValue,
     }
@@ -2130,6 +2183,17 @@ app.controller("businessManagement.projects.junk.explore", function($scope, $sta
   }
 
   $scope.invoceSave = function() {
+    $scope.form.invoiceValue = 0
+    if($scope.projects.length>0){
+      for (var i = 0; i < $scope.projects.length; i++) {
+        $scope.form.invoiceValue += ($scope.projects[i].quantity1 *  $scope.projects[i].price )
+      }
+    }
+    if($scope.data.length>0){
+      for (var i = 0; i < $scope.data.length; i++) {
+        $scope.form.invoiceValue += ($scope.data[i].quantity1 *  $scope.data[i].price )
+      }
+    }
     console.log("aaaaaa");
     var send = {
       invoiceValue: $scope.form.invoiceValue,

@@ -14,7 +14,7 @@
 
 
 
-// 
+//
 // app.controller('sudo.explore.project', function($scope, $http, Flash, $users) {
 // $scope.apps = "fggggggggggggggggggh"
 // });
@@ -1182,7 +1182,7 @@ app.controller('admin.manageUsers', function($scope, $http, $aside, $state, Flas
   };
 
   $scope.getPermissionSuggestions = function(query) {
-    return $http.get('/api/ERP/application/?name__contains=' + query)
+    return $http.get('/api/ERP/application/?search=' + query)
   }
 
   $scope.updateProfile = function(index) {

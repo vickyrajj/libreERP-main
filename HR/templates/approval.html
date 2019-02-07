@@ -62,15 +62,15 @@
         <div id="myDynamicTable" class="row" style="padding-top:20px">
         </div>
         <div class="row" style="padding-top:20px">
-          <div class="col-md-8 text-right">
+          <div class="col-md-5 text-right">
             <button type="button" class="btn btn-danger pull-right" onclick="reject()" > Reject</button>
             </div>
-            <div class="col-md-2 text-right">
+            <div class="col-md-1">
             <button type="button" class="btn btn-success pull-right" onclick="approve()">  Approve</button>
           </div>
         </div>
         <div class="row" style="padding-top:20px">
-          <div class="col-md-6" id="alerts">
+          <div class="col-md-5" id="alerts">
           </div>
 
         </div>
@@ -150,7 +150,7 @@
           <th width="30%" class="text-center" style="border-right:1px solid rgb(15, 15, 15)"> Product </th>\
           <th width="15%" class="text-center" style="border-right:1px solid rgb(15, 15, 15)"> Price </th>\
           <th width="15%" class="text-center" style="border-right:1px solid rgb(15, 15, 15)"> Quantity </th>\
-          <th width="15%" class="text-center" style="border-right:1px solid rgb(15, 15, 15)"> Customer Quantity </th>'
+          <th width="15%" class="text-center" style="border-right:1px solid rgb(15, 15, 15)"> Landed Price</th>'
           tableBody.appendChild(tr1);
           tr1.setAttribute("id", "header")
           for (var i = 0; i < productDetails.length; i++) {
