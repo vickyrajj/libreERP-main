@@ -183,7 +183,6 @@ class GeneratePdf(APIView):
                 # print sec
                 secQuestions = Question.objects.filter(bookSection=sec)
                 # print secQuestions.count()
-                allQuestion = allQuestion | secQuestions
                 try:
                     name = str(sec.shortUrl)
                     print name,'nameeeeeeeeeeeeeee'
@@ -193,6 +192,7 @@ class GeneratePdf(APIView):
                         desc = ''
                     c = pdfsCreation(secQuestions,name,sec.title,blogObj.author,desc)
                     sectionPdfCount += int(c)
+                    allQuestion = allQuestion | secQuestions
                 except:
                     print name,'Secion has errors'
             print 'sections pdf doneeeeeee total {0}'.format(sectionPdfCount)
