@@ -48,7 +48,7 @@
           <table>
             <tr>
               <td style="width:50%">
-                 <i class="fa fa-star " style="color:#f4c810" aria-hidden="true"></i>
+                <i class="fa fa-star " style="color:#f4c810" aria-hidden="true"></i>
                 <i class="fa fa-star " style="color:#f4c810" aria-hidden="true"></i>
                 <i class="fa fa-star " style="color:#f4c810" aria-hidden="true"></i>
                 <i class="fa fa-star " style="color:#f4c810" aria-hidden="true"></i>
@@ -79,7 +79,7 @@
 
     <div class="container-fluid" style="background-color:#FCC300;min-height:10vh;  position:relative;padding-bottom: 2em;">
       <div class="container">
-        <div class="col-md-4 clickchange {% if subPart == 'books' %}  arrow  {% endif %}">
+        <div class="col-md-3 clickchange {% if subPart == 'books' %}  arrow  {% endif %}">
           <a href="/class-{{level}}-{{title}}/books/"><b>Books</b></a>
           {% if subPart == 'books' %}
           <div class="tips hidden-xs hidden-sm"></div>
@@ -95,26 +95,26 @@
         </div>
         <div class="col-md-2 clickchange">
           <a href="/class-{{level}}-{{title}}/forum/"><b>Forum</b></a>
-          <div ng-class="class4"></div>
+          <div ng-class="class3"></div>
         </div> -->
-        <div class="col-md-4 clickchange {% if subPart == 'referenceBook' %}  arrow  {% endif %}">
+        <div class="col-md-3 clickchange {% if subPart == 'referenceBook' %}  arrow  {% endif %}">
           <a href="/class-{{level}}-{{title}}/referenceBook/"><b>Refernce Books ({{refbooklen}})</b></a>
           {% if subPart == 'referenceBook' %}
           <div class="tips hidden-xs hidden-sm"></div>
           {% endif %}
         </div>
-        <div class="col-md-4 clickchange {% if subPart == 'notes' %}  arrow  {% endif %}">
+        <div class="col-md-3 clickchange {% if subPart == 'notes' %}  arrow  {% endif %}">
           <a href="/class-{{level}}-{{title}}/notes/"><b>Notes ({{noteslen}})</b></a>
           {% if subPart == 'notes' %}
           <div class="tips hidden-xs hidden-sm"></div>
           {% endif %}
         </div>
-        <!-- <div class="col-md-4 clickchange {% if subPart == 'notes' %}  arrow  {% endif %}">
-          <a href="/class-{{level}}-{{title}}/notes/"><b>Forum</b></a>
+        <div class="col-md-3 clickchange {% if subPart == 'forum' %}  arrow  {% endif %}">
+          <a href="/class-{{level}}-{{title}}/forum/"><b>Forum</b></a>
           {% if subPart == 'forum' %}
           <div class="tips hidden-xs hidden-sm"></div>
           {% endif %}
-        </div> -->
+        </div>
       </div>
     </div>
     {% if not subPart %}
@@ -150,13 +150,13 @@
           {% if c.topic.subject.title == 'Biology' %}<img src="/static/images/24tut/bio.png" class="courseobj_img">{% endif %}
           <div class="container-fluid courseobj_container">
             <h5> <b>{{c.title}}</b> </h5>
-            <div class=""style="height:120px;overflow-y:hidden;">
+            <div class="" style="height:120px;overflow-y:hidden;">
               <span>{{c.description}}</span>
             </div>
-            <div class="text-center"style="padding-top:15px;">
-            <a href="/{{c.urlSuffix}}/" class="btn-style1" style="border-top-left-radius: 15px;padding: 0.5em 1em;margin-top: 0em;text-decoration:none;">
+            <div class="text-center" style="padding-top:15px;">
+              <a href="/{{c.urlSuffix}}/" class="btn-style1" style="border-top-left-radius: 15px;padding: 0.5em 1em;margin-top: 0em;text-decoration:none;">
                 View this Course
-            </a>
+              </a>
             </div>
           </div>
         </div>
@@ -223,7 +223,13 @@
     {% endif %}
 
     {% if subPart == 'forum' %}
-    {% verbatim %}
+    <div class="container-fluid">
+        <div class="col-md-6 col-md-offset-3 col-xs-12 no_padding">
+          {% include "forum.html" %}
+        </div>
+    </div>
+    {% endif %}
+    <!-- {% verbatim %}
     <h1>forum</h1>
     <div class="container-fluid" ng-show="forum">
       <div ng-repeat="a in forumlist" style="margin-top:3em;">
@@ -289,8 +295,8 @@
         </div>
       </div>
     </div>
-    {% endverbatim %}
-    {% endif %}
+    {% endverbatim %} -->
+
 
 
     {% if subPart == 'referenceBook' %}
@@ -303,7 +309,7 @@
               <div class="colorcircle" style="background-color:{{color}}"></div>
               <img src="/media/{{r.book.dp}}" class="imgstyle" style="border-radius:0px;border-top-left-radius:7px;margin-left:-3px;">
             </div>
-            <div class="col-md-7 text-left col-xs-7"style="z-index:20;">
+            <div class="col-md-7 text-left col-xs-7" style="z-index:20;">
               <div style="margin-top:1em;">
                 <span style="font-size:18px;color:#5B5B5B;"> <strong>{{r.book.title}}</strong> </span><br>
                 <span style="color:#5B5B5B;"> <b>Volume - </b> {{r.book.volume}}</span><br>
@@ -365,6 +371,7 @@
 
   {% block tutorjs %}
   <script type="text/javascript">
-    {% include "app.tutor.common.js" %}
+    { % include "app.tutor.common.js" %
+    }
   </script>
   {% endblock %}

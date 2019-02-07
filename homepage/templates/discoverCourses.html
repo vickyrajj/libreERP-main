@@ -1,15 +1,54 @@
 {% extends "tutorBase.html" %}{% load staticfiles %}
 
 {% block tutorcontent %}
-<div class="container-fluid">
-<br><br>
-<h1>Discover new courses</h1>
+<div class="container-fluid" style="padding-top:60px;">
+  <div class="col-md-8 col-md-offset-2">
+    {% for s in subobj %}
+    <!-- <div class="col-md-3">
+    <div class="container-fluid discover_cards">
+      <h4><b>{{s.title}} {{s.level}}</b> </h4>
+      <p>{{s.dp}}</p>
+  </div>
+  </div> -->
+    <a href="/class-{{s.level}}-{{s.title}}/">
+      <div class="col-md-4 col-xs-12" style="position: relative;text-decoration:none;min-height:260px;">
+        <div class="movie-card zoomOnHover disc-card">
+          <div class="col-md-5 studentcard col-xs-5" style="min-height:260px;position:relative;padding:0px;">
+            <div class="colorcircle" style="background-color:{{color}}"></div>
+            <img src="/media/{{s.dp}}" class="dimgstyle" style="border-radius:0px;border-top-left-radius:7px;border-bottom-left-radius:7px;margin-left:-3px;">
+          </div>
+          <div class="col-md-7 col-xs-7" style="z-index:20;">
+            <div class="text-center" style="margin-top:4em;">
+              <span style="font-size:18px;color:#5B5B5B;"> <strong>{{s.title}}</strong> </span><br>
+              <span style="color:#5B5B5B;"> <b>level </b> {{s.level}}</span><br><br>
+              <span style="color:#5B5B5B;"> <b>Added on :</b> {{s.created|date:'Y-M-d'}}</span><br>
+            </div>
+            <!-- <div class="container-fluid" style="height:63px;overflow-y:hidden;">
+          <h6>{{r.book.description}}</h6>
+        </div> -->
+            <!-- <div class="" style="padding-top:20px;">
+          <span style="font-size:18px;color:#5B5B5B;"><b>By - {{r.book.author}}</b></span><br>
+          <h5> <b>Subject - </b> {{r.book.subject.title}}</h5>
+          <h5> <b>Version - </b> {{r.book.version}}</h5>
+          <h5> <b>License - </b> {{r.book.license}}</h5>
+        </div> -->
+            <!-- <div class="" style="padding-top:10px;">
+          <span style="color:#5B5B5B;"> <b>ISSN - </b> {{r.book.ISSN}}</span>
+        </div> -->
+          </div>
+        </div>
+      </div>
+    </a>
+    {% endfor %}
+  </div>
+
 </div>
 
 {% endblock %}
 
 {% block tutorjs %}
 <script type="text/javascript">
-  {% include "app.tutor.common.js" %}
+  { % include "app.tutor.common.js" %
+  }
 </script>
 {% endblock %}

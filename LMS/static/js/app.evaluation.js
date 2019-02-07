@@ -83,6 +83,9 @@ app.controller('home.LMS.evaluation', function($scope, $http, $aside, $state, Fl
         if (action == 'edit') {
           var title = 'Edit Paper Group :';
           var appType = 'paperGroupEditor';
+        } else if (action == 'details') {
+          var title = 'Details :';
+          var appType = 'paperGroupDetails';
         }
         $scope.paperGroupData = $scope.data.paperGroupTableData[i]
         $scope.addTab({

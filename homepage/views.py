@@ -29,7 +29,11 @@ import random
 from django.core.files.images import get_image_dimensions
 from tutor.models import Tutors24Profile
 import datetime
+import os
+from django.http import HttpResponse
 
+def sitemapView(request):
+    return HttpResponse(open( os.path.join(globalSettings.BASE_DIR, 'homepage' , 'extended.sitemap.xml')  ).read(), content_type='text/xml')
 
 def index(request):
     subobj = Subject.objects.all().order_by('level')
@@ -57,11 +61,25 @@ def team(request):
 
 def ncertSolutions(request):
     subobjs = Subject.objects.all().order_by('level')
-    return render(request, 'ncertSolutions.html', {"subobj":subobjs,'seoDetails':{'title':globalSettings.SEO_TITLE,'description':globalSettings.SEO_DESCRIPTION,'image':globalSettings.SEO_IMG,'width':globalSettings.SEO_IMG_WIDTH,'height':globalSettings.SEO_IMG_HEIGHT}})
+    SEODetails = {'title': '[New Syllabus] NCERT Solutions for class 6-12 for CBSE and IIT JEE | Free PDF Download',
+                  'description':'Download the 2019 NCERT Solutions based on newest guidelines from CBSE and NTA for CBSE Board exams and IIT JEE mains and advance for Free',
+                  'image':globalSettings.SEO_IMG,
+                  'width':globalSettings.SEO_IMG_WIDTH,
+                  'height':globalSettings.SEO_IMG_HEIGHT
+                  }
+    return render(request, 'ncertSolutions.html', {"subobj":subobjs,'seoDetails':SEODetails})
 
 def courses(request):
     subobjs = Subject.objects.all().order_by('level')
-    return render(request, 'discoverCourses.html', {"subobj":subobjs,'seoDetails':{'title':globalSettings.SEO_TITLE,'description':globalSettings.SEO_DESCRIPTION,'image':globalSettings.SEO_IMG,'width':globalSettings.SEO_IMG_WIDTH,'height':globalSettings.SEO_IMG_HEIGHT}})
+
+    SEODetails = {'title':'Free online course for class 10 to 12 for CBSE Board exams, IIT JEE mains and IIT JEE advance',
+                  'description':'Get most curated courses to score high in your Board exams and IIT JEE for free with videos and mock tests designed by experts',
+                  'image':globalSettings.SEO_IMG,
+                  'width':globalSettings.SEO_IMG_WIDTH,
+                  'height':globalSettings.SEO_IMG_HEIGHT
+                  }
+
+    return render(request, 'discoverCourses.html', {"subobj":subobjs,'seoDetails': SEODetails})
 
 def account(request):
     try:
@@ -109,6 +127,8 @@ def blogDetails(request, blogname):
         subTopics = Topic.objects.filter(subject=sub)
         refbooklen = len(refbookobjs)
         noteslen = len(noteobj)
+        forumdata = ForumThread.objects.filter(verified=True).annotate(clicked=Value(0, output_field=IntegerField()))
+        print forumdata,'lllllllllllllllllll'
         r = lambda: random.randint(150,250)
         color = ('#%02X%02X%02X' % (r(),r(),r()))
         # for i in refbookobjs:
@@ -142,6 +162,8 @@ def blogDetails(request, blogname):
         # data['created'] = sub.created
         data['subject'] = sub
         data['subTopics'] = subTopics
+        data['forumData'] = forumdata
+        data['blogname'] = blogname
         if sub.title:
             data['seoDetails']['title'] =  'CBSE Class ' + str(sub.level) +' ' + str(sub.title) + ' Online Course [{0}]'.format(datetime.datetime.today().year)
         if sub.description:
@@ -461,15 +483,22 @@ def SaveForumDetails(request):
     if 'typ' in request.POST:
         if request.POST['typ'] == 'comment':
             parentObj = ForumThread.objects.get(pk=int(request.POST['parent']))
-            retUrl = '/'+str(parentObj.page)+'/'
-            data = {'parent':parentObj,'txt':str(request.POST['txt']),'user':request.user}
+            page = str(parentObj.page)
+            if page.startswith('class-') :
+                page = page + "/forum"
+            retUrl = '/'+ page +'/'
+            data = {'parent':parentObj,'user':request.user}
+            if len(str(request.POST['txt']))>0:
+                data['txt'] = str(request.POST['txt'])
             print data,'creating dataaaaaaaaaaa'
             fcObj = ForumComment.objects.create(**data)
             return redirect(retUrl)
         else:
             page = str(request.POST['page'])
-            retUrl = '/'+page+'/'
             data = {'user':request.user,'page':page}
+            if page.startswith('class-') :
+                page = page + "/forum"
+            retUrl = '/'+page+'/'
             if len(str(request.POST['txt']))>0:
                 data['txt'] = str(request.POST['txt'])
             try:

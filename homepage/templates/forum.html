@@ -1,83 +1,190 @@
-{% extends "tutor.angular.apps.html" %}
+{% extends "base.simple.html" %}
 
-{% block tutorcontent %}
+{% block tutorforumcontent %}
+<div>
+  <style media="screen">
+    .areatext{
+      width: 75%;
+      margin-left: 0.5em;
+    }
+    .parenttext{
+      width: 77%;
+      margin-left: 0.5em;
+    }
+    .send{
+     width: 75%;
+    }
+    .post{
+     width: 79%;
+    }
+    .head{
+      display: none;
+    }
+    /* footer,nav{
+      display:none;
+    } */
 
-<div class="row text-center">
-  <div class="row" ng-repeat="a in forumdata" style="border-top:1px solid #eaecf0;border-bottom:1px solid #eaecf0;padding-bottom: 2em;">
-    <div class="col-md-1 col-xs-2">
-      <div style="width:60px;padding-top: 1.5em;">
+  </style>
+  <style media="screen and (max-width:768px)">
+    .areatext{
+      width: 95%;
+      margin-left: 1em;
+      margin-top: 0.5em;
+
+     }
+     .parenttext{
+       width: 100%;
+       margin-left: 0;
+     }
+     .coloumn{
+       padding: 0;
+       margin:0;
+
+     }
+     .send{
+      width: 97%;
+     }
+     .post{
+      width: 105%;
+     }
+     .forumhead{
+       display:none;
+     }
+     .head{
+       display: block;
+     }
+
+  </style>
+
+
+  {% if not request.user.is_authenticated %}
+  <div class="row" style="margin:2em 1em;">
+    <a href="/signin"><button class="btn btn-primary" style="margin:-0.5em 0 0 0;padding:0.2em 1em;border-radius:0%">Ask a New Question</button></a>
+  </div>
+  {% endif %}
+  {% for ft in forumData %}
+  {% if ft.page == blogname %}
+  <div class="row" style="border-bottom:1px solid #eaecf0;padding-bottom: 1em;">
+    <div class="col-md-1 col-xs-1">
+      <div style="width:50px;padding-top: 1.5em;">
+        {% if ft.user.profile.displayPicture.url %}
+        <img src="{{ft.user.profile.displayPicture.url}}" style="width:45px;border-radius:50%;height:45px;" />
+        {% else %}
         <img src="/static/images/24tut/hom/dp.jpg" style="width:45px;border-radius:50%;height:45px;" />
+        {% endif %}
       </div>
     </div>
-    <div class="col-md-11 col-xs-10 text-left">
-      <div class="no_pad" style="border-bottom: 1px solid #eaecf0;">
+
+    <div class="col-md-11 col-xs-12 text-left coloumn">
+      <div class="no_pad" style="display: flex;align-items: center;">
 
         <div class="contentrow" style="flex: 0 1 auto;width:100%;">
           <div class="toprow" style="">
-            <span style="font-size:17px;cursor:pointer;color:#3C5899">{{a.user.username}}</span>
+            <span style="font-size:17px;cursor:pointer;color:#3C5899">{{ft.user.username}}</span>
           </div>
           <div class="bottomrow" style="font-size: 1em;">
-            <span class="" style="font-size:15px;color: #3C4556;">{{a.txt}}
+            <span class="" style="font-size:15px;color: #3C4556;">{{ft.txt}}
             </span>
           </div>
+          {% if ft.attachment %}
+          <div class="bottomrow">
+            <img src="{{ft.attachment.url}}" style="width:150px;height:150px;" />
+          </div>
+          {% endif %}
           <div class="bottomrow" style="font-size: 1em;">
-            <span class="" style="font-size:15px;color: #3C5899;">10 comments
+            <span class="" style="font-size:13px;color: #3C5899;">{{ ft.forumthread.all|length }}Answers
             </span>
           </div>
         </div>
       </div>
+      {% if request.user.is_authenticated %}
+      <div class="row">
+        <div class="text-center" style="padding-top:0;margin-left:0.5em;">
+          <div class="col-md-1 col-xs-2">
+            <div style="width:60px;padding-top: 1.5em;">
+              {% if request.user.profile.displayPicture %}
+              <img src="{{request.user.profile.displayPicture.url}}" style="width:40px;border-radius:50%;height:40px;" />
+              {% else %}
+              <img src="/static/images/24tut/hom/dp.jpg" style="width:45px;border-radius:50%;height:45px;" />
+              {% endif %}
+            </div>
+          </div>
+          <div class="col-md-11 col-xs-10  text-left" style="padding-top: 1em;">
+            <form action="/saveForumDetails/" method="post">{% csrf_token %}
+              <input name="typ" type="hidden" class="form-control" value="comment">
+              <input name="parent" type="hidden" class="form-control" value="{{ft.pk}}">
+              <textarea class="areatext" type="textarea" placeholder='Post a Answer Here..' style='resize: none;' name="txt"></textarea>
+              <div class="send " style="padding:0;margin-top: -2px;height:4em;text-align: right;margin-left: 0.5em;">
+                <button class="btn btn-primary" style="margin:0.7em 0 0 0;padding:0.2em 1em;border-radius:0%" type="submit"><i class="fa fa-paper-plane" aria-hidden="true"></i></button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+      {% endif %}
+      {% for ftc in ft.forumthread.all %}
+      {% if ftc.verified is True %}
       <div class="col-md-1 col-xs-2">
         <div style="width:60px;padding-top: 1.5em;">
+          {% if ftc.user.profile.displayPicture %}
+          <img src="{{ftc.user.profile.displayPicture.url}}" style="width:45px;border-radius:50%;height:45px;" />
+          {% else %}
           <img src="/static/images/24tut/hom/dp.jpg" style="width:45px;border-radius:50%;height:45px;" />
+          {% endif %}
         </div>
       </div>
       <div class="col-md-11 col-xs-10 text-left">
         <div class="row">
-          <div class="no_pad" style="border-bottom: 1px solid #eaecf0;display: flex;align-items: center;">
-            <div class="contentrow" style="flex: 0 1 auto;max-width:75%;">
-              <div class="toprow" style="">
-                <span style="font-size:17px;cursor:pointer;color:#3C5899">Lara</span>
-              </div>
+          <div class="no_pad" style="{% if  request.user.is_authenticated %}border-top: 1px solid #eaecf0{% endif %};display: flex;align-items: center;margin-left: 1em;">
+            <div class="contentrow" style="flex: 0 1 auto;max-width:100%;">
               <div class="bottomrow" style="font-size: 1em;">
-                <span class="" style="font-size:15px;color: #3C4556;">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam.
+                <span class="" style="font-size:15px;color: #3C4556;">{{ftc.txt}}
                 </span>
               </div>
               <div class="bottomrow" style="font-size: 1em;">
-                <span class="" style="font-size:15px;color:#3C5899;">Posted by April 2018
+                <span class="" style="font-size:13px;color:#9E9E9E;">Posted {{ftc.created}} by <span style="color:#3C5899;">{{ftc.user.username}}</span>
                 </span>
               </div>
             </div>
           </div>
         </div>
       </div>
-      <div class="row">
-        <div class="text-center" style="padding-top:2em;margin-left:0.5em;">
-          <div class="col-md-1 col-xs-2 text-center">
-            <div style="width:60px;padding-top: 1.5em;">
-              <img src="/static/images/24tut/hom/dp.jpg" style="width:45px;border-radius:50%;height:45px;" />
-            </div>
-          </div>
-          <div class="col-md-11 col-xs-10  text-left" style="padding-top: 1.5em;">
-            <textarea class="" type="textarea" placeholder='Add  a comment Here..' ng-model="commentText" style='width:75%;resize: none;'></textarea>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-  <div class="row">
-    <div class="col-md-1 col-xs-2 text-center">
-      <div style="width:60px;padding-top: 1.5em;">
-        <img src="/static/images/24tut/hom/dp.jpg" style="width:45px;border-radius:50%;height:45px;" />
-      </div>
-    </div>
-    <div class="col-md-11 col-xs-10  text-left" style="padding-top: 1.5em;">
-      <textarea class="autoExpand areaa" type="textarea" placeholder='Add  a comment Here..' ng-model="parentText" style='width:100%;resize: none;'></textarea>
-    </div>
-  </div>
-</div>
-{% endblock %}
-{% block tutorjs %}
+      {% endif %}
+      {% endfor %}
 
-<script src="{% static 'js/app.tutor.forum.js' %}"></script>
+    </div>
+
+  </div>
+  {% endif %}
+  {% endfor %}
+  {% if request.user.is_authenticated %}
+  <div class="row">
+    <div class="text-center" style="padding-top:2em;">
+      <div class="col-md-1 col-xs-2" style="margin-left: -0.5em;">
+        <div style="width:60px;padding-top: 1.5em;">
+          {% if request.user.profile.displayPicture %}
+          <img src="{{request.user.profile.displayPicture.url}}" style="width:45px;border-radius:50%;height:45px;" />
+          {% else %}
+          <img src="/static/images/24tut/hom/dp.jpg" style="width:45px;border-radius:50%;height:45px;" />
+          {% endif %}
+        </div>
+      </div>
+      <div class="col-md-11 col-xs-10  text-left" style="padding-top: 1.5em;">
+        <form action="/saveForumDetails/" method="post" enctype="multipart/form-data">{% csrf_token %}
+          <input name="typ" type="hidden" class="form-control" value="forum">
+          <input name="page" type="hidden" class="form-control" value="{{blogname}}">
+          <textarea class="parenttext" rows="3" type="textarea" placeholder='Post a Question Here..' style='resize: none;margin-left:1.2em;' name="txt"></textarea>
+          <div class="post" style="padding:0;margin-top: -2px;height:4em;text-align: right">
+            <span style="cursor:pointer; "><i class="fa fa-paperclip" style="font-size:1.5em;margin:0.8em ;" onclick="document.getElementById('selectedFile').click();"></i></span>
+            <input type="file" name="files" style="display: none;" id="selectedFile">
+            <span><button class="btn btn-primary" style="margin:-0.5em 0 0 0;padding:0.2em 1em;border-radius:0%" type="submit">Post</button> </span>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+  {% endif %}
+
+</div>
 
 {% endblock %}
