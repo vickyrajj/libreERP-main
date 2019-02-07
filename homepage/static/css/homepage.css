@@ -2062,7 +2062,7 @@ hr {
 .top_header {
   position: relative;
   background-size: 100%;
-  min-height: 20vh;
+  min-height: 25vh;
   color: white;
   background-image: url('/static/images/24tut/blue_waves.jpg');
 }
@@ -2441,7 +2441,9 @@ hr {
   transition: all .2s ease-in-out;
   cursor: pointer;
 }
-
+.down_btn {
+  padding: 10px;
+}
 /* exams css properties */
 /* for normal screens ends here.... */
 @media only screen and (device-width: 1352px) and (device-height: 641px) {
@@ -2719,11 +2721,13 @@ hr {
   font-size: 4em;
   color: #fff
 }
+
 .nc_title {
   font-size: 4em;
   color: #fff
 }
-.nc_container{
+
+.nc_container {
   width: 90%;
 }
 
@@ -3718,6 +3722,11 @@ hr {
 
   .top_header {
     padding-bottom: 15px;
+    min-height: 35vh;
+  }
+
+  .down_btn {
+    padding: 10px;
   }
 
   .heading_24 {
@@ -3892,7 +3901,8 @@ hr {
   .nc_title {
     font-size: 2.5em;
   }
-  .nc_container{
+
+  .nc_container {
     margin-top: 60px;
     width: 100%;
   }
