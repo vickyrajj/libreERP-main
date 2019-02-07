@@ -493,6 +493,7 @@ class ForumThreadSerializer(serializers.ModelSerializer):
     class Meta:
         model = ForumThread
         fields = ('pk' , 'created' , 'updated', 'page', 'txt', 'attachment','user','verified','forumthread')
+        
 
         def create(self , validated_data):
             f = ForumThread(**validated_data)
