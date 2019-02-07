@@ -1,6 +1,6 @@
-{% extends "tutorBook.html" %}
+{% extends "base.simple.html" %}
 
-{% block bookcontent %}
+{% block tutorforumcontent %}
 <div>
   <style media="screen">
     .areatext{
@@ -20,9 +20,9 @@
     .head{
       display: none;
     }
-    footer,nav{
+    /* footer,nav{
       display:none;
-    }
+    } */
 
   </style>
   <style media="screen and (max-width:768px)">
@@ -56,12 +56,14 @@
 
   </style>
 
+
   {% if not request.user.is_authenticated %}
   <div class="row" style="margin:2em 1em;">
     <a href="/signin"><button class="btn btn-primary" style="margin:-0.5em 0 0 0;padding:0.2em 1em;border-radius:0%">Ask a New Question</button></a>
   </div>
   {% endif %}
   {% for ft in forumData %}
+  {% if ft.page == blogname %}
   <div class="row" style="border-bottom:1px solid #eaecf0;padding-bottom: 1em;">
     <div class="col-md-1 col-xs-1">
       <div style="width:50px;padding-top: 1.5em;">
@@ -90,7 +92,7 @@
           </div>
           {% endif %}
           <div class="bottomrow" style="font-size: 1em;">
-            <span class="" style="font-size:13px;color: #3C5899;">{{ ft.forumthread.all|length }} Answers
+            <span class="" style="font-size:13px;color: #3C5899;">{{ ft.forumthread.all|length }}Answers
             </span>
           </div>
         </div>
@@ -120,7 +122,8 @@
         </div>
       </div>
       {% endif %}
-      {% for ftc in ft.forumthread.all  %}
+      {% for ftc in ft.forumthread.all %}
+      {% if ftc.verified is True %}
       <div class="col-md-1 col-xs-2">
         <div style="width:60px;padding-top: 1.5em;">
           {% if ftc.user.profile.displayPicture %}
@@ -146,11 +149,13 @@
           </div>
         </div>
       </div>
+      {% endif %}
       {% endfor %}
 
     </div>
 
   </div>
+  {% endif %}
   {% endfor %}
   {% if request.user.is_authenticated %}
   <div class="row">
