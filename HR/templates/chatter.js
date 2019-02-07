@@ -325,7 +325,7 @@ var suggested_text =
 
 firstMessage = firstMessage.replaceAll("&lt;",'<')
 firstMessage = firstMessage.replaceAll("&gt;",">")
-firstMessage = firstMessage.replaceAll("<a","<a style="+'color:'+windowColor+';text-decoration:none')
+firstMessage = firstMessage.replaceAll("<a","<a style="+'color:var(--windowColor);text-decoration:none')
 firstMessage = firstMessage.replaceAll("<li>","<li style='list-style:none'>")
 
 
@@ -570,8 +570,21 @@ function setVisitorDetails(name , phoneNumber , email) {
   setCookie("uidDetails", JSON.stringify({email:email , name:name , phoneNumber:phoneNumber}), 365);
 }
 
-function setColors(bubbleColor , windowColor , fontColor) {
-  var windowColor = "#000"
+function setColors(window_color, icon_color, font_icon_color, support_bubble_color) {
+
+  if (window_color!=undefined) {
+    document.documentElement.style.setProperty('--windowColor', window_color);
+  }
+  if (icon_color!=undefined) {
+    document.documentElement.style.setProperty('--iconColor', icon_color);
+  }
+  if (font_icon_color!=undefined) {
+    document.documentElement.style.setProperty('--fontAndIconColor', font_icon_color);
+  }
+  if (support_bubble_color!=undefined) {
+    document.documentElement.style.setProperty('--supportBubbleColor', support_bubble_color);
+  }
+
 }
 
 
@@ -623,6 +636,15 @@ function setIframeToNormal(){
 document.addEventListener("DOMContentLoaded", function(event) {
 
 
+  function setInitColor() {
+    document.documentElement.style.setProperty('--windowColor', windowColor);
+    document.documentElement.style.setProperty('--iconColor', iconColor);
+    document.documentElement.style.setProperty('--fontAndIconColor', fontAndIconColor);
+    document.documentElement.style.setProperty('--supportBubbleColor', supportBubbleColor);
+  }
+
+  setInitColor()
+
    window.CHATTER_FUNCTION = {
     sendCustomMessage:function (msg, is_hidden) {
       if (is_hidden==undefined) {
@@ -631,7 +653,6 @@ document.addEventListener("DOMContentLoaded", function(event) {
       sendMessage(msg,is_hidden)
     },
     hideChatBox:function () {
-      // alert('hide');
       document.getElementById('mainDiv').style.display = "none";
     },
     displayChatBox:function () {
@@ -651,15 +672,19 @@ document.addEventListener("DOMContentLoaded", function(event) {
       document.cookie = encodeURIComponent("uid") + "=deleted; expires=" + new Date(0).toUTCString()
     },
     setVisitorDetails:function (name , phoneNumber , email) {
-      console.log(name, phoneNumber, email);
       setVisitorDetails(name, phoneNumber, email);
     },
     getVisitorDetails:function () {
       return getVisitorDetails()
+    },
+    setColors:function (window_color, icon_color, font_icon_color, support_bubble_color) {
+      setColors(window_color, icon_color, font_icon_color, support_bubble_color)
+    },
+    resetColor:function () {
+      setInitColor()
     }
   }
 
-  // support_icon = ''
 
 
 
@@ -1052,7 +1077,7 @@ function createChatDiv() {
                     '</div>'+
                     '<div id="chatBox_footer" class="chatBox_footer">'+
                           '<div class="chatbox_branding">'+
-                            '<a style="color:'+fontAndIconColor+' ;text-decoration:none;font-size:10px !important;" href="https://www.syrow.com/" target="_blank">We run on Syrow</a>'+
+                            '<a style="color:var(--fontAndIconColor) ;text-decoration:none;font-size:10px !important;" href="https://www.syrow.com/" target="_blank">We run on Syrow</a>'+
                           '</div>'+
                           '<div id="messageComposer" class="flex_container">'+
                             '<textarea id="inputText" placeholder="Message..." name="name" rows="2" style="background-color:#fff;outline:none;font-size:14px !important;" ></textarea>'+
@@ -1068,52 +1093,52 @@ function createChatDiv() {
 
 
 
-              '<div id="closeSupport" class="close-support '+sy_circle_class+'" style="height:60px; width:60px; background-color: '+supportBubbleColor+'; border-radius:50%; position:fixed ; z-index:997654321; cursor:pointer;">'+
+              '<div id="closeSupport" class="close-support '+sy_circle_class+'" style="height:60px; width:60px; background-color: var(--supportBubbleColor); border-radius:50%; position:fixed ; z-index:997654321; cursor:pointer;">'+
                 '<svg style="position:absolute; top:20px; left:19px; height:51px;" viewBox="0 0 28 32">'+
-                   '<path id="closeChatSvg" style="fill:'+iconColor+';" d="M13.978 12.637l-1.341 1.341L6.989 8.33l-5.648 5.648L0 12.637l5.648-5.648L0 1.341 1.341 0l5.648 5.648L12.637 0l1.341 1.341L8.33 6.989l5.648 5.648z" fill-rule="evenodd"></path>'+
+                   '<path id="closeChatSvg" style="fill:var(--iconColor);" d="M13.978 12.637l-1.341 1.341L6.989 8.33l-5.648 5.648L0 12.637l5.648-5.648L0 1.341 1.341 0l5.648 5.648L12.637 0l1.341 1.341L8.33 6.989l5.648 5.648z" fill-rule="evenodd"></path>'+
                  '</svg>'+
               '</div>'+
 
               '<div id="circleStyle">'+
                   '<div id="supportCircle">'+
-                      '<div style="background: '+supportBubbleColor+' !important; color:'+iconColor+';cursor:pointer" class="sy-circle first_animation '+sy_circle_class+'" id="sy-main-icon">'+
-                          '<span id="Syrow24hSupportText" style="background: '+supportBubbleColor+' !important; color:'+iconColor+'" class="sy-text '+sy_firsttext_class+'">24 Hours Support</span>'+
-                          '<span id="chatSuggestionBar" style="display:none;background:'+supportBubbleColor+' !important; color:'+iconColor+'" class="sy-text-Suggested '+sy_firsttext_class+'"><img style="width:35px;height:35px;display:inline;border-radius:50%;margin:3px;margin-right:10px" src="'+dpSupport+'"/>'+firstMessage+'</span>'+
+                      '<div style="background: var(--supportBubbleColor) !important; color:var(--iconColor);cursor:pointer" class="sy-circle first_animation '+sy_circle_class+'" id="sy-main-icon">'+
+                          '<span id="Syrow24hSupportText" style="background: var(--supportBubbleColor) !important; color:var(--iconColor)" class="sy-text '+sy_firsttext_class+'">24 Hours Support</span>'+
+                          '<span id="chatSuggestionBar" style="display:none;background:var(--supportBubbleColor) !important; color:var(--iconColor)" class="sy-text-Suggested '+sy_firsttext_class+'"><img style="width:35px;height:35px;display:inline;border-radius:50%;margin:3px;margin-right:10px" src="'+dpSupport+'"/>'+firstMessage+'</span>'+
                           '<span id="24Icon" class="SyrowFont sy-md-1 sy-ops"><img id="supportDp" src="'+support_icon+'" style="width:40px !important; height:40px important; border-radius:50% !important;"></img> </span>'+
                           '<div  id="sy-sub-icons">'+
-                              '<div style="background: '+supportBubbleColor+' !important; color:'+iconColor+';cursor:pointer" id="callCircle" class="sy-circle '+sy_circle_class+'">'+
-                                '<span id="callCircleText" style="background: '+supportBubbleColor+' !important; color:'+iconColor+'" class="sy-text '+sy_text_class+'">Callback</span>'+
+                              '<div style="background: var(--supportBubbleColor) !important; color:var(--iconColor);cursor:pointer" id="callCircle" class="sy-circle '+sy_circle_class+'">'+
+                                '<span id="callCircleText" style="background: var(--supportBubbleColor) !important; color:var(--iconColor)" class="sy-text '+sy_text_class+'">Callback</span>'+
                                 '<span class="SyrowFont font-SyrowCallBack sy-md-1 sy-ops"></span></a>'+
                               '</div>'+
-                              '<div style="background: '+supportBubbleColor+' !important; color:'+iconColor+';cursor:pointer" id="chatCircle" class="sy-circle '+sy_circle_class+'">'+
-                                '<span id="chatCircleText" style="background: '+supportBubbleColor+' !important; color:'+iconColor+'" class="sy-text '+sy_text_class+'">Chat</span>'+
+                              '<div style="background: var(--supportBubbleColor) !important; color:var(--iconColor);cursor:pointer" id="chatCircle" class="sy-circle '+sy_circle_class+'">'+
+                                '<span id="chatCircleText" style="background: var(--supportBubbleColor) !important; color:var(--iconColor)" class="sy-text '+sy_text_class+'">Chat</span>'+
                                 '<span class="SyrowFont font-SyrowChat sy-md-2 sy-ops"></span>'+
                               '</div>'+
-                              '<div style="background: '+supportBubbleColor+' !important; color:'+iconColor+';cursor:pointer" id="audioCircle" class="sy-circle '+sy_circle_class+'">'+
-                                '<span id="audioCircleText" style="background: '+supportBubbleColor+' !important; color:'+iconColor+'" class="sy-text '+sy_text_class+'">Audio Call</span>'+
+                              '<div style="background: var(--supportBubbleColor) !important; color:var(--iconColor);cursor:pointer" id="audioCircle" class="sy-circle '+sy_circle_class+'">'+
+                                '<span id="audioCircleText" style="background: var(--supportBubbleColor) !important; color:var(--iconColor)" class="sy-text '+sy_text_class+'">Audio Call</span>'+
                                 '<span class="SyrowFont font-SyrowAudioCall sy-md-2 sy-ops"></span>'+
                               '</div>'+
-                              '<div style="background: '+supportBubbleColor+' !important; color:'+iconColor+';cursor:pointer" id="videoCircle" class="sy-circle '+sy_circle_class+'" >'+
-                                '<span id="videoCircleText" style="background: '+supportBubbleColor+' !important; color:'+iconColor+'" class="sy-text '+sy_text_class+'">Video Call</span>'+
+                              '<div style="background: var(--supportBubbleColor) !important; color:var(--iconColor);cursor:pointer" id="videoCircle" class="sy-circle '+sy_circle_class+'" >'+
+                                '<span id="videoCircleText" style="background: var(--supportBubbleColor) !important; color:var(--iconColor)" class="sy-text '+sy_text_class+'">Video Call</span>'+
                                 '<span class="SyrowFont font-SyrowVideoCall sy-md-2 sy-ops"></span>'+
                               '</div>'+
-                              '<div style="background: '+supportBubbleColor+' !important; color:'+iconColor+';cursor:pointer" id="ticketCircle" class="sy-circle '+sy_circle_class+'">'+
-                                '<span id="ticketCircleText" style="background: '+supportBubbleColor+' !important; color:'+iconColor+'" class="sy-text '+sy_text_class+'">Ticket</span>'+
+                              '<div style="background: var(--supportBubbleColor) !important; color:var(--iconColor);cursor:pointer" id="ticketCircle" class="sy-circle '+sy_circle_class+'">'+
+                                '<span id="ticketCircleText" style="background: var(--supportBubbleColor) !important; color:var(--iconColor)" class="sy-text '+sy_text_class+'">Ticket</span>'+
                                 '<span class="SyrowFont font-SyrowTicket sy-md-1 sy-ops"></span>'+
                               '</div>'+
                           '</div>'+
                       '</div>'+
                   '</div>'+
 
-                  '<div id="singleService" style="background: '+supportBubbleColor+' !important; color:'+iconColor+';cursor:pointer" class="sy-circle first_animation '+sy_circle_class+'">'+
-                    '<span id="singleServiceText" style="background: '+supportBubbleColor+' !important; color:'+iconColor+' ;display:none; transition: .5s;opacity:0" class="sy-text '+sy_text_class+'  "></span>'+
-                    '<span id="chatSuggestionBar1" style="background: '+supportBubbleColor+' !important; color:'+iconColor+';font-size:13px !important;display:flex !important" class="sy-text-Suggested '+sy_firsttext_class+'"><img style="width:35px;height:35px;display:inline;border-radius:50%;margin:3px;margin-right:10px" src="'+dpSupport+'"/><span>'+firstMessage+'</span></span>'+
+                  '<div id="singleService" style="background: var(--supportBubbleColor) !important; color:var(--iconColor);cursor:pointer" class="sy-circle first_animation '+sy_circle_class+'">'+
+                    '<span id="singleServiceText" style="background: var(--supportBubbleColor) !important; color:var(--iconColor) ;display:none; transition: .5s;opacity:0" class="sy-text '+sy_text_class+'  "></span>'+
+                    '<span id="chatSuggestionBar1" style="background: var(--supportBubbleColor) !important; color:var(--iconColor);font-size:13px !important;display:flex !important" class="sy-text-Suggested '+sy_firsttext_class+'"><img style="width:35px;height:35px;display:inline;border-radius:50%;margin:3px;margin-right:10px" src="'+dpSupport+'"/><span>'+firstMessage+'</span></span>'+
                     '<span id="singleServiceFont" class="SyrowFont font-SyrowCallBack sy-md-2 sy-ops"> <img id="singleServiceSupportDp" src="'+support_icon+'" style="width:40px !important; height:40px important; border-radius:50% !important;"></img> </span></a>'+
                   '</div>'+
               '</div>'+
 
           '<div id="boxStyle">'+
-            '<div id="ChatWithUs" style="background: '+supportBubbleColor+' !important; color:'+iconColor+';cursor:pointer;" class="chat_with_us '+position_of_chat+'">'+
+            '<div id="ChatWithUs" style="background: var(--supportBubbleColor) !important; color:var(--iconColor);cursor:pointer;" class="chat_with_us '+position_of_chat+'">'+
               '<span style="margin-right:10px;font-size:17px !important;">Chat With Us</span>'+
               '<span style="font-size:16px !important;" class="SyrowFont font-SyrowChat"></span>'+
             '</div>'+
@@ -1214,7 +1239,7 @@ function createChatDiv() {
   chatBox.style.display = "none";
     inputText.addEventListener('keyup',function(e){
       if(inputText.value.length>0){
-        document.getElementById('paperPlane').style.color=windowColor
+        document.getElementById('paperPlane').style.color='var(--windowColor)'
       }else{
         document.getElementById('paperPlane').style.color="#A0A0A0"
       }
@@ -1878,8 +1903,8 @@ function createChatDiv() {
                     bottom: 0%;\
           }\
               .chat_with_us {\
-              background-color: "+windowColor+";\
-              color:"+fontAndIconColor+"\
+              background-color: var(--windowColor);\
+              color:var(--fontAndIconColor);\
               cursor:  pointer;\
               display:  inline-block;\
               position: fixed;\
@@ -1935,13 +1960,13 @@ function createChatDiv() {
           }\
           @keyframes blink{\
           0%{\
-              box-shadow:0px 0px 0px "+supportBubbleColor+";\
+              box-shadow:0px 0px 0px var(--supportBubbleColor);\
             }\
             50%{\
-              box-shadow:2px 0px 30px "+supportBubbleColor+"\
+              box-shadow:2px 0px 30px var(--supportBubbleColor)\
             }\
             100%{\
-              box-shadow:0px 0px 0px "+supportBubbleColor+"\
+              box-shadow:0px 0px 0px var(--supportBubbleColor)\
             }\
           }\
           @keyframes chatSuggestionBar{\
@@ -2041,7 +2066,7 @@ function createChatDiv() {
             .audio_section{\
               display:none;\
               height: 40px;\
-              background-color: "+windowColor+";\
+              background-color: var(--windowColor);\
               padding:0px;\
               margin:0px;\
               position: absolute;\
@@ -2051,7 +2076,7 @@ function createChatDiv() {
             .video_section{\
               display:none;\
               height: 201px;\
-              background-color: "+windowColor+";\
+              background-color: var(--windowColor);\
               padding:0px;\
               margin:0px;\
               position: absolute;\
@@ -2068,13 +2093,13 @@ function createChatDiv() {
               position: absolute;\
               width:100%;\
               min-height: 80px;\
-              background-image:linear-gradient(to right, "+windowColor +","+ windowColor+","+ windowColor+");\
+              background-image:linear-gradient(to right, var(--windowColor),var(--windowColor),var(--windowColor));\
               color: rgba(255, 255, 255, 0.8);\
               border-radius: 10px 10px 0 0;\
             }\
             .chatBox_header i{\
                font-size:25px !important;\
-               color:"+fontAndIconColor+"\
+               color:var(--fontAndIconColor);\
             }\
             .chatBox_header > .logo_image{\
               width: 70px;\
@@ -2088,7 +2113,7 @@ function createChatDiv() {
               margin: 20px 10px;;\
               width: 60%;\
               padding:0px;\
-              color:"+fontAndIconColor+"\
+              color:var(--fontAndIconColor);\
             }\
             .chatBox_header .chatBox_name{\
               display: block;\
@@ -2160,9 +2185,9 @@ function createChatDiv() {
               min-height: 15px;\
               text-align: center;\
               font-size: 10px !important;\
-              background-image:linear-gradient(to right, "+windowColor +","+ windowColor+","+ windowColor+");\
+              background-image:linear-gradient(to right, var(--windowColor),var(--windowColor),var(--windowColor));\
               width: 100%;\
-              color: "+fontAndIconColor+";\
+              color: var(--fontAndIconColor);\
               padding:0px;\
               margin:0px;\
             }\
@@ -2170,7 +2195,7 @@ function createChatDiv() {
               text-align: center;\
               padding-top:15px; \
               background-color:#fff;\
-              color:"+windowColor+";\
+              color:var(--windowColor);\
               cursor:pointer;\
               width:100%;\
               display:none;\
@@ -2188,7 +2213,7 @@ function createChatDiv() {
               animation: msgDiv 0.7s ease;\
             }\
             .confirmationSureText{\
-              color: "+windowColor+";\
+              color: var(--windowColor);\
               font-size: 16px !important;\
               font-weight: bold;\
               text-align: center;\
@@ -2200,7 +2225,7 @@ function createChatDiv() {
               padding: 15px;\
             }\
             .confirmationBtn{\
-              background-color: "+supportBubbleColor+";\
+              background-color: var(--supportBubbleColor);\
               padding: 5px 10px;\
               border: 1px solid #fff;\
               width: 78px;\
@@ -2371,10 +2396,10 @@ function createChatDiv() {
                         '</div>'+
                         '<input type="text" id="emailId" placeholder="Email (Optional)"  style="width:100%; padding:5px;border:none; margin-bottom:10px;">'+
                          '<textarea id="feedbackText" style="width:100%;outline:none;padding:5px; resize:none;border:none; box-shadow:.3px .3px #fff; box-sizing:border-box;" rows="3" placeholder="Feedback"></textarea>'+
-                         '<button id="submitCancel" type="button" style="margin-top:10px; padding:4px 8px; border-radius:8px; background-color:'+fontAndIconColor+' ; color:'+windowColor+'; text-transform:none; font-size:11px !important; cursor:pointer;" >'+
+                         '<button id="submitCancel" type="button" style="margin-top:10px; padding:4px 8px; border-radius:8px; background-color:var(--fontAndIconColor) ; color:var(--windowColor); text-transform:none; font-size:11px !important; cursor:pointer;" >'+
                            'Cancel'+
                          '</button>'+
-                         '<button id="submitStars" type="button" style="margin-top:10px;margin-left:10%; padding:4px 8px; border-radius:8px; background-color:'+windowColor+' ; color:'+fontAndIconColor+'; text-transform:none; font-size:11px !important; cursor:pointer;" >'+
+                         '<button id="submitStars" type="button" style="margin-top:10px;margin-left:10%; padding:4px 8px; border-radius:8px; background-color:var(--windowColor) ; color:var(--fontAndIconColor); text-transform:none; font-size:11px !important; cursor:pointer;" >'+
                            'Submit'+
                          '</button>'+
                         '</form>'+
@@ -3107,7 +3132,7 @@ function addExitConfirmation() {
         attachedFile = '<video width="200" height="180" style="box-sizing:border-box;" src="'+ message.attachment +'" controls></video>'
       }else if (message.attachmentType=='application') {
           console.log('application');
-          attachedFile ='<p style="font-size:14px !important; margin:5px 0px !important;width:100%; line-height: 1.50; box-sizing:border-box;">  <a target="_blank" style="color:#3961ea; word-wrap: break-word !important;" href="'+message.attachment+'"> '+message.attachment+' </a></p>'
+          attachedFile ='<p style="font-size:14px !important; margin:5px 0px !important;width:100%; line-height: 1.50; box-sizing:border-box;">  <a target="_blank" style="font-size:14px !important; color:#3961ea; word-wrap: break-word !important;" href="'+message.attachment+'"> '+message.attachment+' </a></p>'
       }
     }
 
@@ -3126,7 +3151,7 @@ function addExitConfirmation() {
           var pTag
           res.forEach((r)=>{
             if (r.match(regex)) {
-              str=str.replace(r,'<a style="color:#3961ea" href="'+r+'" target="_blank">'+r+'</a>')
+              str=str.replace(r,'<a style="font-size:14px !important; color:#3961ea" href="'+r+'" target="_blank">'+r+'</a>')
                 pTag='<p style="font-size:14px !important; margin:5px 0px !important;width:100%; box-sizing:border-box !important; text-align:start !important;word-wrap: break-word !important; white-space: pre-wrap;">'+ str +'</p>'
             }else{
                  pTag='<p style="font-size:14px !important; margin:5px 0px !important; box-sizing:border-box !important;width:100%; text-align:start !important;word-wrap: break-word !important; white-space: pre-wrap;">'+ str +'</p>'
@@ -3144,7 +3169,7 @@ function addExitConfirmation() {
     if (message.logs==null) {
       if (!message.sentByAgent) {
         var msgHtml = '<div id="msg'+chat.messages.length+'" style="margin : 0px 0px 15px; box-sizing:border-box;">'+
-                        '<div style=" clear: both; float:right; background-color:'+ windowColor +'; color:'+fontAndIconColor+';  padding:5px 10px;margin:8px;max-width:94%; border-radius:20px 0px 20px 20px; box-sizing:border-box; ">'+
+                        '<div style=" clear: both; float:right; background-color:var(--windowColor); color:var(--fontAndIconColor);  padding:5px 10px;margin:8px;max-width:94%; border-radius:20px 0px 20px 20px; box-sizing:border-box; ">'+
                           msgDiv+
                         '</div>'+
                         '<div style="clear: both; float:right; padding:0px 10px 5px 10px; font-size:9px !important;">'+ message.timeDate +'</div>'+
@@ -3217,7 +3242,7 @@ createActivity()
       if (chat.messages[i].message=="first") {
         firstMessage = firstMessage.replaceAll("&lt;",'<')
         firstMessage = firstMessage.replaceAll("&gt;",">")
-        firstMessage = firstMessage.replaceAll("<a","<a style="+'color:'+windowColor+';text-decoration:none')
+        firstMessage = firstMessage.replaceAll("<a","<a style="+'color:var(--windowColor);text-decoration:none')
         firstMessage = firstMessage.replaceAll("<li>","<li style='list-style:none'>")
 
           div.innerHTML = '<div style="margin:0px 0px 10px; box-sizing:border-box;" >'+

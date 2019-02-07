@@ -325,8 +325,17 @@ app.directive('reviewqcInfo', function() {
     },
     controller: function($scope, $state, $http, $permissions, $timeout, $uibModal) {
       if ($scope.data.chatThreadData != null) {
-        console.log($scope.data);
+        //console.log($scope.data);
         $scope.msgData = $scope.data.chatThreadData
+
+        try {
+          if (typeof $scope.msgData.location != 'object') {
+            $scope.msgData.location = JSON.parse($scope.msgData.location)
+          }
+        } catch (err) {
+          console.log(err);
+        }
+
         $scope.fullChatData = $scope.data.supportChatData
         $scope.commentPerm = false;
         $timeout(function() {
@@ -338,7 +347,7 @@ app.directive('reviewqcInfo', function() {
           url: '/api/support/visitor/?uid=' + $scope.msgData.uid,
         }).
         then(function(response) {
-          console.log(response.data, typeof response.data, response.data.length);
+          //console.log(response.data, typeof response.data, response.data.length);
           $scope.visitorDetails = response.data[0]
         });
 
@@ -382,7 +391,7 @@ app.directive('reviewqcInfo', function() {
           }, function(data) {
 
             if (data != 'backdrop click' && data != '' && data != 'escape key press') {
-              console.log(data);
+              //console.log(data);
               $scope.chatBox.messageToSend = $scope.chatBox.messageToSend + data
             }
           });
@@ -402,7 +411,7 @@ app.directive('reviewqcInfo', function() {
           url: '/api/support/chatThread/?uid=' + $scope.msgData.uid
         }).
         then(function(response) {
-          console.log(response.data, 'dddddddddddd', typeof response.data);
+          //console.log(response.data, 'dddddddddddd', typeof response.data);
           $scope.myChatThreadData = response.data[0]
         });
 
@@ -529,7 +538,7 @@ app.directive('reviewqcInfo', function() {
 
 
         $scope.showChart = function() {
-          console.log('modalllllllllllllllll');
+          //console.log('modalllllllllllllllll');
           $uibModal.open({
             templateUrl: '/static/ngTemplates/app.support.review.fullChat.modal.html',
             size: 'lg',
@@ -563,19 +572,19 @@ app.directive('reviewqcInfo', function() {
                 url: '/api/support/supportChat/?uid=' + myChatThreadData.uid,
               }).
               then(function(response) {
-                console.log(response.data, typeof response.data, response.data.length);
+                //console.log(response.data, typeof response.data, response.data.length);
                 $scope.fullChatData = response.data
               });
 
 
               checkEmail = function() {
-                console.log($scope.form.email);
+                //console.log($scope.form.email);
                 $http({
                   method: 'GET',
                   url: '/api/support/visitor/?email=' + $scope.form.email + '&uid=' + uid,
                 }).
                 then(function(response) {
-                  console.log(response.data, typeof response.data, response.data.length);
+                  //console.log(response.data, typeof response.data, response.data.length);
                   if (response.data.length == 1 && response.data[0].email == $scope.form.email) {
                     $scope.form = response.data[0]
                   }
@@ -599,8 +608,8 @@ app.directive('reviewqcInfo', function() {
           }).result.then(function() {
 
           }, function(status) {
-            console.log(status);
-            console.log($scope.myChatThreadData);
+            //console.log(status);
+            //console.log($scope.myChatThreadData);
             if (status != 'backdrop click' && status != 'escape key press') {
               $scope.myChatThreadData.status = status
             }
@@ -666,12 +675,12 @@ app.directive('reviewqcInfo', function() {
           }).result.then(function() {
 
           }, function(data) {
-            console.log(data);
+            //console.log(data);
           });
         };
 
         function SendingPostRequest(toSend) {
-          console.log("Posting....", toSend);
+          //console.log("Posting....", toSend);
           $http({
             method: 'POST',
             url: '/api/support/reviewComment/',
@@ -682,7 +691,7 @@ app.directive('reviewqcInfo', function() {
             }
           }).
           then(function(response) {
-            console.log(response.data);
+            //console.log(response.data);
             $scope.reviewCommentData.push(response.data)
             $scope.reviewForm = {
               message: '',
@@ -690,12 +699,12 @@ app.directive('reviewqcInfo', function() {
               visitor_capture: ''
             }
           }, function(err) {
-            console.log(err.data.detail);
+            //console.log(err.data.detail);
             Flash.create('danger', err.data.detail);
           });
         }
         $scope.postComment = function() {
-          console.log($scope.msgData.created);
+          //console.log($scope.msgData.created);
           if ($scope.reviewForm.message.length == 0) {
             Flash.create('warning', 'Please Write Some Comment')
             return
@@ -704,7 +713,7 @@ app.directive('reviewqcInfo', function() {
           fd1.append('message', $scope.reviewForm.message);
           fd1.append('uid', $scope.msgData.uid);
           fd1.append('chatedDate', $scope.msgData.created.split('T')[0]);
-          console.log(fd1);
+          //console.log(fd1);
           SendingPostRequest(fd1);
         }
       }
@@ -722,8 +731,20 @@ app.directive('reviewInfo', function() {
     },
     controller: function($scope, $state, $http, $permissions, $timeout, $uibModal) {
       if ($scope.data.chatThreadData != null) {
-        console.log($scope.data);
+        //console.log($scope.data);
         $scope.msgData = $scope.data.chatThreadData
+
+        try {
+          if (typeof $scope.msgData.location != 'object') {
+            $scope.msgData.location = JSON.parse($scope.msgData.location)
+          }
+        } catch (err) {
+          console.log(err);
+        }
+
+
+
+        //console.log($scope.msgData, 'herrrrrrrrrrrrrrrrrrrr');
         $scope.fullChatData = $scope.data.supportChatData
         $scope.commentPerm = false;
         $timeout(function() {
@@ -735,7 +756,7 @@ app.directive('reviewInfo', function() {
           url: '/api/support/visitor/?uid=' + $scope.msgData.uid,
         }).
         then(function(response) {
-          console.log(response.data, typeof response.data, response.data.length);
+          //console.log(response.data, typeof response.data, response.data.length);
           $scope.visitorDetails = response.data[0]
         });
 
@@ -779,7 +800,7 @@ app.directive('reviewInfo', function() {
           }, function(data) {
 
             if (data != 'backdrop click' && data != '' && data != 'escape key press') {
-              console.log(data);
+              //console.log(data);
               $scope.chatBox.messageToSend = $scope.chatBox.messageToSend + data
             }
           });
@@ -799,7 +820,7 @@ app.directive('reviewInfo', function() {
           url: '/api/support/chatThread/?uid=' + $scope.msgData.uid
         }).
         then(function(response) {
-          console.log(response.data, 'dddddddddddd', typeof response.data);
+          //console.log(response.data, 'dddddddddddd', typeof response.data);
           $scope.myChatThreadData = response.data[0]
         });
 
@@ -926,7 +947,7 @@ app.directive('reviewInfo', function() {
 
 
         $scope.showChart = function() {
-          console.log('modalllllllllllllllll');
+          //console.log('modalllllllllllllllll');
           $uibModal.open({
             templateUrl: '/static/ngTemplates/app.support.review.fullChat.modal.html',
             size: 'lg',
@@ -960,19 +981,19 @@ app.directive('reviewInfo', function() {
                 url: '/api/support/supportChat/?uid=' + myChatThreadData.uid,
               }).
               then(function(response) {
-                console.log(response.data, typeof response.data, response.data.length);
+                //console.log(response.data, typeof response.data, response.data.length);
                 $scope.fullChatData = response.data
               });
 
 
               checkEmail = function() {
-                console.log($scope.form.email);
+                //console.log($scope.form.email);
                 $http({
                   method: 'GET',
                   url: '/api/support/visitor/?email=' + $scope.form.email + '&uid=' + uid,
                 }).
                 then(function(response) {
-                  console.log(response.data, typeof response.data, response.data.length);
+                  //console.log(response.data, typeof response.data, response.data.length);
                   if (response.data.length == 1 && response.data[0].email == $scope.form.email) {
                     $scope.form = response.data[0]
                   }
@@ -996,8 +1017,8 @@ app.directive('reviewInfo', function() {
           }).result.then(function() {
 
           }, function(status) {
-            console.log(status);
-            console.log($scope.myChatThreadData);
+            //console.log(status);
+            //console.log($scope.myChatThreadData);
             if (status != 'backdrop click' && status != 'escape key press') {
               $scope.myChatThreadData.status = status
             }
@@ -1019,7 +1040,7 @@ app.directive('reviewInfo', function() {
               }
             },
             controller: function($scope, $users, $uibModalInstance, data, Flash) {
-              console.log("model opened");
+              //console.log("model opened");
               $scope.uidd = data;
               $scope.imgsrc_agent = canvas_agent.toDataURL();
               $scope.imgsrc_visitor = canvas_visitor.toDataURL();
@@ -1055,7 +1076,7 @@ app.directive('reviewInfo', function() {
                 fd.append('visitor_capture', $scope.blob_of_visitor_image);
                 fd.append('agent_capture', $scope.blob_of_agent_image);
                 fd.append('chatedDate', $scope.timeOfGeneration.split('T')[0]);
-                console.log("Sending..");
+                //console.log("Sending..");
                 SendingPostRequest(fd);
                 $uibModalInstance.dismiss()
               }
@@ -1063,12 +1084,12 @@ app.directive('reviewInfo', function() {
           }).result.then(function() {
 
           }, function(data) {
-            console.log(data);
+            //console.log(data);
           });
         };
 
         function SendingPostRequest(toSend) {
-          console.log("Posting....", toSend);
+          //console.log("Posting....", toSend);
           $http({
             method: 'POST',
             url: '/api/support/reviewComment/',
@@ -1079,7 +1100,7 @@ app.directive('reviewInfo', function() {
             }
           }).
           then(function(response) {
-            console.log(response.data);
+            //console.log(response.data);
             $scope.reviewCommentData.push(response.data)
             $scope.reviewForm = {
               message: '',
@@ -1087,12 +1108,12 @@ app.directive('reviewInfo', function() {
               visitor_capture: ''
             }
           }, function(err) {
-            console.log(err.data.detail);
+            //console.log(err.data.detail);
             Flash.create('danger', err.data.detail);
           });
         }
         $scope.postComment = function() {
-          console.log($scope.msgData.created);
+          //console.log($scope.msgData.created);
           if ($scope.reviewForm.message.length == 0) {
             Flash.create('warning', 'Please Write Some Comment')
             return
@@ -1101,7 +1122,7 @@ app.directive('reviewInfo', function() {
           fd1.append('message', $scope.reviewForm.message);
           fd1.append('uid', $scope.msgData.uid);
           fd1.append('chatedDate', $scope.msgData.created.split('T')[0]);
-          console.log(fd1);
+          //console.log(fd1);
           SendingPostRequest(fd1);
         }
       }
@@ -1120,25 +1141,25 @@ app.directive('chatBox', function() {
       data: '=',
       index: '=',
       closeChat: '=',
-      device:'='
+      device: '='
     },
     controller: function($scope, $users, $uibModal, $http, ngAudio, Flash, $sce, webNotification) {
       $scope.IsVisitorOn = true;
       $scope.isVisitorVideoShowing = true;
       $scope.location = {}
-      console.log($scope.data, "^^^^^^^^^^^^^^^^^^^^^");
+      //console.log($scope.data, "^^^^^^^^^^^^^^^^^^^^^");
 
 
-      $scope.sendCustomMessage = function (message) {
-        if (message==undefined) {
+      $scope.sendCustomMessage = function(message) {
+        if (message == undefined) {
           message = "hidden message"
         }
-       var dataToSend = {
+        var dataToSend = {
           uid: $scope.data.uid,
           message: message,
           user: $scope.me.pk,
           sentByAgent: true,
-          is_hidden:true
+          is_hidden: true
         }
         $http({
           method: 'POST',
@@ -1151,11 +1172,11 @@ app.directive('chatBox', function() {
         })
       }
 
-      $scope.callToChatter = function (data) {
-        connection.session.call(wamp_prefix + 'service.support.handleQuickActions.' + $scope.data.uid, ['start_session',data]).then(
+      $scope.callToChatter = function(data) {
+        connection.session.call(wamp_prefix + 'service.support.handleQuickActions.' + $scope.data.uid, ['start_session', data]).then(
           function(res) {
             console.log('called');
-            Flash.create('success','Sent')
+            Flash.create('success', 'Sent')
           },
           function(err) {
             console.log(err);
@@ -1163,7 +1184,7 @@ app.directive('chatBox', function() {
         );
       }
 
-      $scope.setLocationData=function(data){
+      $scope.setLocationData = function(data) {
 
         let myLocationData = JSON.parse(data)
         if (myLocationData.city != null) {
@@ -1179,13 +1200,13 @@ app.directive('chatBox', function() {
                 'capital': null,
                 'languages': null
               },
-              'longitude':myLocationData.lon,
-              'latitude':myLocationData.lat
+              'longitude': myLocationData.lon,
+              'latitude': myLocationData.lat
             }
           } else {
             let dataValue = Object.assign(myLocationData)
             dataValue.flag = '/static/Flags/' + myLocationData.country_code.toLowerCase() + '.png',
-            dataValue.timezone = null
+              dataValue.timezone = null
             return dataValue
           }
         }
@@ -1248,7 +1269,7 @@ app.directive('chatBox', function() {
         return span.textContent || span.innerText;
       };
 
-      console.log($scope.data.companyPk,'yesssssssssssssssssssssssssssssssssssssssss');
+      //console.log($scope.data.companyPk, 'yesssssssssssssssssssssssssssssssssssssssss');
       $scope.data.messages = []
 
       $http({
@@ -1258,7 +1279,9 @@ app.directive('chatBox', function() {
         $scope.companyName = response.data.cDetails[0]
         $scope.compContactPersons = response.data.contactP
         $scope.companyPk = response.data.servicePk
-        $scope.data.messages.push({'message':extractContent(response.data.firstMsg[0])})
+        $scope.data.messages.push({
+          'message': extractContent(response.data.firstMsg[0])
+        })
         $scope.getAllMessages();
       })
 
@@ -1267,10 +1290,10 @@ app.directive('chatBox', function() {
         url: '/api/support/chatThread/?uid=' + $scope.data.uid
       }).
       then(function(response) {
-        console.log(response.data, 'dddddddddddd', typeof response.data);
+        //console.log(response.data, 'dddddddddddd', typeof response.data);
         $scope.chatThreadData = response.data[0]
         $scope.location = $scope.setLocationData(response.data[0].location)
-        console.log($scope.location);
+        //console.log($scope.location);
       });
 
       setTimeout(function() {
@@ -1289,7 +1312,7 @@ app.directive('chatBox', function() {
           console.log('here');
         }
 
-        if(e.ctrlKey && e.altKey  && e.keyCode == 72) {
+        if (e.ctrlKey && e.altKey && e.keyCode == 72) {
           console.log("Hey! shift+H event captured!");
           $scope.sendCustomMessage($scope.chatBox.messageToSend)
         }
@@ -1329,7 +1352,7 @@ app.directive('chatBox', function() {
       }
 
       $scope.$watch('data.closeIframe', function(newValue, oldValue) {
-        console.log(newValue, '=********************************************');
+        //console.log(newValue, '=********************************************');
         //printed true ono cut
 
         if (newValue) {
@@ -1343,21 +1366,21 @@ app.directive('chatBox', function() {
       $scope.setHeight = function() {
         // console.log('Here');
         if ($scope.data.audio) {
-          if ($scope.device.name=='large') {
+          if ($scope.device.name == 'large') {
             $scope.msgDivHeight = 70
-          }else {
+          } else {
             $scope.msgDivHeight = 62
           }
         } else if ($scope.data.video) {
-          if ($scope.device.name=='large') {
+          if ($scope.device.name == 'large') {
             $scope.msgDivHeight = 54
-          }else {
+          } else {
             $scope.msgDivHeight = 46
           }
         } else {
-          if ($scope.device.name=='large') {
+          if ($scope.device.name == 'large') {
             $scope.msgDivHeight = 74
-          }else {
+          } else {
             $scope.msgDivHeight = 66
           }
         }
@@ -1372,7 +1395,7 @@ app.directive('chatBox', function() {
           alert('aaaaaaaaaaa gyaaaaaaaaaaa');
         }
         if (event.origin == webRtcAddress && event.data.indexOf("*")) {
-          console.log(event.data + ' ******************');
+          //console.log(event.data + ' ******************');
           if (event.data == 'calledToShowVisitorVideo') {
             connection.session.publish(wamp_prefix + 'service.support.chat.' + $scope.data.uid, ['calledToShowVisitorVideo'], {}, {
               acknowledge: true
@@ -1628,7 +1651,7 @@ app.directive('chatBox', function() {
             url: '/api/support/visitor/?email=' + $scope.data.email,
           }).
           then(function(response) {
-            console.log(response);
+            //console.log(response);
             if (response.data.length > 1) {
               $scope.chatHistBtn = true
             }
@@ -1642,10 +1665,10 @@ app.directive('chatBox', function() {
         url: '/api/support/visitor/?uid=' + $scope.data.uid,
       }).
       then(function(response) {
-        console.log(response.data, typeof response.data, response.data.length);
+        //console.log(response.data, typeof response.data, response.data.length);
         if (response.data.length > 0) {
           $scope.visitorForm = response.data[0]
-          console.log($scope.visitorForm, "Visitor Data");
+          //console.log($scope.visitorForm, "Visitor Data");
         }
       });
 
@@ -1657,7 +1680,7 @@ app.directive('chatBox', function() {
           data: {
             email: mailId,
             uid: uid,
-            servicePk:$scope.companyPk
+            servicePk: $scope.companyPk
           }
         }).then(function(response) {
           console.log('mail sent to ' + mailId);
@@ -1677,7 +1700,7 @@ app.directive('chatBox', function() {
 
 
 
-      $scope.getAllMessages = function () {
+      $scope.getAllMessages = function() {
         $http({
           method: 'GET',
           url: '/api/support/supportChat/?&uid=' + $scope.data.uid,
@@ -1781,7 +1804,7 @@ app.directive('chatBox', function() {
 
 
         if ($scope.chatBox.messageToSend.length > 0) {
-          console.log($scope.inProcess);
+          //console.log($scope.inProcess);
           if ($scope.inProcess) {
             console.log('returning');
             return;
@@ -1880,7 +1903,7 @@ app.directive('chatBox', function() {
         }, function(data) {
 
           if (data != 'backdrop click' && data != '' && data != 'escape key press') {
-            console.log(data);
+            //console.log(data);
             $scope.chatBox.messageToSend = $scope.chatBox.messageToSend + data
           }
         });
@@ -1944,11 +1967,10 @@ app.directive('chatBox', function() {
           url: '/api/support/sendFeedBackRequest/',
           data: {
             id: $scope.data.uid,
-            chatThreadPk : chatThreadPk,
+            chatThreadPk: chatThreadPk,
           }
         }).
-        then(function(response) {
-        });
+        then(function(response) {});
       }
 
       $scope.closeChatBox = function(indx, myUserIndex) {
@@ -2075,7 +2097,7 @@ app.directive('chatBox', function() {
                 url: '/api/support/documentation/?customer=' + companyPk + '&title__icontains=' + title,
               }).
               then(function(response) {
-                console.log(response.data);
+                //console.log(response.data);
                 $scope.docData = response.data
               });
             }
@@ -2090,7 +2112,7 @@ app.directive('chatBox', function() {
             }
 
             $scope.sendDocument = function(doc) {
-              console.log(doc);
+              //console.log(doc);
               $uibModalInstance.dismiss(doc)
             }
 
@@ -2103,7 +2125,7 @@ app.directive('chatBox', function() {
         }, function(data) {
 
           if (data != 'backdrop click' && data != '' && data != 'escape key press') {
-            console.log(data);
+            //console.log(data);
             $scope.chatBox.messageToSend = $scope.chatBox.messageToSend + data
             // $scope.send()
           }
@@ -2112,22 +2134,22 @@ app.directive('chatBox', function() {
       }
 
       $scope.getChatHistory = function(email) {
-        console.log('email ', email);
+        //console.log('email ', email);
         $http({
           method: 'GET',
           url: '/api/support/getChatHistory/?email=' + email,
         }).
         then(function(response) {
-          console.log(response.data.data);
+          //console.log(response.data.data);
           $scope.chatHistory = response.data.data
-          console.log(response.data.data, 'ressssssssssssin chat hist');
+          //console.log(response.data.data, 'ressssssssssssin chat hist');
           $scope.chatHistModal(email)
         })
       }
 
 
       $scope.chatHistModal = function(email) {
-        console.log('chatHistModal', email);
+        //console.log('chatHistModal', email);
         $uibModal.open({
           templateUrl: '/static/ngTemplates/app.support.chatHistory.modal.html',
           size: 'xl',
@@ -2150,7 +2172,7 @@ app.directive('chatBox', function() {
               var all_text = document.getElementById('all_text')
               for (var i = 0; i < all_text.childNodes.length; i++) {
                 for (var j = 0; j < all_text.childNodes[i].length; j++) {
-                  console.log(all_text.childNodes[i].childNodes[j]);
+                  //console.log(all_text.childNodes[i].childNodes[j]);
                 }
               }
 
@@ -2177,7 +2199,7 @@ app.directive('chatBox', function() {
       }
 
       $scope.chatTransfer = function(uid, chatThreadPk) {
-        console.log($scope.data, 'entireeeeeeeeeeeeee');
+        //console.log($scope.data, 'entireeeeeeeeeeeeee');
         $scope.onlineAgents = []
         $scope.offlineAgents = []
         $http({
@@ -2266,7 +2288,7 @@ app.directive('chatBox', function() {
 
 
       $scope.searchCannedRes = function(val) {
-        console.log($scope.companyPk);
+        //console.log($scope.companyPk);
         var hash = "#"
         if (val.includes('#')) {
           var textAfterHash = val.slice(val.indexOf(hash) + hash.length);
@@ -2276,7 +2298,7 @@ app.directive('chatBox', function() {
               url: '/api/support/cannedResponses/?text__icontains=' + textAfterHash + '&service=' + $scope.companyPk
             }).
             then(function(response) {
-              console.log(response.data);
+              //console.log(response.data);
               return response.data;
             })
           }
@@ -2287,7 +2309,7 @@ app.directive('chatBox', function() {
 
       $scope.showCountryDetails = function(uid) {
 
-        console.log($scope.data,'sssssssss');
+        //console.log($scope.data, 'sssssssss');
 
         $uibModal.open({
           templateUrl: '/static/ngTemplates/app.support.showCountryDetails.modal.html',
@@ -2297,17 +2319,17 @@ app.directive('chatBox', function() {
             locationData: function() {
               return $scope.location;
             },
-            currentUrl:function(){
+            currentUrl: function() {
               return $scope.data.currentUrl
             },
-            chatThreadData:function () {
+            chatThreadData: function() {
               return $scope.chatThreadData
             }
           },
-          controller: function($scope, locationData,currentUrl, $users,chatThreadData, $uibModalInstance, Flash) {
+          controller: function($scope, locationData, currentUrl, $users, chatThreadData, $uibModalInstance, Flash) {
             $scope.chatThreadData = chatThreadData;
             $scope.locationInfo = locationData
-            $scope.currentUrl=currentUrl
+            $scope.currentUrl = currentUrl
           },
         }).result.then(function() {
 
@@ -2322,135 +2344,132 @@ app.directive('chatBox', function() {
 
 
 
-      $scope.openDynamicFuncModal = function () {
+      $scope.openDynamicFuncModal = function() {
 
-        console.log($scope.companyPk);
-        console.log(typeof $scope.visitorForm,'kkkkkkkkkkk');
+        //console.log($scope.companyPk);
+        //console.log(typeof $scope.visitorForm, 'kkkkkkkkkkk');
 
-          $uibModal.open({
-            templateUrl: '/static/ngTemplates/app.support.dynamicForms.modal.html',
-            size: 'lg',
-            backdrop: true,
-            resolve: {
-              servicePk: function() {
-                return $scope.companyPk;
-              },
-              callTochatter: function() {
-                return $scope.callToChatter;
-              },
-              visitor : function() {
-                return $scope.visitorForm;
-              },
+        $uibModal.open({
+          templateUrl: '/static/ngTemplates/app.support.dynamicForms.modal.html',
+          size: 'lg',
+          backdrop: true,
+          resolve: {
+            servicePk: function() {
+              return $scope.companyPk;
             },
-            controller: function($scope, servicePk, $users,callTochatter , visitor, $uibModalInstance, Flash) {
-              console.log(visitor,'aaaaa');
-              $http({
-                method:'GET',
-                url:'/api/support/dynamicForms/?companyPk='+servicePk
-              }).then(function (response) {
-                console.log(response.data);
-                $scope.dynamicForms = response.data
-                $scope.formInView = $scope.dynamicForms[0];
+            callTochatter: function() {
+              return $scope.callToChatter;
+            },
+            visitor: function() {
+              return $scope.visitorForm;
+            },
+          },
+          controller: function($scope, servicePk, $users, callTochatter, visitor, $uibModalInstance, Flash) {
+            //console.log(visitor, 'aaaaa');
+            $http({
+              method: 'GET',
+              url: '/api/support/dynamicForms/?companyPk=' + servicePk
+            }).then(function(response) {
+              //console.log(response.data);
+              $scope.dynamicForms = response.data
+              $scope.formInView = $scope.dynamicForms[0];
 
-                for (let i = 0; i < $scope.dynamicForms.length; i++) {
-                  $http({
-                    method:'GET',
-                    url:'/api/support/dynamicFields/?formPk='+$scope.dynamicForms[i].pk
-                  }).then(function (response) {
-                      $scope.dynamicForms[i].fields = response.data
-                  })
-                }
-              });
-
-              $scope.setForm = function (pk, indx) {
-                $scope.formInView = $scope.dynamicForms[indx]
-              }
-
-              $scope.closeModal = function () {
-                  $uibModalInstance.dismiss()
-              }
-
-              $scope.send = function () {
-                var toSend = {}
-                for (var i = 0; i < $scope.formInView.fields.length; i++) {
-                  if ($scope.formInView.fields[i].is_required && ($scope.formInView.fields[i].value=='' || $scope.formInView.fields[i].value == undefined) ) {
-                    Flash.create('warning', $scope.formInView.fields[i].field_name + ' is required');
-                    return;
-                  }
-                  toSend[$scope.formInView.fields[i].field_name] = $scope.formInView.fields[i].value
-                }
-                console.log(toSend);
-                callTochatter(toSend);
-              }
-
-              $scope.typeahedSearch = function(query, parameter) {
-                return $http.get(parameter + query).
-                then(function(response) {
-                  return response.data.results;
-                })
-              };
-              $scope.sendMessage = function(value){
-                $scope.formTyp = true
-                $scope.visitorData={
-                  email:'',
-                  phone :'',
-                  emailMsg:'',
-                  textMsg:'',
-                  name:'',
-                  dataTyp : value
-                }
-                if(visitor.email!=undefined){
-                  $scope.visitorData.email = visitor.email
-                }
-                else{
-                    $scope.visitorData.email = ''
-                }
-                if(visitor.phoneNumber!=undefined){
-                  $scope.visitorData.phone = visitor.phoneNumber
-                }
-                else{
-                    $scope.visitorData.email = ''
-                }
-                if(visitor.name!=undefined){
-                  $scope.visitorData.name = visitor.name
-                }
-                else{
-                    $scope.visitorData.name = ''
-                }
-              }
-              $scope.sendMsg = function(){
-                if ($scope.visitorData.phone==''&&$scope.visitorData.dataTyp=='msg') {
-                  Flash.create('warning','Add Visitors Number')
-                  return
-                }
-
-                if ($scope.visitorData.email==''&&$scope.visitorData.dataTyp=='email') {
-                  Flash.create('warning','Add Visitors Email')
-                }
-
-
-                  if ($scope.visitorData.emailMsg==''&&$scope.visitorData.textMsg=='') {
-                    Flash.create('warning','Add Message')
-                    return
-                  }
+              for (let i = 0; i < $scope.dynamicForms.length; i++) {
                 $http({
-                  method: 'POST',
-                  url: '/api/support/sendMessage/',
-                  data: $scope.visitorData
-                }).
-                then(function(response) {
-                  Flash.create('success','Message Sent')
-                });
+                  method: 'GET',
+                  url: '/api/support/dynamicFields/?formPk=' + $scope.dynamicForms[i].pk
+                }).then(function(response) {
+                  $scope.dynamicForms[i].fields = response.data
+                })
+              }
+            });
+
+            $scope.setForm = function(pk, indx) {
+              $scope.formInView = $scope.dynamicForms[indx]
+            }
+
+            $scope.closeModal = function() {
+              $uibModalInstance.dismiss()
+            }
+
+            $scope.send = function() {
+              var toSend = {}
+              for (var i = 0; i < $scope.formInView.fields.length; i++) {
+                if ($scope.formInView.fields[i].is_required && ($scope.formInView.fields[i].value == '' || $scope.formInView.fields[i].value == undefined)) {
+                  Flash.create('warning', $scope.formInView.fields[i].field_name + ' is required');
+                  return;
+                }
+                toSend[$scope.formInView.fields[i].field_name] = $scope.formInView.fields[i].value
+              }
+              //console.log(toSend);
+              callTochatter(toSend);
+            }
+
+            $scope.typeahedSearch = function(query, parameter) {
+              return $http.get(parameter + query).
+              then(function(response) {
+                return response.data.results;
+              })
+            };
+            $scope.sendMessage = function(value) {
+              $scope.formTyp = true
+              $scope.visitorData = {
+                email: '',
+                phone: '',
+                emailMsg: '',
+                textMsg: '',
+                name: '',
+                dataTyp: value
+              }
+              if (visitor.email != undefined) {
+                $scope.visitorData.email = visitor.email
+              } else {
+                $scope.visitorData.email = ''
+              }
+              if (visitor.phoneNumber != undefined) {
+                $scope.visitorData.phone = visitor.phoneNumber
+              } else {
+                $scope.visitorData.email = ''
+              }
+              if (visitor.name != undefined) {
+                $scope.visitorData.name = visitor.name
+              } else {
+                $scope.visitorData.name = ''
+              }
+            }
+            $scope.sendMsg = function() {
+              if ($scope.visitorData.phone == '' && $scope.visitorData.dataTyp == 'msg') {
+                Flash.create('warning', 'Add Visitors Number')
+                return
               }
 
-            },
-          }).result.then(function() {
+              if ($scope.visitorData.email == '' && $scope.visitorData.dataTyp == 'email') {
+                Flash.create('warning', 'Add Visitors Email')
+              }
 
-          }, function(data) {
-            if (data != 'backdrop click' && data != 'escape key press') {
 
+              if ($scope.visitorData.emailMsg == '' && $scope.visitorData.textMsg == '') {
+                Flash.create('warning', 'Add Message')
+                return
+              }
+              $http({
+                method: 'POST',
+                url: '/api/support/sendMessage/',
+                data: $scope.visitorData
+              }).
+              then(function(response) {
+                Flash.create('success', 'Message Sent')
+              });
             }
-          });
+
+          },
+        }).result.then(function() {
+
+        }, function(data) {
+          if (data != 'backdrop click' && data != 'escape key press') {
+
+          }
+        });
 
       }
 
@@ -2815,8 +2834,8 @@ app.directive('chatWindow', function($users) {
         console.log('send message ');
         var fd = new FormData();
         var file = $scope.chatForm.fileToSend
-        console.log($scope.chatForm.fileToSend);
-        console.log(file);
+        //console.log($scope.chatForm.fileToSend);
+        //console.log(file);
         if (file != emptyFile) {
           $scope.status = "MF"; // contains message
           // var dataToSend = {attachment:file , user: $scope.friend.pk , read:false};

@@ -321,7 +321,7 @@ app.filter('getTime',function(){
     hours = hours ? hours : 12; // the hour '0' should be '12'
     minutes = minutes < 10 ? '0'+minutes : minutes;
     var strTime = hours + ':' + minutes + ' ' + ampm;
-    console.log(strTime);
+    // console.log(strTime);
     // var dateString = date + "-" +(month + 1) + "-" + year;
     // return dateString + ', ' + strTime
     return strTime

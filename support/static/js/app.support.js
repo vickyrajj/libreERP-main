@@ -145,7 +145,7 @@ app.controller("businessManagement.support", function($scope, $state, $users, $s
 
     function heartbeat(args) {
       if (args[0] == 'popup') {
-        console.log(args[2]);
+        //console.log(args[2]);
         alert(args[1] + " has assigned " + args[2].uid + " uid chat to you!")
         $scope.myUsers.push(args[2]);
         $scope.$apply();
@@ -248,7 +248,7 @@ app.controller("businessManagement.support", function($scope, $state, $users, $s
         method: 'GET',
         url: '/api/support/getMyUser/?getCompanyDetails=' + companyPk,
       }).then(function(response) {
-        console.log(response.data);
+        //console.log(response.data);
         resolve(response.data)
       }).catch((err) => {
         reject(err)
@@ -261,7 +261,7 @@ app.controller("businessManagement.support", function($scope, $state, $users, $s
         method: 'GET',
         url: '/api/support/customerProfile/pk=' + companyPk,
       }).then(function(response) {
-        console.log(response.data, '888888888888888888');
+        //console.log(response.data, '888888888888888888');
         resolve(response.data)
       }).catch((err) => {
         reject(err)
@@ -391,7 +391,7 @@ app.controller("businessManagement.support", function($scope, $state, $users, $s
         method: 'GET',
         url: '/api/support/getMyUser/?getNewComp=' + $scope.me.pk,
       }).then(function(response) {
-        console.log(response.data, 'Got unhamdled');
+        // console.log(response.data, 'Got unhamdled');
         $scope.myCompanies = response.data
       });
 
@@ -404,7 +404,7 @@ app.controller("businessManagement.support", function($scope, $state, $users, $s
         for (var i = 0; i < response.data.length; i++) {
 
           if ($scope.myCompanies.indexOf(response.data[i].companyPk) >= 0) {
-            console.log(response.data, "555555555555555555555");
+            // console.log(response.data, "555555555555555555555");
             $scope.newUsers.push({
               name: '',
               uid: response.data[i].uid,
@@ -540,14 +540,15 @@ app.controller("businessManagement.support", function($scope, $state, $users, $s
       index: indx
     })
     setCookie('openedChats', JSON.stringify(openedUsers), 30);
-    console.log('added index ' + indx);
+    //console.log('added index ' + indx);
   }
 
   $scope.addToChat = function(indx, uid) {
+    //console.log(indx, uid,'add to chat fn');
     addToCookie(uid, indx);
     for (var i = 0; i < $scope.chatsInView.length; i++) {
       if ($scope.myUsers[indx].uid == $scope.chatsInView[i].uid) {
-        console.log('already in chat');
+        //console.log('already in chat');
         return
       }
     }
@@ -555,28 +556,28 @@ app.controller("businessManagement.support", function($scope, $state, $users, $s
     if ($scope.chatsInView.length < 4) {
       $scope.myUsers[indx].myUserIndex = indx
       $scope.chatsInView.push($scope.myUsers[indx])
-      console.log('yess');
+      //console.log('yess');
     } else {
       $scope.myUsers[indx].myUserIndex = indx
       $scope.chatsInView.push($scope.myUsers[indx])
       $scope.chatsInView.splice(0, 1)
-      console.log('elseeee');
+      //console.log('elseeee');
     }
   }
 
   $scope.getOpenedChatFromCookie = function() {
-    console.log($scope.myUsers);
+    //console.log($scope.myUsers);
     var openedChats = getCookie('openedChats')
     if (openedChats.length == 0) {
       return
     }
     openedChats = JSON.parse(openedChats);
-    console.log(openedChats);
+    //console.log(openedChats);
     for (var i = 0; i < openedChats.length; i++) {
       for (var j = 0; j < $scope.myUsers.length; j++) {
         if ($scope.myUsers[j].uid == openedChats[i].uid) {
           if (openedChats[i].index != null) {
-            $scope.addToChat(openedChats[i].index, openedChats[i].uid)
+            $scope.addToChat(j, openedChats[i].uid)
           }
         }
       }
@@ -584,12 +585,12 @@ app.controller("businessManagement.support", function($scope, $state, $users, $s
   }
 
   $scope.chatClose = function(idx, chatThreadPk) {
-    console.log('coming in chatclose');
+    //console.log('coming in chatclose');
     var myUser = $scope.myUsers[idx];
     for (var i = 0; i < $scope.chatsInView.length; i++) {
       if (myUser.uid == $scope.chatsInView[i].uid) {
         $scope.chatsInView.splice(i, 1)
-        console.log('removing from chat');
+        //console.log('removing from chat');
       }
     }
     $scope.myUsers.splice(idx, 1)
@@ -610,7 +611,7 @@ app.controller("businessManagement.support", function($scope, $state, $users, $s
 
   $scope.patchChat = function (newUserIndx, newUid, response) {
 
-    console.log(newUserIndx, newUid, response);
+    //console.log(newUserIndx, newUid, response);
 
     var toPatch = {
       user: $scope.me.pk
@@ -671,7 +672,7 @@ app.controller("businessManagement.support", function($scope, $state, $users, $s
     var newUserIndx = indx;
     var newUid = uid;
 
-    console.log($scope.newUsers[indx]);
+    //console.log($scope.newUsers[indx]);
 
     $http({
       method: 'GET',
@@ -679,7 +680,7 @@ app.controller("businessManagement.support", function($scope, $state, $users, $s
     }).
     then(function(response) {
       var responseToPass = response
-      console.log(response.data[0].user);
+      //console.log(response.data[0].user);
       if (response.data[0].user) {
 
         connection.session.call(wamp_prefix + 'service.support.heartbeat.' + response.data[0].user, []).then(

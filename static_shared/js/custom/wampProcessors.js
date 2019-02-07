@@ -249,7 +249,7 @@ var hasAccesss=true;
           else if(args[1]=='CustmorClosedTheChat'){
             scope.myUsers[i].AudioVideoOn = true
           }else if(args[1]=='CU'){
-            console.log(args[2],'curennnnnnnnnntttttt');
+            // console.log(args[2],'curennnnnnnnnntttttt');
             scope.myUsers[i].currentUrl = args[2]
           }
           setTimeout(function() {
