@@ -29,7 +29,11 @@ import random
 from django.core.files.images import get_image_dimensions
 from tutor.models import Tutors24Profile
 import datetime
+import os
+from django.http import HttpResponse
 
+def sitemapView(request):
+    return HttpResponse(open( os.path.join(globalSettings.BASE_DIR, 'homepage' , 'extended.sitemap.xml')  ).read(), content_type='text/xml')
 
 def index(request):
     subobj = Subject.objects.all().order_by('level')
@@ -57,11 +61,25 @@ def team(request):
 
 def ncertSolutions(request):
     subobjs = Subject.objects.all().order_by('level')
-    return render(request, 'ncertSolutions.html', {"subobj":subobjs,'seoDetails':{'title':globalSettings.SEO_TITLE,'description':globalSettings.SEO_DESCRIPTION,'image':globalSettings.SEO_IMG,'width':globalSettings.SEO_IMG_WIDTH,'height':globalSettings.SEO_IMG_HEIGHT}})
+    SEODetails = {'title': '[New Syllabus] NCERT Solutions for class 6-12 for CBSE and IIT JEE | Free PDF Download',
+                  'description':'Download the 2019 NCERT Solutions based on newest guidelines from CBSE and NTA for CBSE Board exams and IIT JEE mains and advance for Free',
+                  'image':globalSettings.SEO_IMG,
+                  'width':globalSettings.SEO_IMG_WIDTH,
+                  'height':globalSettings.SEO_IMG_HEIGHT
+                  }
+    return render(request, 'ncertSolutions.html', {"subobj":subobjs,'seoDetails':SEODetails})
 
 def courses(request):
     subobjs = Subject.objects.all().order_by('level')
-    return render(request, 'discoverCourses.html', {"subobj":subobjs,'seoDetails':{'title':globalSettings.SEO_TITLE,'description':globalSettings.SEO_DESCRIPTION,'image':globalSettings.SEO_IMG,'width':globalSettings.SEO_IMG_WIDTH,'height':globalSettings.SEO_IMG_HEIGHT}})
+
+    SEODetails = {'title':'Free online course for class 10 to 12 for CBSE Board exams, IIT JEE mains and IIT JEE advance',
+                  'description':'Get most curated courses to score high in your Board exams and IIT JEE for free with videos and mock tests designed by experts',
+                  'image':globalSettings.SEO_IMG,
+                  'width':globalSettings.SEO_IMG_WIDTH,
+                  'height':globalSettings.SEO_IMG_HEIGHT
+                  }
+
+    return render(request, 'discoverCourses.html', {"subobj":subobjs,'seoDetails': SEODetails})
 
 def account(request):
     try:
