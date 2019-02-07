@@ -148,6 +148,7 @@ app.controller("businessManagement.support", function($scope, $state, $users, $s
         console.log(args[2]);
         alert(args[1] + " has assigned " + args[2].uid + " uid chat to you!")
         $scope.myUsers.push(args[2]);
+        $scope.$apply();
         // connection.session.publish(wamp_prefix + 'service.support.chat.' + args[2].uid, ['AP', $scope.me.pk], {}, {
         //   acknowledge: true
         // }).

@@ -585,7 +585,9 @@ function unsetVisitorDetails() {
 function getVisitorDetails() {
   detail = getCookie("uidDetails");
   if (detail != "") {
-    return detail
+    return JSON.parse(detail)
+  }else {
+    return ''
   }
 }
 
@@ -621,9 +623,39 @@ function setIframeToNormal(){
 document.addEventListener("DOMContentLoaded", function(event) {
 
 
-   window.CUSTOM_MESSAGE = {
-    sendCustomMessage:function (msg) {
-      sendMessage(msg,true)
+   window.CHATTER_FUNCTION = {
+    sendCustomMessage:function (msg, is_hidden) {
+      if (is_hidden==undefined) {
+        is_hidden = false;
+      }
+      sendMessage(msg,is_hidden)
+    },
+    hideChatBox:function () {
+      // alert('hide');
+      document.getElementById('mainDiv').style.display = "none";
+    },
+    displayChatBox:function () {
+      document.getElementById('mainDiv').style.display = "";
+    },
+    openChat:function () {
+      if (chatOpen) {
+        return
+      }
+      openChat()
+    },
+    closeChat:function () {
+      closeSupport.click()
+    },
+    clearCookies:function () {
+      document.cookie = encodeURIComponent("uidDetails") + "=deleted; expires=" + new Date(0).toUTCString()
+      document.cookie = encodeURIComponent("uid") + "=deleted; expires=" + new Date(0).toUTCString()
+    },
+    setVisitorDetails:function (name , phoneNumber , email) {
+      console.log(name, phoneNumber, email);
+      setVisitorDetails(name, phoneNumber, email);
+    },
+    getVisitorDetails:function () {
+      return getVisitorDetails()
     }
   }
 
@@ -756,7 +788,18 @@ document.addEventListener("DOMContentLoaded", function(event) {
               var data = JSON.parse(this.responseText)
               // attachment = data.attachment
               // console.log('attachmenttttttttttt' , attachment);
-              message = data
+              message = data;
+
+              var dontPush = false;
+              for (var j = 0; j < chat.messages.length; j++) {
+                if (chat.messages[j].pk==message.pk) {
+                  dontPush = true;
+                }
+              }
+              if (!dontPush) {
+                addMessages(message)
+              }
+
 
               // console.log(data,'ddddddddddd');
 
@@ -768,6 +811,8 @@ document.addEventListener("DOMContentLoaded", function(event) {
 
         xhttp.open('GET', '{{serverAddress}}/api/support/supportChat/' + args[1].filePk + '/'  , true);
         xhttp.send();
+
+        return;
 
       }else if (args[0]=='ML') {
         console.log('ML');
@@ -823,17 +868,19 @@ document.addEventListener("DOMContentLoaded", function(event) {
 
       // console.log('IIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIII');
 
-      setTimeout(function(){
-        var dontPush = false;
-        for (var j = 0; j < chat.messages.length; j++) {
-          if (chat.messages[j].pk==message.pk) {
-            dontPush = true;
-          }
+      // setTimeout(function(){
+      //
+      // }, 1500);
+
+      var dontPush = false;
+      for (var j = 0; j < chat.messages.length; j++) {
+        if (chat.messages[j].pk==message.pk) {
+          dontPush = true;
         }
-        if (!dontPush) {
-          addMessages(message)
-        }
-      }, 1500);
+      }
+      if (!dontPush) {
+        addMessages(message)
+      }
 
 
 
@@ -978,7 +1025,7 @@ function createChatDiv() {
 
 
   var body = document.getElementsByTagName("BODY")[0];
-  var mainDiv = document.createElement("mainDiv");
+  var mainDiv = document.createElement("div");
   mainDiv.id="mainDiv"
 
   mainDiv.innerHTML =
@@ -3109,7 +3156,7 @@ function addExitConfirmation() {
                   '<div style="clear: both; float:left; background-color:#f6f6f6; padding:5px 10px;margin:8px; border-radius:0px 20px 20px 20px; box-sizing:border-box;max-width:94%;">'+
                      msgDiv+
                   '</div> '+
-                  '<div style="clear: both; float:left; padding:0px 10px; font-size:9px !important;">'+ message.timeDate +'</div>'+
+                  '<div style="clear: both; float:left; padding:0px 10px 5px 10px; font-size:9px !important;">'+ message.timeDate +'</div>'+
                 '</div> '
         return msgHtml
       }
@@ -3432,7 +3479,7 @@ createActivity()
                 dontPush = true;
               }
             }
-            if (!dontPush) {
+            if (!dontPush && !is_hidden) {
               var div = document.createElement("div");
               div.className = "messageOpacity"
               div.innerHTML = messageDiv(JSON.parse(this.responseText))

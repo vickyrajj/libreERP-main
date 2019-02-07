@@ -1152,7 +1152,7 @@ class EmailChat(APIView):
         emailAddr.append(request.data['email'])
         chatThreadObj = ChatThread.objects.filter(uid=request.data['uid'])[0]
         chatStarted= chatThreadObj.created
-        sObj = SupportChat.objects.filter(uid = request.data['uid'])
+        sObj = SupportChat.objects.filter(uid = request.data['uid'], is_hidden = False )
         visitor = Visitor.objects.filter(uid = request.data['uid'])
 
         try:
