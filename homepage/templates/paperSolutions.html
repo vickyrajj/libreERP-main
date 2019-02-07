@@ -48,16 +48,19 @@
     }
   </style>
   <!-- <a href="/{{blogobj.shortUrl}}/{{quesobj.name.split|join:'-'}}/practise/"></a> -->
+  {% if request.user.is_authenticated %}
   {% verbatim %}
   <div ng-controller="startexam">
     <div class="col-md-12 text-right" style="margin-top:3em">
       <span class="btn-style1" ng-click='startexam()' style="cursor:pointer">Start Exam</span>
     </div>
-    <!-- <div class="col-md-12 text-right" style="margin-top:3em" ng-if="data==0">
-      <a href="{{url}}"><span class="btn-style1" style="cursor:pointer">Start Exam</span></a>
-    </div> -->
   </div>
   {% endverbatim %}
+  {% else %}
+  <div class="col-md-12 text-right" style="margin-top:3em">
+    <a href="/signin"><span class="btn-style1" style="cursor:pointer">Log In to Start Exam</span></a>
+  </div>
+  {% endif %}
   <div class="col-md-12">
     <div class="col-md10 col-md-offset-1">
       <div class="row">

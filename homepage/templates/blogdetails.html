@@ -18,7 +18,12 @@
   <div class="container-fluid blogContent">
     <div class="row">
       <div class="col-md-8">
-        {{blogobj.source|safe}}
+        <div>
+          {{blogobj.source|safe}}
+        </div>
+        <div style="margin-top:2em;">
+          {% include "forum.html" %}
+        </div>
       </div>
       <div class="col-md-4 blogUpdates">
         <div class="bottomLine" style="padding:0 15px;">

@@ -127,7 +127,7 @@ def blogDetails(request, blogname):
         subTopics = Topic.objects.filter(subject=sub)
         refbooklen = len(refbookobjs)
         noteslen = len(noteobj)
-        forumdata = ForumThread.objects.filter(verified=True).annotate(clicked=Value(0, output_field=IntegerField()))
+        forumdata = ForumThread.objects.filter(verified=True).order_by('-created')
         print forumdata,'lllllllllllllllllll'
         r = lambda: random.randint(150,250)
         color = ('#%02X%02X%02X' % (r(),r(),r()))
@@ -294,12 +294,14 @@ def blogDetails(request, blogname):
             blogobj.created = blogobj.created.replace(microsecond=0)
             recentBlogs = list(blogPost.objects.filter(contentType='article').order_by('-created').values())[0:5]
             data['user'] = us
+            data['forumData'] = ForumThread.objects.filter(verified=True).order_by('-created')
+            data['blogname'] = blogname
             data['recentBlogs'] = recentBlogs
             return render(request, 'blogdetails.html', data)
         elif blogobj.contentType == 'book':
             book = Book.objects.get(pk=blogobj.header)
             sectionobj = Section.objects.filter(book = book.pk)
-            forumData = ForumThread.objects.filter(verified=True).annotate(clicked=Value(0, output_field=IntegerField()))
+            forumData = ForumThread.objects.filter(verified=True).order_by('-created')
             data['book'] = book
             data['sectionobj'] = sectionobj
             data['forumData'] = forumData
@@ -383,6 +385,8 @@ def blogDetails(request, blogname):
 
         return render(request, 'bookContent.html', data)
 
+    return render(request, 'notFound404.html', data, status=404)
+
 
 def blog(request):
     blogObj = blogPost.objects.filter(contentType='article',state='published').order_by('-created')
@@ -439,6 +443,7 @@ def blogAnotherView(request):
     print len(allBlogs),'ddddddd'
     recentBlogs = allBlogs[0:5]
     allBlogs = allBlogs[(page-1)*pagesize:(page*pagesize)]
+
 
     print len(allBlogs),'ddddddd'
 
