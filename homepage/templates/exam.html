@@ -13,7 +13,7 @@
 
     <div class="col-md-9" style="min-height:100vh;padding:0;">
       <div class="text-right timer " >
-        <span style="padding-right: 1em;"><b>Time Left: {{theTime}}:{{timeinsec}}</b></span>
+        <span style="padding-right: 1em;"><b>Time Left:{{(theTime.toString().length == 1 ?'0'+theTime.toString() :theTime)}}:{{(timeinsec.toString().length == 1 ?'0'+timeinsec.toString() :timeinsec)}}  </b></span>
       </div>
       <div class="maindiv">
         <div class="text-center">

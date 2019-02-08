@@ -141,11 +141,11 @@
       <div class="col-md-4 hidden-xs hidden-sm loged_user_div">
         <a href="/account/" style="text-decoration:none;color:#fff;">
           <div class="container-fluid">
-            <div class="admin_wrapper_div" style="background-color:#8b5dab;width:230px;border-top-left-radius:30px;border-top-right-radius:30px;border-bottom-left-radius:20px;border-bottom-right-radius:20px;">
-              <div class="w_left" style="width:50px;height:50px; border-radius:50%;float:left;position:relative">
+            <div class="" style="background-color:#8b5dab;width:230px;border-top-left-radius:30px;border-top-right-radius:30px;border-bottom-left-radius:20px;border-bottom-right-radius:20px;">
+              <div class="" style="width:50px;height:50px; border-radius:50%;float:left;position:relative">
                 <img src="/media/{{request.user.profile.displayPicture}}" style="cursor:pointer;height:40px;width:40px; border-radius:50%;position:absolute;top:4px;left:10px;">
               </div>
-              <div class="w_right" style="max-width:230px;height:50px;background-color:#a0e6f5;border-radius:50px;">
+              <div class="" style="max-width:230px;height:50px;background-color:#a0e6f5;border-radius:50px;">
                 <h5 class="text-center" style="font-size:20px;margin-top:0px;overflow:hidden;padding-top:10px;"><b>{{request.user.first_name}}</b> </h5>
               </div>
               <div class="text-center">
@@ -156,17 +156,32 @@
         </a>
       </div>
       {% endif %}
-      <div class="col-md-12">
+      <div class="col-md-4">
         {% if not request.user.is_authenticated %}
         <a style="cursor:pointer;" class="btn btn-primary pull-right sign_btn" href="/signin/">sign in</a>
         {% endif %}
-        <div class="col-md-12 hidden-xs hidden-sm"style="padding-top:30px;padding-bottom:20px;">
-          <a href="/media/{{sectionobj.shortUrl}}.pdf" class="btn btn-success pull-right down_btn" target="_blank">Download {{sectionobj.title}} Solutions In PDF</a>
+        <div class="col-md-12"style="padding-top:30px;padding-bottom:20px;">
+          <a href="/media/{{sectionobj.shortUrl}}.pdf" style="text-decoration:none;color:#fff;">
+            <div class="container-fluid" style="position:relative;">
+              <div class="down_wrapper_div">
+                <div class="w_right b_cont">
+                  <div class="w_left bo_cont">
+                    <img src="/static/images/24tut/pdf.png" style="cursor:pointer;width:100%; border-radius:50%;position:absolute;top:0px;left:0px;">
+                  </div>
+                  <h5 class="text-center"style="font-size:15px;margin-top:0px;padding-top:10px;word-wrap:wrap;"><b>Download {{book.title}} Solutions In PDF</b> </h5>
+                  <div class="pull-right down_icon bo_icon">
+                    <i class="fa fa-download bo_fa" aria-hidden="true"></i>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </a>
+          <!-- <a href="/media/{{sectionobj.shortUrl}}.pdf" class="btn btn-success pull-right down_btn" target="_blank">Download {{sectionobj.title}} Solutions In PDF</a> -->
         </div>
       </div>
-      <div class="col-xs-12 hidden-lg hidden-md">
+      <!-- <div class="col-xs-12 hidden-lg hidden-md">
         <a href="/media/{{sectionobj.shortUrl}}.pdf" class="btn btn-success" target="_blank" style="white-space: normal !important;">Download {{sectionobj.title}} Solutions In PDF</a>
-      </div>
+      </div> -->
     </div>
     <div class="col-md-12 q_main_div">
       <div class="container-fluid q_container" ng-init="initiateMath()">

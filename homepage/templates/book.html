@@ -23,7 +23,7 @@
             </tr>
           </table>
         </div>
-        <div class="col-md-3 col-xs-12 col-sm-12 smdevice rightborder">
+        <div class="col-md-3 col-xs-12 col-sm-12 smdevice">
           <table>
             <tr>
               <td style="width:50%"> <i class="fa fa-star " style="color:#f4c810" aria-hidden="true"></i>
@@ -35,19 +35,25 @@
             </tr>
           </table>
         </div>
-        <!-- <div class="col-md-4 col-sm-12 col-xs-12 smdevice">
-          <table class="alignintable">
-            <tr>
-              <td class="tablehead"><span> Share this course:</span></td>
-              <td><i class="fa fa-facebook" aria-hidden="true"></i></td>
-              <td><i class="fa fa-twitter" aria-hidden="true"></i></td>
-              <td><i class="fa fa-linkedin" aria-hidden="true"></i></td>
-              <td style="width:8%;"><i class="fa fa-youtube" aria-hidden="true"></i></td>
-            </tr>
-          </table>
-        </div> -->
+        <div class="col-md-7 col-xs-12 hidden-xs hidden-md">
+          <a href="/media/{{sectionobj.shortUrl}}.pdf" style="text-decoration:none;color:#fff;">
+            <div class="container-fluid" style="position:relative;">
+              <div class="admin_wrapper_div">
+                <div class="w_right">
+                  <div class="w_left">
+                    <img src="/static/images/24tut/pdf.png" style="cursor:pointer;width:100%; border-radius:50%;position:absolute;top:0px;left:0px;">
+                  </div>
+                  <h5 class="text-center" style="font-size:20px;margin-top:0px;padding-top:10px;word-wrap:wrap;"><b>Download {{book.title}} Solutions In PDF</b> </h5>
+                  <span class="pull-right down_icon">
+                    <i class="fa fa-download fa-3x" aria-hidden="true"></i>
+                  </span>
+                </div>
+              </div>
+            </div>
+          </a>
+        </div>
       </div>
-      <div class="row">
+      <div class="row" style="margin-top:20px;">
         <div class="col-md-12">
           <h3>Description</h3>
           <p>{{book.description}}</p>
@@ -59,15 +65,17 @@
         {% if book.dp %}
         <img src="{{book.dp.url}}" class="tb_image">
         <br><br>
-        <a href="/media/{{bookUrl}}.pdf" class="btn btn-success" target="_blank">Download {{book.title}} Solutions In PDF</a>
+        <!-- <a href="/media/{{bookUrl}}.pdf" class="btn btn-success" target="_blank">Download {{book.title}} Solutions In PDF</a> -->
         {% endif %}
       </div>
     </div>
   </div>
 </div>
 <div class="container-fluid" style="background-color:#FCC300;min-height:10vh;  position:relative;padding-bottom: 2em;">
-  {% verbatim %}
   <div class="col-md-12">
+    <div class="col-md-6 clickchange hidden-lg hidden-md">
+      <span style="font-size:25px;"><a href="/media/{{bookUrl}}.pdf" target="_blank">Download {{book.title}} Solutions In PDF</a></span>
+    </div>
     <div class="col-md-6 clickchange">
       <span style="font-size:25px;"><b>Solutions</b></span>
     </div>
@@ -75,7 +83,6 @@
       <span style="font-size:25px;"><b> Forum</b></span>
     </div>
   </div>
-  {% endverbatim %}
 </div>
 <div class="container-fluid">
   <div class="col-md-12">
@@ -89,8 +96,7 @@
       </div>
     </div>
     <div class="col-md-6 col-xs-12" style="min-height:60vh;padding:0px;">
-      <div class="head" style="background-color:#FCC300;min-height:10vh;  position:relative;padding-bottom: 2em;padding-top: 0.1em;width: 120%;
-margin-left: -2.2em;">
+      <div class="head" style="background-color:#FCC300;min-height:10vh;  position:relative;padding-bottom: 2em;padding-top: 0.1em;width: 120%;margin-left: -2.2em;">
         {% verbatim %}
         <div>
           <div class=" clickchange ">
@@ -99,7 +105,9 @@ margin-left: -2.2em;">
         </div>
         {% endverbatim %}
       </div>
-       {% include "forum.html" %} 
+      <div style="margin-bottom: 1em;">
+        {% include "forum.html" %}
+      </div>
     </div>
   </div>
 </div>

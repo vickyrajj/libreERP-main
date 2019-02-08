@@ -93,7 +93,7 @@
       <div class="container text-center" style="height:500px;">
           <div ng-repeat="a in subtitle" style="display:inline-block;" class="adjustwidth">
             <span style="font-size:20px;padding:0.4em;" class="leftalign"><b>{{a.title}}</b></span>
-            <canvas id="pie" class="chart chart-pie" chart-data="[a.correct?a.correct:'0',a.incorrect?a.correct:'0']" chart-labels="labels1" chart-colours="colors" style="margin-top:1em;">
+            <canvas id="pie" class="chart chart-pie" chart-data="[a.correct?a.correct:'0',a.incorrect?a.incorrect:subcount[$index].count]" chart-labels="labels1" chart-colours="colors" style="margin-top:1em;">
             </canvas>
           </div>
       </div>
