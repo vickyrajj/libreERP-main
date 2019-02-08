@@ -2671,6 +2671,9 @@ hr {
   .q_div {
     left: 393px;
   }
+  .tips:before {
+    bottom: -34px;
+  }
 
   /* for hd screens ends here.... */
 }
