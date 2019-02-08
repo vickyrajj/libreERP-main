@@ -122,8 +122,8 @@
   <div class="col-md-12" style="margin-bottom:20px;">
     <div class="row" ng-repeat="msg in fullChatData">
       <!-- <h3>{{msg.message}}</h3> -->
-      <div ng-if="!msg.logs" class="row container-fluid" style="float:{{msg.sentByAgent ? 'right; background-color:#e7e7e7;color:black ':'left; background-color:#0075b1;color:white;'}} ; {{msg.is_hidden ? 'background-color:#5252e3 !important; color:#fff;!important':''}} padding:10px;margin:8px;border-radius:{{msg.sentByAgent ? '20px 0px 20px 20px':'0px 20px 20px 20px'}};">
-      <p ng-if="msg.message.length>0 && msg.attachmentType != 'youtubeLink'" style="word-break: break-all !important;" ><h5>{{msg.message}}</h5></p>
+      <div ng-if="!msg.logs" class="row container-fluid" style="float:{{msg.sentByAgent ? 'right; background-color:#e7e7e7;color:black ':'left; background-color:#0075b1;color:white;'}} ; {{msg.is_hidden ? 'background-color:#5252e3 !important; color:#fff !important;':''}} padding:5px 10px;margin:8px;border-radius:{{msg.sentByAgent ? '20px 0px 20px 20px':'0px 20px 20px 20px'}};">
+      <p ng-if="msg.message.length>0 && msg.attachmentType != 'youtubeLink'" style="word-break: break-all !important;" > <span ng-bind-html="(msg.message | linkInText)"></span> </p>
       <!-- <p ng-if="msg.message.length>0 && msg.attachmentType != 'youtubeLink'" style="word-break: break-all !important;" ><h5>{{msg.message}}</h5></p> -->
        <img ng-if="msg.attachmentType == 'image' ||msg.attachmentType == 'instructionImage'" ng-src="{{msg.attachment}}" style="width:250px;" ng-click="imageClicked(msg.attachment)">
        <video ng-if="msg.attachmentType == 'video'" width="280" height="240" ng-src="{{msg.attachment}}" controls></video>

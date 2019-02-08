@@ -1259,8 +1259,8 @@ class SendFeedBackRequest(APIView):
                         emailAddr = [visitor.email]
                         ctx = {
                             'heading' : "Feedback Form",
-                            'msg' : "Your feedback is important for us",
-                            'details': 'Please click on the below link to submit your feedback',
+                            'msg' : "Thank you for contacting" + str(companyName),
+                            'details': 'We value your feedback. Please spare 2 minutes to rate our service at',
                             'link' : link
                         }
 

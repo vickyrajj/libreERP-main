@@ -704,7 +704,7 @@ app.controller("businessManagement.sessionHistory", function($scope, $state, $us
       then(function(response) {
         $scope.reviewData = response.data.data
         console.log($scope.reviewData , " Review data");
-        for (let i = 0; i < $scope.archivedData.length; i++) {
+        for (let i = 0; i < $scope.reviewData.length; i++) {
           if($scope.reviewData[i].location){
             $scope.reviewData[i].location=$scope.setLocationData($scope.reviewData[i].location)
           }
