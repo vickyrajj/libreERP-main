@@ -266,7 +266,7 @@ app.controller('exam', function($scope, $http, $timeout, $interval, $uibModal, $
         $scope.test[val].status = 'notanswered'
       }
     }
-
+    console.log($scope.theTime,'timeeee');
     $timeout(function() {
       $scope.subtitle = []
       for (var i = 0; i < $scope.sublist.length; i++) {
@@ -379,7 +379,7 @@ app.controller('exam', function($scope, $http, $timeout, $interval, $uibModal, $
 
 
       })
-    }, 5000);
+    }, $scope.timelimit.time*60000);
 
     $scope.finish = function(answerlist, questions) {
       $scope.subtitle = []
@@ -600,6 +600,9 @@ app.controller('examresults', function($scope, $http, $timeout, $interval, $uibM
     } else {
       $scope.timecount = []
     }
+    $scope.timeSpent =response.data[response.data.length - 1].sessionTime;
+    
+
 
   });
   $scope.sublist = []
