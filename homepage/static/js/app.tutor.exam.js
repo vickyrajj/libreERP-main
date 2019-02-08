@@ -266,7 +266,7 @@ app.controller('exam', function($scope, $http, $timeout, $interval, $uibModal, $
         $scope.test[val].status = 'notanswered'
       }
     }
-    console.log($scope.theTime,'timeeee');
+    console.log($scope.theTime, 'timeeee');
     $timeout(function() {
       $scope.subtitle = []
       for (var i = 0; i < $scope.sublist.length; i++) {
@@ -373,13 +373,30 @@ app.controller('exam', function($scope, $http, $timeout, $interval, $uibModal, $
           }
         }).then(function(response) {
 
-           window.location.href = '/testresults/'
+          window.location.href = '/testresults/'
 
         });
 
 
       })
-    }, $scope.timelimit.time*60000);
+    }, $scope.timelimit.time * 60000);
+
+    $scope.showinstrctions = function() {
+      $uibModal.open({
+        templateUrl: '/static/ngTemplates/examinstructions.html',
+        size: 'md',
+        backdrop: true,
+        resolve: {
+
+        },
+
+        controller: function($scope, $uibModalInstance) {
+          $scope.closeModal = function() {
+            $uibModalInstance.dismiss('cancel');
+          }
+        },
+      })
+    }
 
     $scope.finish = function(answerlist, questions) {
       $scope.subtitle = []
@@ -600,7 +617,7 @@ app.controller('examresults', function($scope, $http, $timeout, $interval, $uibM
     } else {
       $scope.timecount = []
     }
-  
+
 
 
 
