@@ -107,7 +107,6 @@
 
   <div class="col-md-9 col-md-offset-3 solution_div" style="background-color:#e8e8e8;">
 
-
     <div class="col-md-12 top_header">
       <div class="hidden-md hidden-lg" style="padding-top:10px;">
         {% if request.user.is_authenticated %}
@@ -130,7 +129,6 @@
           <i class="fa fa-bars" aria-hidden="true"></i>
         </button>
       </div>
-
       <div class="col-md-2 mobileview">
         <img src="/media/{{book.dp}}" class="tb_image">
       </div>
@@ -140,26 +138,35 @@
         <h3>{{book.author}}</h3>
       </div>
       {% if request.user.is_authenticated %}
-      <div class="col-md-4 hidden-xs hidden-sm" style="padding:20px 20px 20px 150px;">
-        <div class="container-fluid wrapper">
-          <div class="admin_wrapper_div" style="background-color:#8b5dab;width:230px;border-top-left-radius:30px;border-top-right-radius:30px;border-bottom-left-radius:10px;border-bottom-right-radius:10px;">
-            <div class="w_left" style="width:50px;height:50px; border-radius:50%;float:left;position:relative">
-              <img src="/media/{{request.user.profile.displayPicture}}" style="cursor:pointer;height:40px;width:40px; border-radius:50%;position:absolute;top:4px;left:10px;">
-            </div>
-            <div class="w_right" style="max-width:230px;height:50px;background-color:#a0e6f5;border-radius:50px;">
-              <h5 class="text-center" style="font-size:20px;margin-top:0px;overflow:hidden;padding-top:10px;"><b>{{request.user.first_name}}</b> </h5>
-            </div>
-            <div class="text-center">
-              <h5 style="font-size:20px;padding-bottom:8px;">Balance 01:00 Hrs</h5>
+      <div class="col-md-4 hidden-xs hidden-sm loged_user_div">
+        <a href="/account/" style="text-decoration:none;color:#fff;">
+          <div class="container-fluid">
+            <div class="admin_wrapper_div" style="background-color:#8b5dab;width:230px;border-top-left-radius:30px;border-top-right-radius:30px;border-bottom-left-radius:20px;border-bottom-right-radius:20px;">
+              <div class="w_left" style="width:50px;height:50px; border-radius:50%;float:left;position:relative">
+                <img src="/media/{{request.user.profile.displayPicture}}" style="cursor:pointer;height:40px;width:40px; border-radius:50%;position:absolute;top:4px;left:10px;">
+              </div>
+              <div class="w_right" style="max-width:230px;height:50px;background-color:#a0e6f5;border-radius:50px;">
+                <h5 class="text-center" style="font-size:20px;margin-top:0px;overflow:hidden;padding-top:10px;"><b>{{request.user.first_name}}</b> </h5>
+              </div>
+              <div class="text-center">
+                <h5 style="font-size:20px;padding-bottom:8px;">Balance {{balanceForm.hours1}}{{balanceForm.hours2}}:{{balanceForm.minutes1}}{{balanceForm.minutes2}} Hrs</h5>
+              </div>
             </div>
           </div>
-        </div>
+        </a>
       </div>
       {% endif %}
-      {% if not request.user.is_authenticated %}
-      <a style="cursor:pointer;" class="btn btn-primary pull-right sign_btn" href="/signin/">sign in</a>
-      {% endif %}
-        <a href="/media/{{sectionobj.shortUrl}}.pdf" class="btn btn-success pull-right down_btn" target="_blank">Download {{sectionobj.title}} Solutions In PDF</a>
+      <div class="col-md-12">
+        {% if not request.user.is_authenticated %}
+        <a style="cursor:pointer;" class="btn btn-primary pull-right sign_btn" href="/signin/">sign in</a>
+        {% endif %}
+        <div class="col-md-12 hidden-xs hidden-sm"style="padding-top:30px;padding-bottom:20px;">
+          <a href="/media/{{sectionobj.shortUrl}}.pdf" class="btn btn-success pull-right down_btn" target="_blank">Download {{sectionobj.title}} Solutions In PDF</a>
+        </div>
+      </div>
+      <div class="col-xs-12 hidden-lg hidden-md">
+        <a href="/media/{{sectionobj.shortUrl}}.pdf" class="btn btn-success" target="_blank" style="white-space: normal !important;">Download {{sectionobj.title}} Solutions In PDF</a>
+      </div>
     </div>
     <div class="col-md-12 q_main_div">
       <div class="container-fluid q_container" ng-init="initiateMath()">
