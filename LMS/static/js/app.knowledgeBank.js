@@ -6,19 +6,29 @@ app.config(function($stateProvider) {
   });
 });
 
-// app.controller("home.LMS.knowledgeBank.book.explore", function($scope,$timeout,$filter, $state, $users, $stateParams, $http, Flash) {
-//   $scope.bookData = $scope.bookDetails
-//   console.log('ccccccccccccc'.$scope.bookData);
-// })
-
 app.controller("home.LMS.knowledgeBank.book.explore", function($scope, $state, $users, $stateParams, $http, Flash) {
   $scope.bookData = $scope.bookDetails
+
+
+  $http({
+    method: 'GET',
+    url: '/api/LMS/section/?book=' + $scope.tab.data.pk,
+  }).
+  then(function(response) {
+    $scope.sectionsData = response.data;
+  })
+
+
   $scope.showQues = function(idx) {
-    $scope.sectionQuestion = $scope.bookData.sections[idx].questions
-    console.log('calllllllllllledddd this');
-    // $scope.view.typ = 'questions'
+
+    $http({
+      method: 'GET',
+      url: '/api/LMS/question/?bookSection=' + $scope.sectionsData[idx].pk,
+    }).
+    then(function(response) {
+      $scope.sectionQuestion = response.data;
+    })
   }
-  console.log('ccccccccccccc', $scope.bookData);
 
   $scope.editQuestion = function(idx) {
     $scope.$parent.$parent.$parent.$parent.$parent.$parent.addTab({
@@ -99,7 +109,7 @@ app.controller("home.LMS.knowledgeBank", function($scope, $timeout, $filter, $st
 
   $scope.booksConfig = {
     views: booksViews,
-    url: '/api/LMS/book/',
+    url: '/api/LMS/bookLite/',
     searchField: 'ques',
     deletable: true,
     itemsNumPerView: [16, 32, 48],
@@ -137,30 +147,16 @@ app.controller("home.LMS.knowledgeBank", function($scope, $timeout, $filter, $st
   $scope.tableActionBooks = function(target, action, mode) {
     console.log(target, action, mode);
     console.log($scope.data.booksTableData);
-
     for (var i = 0; i < $scope.data.booksTableData.length; i++) {
       if ($scope.data.booksTableData[i].pk == parseInt(target)) {
         if (action == 'details') {
           var title = 'Details :';
           var appType = 'BookExplorer';
         }
+        console.log('now get sectionsssss for this -----------book', target);
+
         $scope.bookDetails = $scope.data.booksTableData[i]
-        $scope.bookDetails.sections = $filter('orderBy')($scope.data.booksTableData[i].sections, 'sequence')
-        console.log();
-        for (var j = 0; j < $scope.bookDetails.sections.length; j++) {
-          console.log(j);
-          $http({
-            method: 'GET',
-            url: '/api/LMS/question/?bookSection=' + $scope.bookDetails.sections[j].pk,
-          }).
-          then((function(j) {
-            return function(response) {
-              $scope.bookDetails.sections[j].questions = response.data
-            }
-          })(j))
-        }
-        console.log($scope.bookDetails);
-        // $timeout(function(){
+  
         $scope.addTab({
           title: title + $scope.bookDetails.pk,
           cancel: true,
@@ -171,7 +167,6 @@ app.controller("home.LMS.knowledgeBank", function($scope, $timeout, $filter, $st
           },
           active: true
         })
-        // },1000);
       }
     }
 
@@ -201,10 +196,6 @@ app.controller("home.LMS.knowledgeBank", function($scope, $timeout, $filter, $st
       $scope.tabs.push(input)
     }
   }
-
-
-
-
 
 
 });
@@ -278,9 +269,15 @@ app.controller("home.LMS.knowledgeBank.form", function($scope, $state, $users, $
       $scope.mode = 'edit';
 
 
-      $scope.form.quesParts = $scope.form.quesParts.sort(function(a, b){return a.sequence - b.sequence});
-      $scope.form.solutionParts = $scope.form.solutionParts.sort(function(a, b){return a.sequence - b.sequence});
-      $scope.form.optionsParts = $scope.form.optionsParts.sort(function(a, b){return a.sequence - b.sequence});
+      $scope.form.quesParts = $scope.form.quesParts.sort(function(a, b) {
+        return a.sequence - b.sequence
+      });
+      $scope.form.solutionParts = $scope.form.solutionParts.sort(function(a, b) {
+        return a.sequence - b.sequence
+      });
+      $scope.form.optionsParts = $scope.form.optionsParts.sort(function(a, b) {
+        return a.sequence - b.sequence
+      });
 
     })
 
@@ -441,7 +438,7 @@ app.controller("home.LMS.knowledgeBank.form", function($scope, $state, $users, $
     if (f.answer != null && f.answer.length > 0) {
       toSend.objectiveAnswer = f.answer;
     }
-    console.log(toSend.objectiveAnswer,'answerrr');
+    console.log(toSend.objectiveAnswer, 'answerrr');
 
 
     if ($scope.form.typ == 'book') {

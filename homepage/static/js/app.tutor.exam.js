@@ -600,8 +600,8 @@ app.controller('examresults', function($scope, $http, $timeout, $interval, $uibM
     } else {
       $scope.timecount = []
     }
-    $scope.timeSpent =response.data[response.data.length - 1].sessionTime;
-    
+  
+
 
 
   });

@@ -41,6 +41,9 @@
           <div ng-if="tab.app == 'paperGroupEditor'">
               <div ng-include="'/static/ngTemplates/app.LMS.evaluation.paper.group.form.html'"></div>
           </div>
+          <div ng-if="tab.app == 'paperGroupDetails'">
+              <div ng-include="'/static/ngTemplates/app.LMS.evaluation.paper.group.details.html'"></div>
+          </div>
       </uib-tab>
   </uib-tabset>
 </div>

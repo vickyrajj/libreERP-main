@@ -90,7 +90,7 @@ class TopicLiteSerializer(serializers.ModelSerializer):
 class BookLiteSerializer(serializers.ModelSerializer):
     class Meta:
         model = Book
-        fields = ('pk'  , 'title')
+        fields = ('pk'  , 'title', 'dp', 'author','volume')
 
 class SectionLiteSerializer(serializers.ModelSerializer):
     book = BookLiteSerializer(many = False , read_only = True)

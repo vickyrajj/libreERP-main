@@ -45,6 +45,13 @@ class BookViewSet(viewsets.ModelViewSet):
     filter_backends = [DjangoFilterBackend]
     filter_fields = ['title']
 
+class BookLiteViewSet(viewsets.ModelViewSet):
+    permission_classes = (permissions.IsAuthenticated, isAdmin, )
+    serializer_class = BookLiteSerializer
+    queryset = Book.objects.all()
+    filter_backends = [DjangoFilterBackend]
+    filter_fields = ['title']
+
 class QPartViewSet(viewsets.ModelViewSet):
     permission_classes = (permissions.IsAuthenticated, isAdmin, )
     serializer_class = QPartSerializer
@@ -61,6 +68,7 @@ class PaperQuesViewSet(viewsets.ModelViewSet):
     permission_classes = (permissions.IsAuthenticated,)
     serializer_class = PaperSerializer
     queryset = PaperQues.objects.all()
+
 
 class DownloadQuesPaper(APIView):
     permission_classes = (permissions.AllowAny, )
@@ -221,7 +229,7 @@ class PaperViewSet(viewsets.ModelViewSet):
     serializer_class = PaperSerializer
     queryset = Paper.objects.all()
     filter_backends = [DjangoFilterBackend]
-    filter_fields = ['name']
+    filter_fields = ['name','group']
 
 class PaperGroupViewSet(viewsets.ModelViewSet):
     permission_classes = (permissions.IsAuthenticated,)

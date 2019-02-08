@@ -45,7 +45,7 @@ app.controller('home.LMS.evaluation', function($scope, $http, $aside, $state, Fl
 
   $scope.tableAction = function(target, action, mode) {
     console.log(target, action, mode);
-    console.log($scope.data.tableData);
+    console.log($scope.data.tableData,'pppppppappppperssss');
 
     for (var i = 0; i < $scope.data.tableData.length; i++) {
       if ($scope.data.tableData[i].pk == parseInt(target)) {
@@ -56,7 +56,6 @@ app.controller('home.LMS.evaluation', function($scope, $http, $aside, $state, Fl
           var title = 'Paper Details :';
           var appType = 'paperExplorer';
         }
-
 
         $scope.addTab({
           title: title + $scope.data.tableData[i].pk,
@@ -74,6 +73,36 @@ app.controller('home.LMS.evaluation', function($scope, $http, $aside, $state, Fl
 
   }
 
+
+  $scope.editPaperGroupDetails = function (pk, action) {
+
+    for (var i = 0; i < $scope.data.tableData.length; i++) {
+      if ($scope.data.tableData[i].pk == parseInt(pk)) {
+        if (action == 'edit') {
+          var title = 'Edit Paper :';
+          var appType = 'paperEditor';
+        } else if (action == 'details') {
+          var title = 'Paper Details :';
+          var appType = 'paperExplorer';
+        }
+
+        $scope.addTab({
+          title: title + $scope.data.tableData[i].pk,
+          cancel: true,
+          app: appType,
+          data: {
+            pk: parseInt(pk),
+            index: i,
+            paper: $scope.data.tableData[i]
+          },
+          active: true
+        })
+      }
+    }
+
+
+  }
+
   $scope.tableActionPaperGroup = function(target, action, mode) {
     console.log(target, action, mode, '-----------tattta acccc mmmm');
     console.log($scope.data.paperGroupTableData, '-------data');
@@ -88,6 +117,13 @@ app.controller('home.LMS.evaluation', function($scope, $http, $aside, $state, Fl
           var appType = 'paperGroupDetails';
         }
         $scope.paperGroupData = $scope.data.paperGroupTableData[i]
+        $http({
+          method: 'GET',
+          url: '/api/LMS/paper/?group=' + $scope.paperGroupData.pk,
+        }).
+        then(function(response) {
+          $scope.pGrpData = response.data
+        })
         $scope.addTab({
           title: title + $scope.data.paperGroupTableData[i].title,
           cancel: true,

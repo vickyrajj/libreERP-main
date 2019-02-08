@@ -1979,6 +1979,17 @@ hr {
   color: #fff;
 }
 
+.leftSection_div {
+  background-image: linear-gradient(-179deg, #0b2674, #edae2c);
+  min-height: 96vh;
+  position: fixed;
+  padding: 0;
+  left: 0;
+  z-index: 50;
+  color: #fff;
+  width: 400px;
+}
+
 .q_div {
   background-image: linear-gradient(-179deg, #0b2674, #edae2c);
   /* background-color: #223657; */
@@ -1987,7 +1998,7 @@ hr {
   padding-top: 20px;
   position: fixed;
   z-index: 50;
-  left: 21%;
+  left: 325px;
 }
 
 .solution_div {
@@ -2011,18 +2022,7 @@ hr {
 .tb_image {
   width: 50%;
   border-radius: 6px;
-  padding-top: 10px;
-}
-
-.leftSection_div {
-  background-image: linear-gradient(-179deg, #0b2674, #edae2c);
-  min-height: 96vh;
-  position: fixed;
-  padding: 0;
-  left: 0;
-  z-index: 50;
-  color: #fff;
-  width: 402px;
+  padding-top: 30px;
 }
 
 .heading_24 h1 {
@@ -2061,10 +2061,11 @@ hr {
 
 .top_header {
   position: relative;
-  background-size: 100%;
-  min-height: 20vh;
+  background-size: 100% 100%;
+  min-height: 25vh;
   color: white;
   background-image: url('/static/images/24tut/blue_waves.jpg');
+  background-repeat: no-repeat;
 }
 
 .video_card {
@@ -2442,6 +2443,14 @@ hr {
   cursor: pointer;
 }
 
+.down_btn {
+  padding: 10px;
+}
+
+.loged_user_div {
+  padding: 20px 20px 20px 150px;
+}
+
 /* exams css properties */
 /* for normal screens ends here.... */
 @media only screen and (device-width: 1352px) and (device-height: 641px) {
@@ -2525,16 +2534,21 @@ hr {
     padding-top: 30px;
   }
 
+  .leftSection_div {
+    width: 390px;
+  }
+
   .q_div {
-    left: 26%;
+    left: 310px;
   }
 
   .solution_div {
-    padding-left: 7%;
+    padding-left: 50px;
   }
 
   .tb_image {
     width: 50%;
+    padding-top: 20px;
   }
 
   .other_chap {
@@ -2582,6 +2596,10 @@ hr {
 
   .pay_card div:nth-child(2) {
     padding-left: 25px;
+  }
+
+  .loged_user_div {
+    padding: 20px;
   }
 
   /*  non hd screen ends here*/
@@ -2644,6 +2662,17 @@ hr {
 
   .abt_div {
     width: 28%;
+  }
+
+  .leftSection_div {
+    width: 478px;
+  }
+
+  .q_div {
+    left: 393px;
+  }
+  .tips:before {
+    bottom: -34px;
   }
 
   /* for hd screens ends here.... */
@@ -2719,11 +2748,13 @@ hr {
   font-size: 4em;
   color: #fff
 }
+
 .nc_title {
   font-size: 4em;
   color: #fff
 }
-.nc_container{
+
+.nc_container {
   width: 90%;
 }
 
@@ -3718,6 +3749,12 @@ hr {
 
   .top_header {
     padding-bottom: 15px;
+    min-height: 35vh;
+    background-repeat: repeat;
+  }
+
+  .down_btn {
+    padding: 10px;
   }
 
   .heading_24 {
@@ -3892,7 +3929,8 @@ hr {
   .nc_title {
     font-size: 2.5em;
   }
-  .nc_container{
+
+  .nc_container {
     margin-top: 60px;
     width: 100%;
   }
@@ -4006,6 +4044,11 @@ hr {
 
   .leftSection_div {
     width: 337px;
+  }
+
+  .top_header {
+    padding-bottom: 15px;
+    min-height: 30vh;
   }
 
   /* iphone screen size ends here */
@@ -4140,6 +4183,11 @@ hr {
 
   .leftSection_div {
     width: 337px;
+  }
+
+  .top_header {
+    padding-bottom: 15px;
+    min-height: 25vh;
   }
 
   /* for google pixel devices ends here */
