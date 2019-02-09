@@ -43,7 +43,7 @@
                   <div class="w_left">
                     <img src="/static/images/24tut/pdf.png" style="cursor:pointer;width:100%; border-radius:50%;position:absolute;top:0px;left:0px;">
                   </div>
-                  <h5 class="text-center" style="font-size:20px;margin-top:0px;padding-top:10px;word-wrap:wrap;"><b>Download {{book.title}} Solutions In PDF</b> </h5>
+                  <h5 class="text-center" style="font-size:18px;margin:7px;padding:0px 20px;word-wrap:wrap;"><b>Download {{book.title}} Solutions In PDF</b> </h5>
                   <span class="pull-right down_icon">
                     <i class="fa fa-download fa-3x" aria-hidden="true"></i>
                   </span>
@@ -70,11 +70,16 @@
     </div>
   </div>
 </div>
+<div class="container-fluid hidden-lg hidden-md  hidden-sm clickchange" style="background-color:#E14045;min-height:10vh;padding:20px;">
+  <div class="col-xs-2">
+    <img src="/static/images/24tut/pdf.png" width="60px"style="border-radius:50%;">
+  </div>
+  <div class="col-xs-10">
+    <span><a href="/media/{{bookUrl}}.pdf" target="_blank"  style="font-size:20px;color:#fff;text-decoration:none;">Download {{book.title}} Solutions In PDF</a></span>
+  </div>
+</div>
 <div class="container-fluid" style="background-color:#FCC300;min-height:10vh;  position:relative;padding-bottom: 2em;">
   <div class="col-md-12">
-    <div class="col-md-6 clickchange hidden-lg hidden-md">
-      <span style="font-size:25px;"><a href="/media/{{bookUrl}}.pdf" target="_blank">Download {{book.title}} Solutions In PDF</a></span>
-    </div>
     <div class="col-md-6 clickchange">
       <span style="font-size:25px;"><b>Solutions</b></span>
     </div>
