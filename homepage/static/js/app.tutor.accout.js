@@ -42,11 +42,11 @@ app.controller('accountController', function($scope, $http, $timeout, $interval,
       $scope.me = response.data[0]
       $http({
         method: 'GET',
-        url: '/api/tutors/tutors24Profile/' + $scope.me.pk + '/'
+        url: '/api/tutors/tutors24Profile/?user=' + $scope.me.pk
       }).
       then(function(response) {
         console.log(response.data, 'tutorsProfile');
-        $scope.profileData = response.data
+        $scope.profileData = response.data[0]
         $scope.getUsersessions()
       })
     } else {

@@ -49,6 +49,8 @@ class tutors24ProfileViewSet(viewsets.ModelViewSet):
     permission_classes = (permissions.IsAuthenticated,)
     queryset = Tutors24Profile.objects.all()
     serializer_class = Tutors24ProfileSerializer
+    filter_backends = [DjangoFilterBackend]
+    filter_fields = ['user']
 
 class tutors24SessionViewSet(viewsets.ModelViewSet):
     permission_classes = (permissions.IsAuthenticated,)
