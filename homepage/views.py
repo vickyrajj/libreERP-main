@@ -40,24 +40,54 @@ def index(request):
     return render(request, 'index.html', {"home": True , "subobj":subobj, "brandLogo" : globalSettings.BRAND_LOGO , "brandLogoInverted": globalSettings.BRAND_LOGO_INVERT,'seoDetails':{'title':globalSettings.SEO_TITLE,'description':globalSettings.SEO_DESCRIPTION,'image':globalSettings.SEO_IMG,'width':globalSettings.SEO_IMG_WIDTH,'height':globalSettings.SEO_IMG_HEIGHT}})
 
 def aboutUs(request):
+    SEODetails = {'title': 'Top 10 edutech startup in India',
+                  'description':'Learn more about 24tutors.com, fastest growing online tutoring platform in India providing world class learning experience at affordable price',
+                  'image':globalSettings.SEO_IMG,
+                  'width':globalSettings.SEO_IMG_WIDTH,
+                  'height':globalSettings.SEO_IMG_HEIGHT
+                  }
     subobjs = Subject.objects.all().order_by('level')
-    return render(request, 'aboutUs.html', {"subobj":subobjs,'seoDetails':{'title':globalSettings.SEO_TITLE,'description':globalSettings.SEO_DESCRIPTION,'image':globalSettings.SEO_IMG,'width':globalSettings.SEO_IMG_WIDTH,'height':globalSettings.SEO_IMG_HEIGHT}})
+    return render(request, 'aboutUs.html', {"subobj":subobjs,'seoDetails':SEODetails })
 
 def signin(request):
+    SEODetails = {'title': '24Tutors.com - Signin',
+                  'description':'Signup or Login to connect to your tutor instantly. Learn online on shared whiteboard technology with audio and video calls',
+                  'image':globalSettings.SEO_IMG,
+                  'width':globalSettings.SEO_IMG_WIDTH,
+                  'height':globalSettings.SEO_IMG_HEIGHT
+                  }
     subobjs = Subject.objects.all().order_by('level')
-    return render(request, 'signin.html', {"subobj":subobjs,'seoDetails':{'title':globalSettings.SEO_TITLE,'description':globalSettings.SEO_DESCRIPTION,'image':globalSettings.SEO_IMG,'width':globalSettings.SEO_IMG_WIDTH,'height':globalSettings.SEO_IMG_HEIGHT}})
+    return render(request, 'signin.html', {"subobj":subobjs,'seoDetails': SEODetails })
 
 def contactUs(request):
+    SEODetails = {'title': '24tutors.com - Contact us, Customer support',
+                  'description':'Have concerns ? Contact us and we will try our best to assist you in getting your query resolved as soon as possible',
+                  'image':globalSettings.SEO_IMG,
+                  'width':globalSettings.SEO_IMG_WIDTH,
+                  'height':globalSettings.SEO_IMG_HEIGHT
+                  }
     subobjs = Subject.objects.all().order_by('level')
-    return render(request, 'contact.html', {"subobj":subobjs,'seoDetails':{'title':globalSettings.SEO_TITLE,'description':globalSettings.SEO_DESCRIPTION,'image':globalSettings.SEO_IMG,'width':globalSettings.SEO_IMG_WIDTH,'height':globalSettings.SEO_IMG_HEIGHT}})
+    return render(request, 'contact.html', {"subobj":subobjs,'seoDetails':SEODetails})
 
 def testimonials(request):
+    SEODetails = {'title': '24tutors.com Reviews - Testimonials',
+                  'description':'Learn why we are in top 10 Edutech startup in India for the year 2019 - Know our students and what they have achieved',
+                  'image':globalSettings.SEO_IMG,
+                  'width':globalSettings.SEO_IMG_WIDTH,
+                  'height':globalSettings.SEO_IMG_HEIGHT
+                  }
     subobjs = Subject.objects.all().order_by('level')
-    return render(request, 'testimonials.html', {"subobj":subobjs,'seoDetails':{'title':globalSettings.SEO_TITLE,'description':globalSettings.SEO_DESCRIPTION,'image':globalSettings.SEO_IMG,'width':globalSettings.SEO_IMG_WIDTH,'height':globalSettings.SEO_IMG_HEIGHT}})
+    return render(request, 'testimonials.html', {"subobj":subobjs,'seoDetails':SEODetails})
 
 def team(request):
     subobjs = Subject.objects.all().order_by('level')
-    return render(request, 'team.html', {"subobj":subobjs,'seoDetails':{'title':globalSettings.SEO_TITLE,'description':globalSettings.SEO_DESCRIPTION,'image':globalSettings.SEO_IMG,'width':globalSettings.SEO_IMG_WIDTH,'height':globalSettings.SEO_IMG_HEIGHT}})
+    SEODetails = {'title': 'Get to know the team behind the most innovative edutech startup in India',
+                  'description':'Join 24tutors.com and make a difference in 201 Billion USD segment of education. Work on cutting edge technologies and innovate.',
+                  'image':globalSettings.SEO_IMG,
+                  'width':globalSettings.SEO_IMG_WIDTH,
+                  'height':globalSettings.SEO_IMG_HEIGHT
+                  }
+    return render(request, 'team.html', {"subobj":subobjs,'seoDetails': SEODetails})
 
 def ncertSolutions(request):
     subobjs = Subject.objects.all().order_by('level')
@@ -72,7 +102,7 @@ def ncertSolutions(request):
 def courses(request):
     subobjs = Subject.objects.all().order_by('level')
 
-    SEODetails = {'title':'Free online course for class 10 to 12 for CBSE Board exams, IIT JEE mains and IIT JEE advance',
+    SEODetails = {'title':'Free online courses for class 9 to 12 for CBSE Board exams, IIT JEE mains and IIT JEE advance',
                   'description':'Get most curated courses to score high in your Board exams and IIT JEE for free with videos and mock tests designed by experts',
                   'image':globalSettings.SEO_IMG,
                   'width':globalSettings.SEO_IMG_WIDTH,
@@ -479,8 +509,16 @@ def blogAnotherView(request):
     return render(request,"blog.html" , {"home" : False,'pages':pages ,"subobj":subobjs,"firstSection":firstSection , "second_sec1":second_sec1 , "second_sec2":second_sec2 , "thirdSection":thirdSection,"recentBlogs":recentBlogs })
 
 def career(request):
+
+    SEODetails = {'title': 'Online tutoring jobs in India' ,
+        'description': 'Join 24tutors.com and be a part of our exceptional growth journey. Apply today and become an Online tutor and reach out to global student community with best technology supporting you' ,
+        'image':globalSettings.SEO_IMG,
+        'width':globalSettings.SEO_IMG_WIDTH,
+        'height':globalSettings.SEO_IMG_HEIGHT
+        }
+
     subobjs = Subject.objects.all().order_by('level')
-    return render(request,"career.html" , {"home" : False , "subobj":subobjs,"brandLogo" : globalSettings.BRAND_LOGO , "brandLogoInverted": globalSettings.BRAND_LOGO_INVERT,'seoDetails':{'title':globalSettings.SEO_TITLE,'description':globalSettings.SEO_DESCRIPTION,'image':globalSettings.SEO_IMG,'width':globalSettings.SEO_IMG_WIDTH,'height':globalSettings.SEO_IMG_HEIGHT}})
+    return render(request,"career.html" , {"home" : False , "subobj":subobjs,"brandLogo" : globalSettings.BRAND_LOGO , "brandLogoInverted": globalSettings.BRAND_LOGO_INVERT,'seoDetails': SEODetails })
 
 def policy(request):
     subobjs = Subject.objects.all().order_by('level')
