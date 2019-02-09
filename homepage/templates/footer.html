@@ -8,10 +8,14 @@
       <h5 class="heading_small">Learn SOMETHING WHEREEVER YOU ARE</h5>
       <div class="foot_btn">
         {% if not request.user.is_authenticated %}
-        <button type="button" class="btn_gradient " ng-click="signin()">Join a Course Now</button>
+        <a href="/signin/">
+          <button type="button" class="btn_gradient ">Join a Course Now </button>
+        </a>
         {% endif %}
         {% if request.user.is_authenticated %}
-        <button type="button" class="btn_gradient " ng-click="signin(true)">Start A Session Now</button>
+        <a href="/account/">  
+        <button type="button" class="btn_gradient">Start A Session Now</button>
+      </a>
         {% endif %}
       </div>
     </div>
