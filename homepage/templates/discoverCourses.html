@@ -2,7 +2,7 @@
 
 {% block tutorcontent %}
 <div class="container-fluid" style="padding-top:60px;">
-  <div class="col-md-8 col-md-offset-2">
+  <div class="col-md-10 col-md-offset-1">
     {% for s in subobj %}
     <!-- <div class="col-md-3">
     <div class="container-fluid discover_cards">
@@ -20,8 +20,7 @@
           <div class="col-md-7 col-xs-7" style="z-index:20;">
             <div class="text-center" style="margin-top:4em;">
               <span style="font-size:18px;color:#5B5B5B;"> <strong>{{s.title}}</strong> </span><br>
-              <span style="color:#5B5B5B;"> <b>level </b> {{s.level}}</span><br><br>
-              <span style="color:#5B5B5B;"> <b>Added on :</b> {{s.created|date:'Y-M-d'}}</span><br>
+              <span style="color:#5B5B5B;"> <b>Class </b> {{s.level}}</span><br><br>
             </div>
             <!-- <div class="container-fluid" style="height:63px;overflow-y:hidden;">
           <h6>{{r.book.description}}</h6>

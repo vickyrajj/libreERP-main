@@ -462,7 +462,10 @@ def blog(request):
         data.append({'user':us , 'header' : header , 'title' : title , 'date' : date , 'blogId' : blogId , 'url' : i.shortUrl })
     data = data[(page-1)*pagesize:(page*pagesize)]
 
-    return render(request,"blog.html" , {"home" : False  ,'data' : data, 'dataLen' : len(data) ,'pages':pages , "brandLogo" : globalSettings.BRAND_LOGO , "brandLogoInverted": globalSettings.BRAND_LOGO_INVERT,'seoDetails':{'title':globalSettings.SEO_TITLE,'description':globalSettings.SEO_DESCRIPTION,'image':globalSettings.SEO_IMG,'width':globalSettings.SEO_IMG_WIDTH,'height':globalSettings.SEO_IMG_HEIGHT}})
+    SEODetails = {'title':'Get latest news , tips and tricks for your IIT JEE Preparation','description':'Learn more about the students and their journey and how they made it to IIT','image':globalSettings.SEO_IMG,'width':globalSettings.SEO_IMG_WIDTH,'height':globalSettings.SEO_IMG_HEIGHT}
+
+
+    return render(request,"blog.html" , {"home" : False  ,'data' : data, 'dataLen' : len(data) ,'pages':pages , "brandLogo" : globalSettings.BRAND_LOGO , "brandLogoInverted": globalSettings.BRAND_LOGO_INVERT,'seoDetails': SEODetails})
 # this is blog page
 def blogAnotherView(request):
     print 'ininnnnnnnnnnnnnnnnnnn bloggssss main'
