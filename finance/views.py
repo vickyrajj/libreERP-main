@@ -51,14 +51,14 @@ from openpyxl.styles import PatternFill , Font
 # Create your views here.
 
 class AccountViewSet(viewsets.ModelViewSet):
-    permission_classes = (permissions.IsAuthenticated, isAdmin, )
+    permission_classes = (permissions.IsAuthenticated, )
     serializer_class = AccountSerializer
     queryset = Account.objects.all()
     filter_backends = [DjangoFilterBackend]
     filter_fields = ['number','personal','contactPerson']
 
 class InflowViewSet(viewsets.ModelViewSet):
-    permission_classes = (permissions.IsAuthenticated, isAdmin, )
+    permission_classes = (permissions.IsAuthenticated,)
     serializer_class = InflowSerializer
     queryset = Inflow.objects.all()
     filter_backends = [DjangoFilterBackend]
@@ -74,7 +74,7 @@ class InflowViewSet(viewsets.ModelViewSet):
             return Inflow.objects.all()
 
 class CostCenterViewSet(viewsets.ModelViewSet):
-    permission_classes = (permissions.IsAuthenticated, isAdmin, )
+    permission_classes = (permissions.IsAuthenticated,)
     serializer_class = CostCenterSerializer
     queryset = CostCenter.objects.all()
     filter_backends = [DjangoFilterBackend]
@@ -229,13 +229,13 @@ class GetExpenseDataAPI(APIView):
         accountsList = list(request.user.accountsManaging.all().values_list('pk',flat=True).distinct())
         print accountsList,'user accountssssss Listttttttt'
         tosend=[]
-        expObj = ProjectPettyExpense.objects.filter(account__in=accountsList).values('project__pk','project__title').distinct()
+        expObj = ProjectPettyExpense.objects.filter(account__in=accountsList).values('project__pk','project__title','project__budget').distinct()
         print expObj
         for i in expObj:
             expTotal = ProjectPettyExpense.objects.filter(project__id=int(i['project__pk']),account__in=accountsList).aggregate(tot=Sum('amount'))
             expTotal = expTotal['tot'] if expTotal['tot'] else 0
             print expTotal
-            data = {'projectPk':i['project__pk'],'projectName':i['project__title'],'expTotal':expTotal}
+            data = {'projectPk':i['project__pk'],'projectName':i['project__title'],'expTotal':expTotal,'budget':i['project__budget']}
             tosend.append(data)
         if 'limit' in request.GET:
             try:

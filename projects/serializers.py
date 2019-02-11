@@ -6,7 +6,7 @@ from .models import *
 from gitweb.serializers import repoLiteSerializer
 from finance.models import CostCenter , ExpenseSheet , Account , ExpenseHeading
 from django.db.models import Sum
-
+from datetime import datetime
 
 class mediaSerializer(serializers.ModelSerializer):
     class Meta:
@@ -102,7 +102,7 @@ class projectSerializer(serializers.ModelSerializer):
 class projectLiteSerializer(serializers.ModelSerializer):
     class Meta:
         model = project
-        fields = ('pk' , 'title', 'description')
+        fields = ('pk' , 'title', 'description','budget')
 
 
 class timelineItemSerializer(serializers.ModelSerializer):
@@ -159,4 +159,10 @@ class PettyCashSerializer(serializers.ModelSerializer):
         if 'project' in self.context['request'].data:
             ptc.project = project.objects.get(pk=int(self.context['request'].data['project']))
         ptc.save()
+        if 'dated' in self.context['request'].data:
+            print self.context['request'].data['dated'],type(self.context['request'].data['dated'])
+            datetime_object = datetime.strptime(str(self.context['request'].data['dated']), '%Y-%m-%d')
+            print datetime_object
+            ptc.created = datetime_object
+            ptc.save()
         return ptc

@@ -50,8 +50,8 @@ class AccountSerializer(serializers.ModelSerializer):
         if 'addMoney' in self.context['request'].data:
             instance.balance += int(self.context['request'].data['addMoney'])
         instance.save()
-        instance.authorizedSignaturies.clear()
         if 'authorizedSignaturies' in self.context['request'].data:
+            instance.authorizedSignaturies.clear()
             for u in self.context['request'].data['authorizedSignaturies']:
                 instance.authorizedSignaturies.add(User.objects.get(pk = int(u)))
         return instance

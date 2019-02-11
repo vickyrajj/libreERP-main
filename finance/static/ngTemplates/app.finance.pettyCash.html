@@ -31,16 +31,29 @@
           <strong style="font-size:18px">Create Expense Record</strong>
         </div>
         <div class="row">
-          <div class="col-md-6">
+          <div class="col-md-12">
             <div class="form-group">
               <label>Title</label>
               <input uib-typeahead="head as head.title for head in titleSearch($viewValue)" ng-model="form.heading" type="text" class="form-control" placeholder="Search By Some Title">
             </div>
           </div>
+        </div>
+        <div class="row">
           <div class="col-md-6">
             <div class="form-group">
               <label>Amount</label>
               <input type="number" class="form-control" ng-model="form.amount" min="1">
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="form-group">
+              <label>Expense Data</label>
+              <div class="input-group">
+                <input type="text" class="form-control" show-weeks="false" uib-datepicker-popup="dd-MMMM-yyyy" ng-model="form.dated" is-open="status.opened" disabled/>
+                <span class="input-group-btn">
+                <button type="button" class="btn btn-default" ng-click="status.opened = true;"><i class="glyphicon glyphicon-calendar"></i></button>
+              </span>
+              </div>
             </div>
           </div>
         </div>
@@ -81,14 +94,15 @@
   <div class="row" ng-if="userAccounts.length>0">
     <hr>
     <div class="row" style="padding:25px 15px">
-      <div class="col-md-4" ng-repeat="exp in expData">
+      <div class="col-md-6" ng-repeat="exp in expData">
         <div class="card" style="padding:0px 10px;border-radius:20px;margin-bottom:20px;cursor:pointer;background-color:{{exp.colorCode}}" ng-click="openExpenseDetails($index)">
           <div class="row">
             <div class="col-md-8">
-              <h3><i class="fa fa-globe"></i> {{exp.projectName}}</h3>
+              <h2><i class="fa fa-globe"></i> {{exp.projectName}}</h2>
             </div>
-            <div class="col-md-4 text-right" style="padding-left:0px">
-              <h2 style="color:#b1afaf"> <i class="fa fa-inr"></i> {{exp.expTotal | number}} </h2>
+            <div class="col-md-4 text-right" style="padding:10px;padding-left:0px;font-size:25px">
+              <span><i class="fa fa-briefcase"></i> {{exp.budget | number}}</span><br>
+              <span style="color:#ec6464"><i class="fa fa-inr fa-lg"></i> {{exp.expTotal | number}}</span><br>
             </div>
           </div>
         </div>

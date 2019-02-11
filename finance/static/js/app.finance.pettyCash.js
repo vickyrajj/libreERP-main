@@ -6,7 +6,8 @@ app.controller('businessManagement.finance.pettyCash', function($scope, $http, $
     project: '',
     description: '',
     heading: '',
-    attachment: emptyFile
+    attachment: emptyFile,
+    dated: new Date()
   }
   $scope.userAccounts = []
   $http.get('/api/finance/account/?personal=true&contactPerson=' + $scope.me.pk).
@@ -127,6 +128,7 @@ app.controller('businessManagement.finance.pettyCash', function($scope, $http, $
     formData.append('project', f.project.pk)
     formData.append('account', $scope.userAccounts[f.accountIdx].pk)
     formData.append('heading', f.heading.pk)
+    formData.append('dated', f.dated.toJSON().split('T')[0])
 
     if (f.attachment != emptyFile) {
       formData.append('attachment', f.attachment)
@@ -155,7 +157,8 @@ app.controller('businessManagement.finance.pettyCash', function($scope, $http, $
         description: '',
         heading: '',
         attachment: emptyFile,
-        accountIdx: 0
+        accountIdx: 0,
+        dated: new Date()
       }
       if ($scope.userAccounts.length > 1) {
         $scope.form.accountIdx = -1
