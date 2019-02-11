@@ -54,9 +54,6 @@ styleN = styles['Normal']
 styleH = styles['Heading1']
 
 
-settingsFields = application.objects.get(name='app.clientRelationships').settings.all()
-
-
 class FullPageImage(Flowable):
     def __init__(self, img):
         Flowable.__init__(self)
@@ -192,6 +189,7 @@ class PageNumCanvas(canvas.Canvas):
         p.drawOn(self, 100 * mm, 10 * mm)
 
     def drawLetterHeadFooter(self):
+        settingsFields = application.objects.get(name='app.clientRelationships').settings.all()
         self.setStrokeColor(themeColor)
         self.setFillColor(themeColor)
         self.rect(0, 0, 1500, 70, fill=True)
@@ -369,6 +367,7 @@ def genInvoice(response, contract, request):
     story.append(t)
     story.append(Spacer(2.5, 0.5 * cm))
 
+    settingsFields = application.objects.get(name='app.clientRelationships').settings.all()
     if contract.status in ['billed', 'approved', 'recieved']:
         summryParaSrc = settingsFields.get(name='regulatoryDetails').value
         story.append(Paragraph(summryParaSrc, styleN))

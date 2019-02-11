@@ -159,9 +159,6 @@ styleN = styles['Normal']
 styleH = styles['Heading1']
 
 
-settingsFields = application.objects.get(name='app.clientRelationships').settings.all()
-
-
 class FullPageImage(Flowable):
     def __init__(self, img):
         Flowable.__init__(self)
@@ -289,6 +286,7 @@ class PageNumCanvas(canvas.Canvas):
         p.drawOn(self, 100 * mm, 10 * mm)
 
     def drawLetterHeadFooter(self):
+        settingsFields = application.objects.get(name='app.clientRelationships').settings.all()
         self.setStrokeColor(themeColor)
         self.setFillColor(themeColor)
         self.rect(0, 0, 1500, 70, fill=True)

@@ -412,8 +412,9 @@ class GrnAPIView(APIView):
         grn(response , project , purchaselist , request)
         return response
 
-settingsFields = application.objects.get(name='app.clientRelationships').settings.all()
+
 def invoice(response , inv , invdetails , typ, request):
+    settingsFields = application.objects.get(name='app.clientRelationships').settings.all()
     styles = getSampleStyleSheet()
     doc = SimpleDocTemplate(response,pagesize=letter, topMargin=0.2*cm,leftMargin=0.1*cm,rightMargin=0.1*cm)
     doc.request = request
