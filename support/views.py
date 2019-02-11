@@ -1,4 +1,3 @@
-
 from django.contrib.auth.models import User , Group
 from django.shortcuts import render, redirect , get_object_or_404
 from django.contrib.auth import authenticate , login , logout
@@ -382,9 +381,9 @@ def purchaseOrder(response , project , purchaselist, multNumber,currencyTyp, req
     <b>BRUDERER PRESSES INDIA PRIVATE LTD </b> <br/>
     #17P Sadaramangala Industrial Area, <br/>
     Whitefield Road, Kadugodi. <br/>
-    <b>GST Number :  AABCB6326Q1Z6 </b> <br/>
-    Contact no. : +91 9999999999 <br/>
-    E-Mail id:
+    <b>GST Number :  29AABCB6326Q1Z6 </b> <br/>
+    Contact no. : +91 9008382658 <br/>
+    E-Mail id: Gopinath.Anandan@bruderer.com
     </font>
     </para>
     """ %(),styles['Normal'])
